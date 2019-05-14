@@ -32,6 +32,7 @@ from module_paralogue_counter import add_seq_to_alignment3
 from module_align_to_profile_iter import do_align_iteratively
 from module_mask_nex import mask_nex
 from module_amoebae_trim_nex import trim_nex
+from module_afa_to_nex import delete_extra_mesquite_lines
 
 # Import functions for working with sequences, alignments, and trees.
 #from ete3 import Tree, TreeStyle, Tree, TextFace, add_face_to_node
@@ -76,6 +77,9 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta):
     # Copy nexus alignment into temporary directory.
     #nex_ali_copy = os.path.join(tempdirpath, os.path.basename(alignment))
     #shutil.copyfile(alignment, nex_ali_copy) 
+
+    # Remove extra mesquite lines if present.
+    delete_extra_mesquite_lines(alignment)
 
     # Get number of sequences and accessions in the input alignment.
     alignment_seq_num = 0
