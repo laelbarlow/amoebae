@@ -5,14 +5,15 @@
 ### Synopsis 
 __A__nalysis of __MO__lecular __E__volution with __BA__tch __E__ntry (AMOEBAE)
 is a bioinformatics software toolkit composed of scripts written in the Python3
-language. AMOEBAE automates certain repetitive tasks involved in identifying
-and classifying peptide sequences. Specifically, AMOEBAE uses Python
-packages including Biopython, ETE3, pandas, and Matplotlib for setting up,
-running, and summarizing analyses of molecular evolution using bioinformatics
-software packages including MUSCLE, BLAST+, HMMER3, and IQ-Tree.  Applications
-include identifying and classifying predicted genes in novel biological
-sequence data according to their evolutionary relationships with homologues.
-AMOEBAE is open-source, and all dependencies are freely available.
+language. AMOEBAE performs certain tasks involved in identifying and
+classifying amino acid sequences. Specifically, AMOEBAE uses Python packages
+including Biopython, ETE3, pandas, and Matplotlib for setting up, running, and
+summarizing analyses of molecular evolution using bioinformatics software
+packages including MUSCLE, BLAST+, HMMER3, and IQ-Tree.  Applications include
+identifying and classifying predicted genes in novel biological sequence data
+according to their evolutionary relationships with homologues.  AMOEBAE is
+open-source, and all dependencies are freely available. However, please note
+that AMOEBAE is currently under development and is not yet fully functional. 
 
 
 ## Setup
@@ -56,47 +57,9 @@ as follows:
     amoebae <commandnamehere> -h
 
 
-## Limitations
-
-- Please note that AMOEBAE is currently under development, and some commands and
-  scripts may not yet function as described and the code may contain bugs. Users are
-  responsible for ensuring that errors are not introduced into their results.
-
-- There is no graphical user interface for AMOEBAE. It only runs on the command line.
-
-- AMOEBAE does not provide a means to fully automate analysis pipelines from
-  start to finish, and users are encouraged to manually review results at each
-  stage of analysis.
-
-- AMOEBAE has not been tested on Windows operating systems.
-
-- AMOEBAE has dependencies which may not be installed by default on some servers.
-
-Also, AMOEBAE is (currently) **not applicable** for facilitating many common
-types of analyses including the following:
-
-- Similarity (homology) searching with nucleotide query sequences/profiles, or
-  any other analysis of nucleotide sequences other than searching for
-  protein-coding sequences with amino acid sequence queries (tblastn).
-
-- gene/exon/ORF finding/prediction in DNA sequences (beyond basic tblastn or
-  nhmmer searches), or determining whether such sequences are pseudogenes.
-
-- genome-scale analyses involving all-against-all comparative genomic profiling
-  among entire predicted proteomes. or any other large-scale analysis requiring
-  storing of data in relational databases rather than plaintext files.
-
-- Analysis of 3D structures.
-
-- Phylogenetic analyses without a reference tree with which to classify
-  sequences (although AMOEBAE can be used to curate a dataset for such an
-  analysis). 
-
-
 ## Documentation
 
-For a tutorial on some basic usage of AMOEBAE, please see the tutorial file:
-amoebae/doc/AMOEBAE_tutorial.pdf 
+A tutorial is currently in preparation.
 
 For code documentation, please see the html file(s), which can be opened with
 your web browser: amoebae/doc/code_documentation/html/index.html
@@ -115,12 +78,6 @@ permanent repositories if relevant). Also, remember to cite other software
 packages which you may have also installed and used for your work via AMOEBAE
 scripts.
 
-
-## Funding
-
-During the time that this code was (and is) being developed, the author, Lael
-D. Barlow, was supported by a Postgraduate Scholarship-Doctoral from the
-Natural Sciences and Engineering Research Council of Canada (NSERC). 
 
 ## License
 
