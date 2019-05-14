@@ -3,7 +3,7 @@
 ## Introduction
 
 ### Synopsis 
-__A__nalysis of __MO__lecular __E__volution with __BA__tch __E__ntry (AMOEBAE)
+**A**nalysis of **MO**lecular **E**volution with **BA**tch **E**ntry (AMOEBAE)
 is a bioinformatics software toolkit composed of scripts written in the Python3
 language. AMOEBAE performs certain tasks involved in identifying and
 classifying amino acid sequences. Specifically, AMOEBAE uses Python packages
@@ -67,8 +67,8 @@ your web browser: amoebae/doc/code_documentation/html/index.html
 
 ## Reporting problems
 
-Please use the [issue tracker](https://github.com/laelbarlow) on the GitHub
-webpage to report any problems you find in using this toolkit.
+Please use the [issue tracker](https://github.com/laelbarlow/amoebae/issues) on
+the GitHub webpage to report any problems you find in using this toolkit.
 
 
 ## How to cite AMOEBAE
