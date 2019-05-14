@@ -1,0 +1,277 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_name_replace &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_amoebae_name_replace</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module defining functions for coding and decoding taxon/sequence names in</span>
+<span class="sd">alignments and tree files for input to phylogenetics software. Based on the</span>
+<span class="sd">name_replace.pl script written by Jed Barlow.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">ete3</span> <span class="k">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">module_afa_to_nex</span> <span class="k">import</span> <span class="n">nex_to_afa</span><span class="p">,</span> <span class="n">afa_to_nex</span>
+
+
+<div class="viewcode-block" id="generate_code_name"><a class="viewcode-back" href="../module_amoebae_name_replace.html#module_amoebae_name_replace.generate_code_name">[docs]</a><span class="k">def</span> <span class="nf">generate_code_name</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take the number of the sequence in the input file, and output an</span>
+<span class="sd">    alphabetical code that uniquely corresponds to that number.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check that the number is not greater than the maximum possible to code</span>
+    <span class="c1"># using this function.</span>
+    <span class="k">assert</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">99999999</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Given sequence number exceeds maximum limit</span>
+<span class="s2">    for coding function.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Define dictionary for converting digits to letters.</span>
+    <span class="n">conversion_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;W&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;R&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="s1">&#39;P&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;5&#39;</span><span class="p">:</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;6&#39;</span><span class="p">:</span> <span class="s1">&#39;K&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;7&#39;</span><span class="p">:</span> <span class="s1">&#39;L&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;8&#39;</span><span class="p">:</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;9&#39;</span><span class="p">:</span> <span class="s1">&#39;Q&#39;</span>
+                       <span class="p">}</span>
+
+    <span class="c1"># Convert digits to letters.</span>
+    <span class="n">codename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+        <span class="n">codename</span> <span class="o">=</span> <span class="n">codename</span> <span class="o">+</span> <span class="n">conversion_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="c1"># Add prefix.</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;Z&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">8</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">codename</span><span class="p">)))</span>
+    <span class="n">codename</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">codename</span>
+
+    <span class="c1"># Return codename</span>
+    <span class="k">return</span> <span class="n">codename</span></div>
+
+
+<div class="viewcode-block" id="write_afa_with_code_names"><a class="viewcode-back" href="../module_amoebae_name_replace.html#module_amoebae_name_replace.write_afa_with_code_names">[docs]</a><span class="k">def</span> <span class="nf">write_afa_with_code_names</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">tablefile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take an aligned (or unaligned) fasta file, and write a fasta file with</span>
+<span class="sd">    coded names, and a table for converting names back.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">original_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">tablefile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tableh</span><span class="p">:</span>
+        <span class="n">inum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">):</span>
+                <span class="n">inum</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">original_name</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">original_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">original_name</span><span class="p">)</span>
+
+                <span class="c1"># Define code name.</span>
+                <span class="n">code_name</span> <span class="o">=</span> <span class="n">generate_code_name</span><span class="p">(</span><span class="n">inum</span><span class="p">)</span>
+
+                <span class="c1"># Write coded name to output sequence file.</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="n">code_name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="c1"># Write values to table file.</span>
+                <span class="n">tableh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">code_name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">tableh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">original_name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Write line with sequence to output sequence file.</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># Check for redundant sequence names.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_names</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">original_names</span><span class="p">))),</span> <span class="s2">&quot;&quot;&quot;Redundant</span>
+<span class="s2">    sequence names in input fasta file.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="write_nex_with_code_names"><a class="viewcode-back" href="../module_amoebae_name_replace.html#module_amoebae_name_replace.write_nex_with_code_names">[docs]</a><span class="k">def</span> <span class="nf">write_nex_with_code_names</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">tablefile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a nexus file, and write a nexus file with</span>
+<span class="sd">    coded names, and a table for converting names back.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert nexus to afa.</span>
+    <span class="n">afa_path</span> <span class="o">=</span> <span class="n">infile</span> <span class="o">+</span> <span class="s1">&#39;_TEMP.afa&#39;</span>
+    <span class="n">nex_to_afa</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">afa_path</span><span class="p">)</span>
+
+    <span class="c1"># Code names.</span>
+    <span class="n">afa_coded_path</span> <span class="o">=</span> <span class="n">afa_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.C.afa&#39;</span>
+    <span class="n">write_afa_with_code_names</span><span class="p">(</span><span class="n">afa_path</span><span class="p">,</span> <span class="n">afa_coded_path</span><span class="p">,</span> <span class="n">tablefile</span><span class="p">)</span> 
+
+    <span class="c1"># Convert afa to nexus.</span>
+    <span class="n">afa_to_nex</span><span class="p">(</span><span class="n">afa_coded_path</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+    <span class="c1"># Remove intermediate afa files.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">afa_path</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">afa_coded_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_conversion_dict_from_table"><a class="viewcode-back" href="../module_amoebae_name_replace.html#module_amoebae_name_replace.get_conversion_dict_from_table">[docs]</a><span class="k">def</span> <span class="nf">get_conversion_dict_from_table</span><span class="p">(</span><span class="n">tablefile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a conversion table and return a dictionary for uncoding names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conv_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tablefile</span><span class="p">)</span> <span class="k">as</span> <span class="n">tablefileh</span><span class="p">:</span>
+        <span class="n">oddlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">evenlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">inum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tablefileh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                <span class="n">inum</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">inum</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">evenlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">oddlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">code</span><span class="p">,</span> <span class="n">original</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">oddlist</span><span class="p">,</span> <span class="n">evenlist</span><span class="p">):</span>
+        <span class="n">conv_dict</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">original</span>
+
+    <span class="k">return</span> <span class="n">conv_dict</span></div>
+
+
+<div class="viewcode-block" id="write_newick_tree_with_uncoded_names"><a class="viewcode-back" href="../module_amoebae_name_replace.html#module_amoebae_name_replace.write_newick_tree_with_uncoded_names">[docs]</a><span class="k">def</span> <span class="nf">write_newick_tree_with_uncoded_names</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">tablefile</span><span class="p">,</span>
+        <span class="n">quoted_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a text file with a newick tree, and write a new one with names</span>
+<span class="sd">    converted back to original names (given values in a conversion table), and</span>
+<span class="sd">    optionally put quotation marks around the names in the output tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate a dictionary for converting names.</span>
+    <span class="n">conv_dict</span> <span class="o">=</span> <span class="n">get_conversion_dict_from_table</span><span class="p">(</span><span class="n">tablefile</span><span class="p">)</span>
+
+    <span class="c1">## Look for each code in the input tree, and replace with original name.</span>
+    <span class="c1">#tree_string = None</span>
+    <span class="c1">#with open(infile) as infh:</span>
+    <span class="c1">#    tree_string = infh.readline()</span>
+
+    <span class="c1">#for code in conv_dict:</span>
+    <span class="c1">#    if quoted_names:</span>
+    <span class="c1">#        tree_string = tree_string.replace(code, &#39;&quot;&#39; + conv_dict[code] + &#39;&quot;&#39;)</span>
+    <span class="c1">#    else:</span>
+    <span class="c1">#        tree_string = tree_string.replace(code, conv_dict[code])</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">t1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t2</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">conv_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">):</span>
+                    <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">conv_dict</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+
+    <span class="c1"># Write uncoded tree to output file.</span>
+    <span class="c1">#with open(outfile, &#39;w&#39;) as o:</span>
+        <span class="c1">#o.write(tree_string)</span>
+        <span class="c1">#o.write(t2)</span>
+    <span class="n">t2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="n">outfile</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="write_newick_tree_with_coded_names"><a class="viewcode-back" href="../module_amoebae_name_replace.html#module_amoebae_name_replace.write_newick_tree_with_coded_names">[docs]</a><span class="k">def</span> <span class="nf">write_newick_tree_with_coded_names</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">tablefile</span><span class="p">,</span>
+        <span class="n">quoted_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a newick file and replace full taxon names with coded names from a</span>
+<span class="sd">    table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate a dictionary for converting names.</span>
+    <span class="n">conv_dict</span> <span class="o">=</span> <span class="n">get_conversion_dict_from_table</span><span class="p">(</span><span class="n">tablefile</span><span class="p">)</span>
+
+    <span class="c1"># Look for each original name in the input tree and replace with the coded</span>
+    <span class="c1"># name for the output tree.</span>
+    <span class="n">tree_string</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="n">tree_string</span> <span class="o">=</span> <span class="n">infh</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">conv_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">tree_string</span> <span class="o">=</span> <span class="n">tree_string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">conv_dict</span><span class="p">[</span><span class="n">code</span><span class="p">],</span> <span class="n">code</span><span class="p">)</span>
+
+    <span class="c1"># Write uncoded tree to output file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tree_string</span><span class="p">)</span></div>
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_add_to_db module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_add_to_db_test module" href="module_add_to_db_test.html" />
+    <link rel="prev" title="misc_functions module" href="misc_functions.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_add_to_db_test.html" title="module_add_to_db_test module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="misc_functions.html" title="misc_functions module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_add_to_db">
+<span id="module-add-to-db-module"></span><h1>module_add_to_db module<a class="headerlink" href="#module-module_add_to_db" title="Permalink to this headline">¶</a></h1>
+<p>Module for script: amoebae.</p>
+<dl class="function">
+<dt id="module_add_to_db.convert_headers">
+<code class="descclassname">module_add_to_db.</code><code class="descname">convert_headers</code><span class="sig-paren">(</span><em>infp</em>, <em>outfp</em>, <em>split_char=' '</em>, <em>split_pos='0'</em>, <em>skip_header_reformat=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_add_to_db.html#convert_headers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_add_to_db.convert_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>For converting headers in fasta files, and writing a new fasta file with
+appropriate filename extension.</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a><a href="#id3"><span class="problematic" id="id4">*</span></a>If told to split on “empty” (empty string), then won’t split at all (for
+headers that are composed only of accession).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_add_to_db.get_corr_fasta_exten">
+<code class="descclassname">module_add_to_db.</code><code class="descname">get_corr_fasta_exten</code><span class="sig-paren">(</span><em>infp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_add_to_db.html#get_corr_fasta_exten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_add_to_db.get_corr_fasta_exten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines the correct filename extension that a given fasta file should
+have.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_add_to_db.get_dbtype_from_file_exten">
+<code class="descclassname">module_add_to_db.</code><code class="descname">get_dbtype_from_file_exten</code><span class="sig-paren">(</span><em>infp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_add_to_db.html#get_dbtype_from_file_exten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_add_to_db.get_dbtype_from_file_exten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine data type from fasta filename extension.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_add_to_db.make_blast_db">
+<code class="descclassname">module_add_to_db.</code><code class="descname">make_blast_db</code><span class="sig-paren">(</span><em>infp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_add_to_db.html#make_blast_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_add_to_db.make_blast_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes blastable database for given fasta file (in same directory).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_add_to_db.make_easel_index">
+<code class="descclassname">module_add_to_db.</code><code class="descname">make_easel_index</code><span class="sig-paren">(</span><em>outfp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_add_to_db.html#make_easel_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_add_to_db.make_easel_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the esl-sfetch miniapp from the Easel package associated with the
+HMMER3 software package to index a fasta file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_add_to_db.update_csv">
+<code class="descclassname">module_add_to_db.</code><code class="descname">update_csv</code><span class="sig-paren">(</span><em>outfp</em>, <em>csv_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_add_to_db.html#update_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_add_to_db.update_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends a line to the given spreadsheet with info about the given fasta
+file added to a directory.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="misc_functions.html"
+                        title="previous chapter">misc_functions module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_add_to_db_test.html"
+                        title="next chapter">module_add_to_db_test module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_add_to_db_test.html" title="module_add_to_db_test module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="misc_functions.html" title="misc_functions module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

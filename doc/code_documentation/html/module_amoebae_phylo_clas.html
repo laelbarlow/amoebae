@@ -1,0 +1,220 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_phylo_clas module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_amoebae_plot module" href="module_amoebae_plot.html" />
+    <link rel="prev" title="module_amoebae_nex_to_hmm module" href="module_amoebae_nex_to_hmm.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_plot.html" title="module_amoebae_plot module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_nex_to_hmm.html" title="module_amoebae_nex_to_hmm module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_amoebae_phylo_clas">
+<span id="module-amoebae-phylo-clas-module"></span><h1>module_amoebae_phylo_clas module<a class="headerlink" href="#module-module_amoebae_phylo_clas" title="Permalink to this headline">¶</a></h1>
+<p>Contains functions for classifying sequences using existing phylogenetic models.</p>
+<dl class="class">
+<dt id="module_amoebae_phylo_clas.ModelInfoFromCSV">
+<em class="property">class </em><code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">ModelInfoFromCSV</code><span class="sig-paren">(</span><em>model_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#ModelInfoFromCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.ModelInfoFromCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class for retrieving information about a named model (backbone tree).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.add_seq_to_alignment">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">add_seq_to_alignment</code><span class="sig-paren">(</span><em>inseqobj</em>, <em>innexpath</em>, <em>outdp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#add_seq_to_alignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.add_seq_to_alignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a sequence and adds it to a trimmed alignment for a backbone tree
+(which will be used to classify the sequence).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.classify_one_seq_record">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">classify_one_seq_record</code><span class="sig-paren">(</span><em>ali_num</em>, <em>record</em>, <em>model</em>, <em>outdirpath1</em>, <em>summary_csv_fp</em>, <em>summary_header_line</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#classify_one_seq_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.classify_one_seq_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classify one sequence.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.classify_seq_with_constrained_tree">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">classify_seq_with_constrained_tree</code><span class="sig-paren">(</span><em>alignment</em>, <em>tree</em>, <em>subs_model</em>, <em>type_seqs</em>, <em>fasta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#classify_seq_with_constrained_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.classify_seq_with_constrained_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classify sequences in a given fasta file using a given backbone tree.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.classify_seq_with_constrained_tree2">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">classify_seq_with_constrained_tree2</code><span class="sig-paren">(</span><em>file_with_seqs</em>, <em>model=None</em>, <em>subseq=False</em>, <em>abbrev=True</em>, <em>place=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#classify_seq_with_constrained_tree2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.classify_seq_with_constrained_tree2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classify sequences in a given fasta file using a given backbone tree.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.code_names_in_ali">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">code_names_in_ali</code><span class="sig-paren">(</span><em>indp</em>, <em>inalifp</em>, <em>outalifp</em>, <em>outtablefp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#code_names_in_ali"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.code_names_in_ali" title="Permalink to this definition">¶</a></dt>
+<dd><p>Code names using name_replace.pl.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.code_tree">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">code_tree</code><span class="sig-paren">(</span><em>intreefp</em>, <em>outtreefp</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#code_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.code_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Code names in a tree, given a conversion table.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.get_clade_name_from_model">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">get_clade_name_from_model</code><span class="sig-paren">(</span><em>type_seq_name</em>, <em>type_seqs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#get_clade_name_from_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.get_clade_name_from_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return clade name for given type sequence name and type seqs info file
+(from models directory).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.get_conversion_dict">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">get_conversion_dict</code><span class="sig-paren">(</span><em>tablefile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#get_conversion_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.get_conversion_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a Name_Replace-style taxon name conversion table file, and return a
+dictionary for converting between coded names and long names, with long
+names as keys and codes as values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.get_phylo_class_csv">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">get_phylo_class_csv</code><span class="sig-paren">(</span><em>outdirpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#get_phylo_class_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.get_phylo_class_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a phylo_class output directory, return the path to the full
+summary file contained in the directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.get_phylo_class_logfile_path">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">get_phylo_class_logfile_path</code><span class="sig-paren">(</span><em>phylo_class_outdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#get_phylo_class_logfile_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.get_phylo_class_logfile_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a log file path given an output directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.place_one_seq_record">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">place_one_seq_record</code><span class="sig-paren">(</span><em>ali_num</em>, <em>record</em>, <em>model</em>, <em>outdirpath1</em>, <em>summary_csv_fp</em>, <em>summary_header_line</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#place_one_seq_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.place_one_seq_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classify one sequence.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.polyt_model_backbone">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">polyt_model_backbone</code><span class="sig-paren">(</span><em>model_name</em>, <em>outfilepath=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#polyt_model_backbone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.polyt_model_backbone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a tree and make internal branches/nodes outside specified clades of
+interest into a polytomy.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.quote_tree">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">quote_tree</code><span class="sig-paren">(</span><em>intree</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#quote_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.quote_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add quotation marks around long names in tree.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.uncode_tree">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">uncode_tree</code><span class="sig-paren">(</span><em>intreefp</em>, <em>outtreefp</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#uncode_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.uncode_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Code names in a tree file, given a conversion table. Without parsing
+with ete3.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.uncode_tree_obj">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">uncode_tree_obj</code><span class="sig-paren">(</span><em>intreeobj</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#uncode_tree_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.uncode_tree_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uncode names in a tree, given a conversion table.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_phylo_clas.write_phylo_class_to_csv">
+<code class="descclassname">module_amoebae_phylo_clas.</code><code class="descname">write_phylo_class_to_csv</code><span class="sig-paren">(</span><em>phylo_class_id</em>, <em>outdir</em>, <em>csv_file</em>, <em>max_pvalue</em>, <em>timestamp</em>, <em>output_csv_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_phylo_clas.html#write_phylo_class_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_phylo_clas.write_phylo_class_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse output of a forward search (from running the fwd_srch command of
+amoebae) and append rows to input csv with information for interpreting
+the forward results.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_amoebae_nex_to_hmm.html"
+                        title="previous chapter">module_amoebae_nex_to_hmm module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_amoebae_plot.html"
+                        title="next chapter">module_amoebae_plot module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_plot.html" title="module_amoebae_plot module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_nex_to_hmm.html" title="module_amoebae_nex_to_hmm module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

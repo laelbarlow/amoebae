@@ -1,0 +1,269 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_paralogue_counter module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_search_scaffolds module" href="module_search_scaffolds.html" />
+    <link rel="prev" title="module_nhmmer_scaffolds module" href="module_nhmmer_scaffolds.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_search_scaffolds.html" title="module_search_scaffolds module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_nhmmer_scaffolds.html" title="module_nhmmer_scaffolds module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_paralogue_counter">
+<span id="module-paralogue-counter-module"></span><h1>module_paralogue_counter module<a class="headerlink" href="#module-module_paralogue_counter" title="Permalink to this headline">¶</a></h1>
+<p>This module contains functions to be used in the paralogue_counter.py
+script (or other scripts).</p>
+<dl class="function">
+<dt id="module_paralogue_counter.add_alignment_column">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">add_alignment_column</code><span class="sig-paren">(</span><em>incsv</em>, <em>outcsv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#add_alignment_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.add_alignment_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a column to the input csv spreadsheet which lists the alignment file
+name to use.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.add_model_column">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">add_model_column</code><span class="sig-paren">(</span><em>incsv</em>, <em>outcsv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#add_model_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.add_model_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a column to the input csv spreadsheet which lists the alignment file
+name to use.</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a><a href="#id3"><span class="problematic" id="id4">*</span></a>Very similar to the add_alignment_to_column function defined above.
+<a href="#id5"><span class="problematic" id="id6">**</span></a><a href="#id7"><span class="problematic" id="id8">*</span></a>Not yet customized for purpose!</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.add_seq_to_alignment2">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">add_seq_to_alignment2</code><span class="sig-paren">(</span><em>inseqobj</em>, <em>innexpath</em>, <em>outnexpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#add_seq_to_alignment2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.add_seq_to_alignment2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a sequence and adds it to an alignment.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.add_seq_to_alignment3">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">add_seq_to_alignment3</code><span class="sig-paren">(</span><em>inseqobj</em>, <em>innexpath</em>, <em>outnexpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#add_seq_to_alignment3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.add_seq_to_alignment3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a sequence and adds it to an alignment. Make sure that the
+sequence header is formatted correctly (e.g., use modify_seq_descr_for_tree
+function).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.check_for_redundant_seq_names">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">check_for_redundant_seq_names</code><span class="sig-paren">(</span><em>alignment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#check_for_redundant_seq_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.check_for_redundant_seq_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an alignment, and assert that there are no sequences with identical
+names in the alignment.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.count_paralogues">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">count_paralogues</code><span class="sig-paren">(</span><em>alignment</em>, <em>fasta</em>, <em>fwdeval</em>, <em>identity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#count_paralogues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.count_paralogues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manage input and output details.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.count_paralogues2">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">count_paralogues2</code><span class="sig-paren">(</span><em>csv_file</em>, <em>alignmentdir</em>, <em>fastadir</em>, <em>fwdeval</em>, <em>metric_name</em>, <em>metric_value_minimum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#count_paralogues2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.count_paralogues2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manage input and output details.
+fwdeval not used?</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.count_paralogues3">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">count_paralogues3</code><span class="sig-paren">(</span><em>csv_file</em>, <em>metric_name</em>, <em>metric_value_minimum</em>, <em>minimum_percent_similarity</em>, <em>timestamp</em>, <em>overlap_required</em>, <em>minimum_length_of_query_to_be_distinct_paralogue</em>, <em>minimum_percent_length_of_query_to_be_distinct_paralogue</em>, <em>remove_tblastn_hits_at_annotated_loci</em>, <em>outfp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#count_paralogues3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.count_paralogues3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manage input and output details.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.find_redun_model_recursively">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">find_redun_model_recursively</code><span class="sig-paren">(</span><em>outdir</em>, <em>cur_ali_num</em>, <em>inali</em>, <em>ranked_seq_objs</em>, <em>redundant_gene_model_dict</em>, <em>metric_name</em>, <em>metric_value_minimum</em>, <em>minimum_percent_similarity</em>, <em>extra_info_dict</em>, <em>overlap_required</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#find_redun_model_recursively"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.find_redun_model_recursively" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively process sequence objects, classifying them into groups of
+redundant predictions for single loci/alleles.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>info_tuple = (index,</dt>
+<dd>acc,
+seq_obj,
+evalue, 
+program,
+percent_len,
+hit_range,
+actual_acc,
+sequence_filename
+)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.get_all_comparison_output_filepath">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">get_all_comparison_output_filepath</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#get_all_comparison_output_filepath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.get_all_comparison_output_filepath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define path for output file (csv format) that lists all sequence
+comparisons made, and their details.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.get_cur_ali_num">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">get_cur_ali_num</code><span class="sig-paren">(</span><em>alignmentdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#get_cur_ali_num"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.get_cur_ali_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets number of alignment with largest number in its filename.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.get_overlapping_genes_from_gff3">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">get_overlapping_genes_from_gff3</code><span class="sig-paren">(</span><em>sql_database</em>, <em>seq_id</em>, <em>cluster_range</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#get_overlapping_genes_from_gff3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.get_overlapping_genes_from_gff3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a path to a gffutils SQL database (based on a gff3 file), the
+sequence id for the relevant sequnce referred to in the gff file, and a
+range (coordinates in the form of a list object with two items). And,
+return IDs for any genes that fall within that range on the sequence. This
+is for determining whether tblastn hits correspond to already annotated
+protein sequences.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.get_percent_identity">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">get_percent_identity</code><span class="sig-paren">(</span><em>inali</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#get_percent_identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.get_percent_identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an alignment, and return the percent identity between the last two
+sequences in an alignment.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.get_seq_obj_x">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">get_seq_obj_x</code><span class="sig-paren">(</span><em>acc_list</em>, <em>fastadir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#get_seq_obj_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.get_seq_obj_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an accession and find the corresponding sequence in fasta file(s)
+in a given directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.get_seq_obj_x2">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">get_seq_obj_x2</code><span class="sig-paren">(</span><em>acc_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#get_seq_obj_x2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.get_seq_obj_x2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a list of accessions and find the corresponding sequence in fasta file(s)
+in a given directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.get_sequence_comparison_dict">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">get_sequence_comparison_dict</code><span class="sig-paren">(</span><em>inali</em>, <em>score_df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#get_sequence_comparison_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.get_sequence_comparison_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an alignment in nexus format and determines if the last two
+sequences overlap, etc.</p>
+<p>Overlap could be defined in various ways, depending on what is relevant…</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.get_sig_overlap">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">get_sig_overlap</code><span class="sig-paren">(</span><em>inali</em>, <em>score_df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#get_sig_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.get_sig_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if there is significant overlap between two sequences in an
+alignment.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.modify_seq_descr_for_tree">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">modify_seq_descr_for_tree</code><span class="sig-paren">(</span><em>inseqobj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#modify_seq_descr_for_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.modify_seq_descr_for_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a SeqIO sequence object, and modify the header for easy parsing in
+alignment and tree files.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.rank_seqs_by_hmm">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">rank_seqs_by_hmm</code><span class="sig-paren">(</span><em>inali</em>, <em>inseqs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#rank_seqs_by_hmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.rank_seqs_by_hmm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an HMM and fasta sequences, and ranks the sequences according to
+similarity to the HMM, outputting a list of Bio.SeqIO sequence objects.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_paralogue_counter.remove_irrelevant_data_from_alignment">
+<code class="descclassname">module_paralogue_counter.</code><code class="descname">remove_irrelevant_data_from_alignment</code><span class="sig-paren">(</span><em>ali_plus_top_seq_plus_1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_paralogue_counter.html#remove_irrelevant_data_from_alignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_paralogue_counter.remove_irrelevant_data_from_alignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all but the last two sequences, and remove all the positions that
+only contain gaps.</p>
+<p><a href="#id9"><span class="problematic" id="id10">**</span></a><a href="#id11"><span class="problematic" id="id12">*</span></a>This function is not in use, because as currently written it will crash
+the computer. I don’t know why.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_nhmmer_scaffolds.html"
+                        title="previous chapter">module_nhmmer_scaffolds module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_search_scaffolds.html"
+                        title="next chapter">module_search_scaffolds module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_search_scaffolds.html" title="module_search_scaffolds module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_nhmmer_scaffolds.html" title="module_nhmmer_scaffolds module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

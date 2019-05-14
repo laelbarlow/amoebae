@@ -1,0 +1,252 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>test_module_nhmmer_scaffolds &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for test_module_nhmmer_scaffolds</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;For testing functions in module_nhmmer_scaffolds.py using unittest.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    test_module_nhmmer_scaffolds.py</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="s1">&#39;amoebaelib&#39;</span><span class="p">))</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">module_nhmmer_scaffolds</span>
+
+<span class="c1"># Google &quot;mocking&quot; for testing</span>
+
+<div class="viewcode-block" id="TestNhmmerScaffolds"><a class="viewcode-back" href="../test_module_nhmmer_scaffolds.html#test_module_nhmmer_scaffolds.TestNhmmerScaffolds">[docs]</a><span class="k">class</span> <span class="nc">TestNhmmerScaffolds</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestNhmmerScaffolds.test_frameify_seq"><a class="viewcode-back" href="../test_module_nhmmer_scaffolds.html#test_module_nhmmer_scaffolds.TestNhmmerScaffolds.test_frameify_seq">[docs]</a>    <span class="k">def</span> <span class="nf">test_frameify_seq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">inseq1</span> <span class="o">=</span> <span class="s1">&#39;ATGATGATG&#39;</span>
+        <span class="n">hmmfrom1</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+        <span class="n">result1</span> <span class="o">=</span> <span class="s1">&#39;ATGATGATG&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">module_nhmmer_scaffolds</span><span class="o">.</span><span class="n">frameify_seq</span><span class="p">(</span><span class="n">inseq1</span><span class="p">,</span> <span class="n">hmmfrom1</span><span class="p">),</span>
+                <span class="n">result1</span><span class="p">)</span>
+
+        <span class="n">inseq2</span> <span class="o">=</span> <span class="s1">&#39;TGATGATG&#39;</span>
+        <span class="n">hmmfrom2</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span>
+        <span class="n">result2</span> <span class="o">=</span> <span class="s1">&#39;ATGATG&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">module_nhmmer_scaffolds</span><span class="o">.</span><span class="n">frameify_seq</span><span class="p">(</span><span class="n">inseq2</span><span class="p">,</span> <span class="n">hmmfrom2</span><span class="p">),</span>
+                <span class="n">result2</span><span class="p">)</span>
+
+        <span class="n">inseq3</span> <span class="o">=</span> <span class="s1">&#39;GATGATG&#39;</span>
+        <span class="n">hmmfrom3</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
+        <span class="n">result3</span> <span class="o">=</span> <span class="s1">&#39;ATGATG&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">module_nhmmer_scaffolds</span><span class="o">.</span><span class="n">frameify_seq</span><span class="p">(</span><span class="n">inseq3</span><span class="p">,</span> <span class="n">hmmfrom3</span><span class="p">),</span>
+                <span class="n">result3</span><span class="p">)</span></div></div>
+
+    <span class="c1">#def test_check_for_duplicate_ranges(self):</span>
+    <span class="c1">#    tuple_list1 = [(10,11),(10,11)]</span>
+    <span class="c1">#    tuple_list2 = [(0,11),(10,11)]</span>
+    <span class="c1">#    self.assertTrue(module_search_scaffolds.check_for_duplicate_ranges(tuple_list1))</span>
+    <span class="c1">#    self.assertFalse(module_search_scaffolds.check_for_duplicate_ranges(tuple_list2))</span>
+
+
+    <span class="c1">#def test_sort_left_ranges(self):</span>
+    <span class="c1">#    range_list1 = [(1,10),(11,20)]</span>
+    <span class="c1">#    result1 = [(11,20),(1,10)]</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.sort_left_ranges(range_list1), result1)</span>
+
+
+    <span class="c1">#def test_sort_right_ranges(self):</span>
+    <span class="c1">#    range_list1 = [(11,20),(1,10)]</span>
+    <span class="c1">#    result1 = [(1,10),(11,20)]</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.sort_right_ranges(range_list1), result1)</span>
+
+
+    <span class="c1">#def test_reduce_left_ranges(self):</span>
+    <span class="c1">#    # Test for inclusion of ranges within maximum gap.</span>
+    <span class="c1">#    sorted_left_ranges = [(51,70),(31,40),(11,20)]</span>
+    <span class="c1">#    top_hsp_range = (81,100)</span>
+    <span class="c1">#    max_gap = 15</span>
+    <span class="c1">#    result1 = [(51,70),(31,40),(11,20)]        </span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.reduce_left_ranges(sorted_left_ranges,</span>
+    <span class="c1">#        top_hsp_range, max_gap), result1)</span>
+
+    <span class="c1">#    # Test for exclusion of ranges outside maximum gap.</span>
+    <span class="c1">#    sorted_left_ranges = [(51,70),(31,40),(11,20)]</span>
+    <span class="c1">#    top_hsp_range = (81,100)</span>
+    <span class="c1">#    max_gap = 5</span>
+    <span class="c1">#    result1 = []</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.reduce_left_ranges(sorted_left_ranges,</span>
+    <span class="c1">#        top_hsp_range, max_gap), result1)</span>
+
+    <span class="c1">#    # Test for exclusion of overlapping ranges.</span>
+    <span class="c1">#    sorted_left_ranges = [(51,82),(31,52),(11,32)]</span>
+    <span class="c1">#    top_hsp_range = (81,100)</span>
+    <span class="c1">#    max_gap = 15</span>
+    <span class="c1">#    result1 = []</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.reduce_left_ranges(sorted_left_ranges,</span>
+    <span class="c1">#        top_hsp_range, max_gap), result1)</span>
+
+    <span class="c1">#    # Test for correct measurement of maximum gap length.</span>
+    <span class="c1">#    sorted_left_ranges = [(1,2)]</span>
+    <span class="c1">#    top_hsp_range = (3,4)</span>
+    <span class="c1">#    max_gap = 0</span>
+    <span class="c1">#    result1 = [(1,2)]</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.reduce_left_ranges(sorted_left_ranges,</span>
+    <span class="c1">#        top_hsp_range, max_gap), result1)</span>
+
+
+    <span class="c1">#def test_reduce_right_ranges(self):</span>
+    <span class="c1">#    # Test for inclusion of ranges within maximum gap.</span>
+    <span class="c1">#    sorted_right_ranges = [(21,30),(41,60),(71,90)]        </span>
+    <span class="c1">#    top_hsp_range = (1,10)</span>
+    <span class="c1">#    max_gap = 15</span>
+    <span class="c1">#    result1 = [(21,30),(41,60),(71,90)]        </span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.reduce_right_ranges(sorted_right_ranges,</span>
+    <span class="c1">#        top_hsp_range, max_gap), result1)</span>
+
+    <span class="c1">#    # Test for exclusion of ranges outside maximum gap.</span>
+    <span class="c1">#    sorted_right_ranges = [(21,30),(41,60),(71,90)]        </span>
+    <span class="c1">#    top_hsp_range = (1,10)</span>
+    <span class="c1">#    max_gap = 5</span>
+    <span class="c1">#    result1 = []</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.reduce_right_ranges(sorted_right_ranges,</span>
+    <span class="c1">#        top_hsp_range, max_gap), result1)</span>
+
+    <span class="c1">#    # Test for exclusion of overlapping ranges.</span>
+    <span class="c1">#    sorted_right_ranges = [(21,42),(41,72),(71,90)]        </span>
+    <span class="c1">#    top_hsp_range = (1,22)</span>
+    <span class="c1">#    max_gap = 15</span>
+    <span class="c1">#    result1 = []</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.reduce_right_ranges(sorted_right_ranges,</span>
+    <span class="c1">#        top_hsp_range, max_gap), result1)</span>
+
+    <span class="c1">#    # Test for correct measurement of maximum gap length. </span>
+    <span class="c1">#    sorted_right_ranges = [(3,4)]        </span>
+    <span class="c1">#    top_hsp_range = (1,2)</span>
+    <span class="c1">#    max_gap = 0</span>
+    <span class="c1">#    result1 = [(3,4)]</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.reduce_right_ranges(sorted_right_ranges,</span>
+    <span class="c1">#        top_hsp_range, max_gap), result1)</span>
+
+
+    <span class="c1">#def test_get_proximate_hsp_ranges(self):</span>
+    <span class="c1">#    #range_list1 = [(1,10),(11,20),(21,30),(31,40),(41,60),(51,70),(61,80),(71,90),(81,100),(91,110)]</span>
+
+    <span class="c1">#    # Test whether it can handle ranges that do not overlap, and are spaced</span>
+    <span class="c1">#    # closer than the maximum gap.</span>
+    <span class="c1">#    range_list2 = [(1,10),(21,30),(41,60),(81,100),(121,140)]</span>
+    <span class="c1">#    top_hsp_range1 = (41,60)</span>
+    <span class="c1">#    result1 = [(1,10),(21,30),(41,60),(81,100),(121,140)]</span>
+    <span class="c1">#    max_gap1 = 10</span>
+
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.get_proximate_hsp_ranges(range_list2,</span>
+    <span class="c1">#        top_hsp_range1, max_gap1), result1)</span>
+
+    <span class="c1">#    # Test whether it will properly handle gaps larger than the maximum.</span>
+    <span class="c1">#    range_list2 = [(1,10),(21,30),(41,60),(81,100),(121,140)]</span>
+    <span class="c1">#    top_hsp_range1 = (41,60)</span>
+    <span class="c1">#    max_gap2 = 5</span>
+    <span class="c1">#    result2 = [(41,60)]</span>
+    <span class="c1">#    self.assertEqual(module_search_scaffolds.get_proximate_hsp_ranges(range_list2,</span>
+    <span class="c1">#        top_hsp_range1, max_gap2), result2)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

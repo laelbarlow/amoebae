@@ -1,0 +1,306 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_add_to_queries &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_add_to_queries</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module for script: amoebae.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Import built-in modules.</span>
+<span class="c1">#import argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="c1">#import re</span>
+<span class="c1">#import settings</span>
+<span class="c1">#import shutil</span>
+<span class="c1">#import glob</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Import modules from installed libraries/packages.</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+<span class="c1">#from Bio import AlignIO</span>
+<span class="c1">#from Bio.Alphabet import IUPAC, Gapped</span>
+
+<span class="kn">import</span> <span class="nn">module_amoebae</span>
+<span class="kn">from</span> <span class="nn">module_amoebae_get_datatype</span> <span class="k">import</span> <span class="n">get_dbtype</span>
+
+
+<span class="c1"># Define functions to be used in amoebae.</span>
+
+
+<div class="viewcode-block" id="get_query_file_type"><a class="viewcode-back" href="../module_add_to_queries.html#module_add_to_queries.get_query_file_type">[docs]</a><span class="k">def</span> <span class="nf">get_query_file_type</span><span class="p">(</span><span class="n">query_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes an input query file and determines whether it is a FASTA file or</span>
+<span class="sd">    an HMM file. Returns either &quot;FASTA&quot; or &quot;HMM&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">query_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="n">first_line</span> <span class="o">=</span> <span class="n">infh</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">first_line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">):</span>
+            <span class="n">file_type</span> <span class="o">=</span> <span class="s1">&#39;FASTA&#39;</span>
+        <span class="k">elif</span> <span class="n">first_line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;HMM&#39;</span><span class="p">):</span>
+            <span class="n">file_type</span> <span class="o">=</span> <span class="s1">&#39;HMM&#39;</span>
+
+    <span class="c1"># Check that it worked.</span>
+    <span class="k">assert</span> <span class="n">file_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Error: Input file type could not be</span>
+<span class="s2">    determined: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">query_file</span>
+
+    <span class="c1"># Return file type.</span>
+    <span class="k">return</span> <span class="n">file_type</span></div>
+
+
+<div class="viewcode-block" id="get_hmm_datatype"><a class="viewcode-back" href="../module_add_to_queries.html#module_add_to_queries.get_hmm_datatype">[docs]</a><span class="k">def</span> <span class="nf">get_hmm_datatype</span><span class="p">(</span><span class="n">query_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes an HMM file (HMMer3 software package) and determines what data</span>
+<span class="sd">    type it has (i.e., generated from an amino acid or nucleic acid alignment).</span>
+
+<span class="sd">    Returns either &quot;prot&quot; or &quot;nucl&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">datatype</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">query_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;ALPH&#39;</span><span class="p">):</span>
+                <span class="n">dname</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">dname</span> <span class="o">==</span> <span class="s1">&#39;amino&#39;</span><span class="p">:</span>
+                    <span class="n">datatype</span> <span class="o">=</span> <span class="s1">&#39;prot&#39;</span>
+                <span class="k">elif</span> <span class="n">dname</span> <span class="o">==</span> <span class="s1">&#39;DNA&#39;</span><span class="p">:</span>
+                    <span class="n">datatype</span> <span class="o">=</span> <span class="s1">&#39;nucl&#39;</span>
+                <span class="k">break</span>
+
+    <span class="c1"># Check that it worked.</span>
+    <span class="k">assert</span> <span class="n">datatype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Error: Data type could not be</span>
+<span class="s2">    determined for input file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">query_file</span>
+
+    <span class="c1"># Return the data type.</span>
+    <span class="k">return</span> <span class="n">datatype</span></div>
+
+
+<div class="viewcode-block" id="get_mod_query_path"><a class="viewcode-back" href="../module_add_to_queries.html#module_add_to_queries.get_mod_query_path">[docs]</a><span class="k">def</span> <span class="nf">get_mod_query_path</span><span class="p">(</span><span class="n">query_file</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">query_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Define a new query path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exten</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">filetype</span> <span class="o">==</span> <span class="s1">&#39;fa&#39;</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;prot&#39;</span><span class="p">:</span>
+            <span class="n">exten</span> <span class="o">=</span> <span class="s1">&#39;faa&#39;</span>
+        <span class="k">elif</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;nucl&#39;</span><span class="p">:</span>
+            <span class="n">exten</span> <span class="o">=</span> <span class="s1">&#39;fna&#39;</span>
+    <span class="k">elif</span> <span class="n">filetype</span> <span class="o">==</span> <span class="s1">&#39;afa&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;prot&#39;</span><span class="p">:</span>
+            <span class="n">exten</span> <span class="o">=</span> <span class="s1">&#39;afaa&#39;</span>
+        <span class="k">elif</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;nucl&#39;</span><span class="p">:</span>
+            <span class="n">extenn</span> <span class="o">=</span> <span class="s1">&#39;afna&#39;</span>
+
+    <span class="c1"># Check that it worked.</span>
+    <span class="k">assert</span> <span class="n">exten</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Error: New extension could not be</span>
+<span class="s2">    determined for input file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">query_file</span>
+
+    <span class="c1"># Define basename with new extension.</span>
+    <span class="n">query_file_new_exten</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">query_file</span><span class="p">)</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>\
+    <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">exten</span>
+
+    <span class="c1"># Get new path.</span>
+    <span class="n">new_query_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">query_dir</span><span class="p">,</span> <span class="n">query_file_new_exten</span><span class="p">)</span>
+
+    <span class="c1"># Return the new path.</span>
+    <span class="k">return</span> <span class="n">new_query_file_path</span></div>
+
+
+<div class="viewcode-block" id="is_single_fasta"><a class="viewcode-back" href="../module_add_to_queries.html#module_add_to_queries.is_single_fasta">[docs]</a><span class="k">def</span> <span class="nf">is_single_fasta</span><span class="p">(</span><span class="n">query_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return True if the given fasta file contains only one sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">single</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">num_seqs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">query_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">query_file</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+            <span class="n">num_seqs</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">num_seqs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">single</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">single</span></div>
+
+
+<div class="viewcode-block" id="fasta_seqs_all_same_len"><a class="viewcode-back" href="../module_add_to_queries.html#module_add_to_queries.fasta_seqs_all_same_len">[docs]</a><span class="k">def</span> <span class="nf">fasta_seqs_all_same_len</span><span class="p">(</span><span class="n">query_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns True if the sequences in a given fasta file are all the same</span>
+<span class="sd">    length.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seq_lengths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">query_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">infh</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+            <span class="n">seq_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+    <span class="c1"># If the sequences are the same length, then a nonredundant list of</span>
+    <span class="c1"># sequence lengths will only contain one element.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">seq_lengths</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="update_query_csv"><a class="viewcode-back" href="../module_add_to_queries.html#module_add_to_queries.update_query_csv">[docs]</a><span class="k">def</span> <span class="nf">update_query_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">mod_query_path</span><span class="p">,</span> <span class="n">datatype</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Appends a line to the given spreadsheet with info about the given fasta</span>
+<span class="sd">    file added to a directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define column headers.</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Filename&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;Query title&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;Query source description&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;Query taxon (species if applicable)&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;Query database filename (if applicable)&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;File type&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;Data type&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;Date added&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;Citation&#39;</span>
+               <span class="p">]</span>
+
+    <span class="c1"># Make new csv file if necessary.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">csv_file</span><span class="p">):</span>
+        <span class="c1">#df = pd.DataFrame(columns=headers)</span>
+        <span class="c1">#df.to_csv(csv_file) #, index_label=&#39;Filename&#39;)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">headers</span><span class="p">))</span> <span class="c1"># + &#39;\n&#39;)</span>
+
+    <span class="c1"># Load dataframe from csv file.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span> <span class="c1">#, index_col=&#39;Filename&#39;)</span>
+
+    <span class="c1"># Get current date.</span>
+    <span class="n">cur_date</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get query filename and extension.</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mod_query_path</span><span class="p">)</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">full</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">exten</span> <span class="o">=</span> <span class="n">full</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Get query basename.</span>
+    <span class="n">query_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mod_query_path</span><span class="p">)</span>
+
+    <span class="c1"># Get query title name.</span>
+    <span class="n">query_title</span> <span class="o">=</span> <span class="n">query_basename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Get query taxon name.</span>
+    <span class="c1"># Assumes that there is an accession or something else after the &quot;taxon&quot; in</span>
+    <span class="c1"># the query file name.</span>
+    <span class="n">taxon</span> <span class="o">=</span> <span class="n">module_amoebae</span><span class="o">.</span><span class="n">get_query_taxon_from_filename</span><span class="p">(</span><span class="n">query_basename</span><span class="p">)</span>
+
+    <span class="c1"># Initiate dataframe for line to append.</span>
+    <span class="n">new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+    <span class="c1"># Add info to new row.</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;???&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_basename</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Query title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_title</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Query source description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">taxon</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Query taxon (species if applicable)&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">module_amoebae</span><span class="o">.</span><span class="n">get_species_from_db_csv</span><span class="p">(</span><span class="n">taxon</span><span class="p">)</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Data type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datatype</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;File type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exten</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Date added&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cur_date</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Citation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;?&#39;</span>
+    <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Query database filename (if applicable)&#39;</span><span class="p">]</span> <span class="o">=</span>\
+    <span class="n">module_amoebae</span><span class="o">.</span><span class="n">get_db_filename_for_query_from_db_csv</span><span class="p">(</span><span class="n">taxon</span><span class="p">)</span>
+    <span class="c1"># Check that it worked.</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="s1">&#39;???&#39;</span> <span class="ow">in</span> <span class="n">new_row</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;&quot;&quot;Could not add all the necessary info</span>
+<span class="s2">    to the query info spreadsheet for query file:</span><span class="se">\n\t</span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">mod_query_path</span>
+
+    <span class="c1"># Append new row to dataframe.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_row</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Write updated dataframe to csv file.</span>
+    <span class="c1">#df[1:].to_csv(csv_file) </span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> </div>
+
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

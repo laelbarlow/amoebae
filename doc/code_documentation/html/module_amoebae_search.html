@@ -1,0 +1,265 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_search module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_amoebae_srchresfile module" href="module_amoebae_srchresfile.html" />
+    <link rel="prev" title="module_amoebae_scrollsaw module" href="module_amoebae_scrollsaw.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_srchresfile.html" title="module_amoebae_srchresfile module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_scrollsaw.html" title="module_amoebae_scrollsaw module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_amoebae_search">
+<span id="module-amoebae-search-module"></span><h1>module_amoebae_search module<a class="headerlink" href="#module-module_amoebae_search" title="Permalink to this headline">¶</a></h1>
+<p>Module for functions for amoebae script that are for performing
+similarity searches and parsing the output.</p>
+<dl class="function">
+<dt id="module_amoebae_search.fwd_search_results_to_csv">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">fwd_search_results_to_csv</code><span class="sig-paren">(</span><em>search_outdir</em>, <em>csv_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#fwd_search_results_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.fwd_search_results_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse forward search output files and add a summary of the results to
+a csv file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_corr_evalue">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_corr_evalue</code><span class="sig-paren">(</span><em>evalue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_corr_evalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_corr_evalue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_csv_with_rev_path">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_csv_with_rev_path</code><span class="sig-paren">(</span><em>csv_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_csv_with_rev_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_csv_with_rev_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a csv file path and returns the name for a new version of the
+file, after addition of columns with info about reverse search results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_evaldiff">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_evaldiff</code><span class="sig-paren">(</span><em>evalue1</em>, <em>evalue2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_evaldiff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_evaldiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return absolute value of the order of magnitude evalue difference for
+two given E-values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_hit_obj_for_hsp_cluster">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_hit_obj_for_hsp_cluster</code><span class="sig-paren">(</span><em>query_res_obj</em>, <em>cluster</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_hit_obj_for_hsp_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_hit_obj_for_hsp_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a SearchIO QueryResult object and a list of HSPs, and return the
+Hit object from the QueryResult object that contains the HSPs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_query_len">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_query_len</code><span class="sig-paren">(</span><em>query_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_query_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_query_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a query filename, gets the full path, get the query type, and
+returns the query length (assumes fasta, because even for HMMer searches
+the query listed will be .afaa).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_redun_hit_dict">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_redun_hit_dict</code><span class="sig-paren">(</span><em>redun_hit_csv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_redun_hit_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_redun_hit_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a csv file listing redundant hits, and returns a nested dictionary
+with the structure:
+Query title &gt; query filename &gt; database filename &gt; [redun hit accs]</p>
+<p>Only works with information from searches into sequence data, not profile
+databases.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_redun_hits_in_dbs">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_redun_hits_in_dbs</code><span class="sig-paren">(</span><em>query_title</em>, <em>query_file_list</em>, <em>db_file_list</em>, <em>csv_file</em>, <em>outdir</em>, <em>timestamp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_redun_hits_in_dbs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_redun_hits_in_dbs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds all items (sequences or profiles) in each given database file
+(fasta or hmm databases) that may be positive hits for query title (e.g.,
+‘VAMP7’ or ‘R-SNAREs’) for each given query file (sequence or profile) and
+appends a record of these hits to a given spreadsheet file path for later
+manual annotation to distinguish positive(redundant) hits from negative
+hits.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_rev_queries">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_rev_queries</code><span class="sig-paren">(</span><em>csv_file</em>, <em>query_subdir</em>, <em>aasubseq</em>, <em>nafullseq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_rev_queries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_rev_queries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a summary of forward search results, extract sequences to use as
+reverse search queries, write them to output files in a given directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_rev_query_path_from_fwd_srch_row">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_rev_query_path_from_fwd_srch_row</code><span class="sig-paren">(</span><em>query_subdir</em>, <em>df_row</em>, <em>aasubseq=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_rev_query_path_from_fwd_srch_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_rev_query_path_from_fwd_srch_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a path for a directory containing reverse search queries (or to
+write such files to), and a row from a forward search summary csv parsed
+with pandas, and returns a path for the corresponding reverse search query
+file to be written or read.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_rows_for_fwd_srch_df">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_rows_for_fwd_srch_df</code><span class="sig-paren">(</span><em>df</em>, <em>q</em>, <em>d</em>, <em>search_result_path</em>, <em>column_label_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_rows_for_fwd_srch_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_rows_for_fwd_srch_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses search result file and adds a corresponding row to an output
+pandas dataframe.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_search_output_file_type">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_search_output_file_type</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_search_output_file_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_search_output_file_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a search output file and return the name of the program that was
+used to generate it (and perhaps the format style).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_search_software_version">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_search_software_version</code><span class="sig-paren">(</span><em>method</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_search_software_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_search_software_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses output from running the -h option to find what version a given
+program is.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.get_subsequences_matching_query">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">get_subsequences_matching_query</code><span class="sig-paren">(</span><em>hit_obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#get_subsequences_matching_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.get_subsequences_matching_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a SearchIO hit object, and returns a list with the first element
+being a string representing the coordinates of the query to which the
+subject sequence aligns, and the second being the corresponding subject
+subsequence(s).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.intersect">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">intersect</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#intersect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the intersection of two lists</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.write_fwd_srch_interp_csv">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">write_fwd_srch_interp_csv</code><span class="sig-paren">(</span><em>csv_file</em>, <em>outfp</em>, <em>score_cutoff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#write_fwd_srch_interp_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.write_fwd_srch_interp_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a csv file and write a new one with an additional column with
+interpretation of which forward search results are positive based on all
+the reverse search results performed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.write_fwd_srch_res_to_csv">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">write_fwd_srch_res_to_csv</code><span class="sig-paren">(</span><em>outdir</em>, <em>query_file_list</em>, <em>db_file_list</em>, <em>csv_file</em>, <em>timestamp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#write_fwd_srch_res_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.write_fwd_srch_res_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse output of a forward search (from running the fwd_srch command of
+amoebae) and append rows to input csv with information for interpreting
+the forward results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.write_interp_csv">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">write_interp_csv</code><span class="sig-paren">(</span><em>csv_file</em>, <em>outfp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#write_interp_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.write_interp_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a csv file and write a new one with an additional column with
+interpretation of which forward search results are positive based on all
+the reverse search results performed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.write_redun_hit_interp_csv">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">write_redun_hit_interp_csv</code><span class="sig-paren">(</span><em>csv_file</em>, <em>outfp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#write_redun_hit_interp_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.write_redun_hit_interp_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a csv file and write a new one with an additional column with
+interpretation of which forward search results redundant for the query.</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a><a href="#id3"><span class="problematic" id="id4">*</span></a>This currently very inefficient.</p>
+<p><a href="#id5"><span class="problematic" id="id6">**</span></a><a href="#id7"><span class="problematic" id="id8">*</span></a>Currently assumes that different query titles refer to
+non-overlapping/non-nested sets of related proteins.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_search.write_rev_srch_res_to_csv">
+<code class="descclassname">module_amoebae_search.</code><code class="descname">write_rev_srch_res_to_csv</code><span class="sig-paren">(</span><em>rev_srch_id</em>, <em>outdir</em>, <em>query_file_list</em>, <em>db_file</em>, <em>csv_file</em>, <em>redun_hit_csv</em>, <em>min_evaldiff</em>, <em>timestamp</em>, <em>aasubseq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_search.html#write_rev_srch_res_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_search.write_rev_srch_res_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse output of a forward search (from running the fwd_srch command of
+amoebae) and append rows to input csv with information for interpreting
+the forward results.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_amoebae_scrollsaw.html"
+                        title="previous chapter">module_amoebae_scrollsaw module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_amoebae_srchresfile.html"
+                        title="next chapter">module_amoebae_srchresfile module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_srchresfile.html" title="module_amoebae_srchresfile module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_scrollsaw.html" title="module_amoebae_scrollsaw module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,149 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_afa_to_nex module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_amoebae module" href="module_amoebae.html" />
+    <link rel="prev" title="module_add_to_queries_test module" href="module_add_to_queries_test.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae.html" title="module_amoebae module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_add_to_queries_test.html" title="module_add_to_queries_test module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_afa_to_nex">
+<span id="module-afa-to-nex-module"></span><h1>module_afa_to_nex module<a class="headerlink" href="#module-module_afa_to_nex" title="Permalink to this headline">¶</a></h1>
+<p>This module is for afa_to_nex.py script and others, which use the same
+functions.</p>
+<dl class="function">
+<dt id="module_afa_to_nex.afa_to_nex">
+<code class="descclassname">module_afa_to_nex.</code><code class="descname">afa_to_nex</code><span class="sig-paren">(</span><em>infilepath</em>, <em>outfilepath=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_afa_to_nex.html#afa_to_nex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_afa_to_nex.afa_to_nex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an aligned fasta file (protein) and writes a nexus format file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_afa_to_nex.delete_extra_mesquite_lines">
+<code class="descclassname">module_afa_to_nex.</code><code class="descname">delete_extra_mesquite_lines</code><span class="sig-paren">(</span><em>infilepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_afa_to_nex.html#delete_extra_mesquite_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_afa_to_nex.delete_extra_mesquite_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove extra blocks added by Mesquite, if present.  This prevents
+Biopython from raising an error about an unmatched ‘end’ in one of the
+nexus blocks.  The extra blocks are not necessary anyway.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_afa_to_nex.determine_alphabet">
+<code class="descclassname">module_afa_to_nex.</code><code class="descname">determine_alphabet</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_afa_to_nex.html#determine_alphabet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_afa_to_nex.determine_alphabet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically determine what alphabet to use for a given file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_afa_to_nex.nex_to_afa">
+<code class="descclassname">module_afa_to_nex.</code><code class="descname">nex_to_afa</code><span class="sig-paren">(</span><em>infilepath</em>, <em>outfilepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_afa_to_nex.html#nex_to_afa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_afa_to_nex.nex_to_afa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a nexus file (protein) and writes an aligned fasta file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_afa_to_nex.nex_to_mbnex">
+<code class="descclassname">module_afa_to_nex.</code><code class="descname">nex_to_mbnex</code><span class="sig-paren">(</span><em>infilepath</em>, <em>outfilepath</em>, <em>mrbayescodeblocks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_afa_to_nex.html#nex_to_mbnex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_afa_to_nex.nex_to_mbnex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a nexus format alignment file and converts to a format for use in
+a phylogenetic analysis using MrBayes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_afa_to_nex.nex_to_phylip">
+<code class="descclassname">module_afa_to_nex.</code><code class="descname">nex_to_phylip</code><span class="sig-paren">(</span><em>infilepath</em>, <em>outfilepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_afa_to_nex.html#nex_to_phylip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_afa_to_nex.nex_to_phylip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes nexus format file and makes a phylip format file.
+Warning: Taxon names must be no more than 10 alphanumeric characters.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_add_to_queries_test.html"
+                        title="previous chapter">module_add_to_queries_test module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_amoebae.html"
+                        title="next chapter">module_amoebae module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae.html" title="module_amoebae module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_add_to_queries_test.html" title="module_add_to_queries_test module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

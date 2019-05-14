@@ -1,0 +1,918 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_plot &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_amoebae_plot</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module for functions for plotting results of analyses performed using</span>
+<span class="sd">AMOEBAE.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="c1">## Set up argument parsing.</span>
+<span class="c1">#parser = argparse.ArgumentParser(</span>
+<span class="c1">#    description = &quot;&quot;&quot;Plots results of HMMer searches.&quot;&quot;&quot;,</span>
+<span class="c1">#    epilog = r&quot;&quot;&quot;epilog&quot;&quot;&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">## Positional arguments.</span>
+<span class="c1">#parser.add_argument(&#39;input&#39;, help=&#39;Path to input file (.csv).&#39;)</span>
+<span class="c1">#parser.add_argument(&#39;output&#39;, help=&#39;Path to output file (.pdf).&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">## Optional argument for different modes.</span>
+<span class="c1">#parser.add_argument(&#39;-c&#39;, &#39;--confidence_heat_map&#39;, help=&#39;Plots percentages\</span>
+<span class="c1"># listed in csv input file.&#39;, action=&#39;store_true&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#args = parser.parse_args()</span>
+
+<div class="viewcode-block" id="get_text_label_matrix"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.get_text_label_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_text_label_matrix</span><span class="p">(</span><span class="n">odf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a dataframe with information to be plotted, and returns a matrix</span>
+<span class="sd">    of text labels for each data point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">odf1</span> <span class="o">=</span> <span class="n">odf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">row_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf1</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">column_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">row_labels</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">column_labels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">odf1</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">odf1</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
+                <span class="n">odf1</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">odf1</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">odf1</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
+                <span class="n">odf1</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">data_labels</span> <span class="o">=</span> <span class="n">odf1</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span> 
+    <span class="k">return</span> <span class="n">data_labels</span></div>
+    
+
+<div class="viewcode-block" id="get_hit_count_matrix"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.get_hit_count_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_hit_count_matrix</span><span class="p">(</span><span class="n">odf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a dataframe with information to be plotted, and returns a matrix</span>
+<span class="sd">    of hit counts for each data point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">odf2</span> <span class="o">=</span> <span class="n">odf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">row_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf2</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">column_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">row_labels</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">column_labels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">odf2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">odf2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
+                <span class="n">odf2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">odf2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">odf2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
+                <span class="n">odf2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">elif</span> <span class="n">odf2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                <span class="n">odf2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">data_count</span> <span class="o">=</span> <span class="n">odf2</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">data_count</span></div>
+
+
+<div class="viewcode-block" id="get_heat_matrix_from_count_matrix"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.get_heat_matrix_from_count_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_heat_matrix_from_count_matrix</span><span class="p">(</span><span class="n">data_count</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Translate matrix of positive hit counts to matrix of heat values for</span>
+<span class="sd">    heatmap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data_heat</span> <span class="o">=</span> <span class="n">data_count</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_count</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_count</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">data_count</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">data_heat</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">elif</span> <span class="n">data_count</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">data_heat</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data_heat</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">data_heat</span></div>
+
+
+<div class="viewcode-block" id="generate_heatmap_figure"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.generate_heatmap_figure">[docs]</a><span class="k">def</span> <span class="nf">generate_heatmap_figure</span><span class="p">(</span><span class="n">column_labels</span><span class="p">,</span> <span class="n">row_labels</span><span class="p">,</span> <span class="n">data_labels</span><span class="p">,</span> <span class="n">data_count</span><span class="p">,</span>
+        <span class="n">data_heat</span><span class="p">,</span> <span class="n">outpdfpath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take relevant data, and write heatmap plot to given output path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initiate plot.</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    
+    <span class="c1"># Set colour scheme for heatmap.</span>
+    <span class="c1">#heatmap = ax.pcolor(data, cmap=plt.cm.Blues)</span>
+    <span class="n">heatmap</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">data_heat</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span> <span class="c1">#, alpha=0.8)</span>
+    
+    <span class="c1"># Format.</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+    <span class="c1">#fig.set_size_inches(8, 11)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">column_labels</span><span class="p">),</span> <span class="mf">0.30</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">row_labels</span><span class="p">))</span>
+    
+    <span class="c1"># Turn off the frame.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_frame_on</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1"># Put the major ticks at the middle of each cell.</span>
+    <span class="c1">#ax.set_xticks(np.arange(data_heat.shape[1]) + 1, minor=False)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_heat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_heat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1"># put the minor ticks at the edges of each cell.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_heat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_heat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Add gridlines based on minor ticks (tick marks).</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># A more natural, table-like display.</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
+    
+    <span class="c1">#ax.set_xticklabels(column_labels, minor=False, fontsize=10, fontweight=&#39;regular&#39;, rotation=&#39;45&#39;)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">column_labels</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;regular&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">row_labels</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;regular&#39;</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1">#if not args.confidence_heat_map:</span>
+    <span class="c1"># Add text labels to heatmap (number of identified orthologues listed in input spreadsheet).</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_count</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_count</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="c1">#if data_count[y,x] != 1:</span>
+            <span class="c1">#plt.text(x + 0.5, y + 0.5, str(abs(data_count[y,x])), #&#39;1&#39;, #&#39;%.d&#39; % (data_count[y, x]),</span>
+            <span class="c1">#         horizontalalignment=&#39;center&#39;,</span>
+            <span class="c1">#         verticalalignment=&#39;center&#39;,</span>
+            <span class="c1">#         color=&#39;black&#39;</span>
+            <span class="c1">#         )</span>
+            <span class="n">font_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span>
+            <span class="k">if</span> <span class="n">data_count</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">font_color</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">data_labels</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">]),</span> <span class="c1">#&#39;1&#39;, #&#39;%.d&#39; % (data_count[y, x]),</span>
+                     <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                     <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                     <span class="n">color</span><span class="o">=</span><span class="n">font_color</span><span class="p">,</span>
+                     <span class="n">weight</span> <span class="o">=</span> <span class="s1">&#39;bold&#39;</span>
+                     <span class="p">)</span>
+    
+    <span class="c1"># Turn off all the major ticks (tick marks).</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_major_ticks</span><span class="p">():</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">tick1On</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">tick2On</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_major_ticks</span><span class="p">():</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">tick1On</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">tick2On</span> <span class="o">=</span> <span class="kc">False</span>
+        
+    <span class="c1"># Turn off all the minor ticks (tick marks).</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_minor_ticks</span><span class="p">():</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">tick1On</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">tick2On</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">get_minor_ticks</span><span class="p">():</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">tick1On</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">tick2On</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    
+    <span class="c1"># Show plot.</span>
+    <span class="c1">#plt.show()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outpdfpath</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_sector_label"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.get_sector_label">[docs]</a><span class="k">def</span> <span class="nf">get_sector_label</span><span class="p">(</span><span class="n">pct</span><span class="p">,</span> <span class="n">iterable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get sector label from iterable list. For constructing coulson plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_complex_info_list"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.get_complex_info_list">[docs]</a><span class="k">def</span> <span class="nf">get_complex_info_list</span><span class="p">(</span><span class="n">complex_info_file</span><span class="p">,</span> <span class="n">column_labels_simple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take complex info file path and column labels (query title) list, and</span>
+<span class="sd">    return a list of lists of complex names as the first item followed by all</span>
+<span class="sd">    the components (query titles) that go in that complex.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">complex_info_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">query_titles_accounted_for</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">complex_info_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">complex_info_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
+                    <span class="n">spliti</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="n">complex_name</span> <span class="o">=</span> <span class="n">spliti</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">query_title</span> <span class="o">=</span> <span class="n">spliti</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                    <span class="c1"># Check that the query title is a valid option.</span>
+                    <span class="k">assert</span> <span class="n">query_title</span> <span class="ow">in</span> <span class="n">column_labels_simple</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Query title</span>
+<span class="s2">                    </span><span class="si">%s</span><span class="s2"> listed in input file is not represented in input</span>
+<span class="s2">                    data.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">query_title</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">complex_info_list</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">complex_name</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="c1"># Initiate new list for complex name.</span>
+                        <span class="n">complex_info_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">complex_name</span><span class="p">,</span> <span class="n">query_title</span><span class="p">])</span>
+                        <span class="n">query_titles_accounted_for</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">query_title</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Add to existing list.</span>
+                        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">complex_info_list</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">complex_name</span><span class="p">:</span>
+                                <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">query_title</span><span class="p">)</span>
+                                <span class="n">query_titles_accounted_for</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">query_title</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Assume that each query title is its own separate &quot;complex&quot; (i.e.,</span>
+        <span class="c1"># none of the proteins form a relevant complex).</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">column_labels_simple</span><span class="p">:</span>
+            <span class="n">complex_info_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># Check that a list of complexes was compiled.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">complex_info_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No input complexes.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Add in any query titles that may not have been included in any complexes.</span>
+    <span class="k">for</span> <span class="n">query_title</span> <span class="ow">in</span> <span class="n">column_labels_simple</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">query_title</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">query_titles_accounted_for</span><span class="p">:</span>
+            <span class="n">complex_info_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">query_title</span><span class="p">,</span> <span class="n">query_title</span><span class="p">])</span>
+
+    <span class="c1"># Check that there are no redundant complex sublists.</span>
+    <span class="n">all_complex_titles</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">complex_info_list</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_complex_titles</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_complex_titles</span><span class="p">)))</span>
+
+    <span class="c1"># Return complex info list.</span>
+    <span class="k">return</span> <span class="n">complex_info_list</span></div>
+
+
+<div class="viewcode-block" id="modify_legend_lines"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.modify_legend_lines">[docs]</a><span class="k">def</span> <span class="nf">modify_legend_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a list of wedge objects, and modify line properties (for pie charts</span>
+<span class="sd">    used as legends.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">wedges</span><span class="p">:</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="modify_lines"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.modify_lines">[docs]</a><span class="k">def</span> <span class="nf">modify_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a list of wedge objects, and modify line properties (for pie charts</span>
+<span class="sd">    with data).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">wedges</span><span class="p">:</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">w</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_coulson_plot"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.make_coulson_plot">[docs]</a><span class="k">def</span> <span class="nf">make_coulson_plot</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">,</span>
+                      <span class="n">row_labels_simple</span><span class="p">,</span>
+                      <span class="n">data_labels_simple</span><span class="p">,</span>
+                      <span class="n">data_count_simple</span><span class="p">,</span>
+                      <span class="n">data_heat_simple</span><span class="p">,</span>
+                      <span class="n">outpdfpath_coulson</span><span class="p">,</span>
+                      <span class="n">complex_info_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a coulson plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Re-organize species order based on input file list order.</span>
+    <span class="c1">#????</span>
+
+    <span class="c1"># Define basic input parameters.</span>
+    <span class="n">num_species</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_labels_simple</span><span class="p">)</span>
+
+    <span class="c1"># Add legend row labels</span>
+    <span class="n">row_labels_simple</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Legend&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">row_labels_simple</span>
+
+    <span class="c1"># Extract info from complex info file, and assemble into a list of lists.</span>
+    <span class="n">complex_info_list</span> <span class="o">=</span> <span class="n">get_complex_info_list</span><span class="p">(</span><span class="n">complex_info_file</span><span class="p">,</span>
+                                              <span class="n">column_labels_simple</span><span class="p">)</span>
+
+    <span class="c1"># Initialize figure.</span>
+    <span class="n">num_columns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">complex_info_list</span><span class="p">)</span>
+    <span class="n">num_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_labels_simple</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">num_columns</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;equal&quot;</span><span class="p">))</span>
+
+    <span class="c1"># Scale output figure size based on number of subplots.</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">complex_info_list</span><span class="p">))</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>\
+                        <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">row_labels_simple</span><span class="p">))</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Decide whether to compare more than one set of paralogue counts.</span>
+    <span class="n">compare_counts</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_count_simple</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">compare_counts</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Iterate over subplots, encoding information:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">species</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row_labels_simple</span><span class="p">):</span>
+        <span class="n">jnum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">compl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">complex_info_list</span><span class="p">):</span>
+            <span class="n">jnum</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Determine number of wedges (&quot;fracs&quot;.</span>
+            <span class="n">num_fracs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">compl</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="c1"># Define list of numbers to be used to make wedges/fracs.</span>
+            <span class="n">fracs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_fracs</span><span class="p">):</span>
+                <span class="n">fracs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Make legends.</span>
+            <span class="k">if</span> <span class="n">species</span> <span class="o">==</span> <span class="s1">&#39;Legend&#39;</span><span class="p">:</span>
+                <span class="c1"># Define colors.</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_fracs</span><span class="p">):</span>
+                    <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+
+                <span class="n">legend_labels</span> <span class="o">=</span> <span class="n">compl</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">legend_radius</span> <span class="o">=</span> <span class="mf">0.4</span>
+                <span class="n">legend_title</span> <span class="o">=</span> <span class="n">compl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">legend_title_size</span> <span class="o">=</span> <span class="mi">15</span>
+
+                <span class="c1"># Initiate subplot pie chart.</span>
+                <span class="k">if</span> <span class="n">num_columns</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">wedges</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">fracs</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">legend_labels</span><span class="p">,</span>\
+                            <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">legend_radius</span><span class="p">)</span>
+
+                    <span class="c1"># Add a title for the complex.</span>
+                    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">legend_title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">legend_title_size</span><span class="p">)</span>
+
+                    <span class="c1"># Modify lines around sectors.</span>
+                    <span class="n">modify_legend_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">wedges</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">fracs</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">legend_labels</span><span class="p">,</span>\
+                            <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">legend_radius</span><span class="p">)</span>
+
+                    <span class="c1"># Add a title for the complex.</span>
+                    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">legend_title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">legend_title_size</span><span class="p">)</span>
+
+                    <span class="c1"># Modify lines around sectors.</span>
+                    <span class="n">modify_legend_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">)</span>
+
+            <span class="c1"># Make subplots for data.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">compare_counts</span><span class="p">:</span>
+                    <span class="c1"># Define paralogue counts for each complex component.</span>
+                    <span class="n">paralogue_counts_list</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="c1"># Determine portion that is relevant to current complex.</span>
+                    <span class="c1">#for a, x in enumerate(column_labels_simple):</span>
+                    <span class="c1">#    if x in compl[1:]:</span>
+                    <span class="c1">#        paralogue_counts_list.append(data_count_simple[i-1][a])</span>
+                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">compl</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span><span class="p">:</span>
+                                <span class="n">paralogue_counts_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_count_simple</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">a</span><span class="p">])</span>
+                                <span class="k">break</span>
+
+                    <span class="c1"># Make an iterable out of the list.</span>
+                    <span class="n">paralogue_counts</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">paralogue_counts_list</span><span class="p">)</span>
+
+
+                    <span class="c1"># Define colors for sectors based on paralogue counts.</span>
+                    <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">paralogue_counts_list</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="c1"># Gray if at least one paralogue found.</span>
+                            <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;xkcd:green&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># White if no paralogues found.</span>
+                            <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+
+                    <span class="c1"># Define which function to use to add appropriate paralogue counts as</span>
+                    <span class="c1"># labels for each sector.</span>
+                    <span class="n">autopct_funct</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">pct</span><span class="p">:</span> <span class="n">get_sector_label</span><span class="p">(</span><span class="n">pct</span><span class="p">,</span> <span class="n">paralogue_counts</span><span class="p">)</span>
+
+                    <span class="c1"># Set variables for species/row titles.</span>
+                    <span class="n">species_font_size</span> <span class="o">=</span> <span class="mi">15</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">])</span>
+
+                    <span class="n">sector_text_size</span> <span class="o">=</span> <span class="mi">15</span>
+
+                    <span class="c1"># Make data subplots.</span>
+                    <span class="k">if</span> <span class="n">num_columns</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                         <span class="c1"># Initiate subplot pie chart.</span>
+                        <span class="n">wedges</span><span class="p">,</span> <span class="n">texts</span><span class="p">,</span> <span class="n">autotexts</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">fracs</span><span class="p">,</span>\
+                                <span class="n">autopct</span><span class="o">=</span><span class="n">autopct_funct</span><span class="p">,</span> <span class="n">textprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">),</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
+                        <span class="c1"># Modify sector label text properties.</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">autotexts</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">sector_text_size</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># Modify lines around sectors.</span>
+                        <span class="n">modify_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">)</span>
+                        
+                        <span class="k">if</span> <span class="n">jnum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="c1"># Add a title for the complex.</span>
+                            <span class="n">title</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">species</span><span class="p">,</span>\
+                                    <span class="n">fontsize</span><span class="o">=</span><span class="n">species_font_size</span><span class="p">)</span>
+                            <span class="c1">#offset = np.array([-0.75, -0.6])</span>
+                            <span class="c1">#title.set_position(title.get_position() + offset)</span>
+                            <span class="n">title</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Initiate subplot pie chart.</span>
+                        <span class="n">wedges</span><span class="p">,</span> <span class="n">texts</span><span class="p">,</span> <span class="n">autotexts</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">fracs</span><span class="p">,</span>\
+                                <span class="n">autopct</span><span class="o">=</span><span class="n">autopct_funct</span><span class="p">,</span> <span class="n">textprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">),</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
+                        <span class="c1"># Modify sector label text properties.</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">autotexts</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">sector_text_size</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># Modify lines around sectors.</span>
+                        <span class="n">modify_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">jnum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="c1"># Define string to make species name italicized.</span>
+                            <span class="n">italic_species</span> <span class="o">=</span> <span class="s1">&#39;$\it{&#39;</span> <span class="o">+</span> <span class="n">species</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;}$&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;$\it{&#39;</span> <span class="o">+</span> <span class="n">species</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;}$&#39;</span>
+                            <span class="c1"># Add a title for the complex.</span>
+                            <span class="n">title</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">italic_species</span><span class="p">,</span>
+                                    <span class="n">fontsize</span><span class="o">=</span><span class="n">species_font_size</span><span class="p">)</span>
+                            <span class="c1">#offset = np.array([-0.75, -0.6])</span>
+                            <span class="c1">#title.set_position(title.get_position() + offset)</span>
+                            <span class="n">title</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+
+                <span class="c1"># Make the plot differently if comparing two sets of paralogue</span>
+                <span class="c1"># counts.</span>
+                <span class="k">elif</span> <span class="n">compare_counts</span><span class="p">:</span>
+                    <span class="c1"># Define paralogue counts for each complex component.</span>
+                    <span class="n">paralogue_counts_list</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="c1"># Determine portion that is relevant to current complex.</span>
+                    <span class="c1">#for a, x in enumerate(column_labels_simple):</span>
+                    <span class="c1">#    if x in compl[1:]:</span>
+                    <span class="c1">#        paralogue_counts_list.append(data_count_simple[i-1][a])</span>
+                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">compl</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="n">x</span><span class="p">:</span>
+                                <span class="n">first_count</span> <span class="o">=</span> <span class="n">data_count_simple</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
+                                <span class="n">second_count</span> <span class="o">=</span> <span class="n">data_count_simple</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
+                                <span class="n">paralogue_counts_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">first_count</span><span class="p">,</span> <span class="n">second_count</span><span class="p">])</span>
+                                <span class="k">break</span>
+
+                    <span class="c1"># Define colors for sectors based on paralogue counts.</span>
+                    <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">paralogue_counts_list</span><span class="p">:</span>
+                        <span class="n">y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="c1"># Gray if at least one paralogue found.</span>
+                            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                                <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                                    <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;xkcd:dark yellow&#39;</span><span class="p">)</span>
+                                <span class="k">elif</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span>
+                                    <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;xkcd:dark orange&#39;</span><span class="p">)</span>
+                                <span class="k">elif</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                                    <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;xkcd:cornflower&#39;</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;xkcd:dark red&#39;</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;xkcd:green&#39;</span><span class="p">)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># White if no paralogues found.</span>
+                            <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+
+                    <span class="n">mod_paralogue_counts_list</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">paralogue_counts_list</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                            <span class="n">mod_paralogue_counts_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">mod_paralogue_counts_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mod_paralogue_counts_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">paralogue_counts_list</span><span class="p">)</span>
+
+                    <span class="c1"># Make an iterable out of the modified list.</span>
+                    <span class="n">paralogue_counts</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">mod_paralogue_counts_list</span><span class="p">)</span>
+
+                    <span class="c1"># Define which function to use to add appropriate paralogue counts as</span>
+                    <span class="c1"># labels for each sector.</span>
+                    <span class="n">autopct_funct</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">pct</span><span class="p">:</span> <span class="n">get_sector_label</span><span class="p">(</span><span class="n">pct</span><span class="p">,</span> <span class="n">paralogue_counts</span><span class="p">)</span>
+
+                    <span class="c1"># Set variables for species/row titles.</span>
+                    <span class="n">species_font_size</span> <span class="o">=</span> <span class="mi">15</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">])</span>
+
+                    <span class="n">sector_text_size</span> <span class="o">=</span> <span class="mi">15</span>
+
+                    <span class="c1"># Make data subplots.</span>
+                    <span class="k">if</span> <span class="n">num_columns</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                         <span class="c1"># Initiate subplot pie chart.</span>
+                        <span class="n">wedges</span><span class="p">,</span> <span class="n">texts</span><span class="p">,</span> <span class="n">autotexts</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">fracs</span><span class="p">,</span>\
+                                <span class="n">autopct</span><span class="o">=</span><span class="n">autopct_funct</span><span class="p">,</span> <span class="n">textprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">),</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
+                        <span class="c1"># Modify sector label text properties.</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">autotexts</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">sector_text_size</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># Modify lines around sectors.</span>
+                        <span class="n">modify_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">)</span>
+                        
+                        <span class="k">if</span> <span class="n">jnum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="c1"># Add a title for the complex.</span>
+                            <span class="n">title</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">species_font_size</span><span class="p">)</span>
+                            <span class="c1">#offset = np.array([-0.75, -0.6])</span>
+                            <span class="c1">#title.set_position(title.get_position() + offset)</span>
+                            <span class="n">title</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Initiate subplot pie chart.</span>
+                        <span class="n">wedges</span><span class="p">,</span> <span class="n">texts</span><span class="p">,</span> <span class="n">autotexts</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">fracs</span><span class="p">,</span>\
+                                <span class="n">autopct</span><span class="o">=</span><span class="n">autopct_funct</span><span class="p">,</span> <span class="n">textprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">),</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
+                        <span class="c1"># Modify sector label text properties.</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">autotexts</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">sector_text_size</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># Modify lines around sectors.</span>
+                        <span class="n">modify_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">jnum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="c1"># Define string to make species name italicized.</span>
+                            <span class="n">italic_species</span> <span class="o">=</span> <span class="s1">&#39;$\it{&#39;</span> <span class="o">+</span> <span class="n">species</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;}$&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;$\it{&#39;</span> <span class="o">+</span> <span class="n">species</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;}$&#39;</span>
+                            <span class="c1"># Add a title for the complex.</span>
+                            <span class="n">title</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">italic_species</span><span class="p">,</span>
+                                    <span class="n">fontsize</span><span class="o">=</span><span class="n">species_font_size</span><span class="p">)</span>
+                            <span class="c1">#offset = np.array([-0.75, -0.6])</span>
+                            <span class="c1">#title.set_position(title.get_position() + offset)</span>
+                            <span class="n">title</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+
+    <span class="c1"># Specify text output type so that text can be edited in adobe illustrator.</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ps.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
+
+    <span class="c1"># Adjust gap sizes between subplots.</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Save figure to pdf file. (transparent=True gets rid of white</span>
+    <span class="c1"># backgrounds).</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outpdfpath_coulson</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_amoebae_res"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.plot_amoebae_res">[docs]</a><span class="k">def</span> <span class="nf">plot_amoebae_res</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">complex_info</span><span class="p">,</span> <span class="n">outpdfpath</span><span class="p">,</span> <span class="n">csv_file2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">row_order_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main function for parsing csv file, translating data into matrices of</span>
+<span class="sd">    relevant information, and generating plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define an output file path if none is input.</span>
+    <span class="k">if</span> <span class="n">outpdfpath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outpdfpath</span> <span class="o">=</span> <span class="n">csv_file</span> <span class="o">+</span> <span class="s1">&#39;_plot.pdf&#39;</span>
+    <span class="n">outpdfpath_simple</span> <span class="o">=</span> <span class="n">outpdfpath</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_simple.pdf&#39;</span>  
+
+    <span class="n">final_output_path</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Define list of csv file paths for input.</span>
+    <span class="n">csv_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">csv_file2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">csv_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">csv_file</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">csv_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">csv_file2</span><span class="p">]</span>
+
+    <span class="c1"># Extract information from each input csv file.</span>
+    <span class="c1">#outpdfpath_coulson = outpdfpath_simple.rsplit(&#39;_&#39;, 1)[0] + &#39;_coulson.pdf&#39;</span>
+    <span class="c1">#make_coulson_plot(column_labels_simple, row_labels_simple, data_labels_simple, data_count_simple,</span>
+    <span class="c1">#    data_heat_simple, outpdfpath_coulson, complex_info)</span>
+
+    <span class="c1"># Initiate variables for comparing more than one csv file.</span>
+    <span class="n">column_labels_simple_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">row_labels_simple_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">data_labels_simple_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">data_count_simple_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">data_heat_simple_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+    <span class="n">file_num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">csv_file_x</span> <span class="ow">in</span> <span class="n">csv_paths</span><span class="p">:</span>
+        <span class="n">file_num</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1">######</span>
+        <span class="c1"># Step 1: Extract relevant information from input csv file and load into</span>
+        <span class="c1"># a pandas dataframe. </span>
+
+        <span class="c1"># Get data from input file.</span>
+        <span class="n">indf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file_x</span><span class="p">)</span>
+
+        <span class="c1"># Define a dictionary for identifying the right columns.</span>
+        <span class="n">column_header_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;query title&#39;</span><span class="p">:</span> <span class="s1">&#39;Query title&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;query file&#39;</span><span class="p">:</span> <span class="s1">&#39;Query file&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;alignment name&#39;</span><span class="p">:</span> <span class="s1">&#39;Alignment for sequence comparison&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;taxon name&#39;</span><span class="p">:</span> <span class="s1">&#39;Subject database species (if applicable)&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;database filename&#39;</span><span class="p">:</span> <span class="s1">&#39;Subject database file&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;positive or not&#39;</span><span class="p">:</span> <span class="s1">&#39;Collective interpretation of reverse search results&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;accession&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit accession&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;program&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward search method&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;seq&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit sequence&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;subseq&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;seq descr&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit description&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;subseq descr&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;evalue&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit E-value (top HSP)&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit score&#39;</span>
+                              <span class="p">}</span>
+
+        <span class="c1"># construct an additional dataframe with each datapoint being a list of</span>
+        <span class="c1"># relevant information.</span>
+
+        <span class="c1"># Define a list of index values for new dataframe.</span>
+        <span class="n">new_row_index_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">taxon_name</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;taxon name&#39;</span><span class="p">]]</span>
+            <span class="n">db_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;database filename&#39;</span><span class="p">]]</span>
+            <span class="n">index_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">taxon_name</span><span class="p">,</span> <span class="n">db_file</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">index_tuple</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_row_index_list</span><span class="p">:</span>
+                <span class="n">new_row_index_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index_tuple</span><span class="p">)</span>
+
+        <span class="c1"># If a database filename list file is provided, then re-order the</span>
+        <span class="c1"># new_row_index_list list to reflect that order.</span>
+        <span class="k">if</span> <span class="n">row_order_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Get taxon list from input file.</span>
+            <span class="n">db_file_list_from_file</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">row_order_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                        <span class="n">db_file_list_from_file</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="c1"># Check that the list is the same length as the list from the</span>
+            <span class="c1"># dataframe.</span>
+            <span class="c1">#assert len(new_row_index_list) == len(taxon_list_from_file)</span>
+
+            <span class="c1"># Make a new list based on order in input file.</span>
+            <span class="n">new_db_file_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">db_file_list_from_file</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">new_row_index_list</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
+                        <span class="n">new_db_file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="c1"># Add remaining db filenames, that were not represented in the</span>
+            <span class="c1"># input file list.</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">new_row_index_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">db_file_list_from_file</span><span class="p">:</span>
+                    <span class="n">new_db_file_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="c1"># Replace list with reordered list.</span>
+            <span class="n">new_row_index_list</span> <span class="o">=</span> <span class="n">new_db_file_list</span>
+
+        <span class="c1"># Define a simplified list of index values for another new dataframe.</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
+        <span class="n">new_row_index_list_simple</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_row_index_list</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">seen</span> <span class="ow">or</span> <span class="n">seen_add</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span>
+
+        <span class="c1"># Define a list of column header values for new dataframe.</span>
+        <span class="n">new_column_header_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">query_title</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]]</span>
+            <span class="n">query_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]]</span>
+            <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">query_title</span><span class="p">,</span> <span class="n">query_file</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">header_tuple</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_column_header_list</span><span class="p">:</span>
+                <span class="n">new_column_header_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header_tuple</span><span class="p">)</span>
+        <span class="c1"># Define a simplified list of header values for another new dataframe.</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
+        <span class="n">new_column_header_list_simple</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_column_header_list</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">seen</span> <span class="ow">or</span> <span class="n">seen_add</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span>
+
+
+        <span class="c1"># Determine column header for column that contains final paralogue count</span>
+        <span class="c1"># information.</span>
+        <span class="n">unique_positive_hit_decis_header</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Represents an identifiably unique paralogue&#39;</span><span class="p">):</span>
+                <span class="n">unique_positive_hit_decis_header</span> <span class="o">=</span> <span class="n">header</span>
+                <span class="k">break</span>
+        <span class="c1"># Check that the header was found.</span>
+        <span class="k">assert</span> <span class="n">unique_positive_hit_decis_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify</span>
+<span class="s2">        which column contains information regarding unique paralogue counts.&quot;&quot;&quot;</span>
+
+
+        <span class="c1"># Initiate new dataframes.</span>
+        <span class="n">odf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">new_column_header_list</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_row_index_list</span><span class="p">)</span>
+        <span class="n">odf_simple</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">new_column_header_list_simple</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="n">new_row_index_list_simple</span><span class="p">)</span>
+
+        <span class="c1"># Set all value in dataframes to &#39;-&#39; by default.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_row_index_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">new_column_header_list</span><span class="p">:</span>
+                <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_row_index_list_simple</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">new_column_header_list_simple</span><span class="p">:</span>
+                <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
+        <span class="c1"># Iterate over rows in input dataframe and add relevant information to</span>
+        <span class="c1"># additional dataframes.</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="c1"># Determine where in the new dataframes the info should be put.</span>
+            <span class="n">index_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;taxon name&#39;</span><span class="p">]],</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;database filename&#39;</span><span class="p">]])</span>
+            <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]],</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]])</span>
+
+            <span class="n">index_simple</span> <span class="o">=</span> <span class="n">index_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">header_simple</span> <span class="o">=</span> <span class="n">header_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Extract relevant information from row.</span>
+            <span class="c1">#unique_positive_hit = row[unique_positive_hit_decis_header]</span>
+            <span class="c1">#if unique_positive_hit == &#39;Yes&#39;:</span>
+            <span class="c1"># ***How to display accurate paralogue counts? Perhaps only if query title is</span>
+            <span class="c1"># the only row index?</span>
+            <span class="n">positive_or_not</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;positive or not&#39;</span><span class="p">]]</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;accession&#39;</span><span class="p">]]</span>
+            <span class="n">fwd_evalue</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;evalue&#39;</span><span class="p">]]</span>
+            <span class="n">fwd_score</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]]</span>
+            <span class="n">unique_positive_hit_decis</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">unique_positive_hit_decis_header</span><span class="p">]</span>
+
+            <span class="c1"># Add relevant information to dataframe for first plot.</span>
+            <span class="k">if</span> <span class="n">positive_or_not</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                <span class="c1"># Do not add info if the result is negative anyway.</span>
+                <span class="c1"># This way if a search was performed it will at least say</span>
+                <span class="c1"># &#39;negative&#39;, and if not search was performed it will stay as &#39;-&#39;.</span>
+                <span class="c1"># But, only assign &#39;negative&#39; if there wasn&#39;t already a positive</span>
+                <span class="c1"># hit recorded.</span>
+                <span class="k">if</span> <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">header_tuple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                    <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">header_tuple</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;negative&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">header_tuple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span>\
+                        <span class="n">header_tuple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
+                    <span class="c1"># First hit to add info for.</span>
+                    <span class="c1"># Format: [[positive hit acc list], top fwd hit E-value, top fwd hit</span>
+                    <span class="c1"># score] where the top hit is assumed to be the one that</span>
+                    <span class="c1"># appears first in the input csv file. </span>
+                    <span class="n">initial_value</span> <span class="o">=</span> <span class="p">[[</span><span class="n">acc</span><span class="p">],</span> <span class="n">fwd_evalue</span><span class="p">,</span> <span class="n">fwd_score</span><span class="p">]</span> 
+                    <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">header_tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">initial_value</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># There are one or more previous hits relevant for this cell in the</span>
+                    <span class="c1"># dataframe, so update existing value (list).</span>
+                    <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">header_tuple</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">header_tuple</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>\
+                            <span class="p">[</span><span class="n">acc</span><span class="p">],</span> <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">header_tuple</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_tuple</span><span class="p">,</span> <span class="n">header_tuple</span><span class="p">][</span><span class="mi">2</span><span class="p">]]</span>
+
+            <span class="c1"># Add relevant information to dataframe for first plot.</span>
+            <span class="k">if</span> <span class="n">positive_or_not</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">unique_positive_hit_decis</span> <span class="o">==</span> <span class="s1">&#39;No&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                    <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;negative&#39;</span>
+            <span class="k">elif</span> <span class="n">unique_positive_hit_decis</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
+                    <span class="c1"># First hit to add info for.</span>
+                    <span class="c1"># Format: [[positive hit acc list], top fwd hit E-value, top fwd hit</span>
+                    <span class="c1"># score] where the top hit is assumed to be the one that</span>
+                    <span class="c1"># appears first in the input csv file. </span>
+                    <span class="n">initial_value</span> <span class="o">=</span> <span class="p">[[</span><span class="n">acc</span><span class="p">],</span> <span class="n">fwd_evalue</span><span class="p">,</span> <span class="n">fwd_score</span><span class="p">]</span> 
+                    <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">=</span> <span class="n">initial_value</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># There are one or more previous hits relevant for this cell in the</span>
+                    <span class="c1"># dataframe, so update existing value (list).</span>
+                    <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>\
+                            <span class="p">[</span><span class="n">acc</span><span class="p">],</span> <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">][</span><span class="mi">2</span><span class="p">]]</span>
+
+        
+        <span class="c1">######</span>
+        <span class="c1"># Step 2: Translate the dataframe into one or more matrices that can be</span>
+        <span class="c1"># plotted in various ways. </span>
+
+        <span class="c1">## Get matrix of positive hit counts (in input spreadsheet).</span>
+        <span class="c1">#data_count = d.as_matrix()</span>
+
+        <span class="c1"># Get matrix for text labels for output plot.</span>
+        <span class="n">data_labels</span> <span class="o">=</span> <span class="n">get_text_label_matrix</span><span class="p">(</span><span class="n">odf</span><span class="p">)</span>
+        <span class="n">data_labels_simple</span> <span class="o">=</span> <span class="n">get_text_label_matrix</span><span class="p">(</span><span class="n">odf_simple</span><span class="p">)</span>
+
+
+        <span class="c1"># Get matrix of positive hit counts (in input spreadsheet).</span>
+        <span class="n">data_count</span> <span class="o">=</span> <span class="n">get_hit_count_matrix</span><span class="p">(</span><span class="n">odf</span><span class="p">)</span>
+        <span class="n">data_count_simple</span> <span class="o">=</span> <span class="n">get_hit_count_matrix</span><span class="p">(</span><span class="n">odf_simple</span><span class="p">)</span>
+
+        
+        <span class="c1"># Get matrix of heat values translated from matrix of counts.</span>
+        <span class="c1">#if not args.confidence_heat_map:</span>
+        <span class="n">data_heat</span> <span class="o">=</span> <span class="n">get_heat_matrix_from_count_matrix</span><span class="p">(</span><span class="n">data_count</span><span class="p">)</span>
+        <span class="n">data_heat_simple</span> <span class="o">=</span> <span class="n">get_heat_matrix_from_count_matrix</span><span class="p">(</span><span class="n">data_count_simple</span><span class="p">)</span>
+
+        <span class="c1">#elif args.confidence_heat_map:</span>
+        <span class="c1">#    pass</span>
+        <span class="c1">#    for y in range(data_count.shape[0]):</span>
+        <span class="c1">#        for x in range(data_count.shape[1]):</span>
+        <span class="c1">#            if data_count[y,x] == 0:</span>
+        <span class="c1">#                data_heat[y,x] = 1</span>
+        <span class="c1">#            elif 100 &gt; data_count[y,x] &gt; 0:</span>
+        <span class="c1">#                data_heat[y,x] = (data_heat[y,x] / 100)/1.5</span>
+        <span class="c1">#            elif data_count[y,x] == 100:</span>
+        <span class="c1">#                data_heat[y,x] = 0</span>
+        
+        <span class="c1">#print(data_heat)</span>
+
+        <span class="c1"># Make rectangular (heatmaps) of only the first csv input file.</span>
+        <span class="k">if</span> <span class="n">file_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1">#######</span>
+            <span class="c1"># Step 3: Plot results.</span>
+                        
+            <span class="c1"># Plot.</span>
+            <span class="n">column_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf</span><span class="p">)</span>
+            <span class="n">row_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">generate_heatmap_figure</span><span class="p">(</span><span class="n">column_labels</span><span class="p">,</span> <span class="n">row_labels</span><span class="p">,</span> <span class="n">data_labels</span><span class="p">,</span> <span class="n">data_count</span><span class="p">,</span>
+                <span class="n">data_heat</span><span class="p">,</span> <span class="n">outpdfpath</span><span class="p">)</span>
+
+            <span class="c1"># Simple plot.</span>
+            <span class="n">column_labels_simple</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf_simple</span><span class="p">)</span>
+            <span class="n">row_labels_simple</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf_simple</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">generate_heatmap_figure</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">,</span> <span class="n">row_labels_simple</span><span class="p">,</span> <span class="n">data_labels_simple</span><span class="p">,</span> <span class="n">data_count_simple</span><span class="p">,</span>
+                <span class="n">data_heat_simple</span><span class="p">,</span> <span class="n">outpdfpath_simple</span><span class="p">)</span>
+
+            <span class="c1"># Only make a coulson plot at this point if there was only one</span>
+            <span class="c1"># input file.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">csv_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Coulson plot.</span>
+                <span class="n">outpdfpath_coulson</span> <span class="o">=</span> <span class="n">outpdfpath_simple</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_coulson.pdf&#39;</span>
+                <span class="n">make_coulson_plot</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">,</span> <span class="n">row_labels_simple</span><span class="p">,</span>
+                        <span class="n">data_labels_simple</span><span class="p">,</span> <span class="p">[</span><span class="n">data_count_simple</span><span class="p">],</span>
+                    <span class="n">data_heat_simple</span><span class="p">,</span> <span class="n">outpdfpath_coulson</span><span class="p">,</span> <span class="n">complex_info</span><span class="p">)</span>
+                <span class="n">final_output_path</span> <span class="o">=</span> <span class="n">outpdfpath_coulson</span>
+
+        <span class="c1"># Define data to use for comparing more than one csv file.</span>
+        <span class="n">column_labels_simple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">)</span>
+        <span class="n">row_labels_simple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_labels_simple</span><span class="p">)</span>
+        <span class="n">data_labels_simple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_labels_simple</span><span class="p">)</span>
+        <span class="n">data_count_simple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_count_simple</span><span class="p">)</span>
+        <span class="n">data_heat_simple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_heat_simple</span><span class="p">)</span>
+
+    <span class="c1"># If comparing two csv files, then call the make_coulson_plot function</span>
+    <span class="c1"># with different input.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">csv_paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Check that the two input coulson plots are comparable.</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">csv_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Can only handle to input csv files.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">column_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">column_labels_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_count_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_count_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Call function to make coulson plot.</span>
+        <span class="n">outpdfpath_coulson</span> <span class="o">=</span> <span class="n">outpdfpath_simple</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>\
+        <span class="s1">&#39;_coulson(comparison).pdf&#39;</span>
+        <span class="n">make_coulson_plot</span><span class="p">(</span><span class="n">column_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                          <span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                          <span class="n">data_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                          <span class="n">data_count_simple_list</span><span class="p">,</span>
+                          <span class="n">data_heat_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                          <span class="n">outpdfpath_coulson</span><span class="p">,</span>
+                          <span class="n">complex_info</span><span class="p">)</span>
+        <span class="n">final_output_path</span> <span class="o">=</span> <span class="n">outpdfpath_coulson</span>
+
+
+    <span class="c1"># Return main output path.</span>
+    <span class="k">return</span> <span class="n">final_output_path</span></div>
+
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

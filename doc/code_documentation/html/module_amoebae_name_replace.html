@@ -1,0 +1,152 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_name_replace module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_amoebae_nex_to_hmm module" href="module_amoebae_nex_to_hmm.html" />
+    <link rel="prev" title="module_amoebae_hmmscan module" href="module_amoebae_hmmscan.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_nex_to_hmm.html" title="module_amoebae_nex_to_hmm module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_hmmscan.html" title="module_amoebae_hmmscan module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_amoebae_name_replace">
+<span id="module-amoebae-name-replace-module"></span><h1>module_amoebae_name_replace module<a class="headerlink" href="#module-module_amoebae_name_replace" title="Permalink to this headline">¶</a></h1>
+<p>Module defining functions for coding and decoding taxon/sequence names in
+alignments and tree files for input to phylogenetics software. Based on the
+name_replace.pl script written by Jed Barlow.</p>
+<dl class="function">
+<dt id="module_amoebae_name_replace.generate_code_name">
+<code class="descclassname">module_amoebae_name_replace.</code><code class="descname">generate_code_name</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_name_replace.html#generate_code_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_name_replace.generate_code_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take the number of the sequence in the input file, and output an
+alphabetical code that uniquely corresponds to that number.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_name_replace.get_conversion_dict_from_table">
+<code class="descclassname">module_amoebae_name_replace.</code><code class="descname">get_conversion_dict_from_table</code><span class="sig-paren">(</span><em>tablefile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_name_replace.html#get_conversion_dict_from_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_name_replace.get_conversion_dict_from_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a conversion table and return a dictionary for uncoding names.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_name_replace.write_afa_with_code_names">
+<code class="descclassname">module_amoebae_name_replace.</code><code class="descname">write_afa_with_code_names</code><span class="sig-paren">(</span><em>infile</em>, <em>outfile</em>, <em>tablefile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_name_replace.html#write_afa_with_code_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_name_replace.write_afa_with_code_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an aligned (or unaligned) fasta file, and write a fasta file with
+coded names, and a table for converting names back.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_name_replace.write_newick_tree_with_coded_names">
+<code class="descclassname">module_amoebae_name_replace.</code><code class="descname">write_newick_tree_with_coded_names</code><span class="sig-paren">(</span><em>infile</em>, <em>outfile</em>, <em>tablefile</em>, <em>quoted_names=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_name_replace.html#write_newick_tree_with_coded_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_name_replace.write_newick_tree_with_coded_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a newick file and replace full taxon names with coded names from a
+table.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_name_replace.write_newick_tree_with_uncoded_names">
+<code class="descclassname">module_amoebae_name_replace.</code><code class="descname">write_newick_tree_with_uncoded_names</code><span class="sig-paren">(</span><em>infile</em>, <em>outfile</em>, <em>tablefile</em>, <em>quoted_names=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_name_replace.html#write_newick_tree_with_uncoded_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_name_replace.write_newick_tree_with_uncoded_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a text file with a newick tree, and write a new one with names
+converted back to original names (given values in a conversion table), and
+optionally put quotation marks around the names in the output tree.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_name_replace.write_nex_with_code_names">
+<code class="descclassname">module_amoebae_name_replace.</code><code class="descname">write_nex_with_code_names</code><span class="sig-paren">(</span><em>infile</em>, <em>outfile</em>, <em>tablefile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_name_replace.html#write_nex_with_code_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_name_replace.write_nex_with_code_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a nexus file, and write a nexus file with
+coded names, and a table for converting names back.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_amoebae_hmmscan.html"
+                        title="previous chapter">module_amoebae_hmmscan module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_amoebae_nex_to_hmm.html"
+                        title="next chapter">module_amoebae_nex_to_hmm module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_nex_to_hmm.html" title="module_amoebae_nex_to_hmm module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_hmmscan.html" title="module_amoebae_hmmscan module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

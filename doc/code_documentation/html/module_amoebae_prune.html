@@ -1,0 +1,156 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_prune module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_amoebae_run_searches module" href="module_amoebae_run_searches.html" />
+    <link rel="prev" title="module_amoebae_plot module" href="module_amoebae_plot.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_run_searches.html" title="module_amoebae_run_searches module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_plot.html" title="module_amoebae_plot module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_amoebae_prune">
+<span id="module-amoebae-prune-module"></span><h1>module_amoebae_prune module<a class="headerlink" href="#module-module_amoebae_prune" title="Permalink to this headline">¶</a></h1>
+<p>Module for amoebae script with functions for parsing trees using the ETE3
+library.</p>
+<dl class="function">
+<dt id="module_amoebae_prune.get_conversion_table_dict">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">get_conversion_table_dict</code><span class="sig-paren">(</span><em>table_with_quotation_marks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#get_conversion_table_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.get_conversion_table_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a conversion table, and return a dictionary with coded names as
+values and original names as keys.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.make_quoted_table">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">make_quoted_table</code><span class="sig-paren">(</span><em>intablepath</em>, <em>outtablepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#make_quoted_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.make_quoted_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a path to a regular table, and writes a file to a given file path
+with quotation marks around the long names.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.manually_select_nodes_and_remove_seqs">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">manually_select_nodes_and_remove_seqs</code><span class="sig-paren">(</span><em>input_tree_one</em>, <em>alignment_file</em>, <em>output_file=None</em>, <em>name_replace_table=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#manually_select_nodes_and_remove_seqs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.manually_select_nodes_and_remove_seqs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a tree file (newick) and the corresponding alignment file (nexus)
+and write a new alignment without the selected nodes/sequences.</p>
+<p>ToDo: Automate selection of long branches for removal. Allow manual
+selection of leaf nodes for removal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.manually_select_nodes_to_constrain">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">manually_select_nodes_to_constrain</code><span class="sig-paren">(</span><em>input_tree_one</em>, <em>name_replace_table</em>, <em>output_tree_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#manually_select_nodes_to_constrain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.manually_select_nodes_to_constrain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a tree file (newick) and the corresponding alignment file (nexus)
+and write a new alignment without the selected nodes/sequences.</p>
+<p>ToDo: Automate selection of long branches for removal. Allow manual
+selection of leaf nodes for removal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.reformat_combined_supports2">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">reformat_combined_supports2</code><span class="sig-paren">(</span><em>tree_string</em>, <em>one_support='bootstrap'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#reformat_combined_supports2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.reformat_combined_supports2" title="Permalink to this definition">¶</a></dt>
+<dd><p>For converting IQtree output (using both -bb and -alrt) to a format that
+is readable by ETE3.</p>
+<p>Currently have to choose one support value to show either ‘boostrap’ or
+‘alrt’.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.remove_nodes_to_match_ali">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">remove_nodes_to_match_ali</code><span class="sig-paren">(</span><em>alignment</em>, <em>tree_file</em>, <em>output_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#remove_nodes_to_match_ali"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.remove_nodes_to_match_ali" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write tree file with only sequences represented in the alignment.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_amoebae_plot.html"
+                        title="previous chapter">module_amoebae_plot module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_amoebae_run_searches.html"
+                        title="next chapter">module_amoebae_run_searches module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_run_searches.html" title="module_amoebae_run_searches module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_plot.html" title="module_amoebae_plot module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

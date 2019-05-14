@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# This script is for opening a csv file in excel if the filepath is too long.
+
+mkdir ~/Desktop/tmp
+
+FILE=$(basename $1)
+
+cp $1 ~/Desktop/tmp/$FILE
+
+open ~/Desktop/tmp/$FILE
+
+sleep 5
+rm -r ~/Desktop/tmp

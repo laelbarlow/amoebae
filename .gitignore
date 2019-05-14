@@ -1,0 +1,14 @@
+__pycache__
+amoebaelib/__pycache__
+misc_scripts/__pycache__
+settings.py
+*.aux
+*.bbl
+*.blg
+*.glo
+*.log
+*.out
+*.toc
+*.xdy
+*.swp
+*.DS_Store

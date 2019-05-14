@@ -1,0 +1,422 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_run_searches &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_amoebae_run_searches</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module for functions for amoebae script that are for performing</span>
+<span class="sd">similarity searches, but do not require installation of pandas library.</span>
+
+<span class="sd">NO PANDAS.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">settings</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">datetime</span> 
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="get_query_subdir"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.get_query_subdir">[docs]</a><span class="k">def</span> <span class="nf">get_query_subdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a reverse-search output directory and returns a path for a reverse</span>
+<span class="sd">    search query subdirectory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;0_rev_srch_queries&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_query_list_from_file"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.get_query_list_from_file">[docs]</a><span class="k">def</span> <span class="nf">get_query_list_from_file</span><span class="p">(</span><span class="n">infp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get query list from file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">query_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infp</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                <span class="n">query_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">query_list</span></div>
+
+
+<div class="viewcode-block" id="get_db_list_from_file"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.get_db_list_from_file">[docs]</a><span class="k">def</span> <span class="nf">get_db_list_from_file</span><span class="p">(</span><span class="n">infp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get database list from file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infp</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                <span class="n">db_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">db_list</span></div>
+
+
+<div class="viewcode-block" id="get_out_bash_path"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.get_out_bash_path">[docs]</a><span class="k">def</span> <span class="nf">get_out_bash_path</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes an output directory that search results are written to, and</span>
+<span class="sd">    returns a path for a file to write query file list to.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;0_run_searches.sh&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_out_query_list_path"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.get_out_query_list_path">[docs]</a><span class="k">def</span> <span class="nf">get_out_query_list_path</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes an output directory that search results are written to, and</span>
+<span class="sd">    returns a path for a file to write query file list to.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;0_queries.txt&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_out_db_list_path"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.get_out_db_list_path">[docs]</a><span class="k">def</span> <span class="nf">get_out_db_list_path</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes an output directory that search results are written to, and</span>
+<span class="sd">    returns a path for a file to write database file list to.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;0_databases.txt&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="determine_search_method"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.determine_search_method">[docs]</a><span class="k">def</span> <span class="nf">determine_search_method</span><span class="p">(</span><span class="n">query_exten</span><span class="p">,</span> <span class="n">db_exten</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine which similarity search method to use based on the filename</span>
+<span class="sd">    extensions of the query and database files.</span>
+
+<span class="sd">    Eventually integrate hhsuite for HMM-HMM comparison.</span>
+
+<span class="sd">    Assuming blastp rather than phmmer for now.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Import default methods, for cases where several could be used, from the</span>
+    <span class="c1"># settings module.</span>
+    <span class="c1">#faa_in_faa = settings.faa_in_faa # phmmer, blastp.</span>
+
+    <span class="c1"># Decide on method.</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">query_exten</span> <span class="o">==</span> <span class="s1">&#39;faa&#39;</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;faa&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;blastp&#39;</span>
+        <span class="k">elif</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;tblastn&#39;</span>
+        <span class="k">elif</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;hmmdb&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;hmmscan&#39;</span>
+
+    <span class="k">elif</span> <span class="n">query_exten</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;faa&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;blastx&#39;</span>
+        <span class="k">elif</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;blastn&#39;</span>
+        <span class="k">elif</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;hmmdb&#39;</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="n">query_exten</span> <span class="o">==</span> <span class="s1">&#39;afaa&#39;</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;faa&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;hmmsearch&#39;</span>
+        <span class="k">elif</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;hmmdb&#39;</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="n">query_exten</span> <span class="o">==</span> <span class="s1">&#39;afna&#39;</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;faa&#39;</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;nhmmer&#39;</span>
+        <span class="k">elif</span> <span class="n">db_exten</span> <span class="o">==</span> <span class="s1">&#39;hmmdb&#39;</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">assert</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Error: Could not determine which similarity</span>
+<span class="s2">    searching method to apply for query with extension &#39;</span><span class="si">%s</span><span class="s2">&#39; and database with</span>
+<span class="s2">    extension &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">query_exten</span><span class="p">,</span> <span class="n">db_exten</span><span class="p">)</span>
+
+    <span class="c1"># Return chosen method.</span>
+    <span class="k">return</span> <span class="n">method</span></div>
+
+
+<div class="viewcode-block" id="search_result_filepath"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.search_result_filepath">[docs]</a><span class="k">def</span> <span class="nf">search_result_filepath</span><span class="p">(</span><span class="n">query_filename</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a filepath for a search result file given a directory path, query</span>
+<span class="sd">    filename, and database filename. This is for both naming and identifying</span>
+<span class="sd">    filepaths after searches have been performed. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">query_filename</span><span class="p">)</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span>\
+            <span class="n">db_filename</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_srch_out.txt&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">outfile</span></div>
+
+
+<div class="viewcode-block" id="get_out_hmm_path"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.get_out_hmm_path">[docs]</a><span class="k">def</span> <span class="nf">get_out_hmm_path</span><span class="p">(</span><span class="n">new_afa_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Define an hmm file path for a given aligned fasta file path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_exten</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">old_exten</span> <span class="o">=</span> <span class="n">new_afa_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">old_exten</span> <span class="o">==</span> <span class="s1">&#39;afaa&#39;</span><span class="p">:</span>
+        <span class="n">new_exten</span> <span class="o">=</span> <span class="s1">&#39;hmm&#39;</span>
+    <span class="k">elif</span> <span class="n">old_exten</span> <span class="o">==</span> <span class="s1">&#39;afna&#39;</span><span class="p">:</span>
+        <span class="n">new_exten</span> <span class="o">=</span> <span class="s1">&#39;nhmm&#39;</span>
+
+    <span class="c1"># Check that it worked.</span>
+    <span class="k">assert</span> <span class="n">new_exten</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Error: HMM extension could not be</span>
+<span class="s2">    determined for input file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">query_file</span>
+
+    <span class="c1"># Get new path.</span>
+    <span class="n">hmm_file_path</span> <span class="o">=</span> <span class="n">new_afa_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">new_exten</span>
+
+    <span class="c1"># Return the new path.</span>
+    <span class="k">return</span> <span class="n">hmm_file_path</span></div>
+
+
+<div class="viewcode-block" id="run_any_search"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.run_any_search">[docs]</a><span class="k">def</span> <span class="nf">run_any_search</span><span class="p">(</span><span class="n">queryfile</span><span class="p">,</span> <span class="n">dbfile</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run similarity search.</span>
+
+<span class="sd">    Import info from settings.py to specify options for running external</span>
+<span class="sd">    software? For example, number of threads.</span>
+
+<span class="sd">    ***Need to refactor functions in the module_nhmmer_search module?</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Determine method to use based on the input file types.</span>
+    <span class="n">query_exten</span> <span class="o">=</span> <span class="n">queryfile</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">dbfile_exten</span> <span class="o">=</span> <span class="n">dbfile</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">determine_search_method</span><span class="p">(</span><span class="n">query_exten</span><span class="p">,</span> <span class="n">dbfile_exten</span><span class="p">)</span>
+
+    <span class="c1"># Get version number for software.</span>
+    <span class="c1">#version = &#39;version&#39;</span>
+    <span class="c1">#version = get_search_software_version(method)</span>
+
+    <span class="c1"># Get relevant settings.</span>
+    <span class="c1"># Get cutoffs for recording hits.</span>
+    <span class="n">blast_evalcut</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">blast_report_evalue_cutoff</span><span class="p">)</span>
+    <span class="n">blast_max_target_seqs</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">blast_max_target_seqs</span><span class="p">)</span>
+    <span class="n">hmmer_evalcut</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">hmmer_report_evalue_cutoff</span><span class="p">)</span>
+    <span class="n">hmmer_scorecut</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">hmmer_report_score_cutoff</span><span class="p">)</span>
+    <span class="c1"># Get number of threads to use.</span>
+    <span class="n">num_threads</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">num_threads_similarity_searching</span><span class="p">)</span>
+
+    <span class="c1"># Construct search command.</span>
+    <span class="n">run_command</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;blastp&#39;</span><span class="p">:</span>
+        <span class="n">run_command</span> <span class="o">=</span> <span class="p">[</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;-query&#39;</span><span class="p">,</span> <span class="n">queryfile</span><span class="p">,</span> <span class="s1">&#39;-db&#39;</span><span class="p">,</span> <span class="n">dbfile</span><span class="p">,</span> <span class="s1">&#39;-out&#39;</span><span class="p">,</span>
+                <span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;-num_threads&#39;</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="s1">&#39;-outfmt&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;-evalue&#39;</span><span class="p">,</span>
+                <span class="n">blast_evalcut</span><span class="p">,</span> <span class="s1">&#39;-max_target_seqs&#39;</span><span class="p">,</span>
+                <span class="n">blast_max_target_seqs</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;tblastn&#39;</span><span class="p">:</span>
+        <span class="n">run_command</span> <span class="o">=</span> <span class="p">[</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;-query&#39;</span><span class="p">,</span> <span class="n">queryfile</span><span class="p">,</span> <span class="s1">&#39;-db&#39;</span><span class="p">,</span> <span class="n">dbfile</span><span class="p">,</span> <span class="s1">&#39;-out&#39;</span><span class="p">,</span>
+                <span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;-num_threads&#39;</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="s1">&#39;-outfmt&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;-evalue&#39;</span><span class="p">,</span>
+                <span class="n">blast_evalcut</span><span class="p">,</span> <span class="s1">&#39;-max_target_seqs&#39;</span><span class="p">,</span>
+                <span class="n">blast_max_target_seqs</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;blastx&#39;</span><span class="p">:</span>
+        <span class="n">run_command</span> <span class="o">=</span> <span class="p">[</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;-query&#39;</span><span class="p">,</span> <span class="n">queryfile</span><span class="p">,</span> <span class="s1">&#39;-db&#39;</span><span class="p">,</span> <span class="n">dbfile</span><span class="p">,</span> <span class="s1">&#39;-out&#39;</span><span class="p">,</span>
+                <span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;-num_threads&#39;</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="s1">&#39;-outfmt&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;-evalue&#39;</span><span class="p">,</span>
+                <span class="n">blast_evalcut</span><span class="p">,</span> <span class="s1">&#39;-max_target_seqs&#39;</span><span class="p">,</span>
+                <span class="n">blast_max_target_seqs</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;blastn&#39;</span><span class="p">:</span>
+        <span class="n">run_command</span> <span class="o">=</span> <span class="p">[</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;-query&#39;</span><span class="p">,</span> <span class="n">queryfile</span><span class="p">,</span> <span class="s1">&#39;-db&#39;</span><span class="p">,</span> <span class="n">dbfile</span><span class="p">,</span> <span class="s1">&#39;-out&#39;</span><span class="p">,</span>
+                <span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;-num_threads&#39;</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="s1">&#39;-outfmt&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;-evalue&#39;</span><span class="p">,</span>
+                <span class="n">blast_evalcut</span><span class="p">,</span> <span class="s1">&#39;-max_target_seqs&#39;</span><span class="p">,</span>
+                <span class="n">blast_max_target_seqs</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;hmmsearch&#39;</span><span class="p">:</span>
+        <span class="c1"># Use HMM file rather than &#39;.afaa&#39; file.</span>
+        <span class="n">actual_queryfile</span> <span class="o">=</span> <span class="n">get_out_hmm_path</span><span class="p">(</span><span class="n">queryfile</span><span class="p">)</span>
+        <span class="c1">#run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
+        <span class="c1">#        &#39;--tblout&#39;, outfile, actual_queryfile, dbfile]</span>
+        <span class="n">run_command</span> <span class="o">=</span> <span class="p">[</span><span class="n">method</span><span class="p">,</span> <span class="s2">&quot;-T&quot;</span><span class="p">,</span> <span class="n">hmmer_scorecut</span><span class="p">,</span> <span class="s2">&quot;--cpu&quot;</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">actual_queryfile</span><span class="p">,</span> <span class="n">dbfile</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;hmmscan&#39;</span><span class="p">:</span>
+        <span class="c1">#run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
+        <span class="c1">#        &#39;--tblout&#39;, outfile, queryfile, dbfile]</span>
+        <span class="n">run_command</span> <span class="o">=</span> <span class="p">[</span><span class="n">method</span><span class="p">,</span> <span class="s2">&quot;-T&quot;</span><span class="p">,</span> <span class="n">hmmer_scorecut</span><span class="p">,</span> <span class="s2">&quot;--cpu&quot;</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">dbfile</span><span class="p">,</span> <span class="n">queryfile</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;nhmmer&#39;</span><span class="p">:</span>
+        <span class="c1"># Use HMM file rather than &#39;.afna&#39; file.</span>
+        <span class="n">actual_queryfile</span> <span class="o">=</span> <span class="n">get_out_hmm_path</span><span class="p">(</span><span class="n">queryfile</span><span class="p">)</span>
+        <span class="c1">#run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
+        <span class="c1">#        &#39;--tblout&#39;, outfile, actual_queryfile, dbfile]</span>
+        <span class="n">run_command</span> <span class="o">=</span> <span class="p">[</span><span class="n">method</span><span class="p">,</span> <span class="s2">&quot;-T&quot;</span><span class="p">,</span> <span class="n">hmmer_scorecut</span><span class="p">,</span> <span class="s2">&quot;--cpu&quot;</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">actual_queryfile</span><span class="p">,</span> <span class="n">dbfile</span><span class="p">]</span>
+
+    <span class="c1"># Prepend program name with directory path if necesssary and specified in</span>
+    <span class="c1"># the settings.py file (this is a work-around for a particular remote</span>
+    <span class="c1"># server).</span>
+    <span class="n">server_program_dirpath</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">server_program_dirpath</span>
+    <span class="n">run_command</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">server_program_dirpath</span><span class="p">,</span> <span class="n">run_command</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span> <span class="o">+</span>\
+    <span class="n">run_command</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="c1"># Run command.</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">run_command</span><span class="p">)</span>
+
+    <span class="c1"># Return string with command used to run search.</span>
+    <span class="c1">#search_descr =  method + &#39; (&#39; + version + &#39;)&#39; + &#39; run with command:\n\t&#39; +\</span>
+    <span class="c1">#        &#39; &#39;.join(run_command) + &#39;\n&#39;</span>
+    <span class="n">search_descr</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">run_command</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">search_descr</span></div>
+
+
+<div class="viewcode-block" id="run_all_searches"><a class="viewcode-back" href="../module_amoebae_run_searches.html#module_amoebae_run_searches.run_all_searches">[docs]</a><span class="k">def</span> <span class="nf">run_all_searches</span><span class="p">(</span><span class="n">query_file_list</span><span class="p">,</span> <span class="n">db_file_list</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">query_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Search with every query file in a given list into every database file in</span>
+<span class="sd">    another given list using appropriate methods.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Current time.</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="c1"># Get query and database directories from settings.</span>
+    <span class="k">if</span> <span class="n">query_dir</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">query_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">querydirpath</span>
+    <span class="n">db_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">dbdirpath</span>
+
+    <span class="c1"># Write a query file list file to output directory.</span>
+    <span class="n">out_query_file</span> <span class="o">=</span> <span class="n">get_out_query_list_path</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_query_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">query_file_list</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Write a database file list file to output directory.</span>
+    <span class="n">out_db_file</span> <span class="o">=</span> <span class="n">get_out_db_list_path</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_db_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">db_file_list</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create a log file.</span>
+    <span class="n">logfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;0_search_log.txt&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Loop over each query-database pair.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="n">srch_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Loop over query files.</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">query_file_list</span><span class="p">:</span>
+            <span class="c1"># Loop over database files.</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">db_file_list</span><span class="p">:</span>
+                <span class="c1"># Temporary &#39;if&#39; statement???</span>
+                <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;afaa&#39;</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span>
+                    <span class="n">warning_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2">WARNING: Not searching with profile query </span><span class="si">%s</span><span class="s2"></span>
+<span class="s2">                    in nucleotide data </span><span class="si">%s</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">warning_text</span><span class="p">)</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">warning_text</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">srch_num</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="c1"># Get name of output file.</span>
+                    <span class="c1">#print(outdir)</span>
+                    <span class="n">outfile</span> <span class="o">=</span> <span class="n">search_result_filepath</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">outdir</span><span class="p">)</span>
+                    <span class="c1">#print(outfile)</span>
+
+                    <span class="c1"># Get full filepaths, and verify existence.</span>
+                    <span class="n">qfull</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+                        <span class="n">qfull</span> <span class="o">=</span> <span class="n">q</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">qfull</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">query_dir</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">qfull</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Specified query file path is</span>
+<span class="s2">                    not a file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">qfull</span>
+
+                    <span class="n">dfull</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+                        <span class="n">dfull</span> <span class="o">=</span> <span class="n">d</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">dfull</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">db_dir</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">dfull</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Specified database file path</span>
+<span class="s2">                    is not a file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">dfull</span>
+
+                    <span class="c1"># Search start time.</span>
+                    <span class="n">search_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+                    <span class="c1"># Run the similarity search and get a description of the search</span>
+                    <span class="c1"># command (write to a log file?).</span>
+                    <span class="n">command_descr</span> <span class="o">=</span> <span class="n">run_any_search</span><span class="p">(</span><span class="n">qfull</span><span class="p">,</span> <span class="n">dfull</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+                    <span class="c1"># Write description of search to log file.</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">command_descr</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                    <span class="c1"># End time.</span>
+                    <span class="n">search_end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                    <span class="c1"># Record time elapsed.</span>
+                    <span class="n">search_elapsed</span> <span class="o">=</span> <span class="n">search_end_time</span> <span class="o">-</span> <span class="n">search_start_time</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Run time: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">search_elapsed</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># End time.</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="c1"># Record time elapsed.</span>
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Total run time: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

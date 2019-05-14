@@ -1,0 +1,172 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_get_fas_from_db_dir &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_get_fas_from_db_dir</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;This module contains functions for retrieving fasta sequences from the</span>
+<span class="sd">database directory used by run_BLAST_pipeline.py and HMMer_pipeline.py.</span>
+
+<span class="sd">This will need to be updated to work with nucleotide data in the database</span>
+<span class="sd">directory system.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+
+
+<div class="viewcode-block" id="get_seq_obj_from_db_fasta"><a class="viewcode-back" href="../module_get_fas_from_db_dir.html#module_get_fas_from_db_dir.get_seq_obj_from_db_fasta">[docs]</a><span class="k">def</span> <span class="nf">get_seq_obj_from_db_fasta</span><span class="p">(</span><span class="n">acc_list</span><span class="p">,</span> <span class="n">fa_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a list of accessions and a fasta file path, and returns seq</span>
+<span class="sd">    objects for corresponding sequences.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Construct a list of sequences (objects) that correspond to accessions.</span>
+    <span class="c1"># Need a way to check them off the list as it goes, and break the loop when</span>
+    <span class="c1"># they are all identified.</span>
+    <span class="n">record_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">acc_not_found_list</span> <span class="o">=</span> <span class="n">acc_list</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fa_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">fa</span><span class="p">:</span>
+        <span class="n">rec_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">fa</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+            <span class="n">rec_num</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">acc_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">acc</span> <span class="o">==</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                    <span class="n">record_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+                    <span class="n">acc_not_found_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+
+    <span class="c1"># Check whether any sequences not identified.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">acc_not_found_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The sequences corresponding to the following accessions were </span><span class="se">\</span>
+<span class="s1">not identified:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">acc_not_found_list</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">record_list</span></div>
+
+
+<div class="viewcode-block" id="get_fas_from_db_dir"><a class="viewcode-back" href="../module_get_fas_from_db_dir.html#module_get_fas_from_db_dir.get_fas_from_db_dir">[docs]</a><span class="k">def</span> <span class="nf">get_fas_from_db_dir</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">acc_list</span><span class="p">,</span> <span class="n">dbdirpath</span><span class="p">,</span> <span class="n">prot_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a dir path (e.g., /Users/Lael/Documents/Data/Genomes_2016), a</span>
+<span class="sd">    database name (e.g., Gintestinalis), and one or more accession numbers, and</span>
+<span class="sd">    returns the corresponding fasta sequence(s) as a string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># print(&#39;db_name: &#39; + db_name)</span>
+    <span class="c1"># print(&#39;acc_list: &#39; + str(acc_list))</span>
+    <span class="c1"># print(&#39;dbdirpath: &#39; + dbdirpath)</span>
+    <span class="c1"># print(&#39;prot_name: &#39; + str(prot_name))</span>
+    <span class="n">fa_paths</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dbdirpath</span><span class="p">,</span> <span class="n">db_name</span> <span class="o">+</span> <span class="s1">&#39;/db_*/*.fa&#39;</span><span class="p">))</span> <span class="c1">#&#39;/db_Prot/*.fa&#39;))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fa_paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Problem: more than one fasta file identified in the database</span><span class="se">\</span>
+<span class="s1">path.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">fa_paths</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Problem: No fasta file identified in the database path.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that fasta file paths were identified.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fa_paths</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Error: Could not identify any fasta file paths.&quot;</span>
+
+    <span class="c1"># Define fasta file path.</span>
+    <span class="n">fa_path</span> <span class="o">=</span> <span class="n">fa_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Get sequence objects.</span>
+    <span class="n">record_list</span> <span class="o">=</span> <span class="n">get_seq_obj_from_db_fasta</span><span class="p">(</span><span class="n">acc_list</span><span class="p">,</span> <span class="n">fa_path</span><span class="p">)</span>
+
+    <span class="c1"># Get the necessary info from the list of objects.</span>
+    <span class="n">fas_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">record_list</span><span class="p">:</span>
+        <span class="n">fas_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fas_string</span> <span class="o">+</span> <span class="n">get_abbrev_fa_record_text_from_obj</span><span class="p">(</span><span class="n">record</span><span class="p">,</span>
+                <span class="n">db_name</span><span class="p">,</span> <span class="n">prot_name</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">fas_string</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

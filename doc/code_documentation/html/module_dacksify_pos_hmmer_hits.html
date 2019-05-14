@@ -1,0 +1,174 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_dacksify_pos_hmmer_hits module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_eml module" href="module_eml.html" />
+    <link rel="prev" title="module_amoebae_trim_nex module" href="module_amoebae_trim_nex.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_eml.html" title="module_eml module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_trim_nex.html" title="module_amoebae_trim_nex module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_dacksify_pos_hmmer_hits">
+<span id="module-dacksify-pos-hmmer-hits-module"></span><h1>module_dacksify_pos_hmmer_hits module<a class="headerlink" href="#module-module_dacksify_pos_hmmer_hits" title="Permalink to this headline">¶</a></h1>
+<p>Module for dacksify_pos_hmmer_hits.py</p>
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.dacksify">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">dacksify</code><span class="sig-paren">(</span><em>infp</em>, <em>outfp</em>, <em>tablefilepath</em>, <em>red_acc_file</em>, <em>evaldiffset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#dacksify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.dacksify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dacksifies</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.find_relev_blast">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">find_relev_blast</code><span class="sig-paren">(</span><em>blast_res</em>, <em>red_acc_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#find_relev_blast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.find_relev_blast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the hit corresponding to the original query, and the first hit
+that is not redundant with the original query in the rblast searches.</p>
+<p>Returns a list composed of lists for the hit corresponding to the original
+query and the first result that is not redundant with the original query.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.find_unabbrev_name">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">find_unabbrev_name</code><span class="sig-paren">(</span><em>abbrev</em>, <em>tablefilepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#find_unabbrev_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.find_unabbrev_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an abbreviation, and returns the full name.
+The table file is a csv file based on the table of genome databases
+accessed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.get_acc_for_prot_name">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">get_acc_for_prot_name</code><span class="sig-paren">(</span><em>prot_name</em>, <em>key_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#get_acc_for_prot_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.get_acc_for_prot_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches in a table file for the chosen representative (refseq?)
+accession for the original (Hsap) query that corresponds to the given
+protein name.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.get_rblast_list">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">get_rblast_list</code><span class="sig-paren">(</span><em>linestring</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#get_rblast_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.get_rblast_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a line from the HMMer_pipeline output and returns a list of lists
+containing the info for a reverse blast hit.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.get_rblast_string">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">get_rblast_string</code><span class="sig-paren">(</span><em>relev_blast_res</em>, <em>red_acc_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#get_rblast_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.get_rblast_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes relevant blast results, and generates a string for writing to the
+output spreadsheet.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.get_red_acc_listx">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">get_red_acc_listx</code><span class="sig-paren">(</span><em>infilepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#get_red_acc_listx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.get_red_acc_listx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a file that contains redundant accessions and returns a list of
+the accessions it contains.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.is_redun_acc">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">is_redun_acc</code><span class="sig-paren">(</span><em>redun_acc_file</em>, <em>acc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#is_redun_acc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.is_redun_acc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if a given accession is in a list of accessions appearing
+in a given file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_dacksify_pos_hmmer_hits.query_retrieved">
+<code class="descclassname">module_dacksify_pos_hmmer_hits.</code><code class="descname">query_retrieved</code><span class="sig-paren">(</span><em>hmmer_string</em>, <em>red_acc_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_dacksify_pos_hmmer_hits.html#query_retrieved"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_dacksify_pos_hmmer_hits.query_retrieved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if a match for the original query was retrieved in the
+rblast results as a top hit.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_amoebae_trim_nex.html"
+                        title="previous chapter">module_amoebae_trim_nex module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_eml.html"
+                        title="next chapter">module_eml module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_eml.html" title="module_eml module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_trim_nex.html" title="module_amoebae_trim_nex module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

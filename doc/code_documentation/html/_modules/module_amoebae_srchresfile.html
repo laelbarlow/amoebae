@@ -1,0 +1,542 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_srchresfile &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_amoebae_srchresfile</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module for defining a module for parsing similarity search output files with</span>
+<span class="sd">various formats.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Import built-in modules.</span>
+<span class="c1">#import argparse</span>
+<span class="c1">#import sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="c1">#import subprocess</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">settings</span>
+<span class="c1">#import shutil</span>
+<span class="c1">#import glob</span>
+<span class="c1">#import time</span>
+<span class="c1">#import pandas as pd</span>
+
+<span class="c1"># Import modules from installed libraries/packages.</span>
+<span class="c1">#from Bio import SeqIO</span>
+<span class="c1">#from Bio import SearchIO</span>
+<span class="c1"># Import SearchIO and suppress experimental warning</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">BiopythonExperimentalWarning</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">BiopythonExperimentalWarning</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SearchIO</span>
+
+<span class="c1">#from Bio import AlignIO</span>
+<span class="c1">#from Bio.Alphabet import IUPAC, Gapped</span>
+<span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="k">import</span> <span class="n">NCBIXML</span>
+
+<span class="kn">from</span> <span class="nn">module_amoebae</span> <span class="k">import</span> <span class="n">get_seqs_from_fasta_db</span><span class="p">,</span> <span class="n">get_subseq_from_fasta_db</span>
+<span class="kn">from</span> <span class="nn">module_search_scaffolds</span> <span class="k">import</span> <span class="n">get_blastp_hit_seq_obj_and_coord</span><span class="p">,</span> <span class="n">get_tblastn_hit_seq_obj_and_coord</span>
+
+<span class="c1"># How to iterate over all hits in a result file?</span>
+
+
+<div class="viewcode-block" id="SrchResFile"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile">[docs]</a><span class="k">class</span> <span class="nc">SrchResFile</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Parses relevant information as needed from similarity search output</span>
+<span class="sd">    file, which may be one of several types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># Check that the input file path exists.</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Input filepath does not exist:</span>
+<span class="s2">        </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">filepath</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span>
+
+        <span class="c1"># Get basic info from file.</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">get_srch_file_info</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="c1"># Determine program used to generate input file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine the name of</span>
+<span class="s2">        the program that produced the similarity search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>\
+        <span class="o">%</span> <span class="n">filepath</span>
+
+        <span class="c1"># Determine version of program used to generate input file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine the version of</span>
+<span class="s2">        the program that produced the similarity search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>\
+        <span class="o">%</span> <span class="n">filepath</span>
+
+        <span class="c1"># Determine format type of input file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine the name of</span>
+<span class="s2">        the format type of the similarity search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>\
+        <span class="o">%</span> <span class="n">filepath</span>
+
+        <span class="c1"># Check that the file contains only results for a search with a single</span>
+        <span class="c1"># query.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hhsearch&#39;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">SearchIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;More than</span>
+<span class="s2">            one search result contained in input file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">filepath</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...</span>
+
+        <span class="c1"># Determine number of hits in input file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_hits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hhsearch&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_hits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_hits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine the number of</span>
+<span class="s2">            hits listed in the similarity search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>\
+            <span class="o">%</span> <span class="n">filepath</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_hits</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine the number of</span>
+<span class="s2">        hits listed in the similarity search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>\
+        <span class="o">%</span> <span class="n">filepath</span>
+
+        <span class="c1"># Get the query and database file paths.</span>
+        <span class="c1">#self.query_file = None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">!=</span> <span class="s1">&#39;hmmer3-tab&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Does not work with tabular</span>
+<span class="s2">        format.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hhsearch&#39;</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...</span>
+
+        <span class="c1">#assert self.query_file is not None, &quot;&quot;&quot;Could not determine query file</span>
+        <span class="c1">#name listed in the similarity search result file: %s&quot;&quot;&quot;\</span>
+        <span class="c1">#% filepath</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine database file</span>
+<span class="s2">        name listed in the similarity search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>\
+        <span class="o">%</span> <span class="n">filepath</span>
+
+        <span class="c1"># Define full path to database file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_file_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">dbdirpath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span>
+        <span class="c1"># Check that it is a real file.</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file_path</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Path to database is not a file:</span>
+<span class="s2">        </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_file_path</span>
+
+
+<div class="viewcode-block" id="SrchResFile.hit_id"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile.hit_id">[docs]</a>    <span class="k">def</span> <span class="nf">hit_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_rank</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return id (accession) (if present) for sequence/profile with a given</span>
+<span class="sd">        rank in the results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hit_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hhsearch&#39;</span><span class="p">:</span>
+            <span class="n">hit_id</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)[</span><span class="n">hit_rank</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...</span>
+
+        <span class="c1"># Check that it worked.</span>
+        <span class="k">assert</span> <span class="n">hit_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not retrieve id for hit with rank</span>
+<span class="s2">        </span><span class="si">%s</span><span class="s2"> in search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">hit_rank</span><span class="p">),</span> <span class="n">filepath</span><span class="p">)</span>
+
+        <span class="c1"># Return the hit id.</span>
+        <span class="k">return</span> <span class="n">hit_id</span></div>
+
+
+<div class="viewcode-block" id="SrchResFile.hit_description"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile.hit_description">[docs]</a>    <span class="k">def</span> <span class="nf">hit_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_rank</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return description (if present) for sequence/profile with a given</span>
+<span class="sd">        rank in the results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hit_descr</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hhsearch&#39;</span><span class="p">:</span>
+            <span class="n">hit_descr</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)[</span><span class="n">hit_rank</span><span class="p">]</span><span class="o">.</span><span class="n">description</span>
+            <span class="k">if</span> <span class="n">hit_descr</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">hit_descr</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span>\
+                        <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)[</span><span class="n">hit_rank</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...</span>
+
+        <span class="c1"># Check that it worked.</span>
+        <span class="k">assert</span> <span class="n">hit_descr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not retrieve description for hit</span>
+<span class="s2">        with rank </span><span class="si">%s</span><span class="s2"> in search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">hit_rank</span><span class="p">),</span> <span class="n">filepath</span><span class="p">)</span>
+
+        <span class="c1"># Return the hit description.</span>
+        <span class="k">return</span> <span class="n">hit_descr</span></div>
+
+
+<div class="viewcode-block" id="SrchResFile.hit_evalue"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile.hit_evalue">[docs]</a>    <span class="k">def</span> <span class="nf">hit_evalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_rank</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return E-value for hit sequence/profile with a given rank in the</span>
+<span class="sd">        results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hit_evalue</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;blast-xml&#39;</span><span class="p">:</span>
+            <span class="c1"># Get the E-value for the top hit.</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">blast_record</span> <span class="ow">in</span> <span class="n">NCBIXML</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">infh</span><span class="p">):</span>
+                    <span class="n">hit_num</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">blast_record</span><span class="o">.</span><span class="n">descriptions</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">hit_num</span> <span class="o">==</span> <span class="n">hit_rank</span><span class="p">:</span> 
+                            <span class="n">hit_evalue</span> <span class="o">=</span> <span class="n">hit</span><span class="o">.</span><span class="n">e</span>
+                            <span class="k">break</span>
+                        <span class="n">hit_num</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">break</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hmmer3-text&#39;</span><span class="p">:</span>
+            <span class="n">hit_evalue</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)[</span><span class="n">hit_rank</span><span class="p">]</span><span class="o">.</span><span class="n">evalue</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hhsearch&#39;</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...?</span>
+
+        <span class="c1"># Check that it worked.</span>
+        <span class="k">assert</span> <span class="n">hit_evalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not retrieve E-value for hit</span>
+<span class="s2">        with rank </span><span class="si">%s</span><span class="s2"> in search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">hit_rank</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="c1"># Return the hit E-value.</span>
+        <span class="k">return</span> <span class="n">hit_evalue</span></div>
+
+
+<div class="viewcode-block" id="SrchResFile.hit_score"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile.hit_score">[docs]</a>    <span class="k">def</span> <span class="nf">hit_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_rank</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return bitscore (from BLAST programs) or sequence score (from HMMer</span>
+<span class="sd">        output) (or something else for hhsearch?) for hit sequence/profile with</span>
+<span class="sd">        a given rank in the results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hit_score</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;blast-xml&#39;</span><span class="p">:</span>
+            <span class="c1"># Get the score for the top hit.</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">blast_record</span> <span class="ow">in</span> <span class="n">NCBIXML</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">infh</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">blast_record</span><span class="o">.</span><span class="n">descriptions</span><span class="p">:</span>
+                        <span class="n">hit_score</span> <span class="o">=</span> <span class="n">hit</span><span class="o">.</span><span class="n">score</span>
+                        <span class="k">break</span>
+                    <span class="k">break</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hmmer3-text&#39;</span><span class="p">:</span>
+            <span class="n">hit_score</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span>\
+                    <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)[</span><span class="n">hit_rank</span><span class="p">]</span><span class="o">.</span><span class="n">bitscore</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hhsearch&#39;</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...?</span>
+
+        <span class="c1"># Check that it worked.</span>
+        <span class="k">assert</span> <span class="n">hit_score</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not retrieve score for hit</span>
+<span class="s2">        with rank </span><span class="si">%s</span><span class="s2"> in search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">hit_rank</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="c1"># Return the hit score.</span>
+        <span class="k">return</span> <span class="n">hit_score</span></div>
+
+
+<div class="viewcode-block" id="SrchResFile.hit_sequence"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile.hit_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">hit_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_rank</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a Seq object for full sequence of subject sequence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get path for databases directory.</span>
+        <span class="n">dbdir_path</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">dbdirpath</span>
+
+        <span class="c1"># Get sequence object.</span>
+        <span class="n">seq_obj</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">seq_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit_id</span><span class="p">(</span><span class="n">hit_rank</span><span class="p">)</span> 
+        <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dbdir_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">db_path</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Given path is not a file.&quot;&quot;&quot;</span>
+        <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">get_seqs_from_fasta_db</span><span class="p">(</span><span class="n">db_path</span><span class="p">,</span> <span class="p">[</span><span class="n">seq_id</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Check that it worked.</span>
+        <span class="k">assert</span> <span class="n">seq_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not retrieve sequence for hit.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Return sequence object.</span>
+        <span class="k">return</span> <span class="n">seq_obj</span></div>
+
+
+<div class="viewcode-block" id="SrchResFile.hit_subsequence_and_coord"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile.hit_subsequence_and_coord">[docs]</a>    <span class="k">def</span> <span class="nf">hit_subsequence_and_coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_rank</span><span class="p">,</span> <span class="n">max_gap</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a Seq object for subsequence of subject sequence that</span>
+<span class="sd">        actually aligns to the query sequence/profile.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subseq_obj</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">subseq_coord</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Get hit object with SearchIO parser.</span>
+        <span class="n">searchio_hit_obj</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="n">hit_num</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
+            <span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">infh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">):</span>
+                <span class="n">hit_num</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">hit_num</span> <span class="o">==</span> <span class="n">hit_rank</span><span class="p">:</span>
+                    <span class="n">searchio_hit_obj</span> <span class="o">=</span> <span class="n">hit</span>
+                    <span class="k">break</span>
+
+        <span class="c1"># Check that hit object was retreived.</span>
+        <span class="k">assert</span> <span class="n">searchio_hit_obj</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not retrieve Bio.SearchIO</span>
+<span class="s2">        hit object from file.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Process SearchIO hit object to get subsequence object and</span>
+        <span class="c1"># coordinates differently depending on format.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;blast-xml&#39;</span><span class="p">:</span>
+            <span class="c1"># Need to concatenate HSPs in a logical manner, and differently for</span>
+            <span class="c1"># blastp vs. tblastn.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">==</span> <span class="s1">&#39;blastp&#39;</span><span class="p">:</span>
+                <span class="c1"># Use the search_scaffolds module.</span>
+                <span class="n">xlist</span> <span class="o">=</span>\
+                <span class="n">get_blastp_hit_seq_obj_and_coord</span><span class="p">(</span><span class="n">searchio_hit_obj</span><span class="p">,</span> <span class="n">max_gap</span><span class="p">)</span>
+                <span class="n">subseq_obj</span> <span class="o">=</span> <span class="n">xlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">subseq_coord</span> <span class="o">=</span> <span class="n">xlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">program</span> <span class="o">==</span> <span class="s1">&#39;tblastn&#39;</span><span class="p">:</span>
+                <span class="c1"># Use the search_scaffolds module.</span>
+                <span class="n">xlist</span> <span class="o">=</span>\
+                <span class="n">get_tblastn_hit_seq_obj_and_coord</span><span class="p">(</span><span class="n">searchio_hit_obj</span><span class="p">,</span> <span class="n">max_gap</span><span class="p">)</span>
+                <span class="n">subseq_obj</span> <span class="o">=</span> <span class="n">xlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">subseq_coord</span> <span class="o">=</span> <span class="n">xlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;hmmer3-text&#39;</span><span class="p">:</span>
+            <span class="c1"># More straight-forward, because the sequences can be taken</span>
+            <span class="c1"># directly from the database file.</span>
+
+            <span class="c1"># Get path for databases directory.</span>
+            <span class="n">dbdir_path</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">dbdirpath</span>
+
+            <span class="c1"># Get coordinates.</span>
+            <span class="n">subseq_coord</span> <span class="o">=</span> <span class="n">get_hmmer_hit_seq_coord</span><span class="p">(</span><span class="n">searchio_hit_obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span>
+
+            <span class="c1"># Get sequence object.</span>
+            <span class="n">seq_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit_id</span><span class="p">(</span><span class="n">hit_rank</span><span class="p">)</span> 
+            <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dbdir_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span>
+            <span class="n">subseq_obj</span> <span class="o">=</span> <span class="n">get_subseq_from_fasta_db</span><span class="p">(</span><span class="n">db_path</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">,</span> <span class="n">subseq_coord</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span> <span class="c1"># ...?</span>
+
+        <span class="c1"># Check that it worked.</span>
+        <span class="k">assert</span> <span class="n">subseq_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not retrieve sequence for hit.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">subseq_coord</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not retrieve sequence</span>
+<span class="s2">        coordinates for hit.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Return sequence object and coordinates.</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">subseq_obj</span><span class="p">,</span> <span class="n">subseq_coord</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SrchResFile.hit_query_subsequence"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile.hit_query_subsequence">[docs]</a>    <span class="k">def</span> <span class="nf">hit_query_subsequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hit_rank</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return Seq object for subsequence of query sequence (or consensus of</span>
+<span class="sd">        profile?) that aligns to the subject sequence.</span>
+
+<span class="sd">        Is this even a necessary method?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SrchResFile.rank_of_first_nonredun_hit"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.SrchResFile.rank_of_first_nonredun_hit">[docs]</a>    <span class="k">def</span> <span class="nf">rank_of_first_nonredun_hit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redun_hit_id_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Efficiently determine the rank of the first hit that does not have</span>
+<span class="sd">        an ID that is in the given list, or return None if there aren&#39;t any.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">first_nonredun_hit_rank</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="n">hit_num</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
+            <span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">infh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">):</span>
+                <span class="n">hit_num</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">hit</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">redun_hit_id_list</span><span class="p">:</span>
+                    <span class="n">first_nonredun_hit_rank</span> <span class="o">=</span> <span class="n">hit_num</span>
+                    <span class="k">break</span>
+
+        <span class="c1"># Return the rank.</span>
+        <span class="k">return</span> <span class="n">first_nonredun_hit_rank</span></div></div>
+
+
+
+
+
+
+<span class="c1">################################</span>
+<span class="c1"># Define functions used by the SrchResFile class that are best separated from</span>
+<span class="c1"># methods of the class.</span>
+
+
+<div class="viewcode-block" id="get_srch_file_info"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.get_srch_file_info">[docs]</a><span class="k">def</span> <span class="nf">get_srch_file_info</span><span class="p">(</span><span class="n">search_result_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the format string necessary for the SearchIO module to parse a</span>
+<span class="sd">    given file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define regular expressions that will only match any line in a file if it</span>
+    <span class="c1"># is of a certain format. See the SearchIO documentation here:</span>
+    <span class="c1"># http://biopython.org/DIST/docs/api/Bio.SearchIO-module.html</span>
+    <span class="n">fmt_expr_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;blast-xml&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^&lt;!DOCTYPE BlastOutput&#39;</span><span class="p">)],</span>
+                     <span class="s1">&#39;hmmer3-tab&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^# Option settings: hmmsearch --tblout&#39;</span><span class="p">)],</span>
+                     <span class="s1">&#39;hmmer3-text&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^# HMMER &#39;</span><span class="p">)]</span>
+                     <span class="p">}</span>
+    
+    <span class="c1"># See if any of the regular expressions match the file.</span>
+    <span class="n">ident_fmt</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">search_result_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">srh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">srh</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">fmt</span> <span class="ow">in</span> <span class="n">fmt_expr_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">fmt_expr_dict</span><span class="p">[</span><span class="n">fmt</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">ident_fmt</span> <span class="o">=</span> <span class="n">fmt</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">ident_fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+    <span class="c1"># Check that a format was found.</span>
+    <span class="k">assert</span> <span class="n">ident_fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Error: Could not identify format for</span>
+<span class="s2">    search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">search_result_path</span>
+
+    <span class="n">ident_prog</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">search_result_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">srh</span><span class="p">:</span>
+        <span class="n">ident_prog</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">srh</span><span class="p">,</span> <span class="n">ident_fmt</span><span class="p">)</span><span class="o">.</span><span class="n">program</span>
+    <span class="k">assert</span> <span class="n">ident_prog</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify program name from file</span>
+<span class="s2">    format type.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Decide which dict key to use based on identified program version, and</span>
+    <span class="c1"># then identify version in file.</span>
+    <span class="n">ident_vers</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1">#vers_key = None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">search_result_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">srh</span><span class="p">:</span>
+        <span class="n">ident_vers</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">srh</span><span class="p">,</span> <span class="n">ident_fmt</span><span class="p">)</span><span class="o">.</span><span class="n">version</span>
+
+    <span class="c1"># Check that the program version was found.</span>
+    <span class="k">assert</span> <span class="n">ident_vers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Error: Could not identify name of program</span>
+<span class="s2">    used to generate search result file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">search_result_path</span>
+
+    <span class="c1"># Return a list defining the input file format.</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">ident_prog</span><span class="p">,</span> <span class="n">ident_vers</span><span class="p">,</span> <span class="n">ident_fmt</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_hmmer_hit_seq_coord"><a class="viewcode-back" href="../module_amoebae_srchresfile.html#module_amoebae_srchresfile.get_hmmer_hit_seq_coord">[docs]</a><span class="k">def</span> <span class="nf">get_hmmer_hit_seq_coord</span><span class="p">(</span><span class="n">searchio_hit_obj</span><span class="p">,</span> <span class="n">db_file</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a Bio.SearchIO hmmer3-text hit object and returns specially</span>
+<span class="sd">    formatted coordinates for the subsequence (top HSP) that match the query.</span>
+
+<span class="sd">    Note: The coordinates are the literal start and end residue numbers for the</span>
+<span class="sd">    relevant portion of the subject sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#domainstart = int(linelist[10]) - 1</span>
+    <span class="n">domainstart</span> <span class="o">=</span> <span class="n">searchio_hit_obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hit_start</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="c1">#domainend = int(linelist[11])</span>
+    <span class="n">domainend</span> <span class="o">=</span> <span class="n">searchio_hit_obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hit_end</span>
+    <span class="c1">#seqlen = len(str(seq_record.seq))</span>
+    <span class="c1">#seqlen = get_seq_len_from_db(searchio_hit_obj.id,\</span>
+    <span class="c1">#        db_file)</span>
+    <span class="c1"># Get sequence length from sequence in database.</span>
+    <span class="n">seqlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_seqs_from_fasta_db</span><span class="p">(</span><span class="n">db_file</span><span class="p">,</span> <span class="p">[</span><span class="n">searchio_hit_obj</span><span class="o">.</span><span class="n">id</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">nterm_margin</span> <span class="o">=</span> <span class="n">domainstart</span>
+    <span class="n">cterm_margin</span> <span class="o">=</span> <span class="n">seqlen</span> <span class="o">-</span> <span class="n">domainend</span>
+    <span class="n">nterm_extra</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
+    <span class="n">cterm_extra</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nterm_margin</span> <span class="o">&lt;</span> <span class="n">nterm_extra</span><span class="p">:</span>
+        <span class="n">nterm_extra</span> <span class="o">=</span> <span class="n">nterm_margin</span>
+    <span class="k">if</span> <span class="n">cterm_margin</span> <span class="o">&lt;</span> <span class="n">cterm_extra</span><span class="p">:</span>
+        <span class="n">cterm_extra</span> <span class="o">=</span> <span class="n">cterm_margin</span>
+    <span class="n">cut_start</span> <span class="o">=</span> <span class="n">domainstart</span> <span class="o">-</span> <span class="n">nterm_extra</span>
+    <span class="n">cut_end</span> <span class="o">=</span> <span class="n">domainend</span> <span class="o">+</span> <span class="n">cterm_extra</span> <span class="c1">#+ 1</span>
+    <span class="c1">#domain = seq_record.seq[cut_start:cut_end]</span>
+    <span class="c1">#domain = seq_record.seq[cut_start:cut_end]</span>
+    <span class="c1">#seq_record.seq = domain</span>
+    <span class="c1">#o.write(&#39;&gt;&#39; + seq_record.id + &#39;\n&#39; </span>
+    <span class="c1">#        + str(seq_record.seq) + &#39;\n&#39;)</span>
+
+    <span class="c1"># Return coordinates.</span>
+    <span class="k">return</span> <span class="p">[[</span><span class="n">cut_start</span><span class="p">,</span> <span class="n">cut_end</span><span class="p">]]</span></div>
+    
+
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,200 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_hmmscan &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_amoebae_hmmscan</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module for amoebae script with functions for running hmmscan (from the</span>
+<span class="sd">HMMer3 software package).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Import built-in modules.</span>
+<span class="c1">#import argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="c1">#import re</span>
+<span class="c1">#import shutil</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Import modules from installed libraries/packages.</span>
+<span class="c1">#from Bio import SeqIO</span>
+<span class="c1">#from Bio import AlignIO</span>
+<span class="c1">#from Bio.Alphabet import IUPAC, Gapped</span>
+
+<span class="c1">#from get_datatype import get_dbtype</span>
+<span class="c1">#from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info</span>
+<span class="kn">from</span> <span class="nn">module_amoebae_nex_to_hmm</span> <span class="k">import</span> <span class="n">nex_to_hmm</span>
+
+<span class="c1">#import settings</span>
+
+<span class="c1"># Define functions to be used in amoebae.</span>
+
+<div class="viewcode-block" id="all_nex_to_hmm"><a class="viewcode-back" href="../module_amoebae_hmmscan.html#module_amoebae_hmmscan.all_nex_to_hmm">[docs]</a><span class="k">def</span> <span class="nf">all_nex_to_hmm</span><span class="p">(</span><span class="n">indirpath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts all nex files in a given directory to .hmm (writes .hmm files).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Loop over files.</span>
+    <span class="k">for</span> <span class="n">nex</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indirpath</span><span class="p">,</span> <span class="s1">&#39;*.nex&#39;</span><span class="p">)):</span>
+        <span class="c1"># Convert nex to hmm.</span>
+        <span class="n">nex_to_hmm</span><span class="p">(</span><span class="n">nex</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_hmm_paths"><a class="viewcode-back" href="../module_amoebae_hmmscan.html#module_amoebae_hmmscan.get_hmm_paths">[docs]</a><span class="k">def</span> <span class="nf">get_hmm_paths</span><span class="p">(</span><span class="n">indirpath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of all .hmm files in a given directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indirpath</span><span class="p">,</span> <span class="s1">&#39;*.hmm&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="cat_hmm"><a class="viewcode-back" href="../module_amoebae_hmmscan.html#module_amoebae_hmmscan.cat_hmm">[docs]</a><span class="k">def</span> <span class="nf">cat_hmm</span><span class="p">(</span><span class="n">hmm_paths</span><span class="p">,</span> <span class="n">outfilepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a list of .hmm file paths, and outputs a file that is a</span>
+<span class="sd">    concatenation of these, and returns its path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outfilehandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">hmm_paths</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">as</span> <span class="n">h</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">h</span><span class="p">:</span>
+                <span class="n">outfilehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+    <span class="n">outfilehandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="call_hmmpress"><a class="viewcode-back" href="../module_amoebae_hmmscan.html#module_amoebae_hmmscan.call_hmmpress">[docs]</a><span class="k">def</span> <span class="nf">call_hmmpress</span><span class="p">(</span><span class="n">infilepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calls hmmpress on a file to make a concatenation of .hmm files into an</span>
+<span class="sd">    HMM database for searching with hmmscan.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">infilepath</span><span class="p">))</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;hmmpress&#39;</span><span class="p">,</span> <span class="n">infilepath</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="make_hmm_db"><a class="viewcode-back" href="../module_amoebae_hmmscan.html#module_amoebae_hmmscan.make_hmm_db">[docs]</a><span class="k">def</span> <span class="nf">make_hmm_db</span><span class="p">(</span><span class="n">indirpath</span><span class="p">,</span> <span class="n">hmmdbname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outdirpath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes .hmm files in a given input directory, and outputs a searchable</span>
+<span class="sd">    HMM database (files) in a given output directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If no hmm db name provided, then set to default name.</span>
+    <span class="k">if</span> <span class="n">hmmdbname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">hmmdbname</span> <span class="o">=</span> <span class="s1">&#39;hmmdb&#39;</span>
+
+    <span class="c1"># Append a timestamp to the database filename.</span>
+    <span class="n">cur_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y_%m_</span><span class="si">%d</span><span class="s2">_%H_%M_%S&quot;</span><span class="p">)</span>
+    <span class="n">hmmdbname</span> <span class="o">=</span> <span class="n">hmmdbname</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">cur_time</span> <span class="o">+</span> <span class="s1">&#39;.hmmdb&#39;</span>
+
+    <span class="c1"># If no out dir path specified, then just use in dir path.</span>
+    <span class="k">if</span> <span class="n">outdirpath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outdirpath</span> <span class="o">=</span> <span class="n">indirpath</span>
+
+    <span class="c1"># Convert .nex alignment files to HMMs (.hmm).</span>
+    <span class="n">all_nex_to_hmm</span><span class="p">(</span><span class="n">indirpath</span><span class="p">)</span>
+
+    <span class="c1"># Get the .hmm file paths.</span>
+    <span class="n">hmms</span> <span class="o">=</span> <span class="n">get_hmm_paths</span><span class="p">(</span><span class="n">indirpath</span><span class="p">)</span>
+
+    <span class="c1"># Concatenate .hmm files.</span>
+    <span class="n">hmmdbpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdirpath</span><span class="p">,</span> <span class="n">hmmdbname</span><span class="p">)</span>
+    <span class="n">chmm</span> <span class="o">=</span> <span class="n">cat_hmm</span><span class="p">(</span><span class="n">hmms</span><span class="p">,</span> <span class="n">hmmdbpath</span><span class="p">)</span> 
+
+    <span class="c1"># Compress the concatenated file.</span>
+    <span class="n">call_hmmpress</span><span class="p">(</span><span class="n">hmmdbpath</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="determine_if_is_hmmdb"><a class="viewcode-back" href="../module_amoebae_hmmscan.html#module_amoebae_hmmscan.determine_if_is_hmmdb">[docs]</a><span class="k">def</span> <span class="nf">determine_if_is_hmmdb</span><span class="p">(</span><span class="n">infp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return True if the given file is an HMM database (generated using</span>
+<span class="sd">    hmmpress from the HMMer3 software package), and return False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">open</span><span class="p">(</span><span class="n">infp</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;HMMER3/f&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

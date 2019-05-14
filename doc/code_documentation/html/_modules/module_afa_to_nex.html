@@ -1,0 +1,240 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_afa_to_nex &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_afa_to_nex</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;This module is for afa_to_nex.py script and others, which use the same</span>
+<span class="sd">functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">AlignIO</span>
+<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">IUPAC</span><span class="p">,</span> <span class="n">Gapped</span>
+<span class="kn">from</span> <span class="nn">module_amoebae_get_datatype</span> <span class="k">import</span> <span class="n">get_dbtype</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
+
+
+<div class="viewcode-block" id="determine_alphabet"><a class="viewcode-back" href="../module_afa_to_nex.html#module_afa_to_nex.determine_alphabet">[docs]</a><span class="k">def</span> <span class="nf">determine_alphabet</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Automatically determine what alphabet to use for a given file.&quot;&quot;&quot;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">get_dbtype</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;prot&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Gapped</span><span class="p">(</span><span class="n">IUPAC</span><span class="o">.</span><span class="n">protein</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;nucl&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Gapped</span><span class="p">(</span><span class="n">IUPAC</span><span class="o">.</span><span class="n">ambiguous_dna</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="afa_to_nex"><a class="viewcode-back" href="../module_afa_to_nex.html#module_afa_to_nex.afa_to_nex">[docs]</a><span class="k">def</span> <span class="nf">afa_to_nex</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="n">outfilepath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes an aligned fasta file (protein) and writes a nexus format file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Delete extra mesquite lines if present (otherwise they cause errors).</span>
+    <span class="c1"># These may have been added if the nex file was opened and saved in</span>
+    <span class="c1"># mesquite. IS THIS NECESSARY???</span>
+    <span class="n">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+
+    <span class="c1"># Convert afa to nex.</span>
+    <span class="k">if</span> <span class="n">outfilepath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outfilepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+    <span class="n">inhandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+    <span class="n">alph</span> <span class="o">=</span> <span class="n">determine_alphabet</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span> <span class="c1"># Get dbtype</span>
+    <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">inhandle</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">,</span>
+        <span class="n">alphabet</span><span class="o">=</span><span class="n">alph</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">description</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">outhandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alignment</span><span class="p">,</span> <span class="n">outhandle</span><span class="p">,</span> <span class="s2">&quot;nexus&quot;</span><span class="p">)</span>
+    <span class="n">inhandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">outhandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="nex_to_afa"><a class="viewcode-back" href="../module_afa_to_nex.html#module_afa_to_nex.nex_to_afa">[docs]</a><span class="k">def</span> <span class="nf">nex_to_afa</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="n">outfilepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a nexus file (protein) and writes an aligned fasta file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Delete extra mesquite lines if present (otherwise they cause errors).</span>
+    <span class="c1"># These may have been added if the nex file was opened and saved in</span>
+    <span class="c1"># mesquite.</span>
+    <span class="n">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+
+    <span class="c1"># Convert nex to afa.</span>
+    <span class="n">inhandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+    <span class="n">alph</span> <span class="o">=</span> <span class="n">determine_alphabet</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span> <span class="c1"># Get dbtype</span>
+    <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">inhandle</span><span class="p">,</span> <span class="s2">&quot;nexus&quot;</span><span class="p">,</span>
+        <span class="n">alphabet</span><span class="o">=</span><span class="n">alph</span><span class="p">)</span>
+    <span class="n">outhandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alignment</span><span class="p">,</span> <span class="n">outhandle</span><span class="p">,</span> <span class="s2">&quot;fasta&quot;</span><span class="p">)</span>
+    <span class="n">inhandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">outhandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="delete_extra_mesquite_lines"><a class="viewcode-back" href="../module_afa_to_nex.html#module_afa_to_nex.delete_extra_mesquite_lines">[docs]</a><span class="k">def</span> <span class="nf">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">infilepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove extra blocks added by Mesquite, if present.  This prevents</span>
+<span class="sd">    Biopython from raising an error about an unmatched &#39;end&#39; in one of the</span>
+<span class="sd">    nexus blocks.  The extra blocks are not necessary anyway.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inhandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">inhandle</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">inhandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">inhandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s1">&#39;BEGIN ASSUMPTIONS;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="p">:</span>
+            <span class="n">inhandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">inhandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="nex_to_phylip"><a class="viewcode-back" href="../module_afa_to_nex.html#module_afa_to_nex.nex_to_phylip">[docs]</a><span class="k">def</span> <span class="nf">nex_to_phylip</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="n">outfilepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes nexus format file and makes a phylip format file.</span>
+<span class="sd">    Warning: Taxon names must be no more than 10 alphanumeric characters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Delete extra mesquite lines if present (otherwise they cause errors).</span>
+    <span class="c1"># These may have been added if the nex file was opened and saved in</span>
+    <span class="c1"># mesquite.</span>
+    <span class="n">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+
+    <span class="c1"># Convert nex to phylip.</span>
+    <span class="n">inhandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+    <span class="n">alph</span> <span class="o">=</span> <span class="n">determine_alphabet</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span> <span class="c1"># Get dbtype</span>
+    <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">inhandle</span><span class="p">,</span> <span class="s2">&quot;nexus&quot;</span><span class="p">,</span>
+        <span class="n">alphabet</span><span class="o">=</span><span class="n">alph</span><span class="p">)</span>
+    <span class="n">outhandle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alignment</span><span class="p">,</span> <span class="n">outhandle</span><span class="p">,</span> <span class="s2">&quot;phylip-sequential&quot;</span><span class="p">)</span>
+    <span class="n">inhandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">outhandle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="nex_to_mbnex"><a class="viewcode-back" href="../module_afa_to_nex.html#module_afa_to_nex.nex_to_mbnex">[docs]</a><span class="k">def</span> <span class="nf">nex_to_mbnex</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="n">outfilepath</span><span class="p">,</span> <span class="n">mrbayescodeblocks</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a nexus format alignment file and converts to a format for use in</span>
+<span class="sd">    a phylogenetic analysis using MrBayes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Delete extra mesquite lines if present (otherwise they cause errors).</span>
+    <span class="c1"># These may have been added if the nex file was opened and saved in</span>
+    <span class="c1"># mesquite.</span>
+    <span class="n">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+
+    <span class="c1"># Parse alignment sequences and replace &#39;?&#39; with &#39;X&#39;.</span>
+    <span class="n">infilepath2</span> <span class="o">=</span> <span class="n">infilepath</span> <span class="o">+</span> <span class="s1">&#39;_TEMP.nex&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath2</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">infh</span><span class="p">,</span> <span class="s2">&quot;nexus&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
+            <span class="c1">#i.seq.seq = i.seq.seq.replace(&#39;?&#39;, &#39;X&#39;)</span>
+            <span class="n">i</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">))</span>
+
+        <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alignment</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s2">&quot;nexus&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Modify input file to make output file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath2</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="c1"># Remove &quot;gap&quot; and change &quot;missing&quot; to &quot;-&quot;.</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">format&#39;</span><span class="p">):</span>
+                <span class="n">newi</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;missing=?&#39;</span><span class="p">,</span> <span class="s1">&#39;missing=-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;gap=-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">newi</span><span class="p">)</span>
+
+            <span class="c1"># Append MrBayes code blocks.</span>
+            <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;end;&#39;</span><span class="p">):</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">mrbayescodeblocks</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># Remove temporary file.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">infilepath2</span><span class="p">)</span></div>
+
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

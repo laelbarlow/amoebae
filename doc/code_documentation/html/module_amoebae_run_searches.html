@@ -1,0 +1,189 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_run_searches module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_amoebae_scrollsaw module" href="module_amoebae_scrollsaw.html" />
+    <link rel="prev" title="module_amoebae_prune module" href="module_amoebae_prune.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_scrollsaw.html" title="module_amoebae_scrollsaw module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_prune.html" title="module_amoebae_prune module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_amoebae_run_searches">
+<span id="module-amoebae-run-searches-module"></span><h1>module_amoebae_run_searches module<a class="headerlink" href="#module-module_amoebae_run_searches" title="Permalink to this headline">¶</a></h1>
+<p>Module for functions for amoebae script that are for performing
+similarity searches, but do not require installation of pandas library.</p>
+<p>NO PANDAS.</p>
+<dl class="function">
+<dt id="module_amoebae_run_searches.determine_search_method">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">determine_search_method</code><span class="sig-paren">(</span><em>query_exten</em>, <em>db_exten</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#determine_search_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.determine_search_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine which similarity search method to use based on the filename
+extensions of the query and database files.</p>
+<p>Eventually integrate hhsuite for HMM-HMM comparison.</p>
+<p>Assuming blastp rather than phmmer for now.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.get_db_list_from_file">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">get_db_list_from_file</code><span class="sig-paren">(</span><em>infp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#get_db_list_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.get_db_list_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get database list from file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.get_out_bash_path">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">get_out_bash_path</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#get_out_bash_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.get_out_bash_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an output directory that search results are written to, and
+returns a path for a file to write query file list to.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.get_out_db_list_path">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">get_out_db_list_path</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#get_out_db_list_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.get_out_db_list_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an output directory that search results are written to, and
+returns a path for a file to write database file list to.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.get_out_hmm_path">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">get_out_hmm_path</code><span class="sig-paren">(</span><em>new_afa_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#get_out_hmm_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.get_out_hmm_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define an hmm file path for a given aligned fasta file path.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.get_out_query_list_path">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">get_out_query_list_path</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#get_out_query_list_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.get_out_query_list_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an output directory that search results are written to, and
+returns a path for a file to write query file list to.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.get_query_list_from_file">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">get_query_list_from_file</code><span class="sig-paren">(</span><em>infp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#get_query_list_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.get_query_list_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get query list from file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.get_query_subdir">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">get_query_subdir</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#get_query_subdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.get_query_subdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a reverse-search output directory and returns a path for a reverse
+search query subdirectory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.run_all_searches">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">run_all_searches</code><span class="sig-paren">(</span><em>query_file_list</em>, <em>db_file_list</em>, <em>outdir</em>, <em>query_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#run_all_searches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.run_all_searches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search with every query file in a given list into every database file in
+another given list using appropriate methods.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.run_any_search">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">run_any_search</code><span class="sig-paren">(</span><em>queryfile</em>, <em>dbfile</em>, <em>outfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#run_any_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.run_any_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run similarity search.</p>
+<p>Import info from settings.py to specify options for running external
+software? For example, number of threads.</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a><a href="#id3"><span class="problematic" id="id4">*</span></a>Need to refactor functions in the module_nhmmer_search module?</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_run_searches.search_result_filepath">
+<code class="descclassname">module_amoebae_run_searches.</code><code class="descname">search_result_filepath</code><span class="sig-paren">(</span><em>query_filename</em>, <em>db_filename</em>, <em>dirpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_run_searches.html#search_result_filepath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_run_searches.search_result_filepath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a filepath for a search result file given a directory path, query
+filename, and database filename. This is for both naming and identifying
+filepaths after searches have been performed.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_amoebae_prune.html"
+                        title="previous chapter">module_amoebae_prune module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_amoebae_scrollsaw.html"
+                        title="next chapter">module_amoebae_scrollsaw module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_scrollsaw.html" title="module_amoebae_scrollsaw module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_prune.html" title="module_amoebae_prune module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

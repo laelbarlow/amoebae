@@ -1,0 +1,190 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae_srchresfile module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="module_amoebae_srchresfile_test module" href="module_amoebae_srchresfile_test.html" />
+    <link rel="prev" title="module_amoebae_search module" href="module_amoebae_search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_srchresfile_test.html" title="module_amoebae_srchresfile_test module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_search.html" title="module_amoebae_search module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-module_amoebae_srchresfile">
+<span id="module-amoebae-srchresfile-module"></span><h1>module_amoebae_srchresfile module<a class="headerlink" href="#module-module_amoebae_srchresfile" title="Permalink to this headline">¶</a></h1>
+<p>Module for defining a module for parsing similarity search output files with
+various formats.</p>
+<dl class="class">
+<dt id="module_amoebae_srchresfile.SrchResFile">
+<em class="property">class </em><code class="descclassname">module_amoebae_srchresfile.</code><code class="descname">SrchResFile</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Parses relevant information as needed from similarity search output
+file, which may be one of several types.</p>
+<dl class="method">
+<dt id="module_amoebae_srchresfile.SrchResFile.hit_description">
+<code class="descname">hit_description</code><span class="sig-paren">(</span><em>hit_rank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile.hit_description"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile.hit_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return description (if present) for sequence/profile with a given
+rank in the results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="module_amoebae_srchresfile.SrchResFile.hit_evalue">
+<code class="descname">hit_evalue</code><span class="sig-paren">(</span><em>hit_rank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile.hit_evalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile.hit_evalue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return E-value for hit sequence/profile with a given rank in the
+results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="module_amoebae_srchresfile.SrchResFile.hit_id">
+<code class="descname">hit_id</code><span class="sig-paren">(</span><em>hit_rank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile.hit_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile.hit_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return id (accession) (if present) for sequence/profile with a given
+rank in the results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="module_amoebae_srchresfile.SrchResFile.hit_query_subsequence">
+<code class="descname">hit_query_subsequence</code><span class="sig-paren">(</span><em>hit_rank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile.hit_query_subsequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile.hit_query_subsequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Seq object for subsequence of query sequence (or consensus of
+profile?) that aligns to the subject sequence.</p>
+<p>Is this even a necessary method?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="module_amoebae_srchresfile.SrchResFile.hit_score">
+<code class="descname">hit_score</code><span class="sig-paren">(</span><em>hit_rank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile.hit_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile.hit_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return bitscore (from BLAST programs) or sequence score (from HMMer
+output) (or something else for hhsearch?) for hit sequence/profile with
+a given rank in the results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="module_amoebae_srchresfile.SrchResFile.hit_sequence">
+<code class="descname">hit_sequence</code><span class="sig-paren">(</span><em>hit_rank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile.hit_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile.hit_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Seq object for full sequence of subject sequence.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="module_amoebae_srchresfile.SrchResFile.hit_subsequence_and_coord">
+<code class="descname">hit_subsequence_and_coord</code><span class="sig-paren">(</span><em>hit_rank</em>, <em>max_gap=10000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile.hit_subsequence_and_coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile.hit_subsequence_and_coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Seq object for subsequence of subject sequence that
+actually aligns to the query sequence/profile.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="module_amoebae_srchresfile.SrchResFile.rank_of_first_nonredun_hit">
+<code class="descname">rank_of_first_nonredun_hit</code><span class="sig-paren">(</span><em>redun_hit_id_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#SrchResFile.rank_of_first_nonredun_hit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.SrchResFile.rank_of_first_nonredun_hit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Efficiently determine the rank of the first hit that does not have
+an ID that is in the given list, or return None if there aren’t any.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_srchresfile.get_hmmer_hit_seq_coord">
+<code class="descclassname">module_amoebae_srchresfile.</code><code class="descname">get_hmmer_hit_seq_coord</code><span class="sig-paren">(</span><em>searchio_hit_obj</em>, <em>db_file</em>, <em>extra=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#get_hmmer_hit_seq_coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.get_hmmer_hit_seq_coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a Bio.SearchIO hmmer3-text hit object and returns specially
+formatted coordinates for the subsequence (top HSP) that match the query.</p>
+<p>Note: The coordinates are the literal start and end residue numbers for the
+relevant portion of the subject sequence.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_srchresfile.get_srch_file_info">
+<code class="descclassname">module_amoebae_srchresfile.</code><code class="descname">get_srch_file_info</code><span class="sig-paren">(</span><em>search_result_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_srchresfile.html#get_srch_file_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_srchresfile.get_srch_file_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the format string necessary for the SearchIO module to parse a
+given file.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="module_amoebae_search.html"
+                        title="previous chapter">module_amoebae_search module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="module_amoebae_srchresfile_test.html"
+                        title="next chapter">module_amoebae_srchresfile_test module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_srchresfile_test.html" title="module_amoebae_srchresfile_test module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="module_amoebae_search.html" title="module_amoebae_search module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

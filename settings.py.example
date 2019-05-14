@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+# Copyright 2018 Lael D. Barlow
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# 
+
+# This file contains definitions of variables used by scripts in the AMOEBAE
+# toolkit. You will need to modify all paths to work on your machine.
+
+
+# The following settings are required for AMOEBAE to find the data files that
+# you have curated.
+
+# Set path to directory containing genome data (predicted peptide sequences,
+# nucleotide scaffolds, etc.).
+dbdirpath =\
+'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Genomes'
+
+# Set path to csv file with information about the relevant genome data.
+db_info_csv =\
+'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Genomes/0_genome_info.csv'
+
+# Set path to directory containing query files (.faa, .afaa, etc.).
+querydirpath =\
+'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Queries'
+
+# Set path to csv file with information about the relevant query files.
+query_info_csv =\
+'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Queries/0_query_info.csv'
+
+# Set path to directory containing reference tree (and alignment) files.
+model_dir_path =\
+'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Models'
+
+# Set path to csv file with information about reference tree (and alignment)
+# files.
+model_info_csv =\
+'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Models/0_models_info.csv'
+
+
+# The following settings are required for AMOEBAE to setup similarity
+# searches.
+
+# Set maximum E-value cutoff to be used for similarity searches.
+evalue_cutoff = 0.05
+
+# Set the minimum order of magnitude difference between the E-value of the top
+# hit in a reverse search (assuming it represents the original query) and the
+# E-value of the first reverse search hit that does not represent the original
+# query.
+min_evaldiff = 2
+
+# Set maximum E-value cutoff for BLAST+ to report hits.
+blast_report_evalue_cutoff = 0.05
+
+# Set maximum E-vale for hmmsearch to report hits.
+hmmer_report_evalue_cutoff = 0.05
+
+# Set minimum sequence score for hmmsearch to report hits.
+hmmer_report_score_cutoff = 5
+
+# "Maximum number of aligned sequences to keep". Default is 500 for BLAST.
+# Note: Top hit is not necessarily the best match if a low max_target_seqs is
+# specified!
+blast_max_target_seqs = 500
+
+# Set the maximum number of forward search hits for which to perform reverse
+# searches into the query database.
+max_num_reverse_searches_per_database = 50
+
+# Set the number of threads to be use for similarity searching (blastp,
+# hmmsearch, etc.).
+num_threads_similarity_searching = 4
+
+# Set the maximum number of nucleotides between HSPs to be concatenated by
+# functions in the search_scaffolds. This is very important, because it will be
+# assumed that HSPs separated by more than this many base pairs from the top
+# scoring HSP in a cluster (in the tblastn results) are not part of the same
+# gene.
+max_gap = 10000
+
+
+# The following settings are required for AMOEBAE to write scripts to be run on
+# remote servers (which may not have all the dependencies of AMOEBAE
+# installed).
+
+# Set path to prepend to program calls on a remote server (normally should be
+# an empty string). 
+server_program_dirpath = ''
+
+# Define path to home directory on a remote server.
+remote_home_dir = '/home/lael'
+
+# Define contents for bash scripts:
+bash_script_content =\
+"""##!/bin/bash
+##This is a script for running commands on a server that uses the Torque job
+##scheduler via the 'qsub' command.
+
+##These commands set up the Grid Environment for your job:
+#PBS -N search
+#PBS -l nodes=1,walltime=100:00:00
+#PBS -q default
+#PBS -M lael@ualberta.ca
+#PBS -m abe
+##Print the Host name of Node
+echo "Hostname is " $HOSTNAME
+##print the time and date
+##Print  working Directory
+pwd
+##Print Date
+date
+##Send command to Cluster nodes.
+"""
+
+
+# The following are miscelaneous settings.
+
+# Set variables to be used for the align_fa.py script.
+blosum62_path = '~/Documents/Scripts/amoebae/amoebaelib/blosum62'
+cc140_path = '~/Documents/Scripts/amoebae/amoebaelib/CC140.txt'
+align_fa_matrix = 'cc140' # 'blosum62' or 'cc140', only optional for mafft.
+align_fa_program = 'muscle' # 'muscle' or 'mafft'
+
+# Set name of RAxML installation as called from the command line.
+raxmlname = 'raxmlHPC-AVX2'

@@ -1,0 +1,825 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_amoebae &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_amoebae</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module for amoebae script that are general purpose (used in modules that</span>
+<span class="sd">define more specialized functions).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Import built-in modules.</span>
+<span class="c1">#import argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">settings</span>
+<span class="c1">#import shutil</span>
+<span class="c1">#import glob</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="c1"># Import modules from installed libraries/packages.</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">AlignIO</span>
+<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">IUPAC</span><span class="p">,</span> <span class="n">Gapped</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
+
+<span class="kn">from</span> <span class="nn">module_amoebae_get_datatype</span> <span class="k">import</span> <span class="n">get_dbtype</span>
+<span class="kn">from</span> <span class="nn">module_afa_to_nex</span> <span class="k">import</span> <span class="n">delete_extra_mesquite_lines</span> 
+<span class="c1">#from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info, get_hit_range_from_hsp_ranges</span>
+<span class="c1">#from module_amoebae import get_seq_obj_from_srch_res_csv_info,\</span>
+<span class="c1">#get_hit_range_from_hsp_ranges </span>
+
+<span class="c1"># Define functions to be used in amoebae.</span>
+
+<div class="viewcode-block" id="get_corr_fasta_exten"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_corr_fasta_exten">[docs]</a><span class="k">def</span> <span class="nf">get_corr_fasta_exten</span><span class="p">(</span><span class="n">infp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determines the correct filename extension that a given fasta file should</span>
+<span class="sd">    have.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Automatically determine what the dbtype is.</span>
+    <span class="n">dbtype</span> <span class="o">=</span> <span class="n">get_dbtype</span><span class="p">(</span><span class="n">infp</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">dbtype</span> <span class="o">==</span> <span class="s1">&#39;prot&#39;</span> <span class="ow">or</span> <span class="n">dbtype</span> <span class="o">==</span> <span class="s1">&#39;nucl&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Error: Could not determine</span>
+<span class="s2">    data type in file &quot; + f + &quot; using get_datatype module.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Determine appropriate filename extension to use.</span>
+    <span class="n">exten</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">dbtype</span> <span class="o">==</span> <span class="s1">&#39;prot&#39;</span><span class="p">:</span>
+        <span class="n">exten</span> <span class="o">=</span> <span class="s1">&#39;faa&#39;</span>
+    <span class="k">elif</span> <span class="n">dbtype</span> <span class="o">==</span> <span class="s1">&#39;nucl&#39;</span><span class="p">:</span>
+        <span class="n">exten</span> <span class="o">=</span> <span class="s1">&#39;fna&#39;</span>
+
+    <span class="k">return</span> <span class="n">exten</span></div>
+
+
+<div class="viewcode-block" id="get_dbtype_from_file_exten"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_dbtype_from_file_exten">[docs]</a><span class="k">def</span> <span class="nf">get_dbtype_from_file_exten</span><span class="p">(</span><span class="n">infp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine data type from fasta filename extension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dbtype</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">exten</span> <span class="o">=</span> <span class="n">infp</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">exten</span> <span class="o">==</span> <span class="s1">&#39;faa&#39;</span><span class="p">:</span>
+        <span class="n">dbtype</span> <span class="o">=</span> <span class="s1">&#39;prot&#39;</span>
+    <span class="k">elif</span> <span class="n">exten</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span>
+        <span class="n">dbtype</span> <span class="o">=</span> <span class="s1">&#39;nucl&#39;</span>
+    <span class="k">assert</span> <span class="n">dbtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine data type for file:</span><span class="se">\n\t</span><span class="s2"></span>
+<span class="s2">        </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">infp</span>
+    <span class="k">return</span> <span class="n">dbtype</span></div>
+
+
+<div class="viewcode-block" id="get_seqs_from_fasta_db"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_seqs_from_fasta_db">[docs]</a><span class="k">def</span> <span class="nf">get_seqs_from_fasta_db</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">accs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of SeqRecord objects corresponding to the given accessions</span>
+<span class="sd">    in the given database file. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get database directory from settings module.</span>
+    <span class="n">db_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">dbdirpath</span>
+
+    <span class="c1"># Get database filepath.</span>
+    <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">db_dir</span><span class="p">,</span> <span class="n">db_name</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">db_path</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Path is not a file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">db_path</span>
+
+    <span class="c1"># Old way:</span>
+    <span class="c1">## Parse database file and compile a list of sequence objects to return. </span>
+    <span class="c1">#seq_objs = []</span>
+    <span class="c1">#with open(db_path) as dbh:</span>
+    <span class="c1">#    for seq in SeqIO.parse(dbh, &#39;fasta&#39;):</span>
+    <span class="c1">#        acc = seq.id.strip()</span>
+    <span class="c1">#        if acc in accs:</span>
+    <span class="c1">#            seq_objs.append(seq)</span>
+    <span class="c1">#        if len(seq_objs) == len(accs):</span>
+    <span class="c1">#            break</span>
+
+    <span class="c1"># Use esl-sfetch to retrieve the sequences and write to a temporary file.</span>
+    <span class="n">temp_fa_path</span> <span class="o">=</span> <span class="n">db_path</span> <span class="o">+</span> <span class="s1">&#39;_TEMP_FASTA.fa&#39;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">accs</span><span class="p">:</span>
+            <span class="c1"># Get sequence as text.</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;esl-sfetch&#39;</span><span class="p">,</span> <span class="n">db_path</span><span class="p">,</span> <span class="n">acc</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
+
+    <span class="c1"># Parse the fasta file to get Seq objects.</span>
+    <span class="n">seq_objs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+        <span class="n">seq_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> 
+
+    <span class="c1"># Remove the temporary fasta file.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">)</span>
+
+    <span class="c1"># Return the list of sequence objects.</span>
+    <span class="k">return</span> <span class="n">seq_objs</span></div>
+
+
+<div class="viewcode-block" id="get_subseq_from_fasta_db"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_subseq_from_fasta_db">[docs]</a><span class="k">def</span> <span class="nf">get_subseq_from_fasta_db</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="n">subseq_coord</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a SeqRecord object corresponding to the subsequence with the</span>
+<span class="sd">    given coordinates in the sequence with the given accessions in the given</span>
+<span class="sd">    database file. </span>
+
+<span class="sd">    Note: the input subsequence coordinates (&#39;subseq_coord&#39;) are the start and</span>
+<span class="sd">    end residue numbers for the subsequence, not python-style slices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get database directory from settings module.</span>
+    <span class="n">db_dir</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">dbdirpath</span>
+
+    <span class="c1"># Get database filepath.</span>
+    <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">db_dir</span><span class="p">,</span> <span class="n">db_name</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">db_path</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Path is not a file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">db_path</span>
+
+    <span class="c1"># Old way:</span>
+    <span class="c1">## Parse database file and compile a list of sequence objects to return. </span>
+    <span class="c1">#seq_objs = []</span>
+    <span class="c1">#with open(db_path) as dbh:</span>
+    <span class="c1">#    for seq in SeqIO.parse(dbh, &#39;fasta&#39;):</span>
+    <span class="c1">#        acc = seq.id.strip()</span>
+    <span class="c1">#        if acc in accs:</span>
+    <span class="c1">#            seq_objs.append(seq)</span>
+    <span class="c1">#        if len(seq_objs) == len(accs):</span>
+    <span class="c1">#            break</span>
+
+    <span class="c1"># Use esl-sfetch to retrieve the sequences and write to a temporary file.</span>
+    <span class="n">temp_fa_path</span> <span class="o">=</span> <span class="n">db_path</span> <span class="o">+</span> <span class="s1">&#39;_TEMP_FASTA.fa&#39;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="c1"># Get sequence as text.</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;esl-sfetch&#39;</span><span class="p">,</span> <span class="n">db_path</span><span class="p">,</span> <span class="n">acc</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
+
+    <span class="c1"># Parse the fasta file to get Seq objects.</span>
+    <span class="n">seq_obj</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
+    <span class="n">seq_obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">subseq_coord</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span>
+
+    <span class="c1"># ***Re-use code from search scaffolds to verify validity of input</span>
+    <span class="c1"># subseq_coord...?</span>
+    <span class="c1">#...</span>
+
+    <span class="c1"># Construct new sequence.</span>
+    <span class="n">new_seq</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">subseq</span> <span class="ow">in</span> <span class="n">subseq_coord</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">subseq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">subseq</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">new_seq</span> <span class="o">=</span> <span class="n">new_seq</span> <span class="o">+</span> <span class="n">seq_obj</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">start</span><span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># Double-check this!</span>
+
+    <span class="n">seq_obj</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">new_seq</span>
+
+    <span class="c1"># Remove the temporary fasta file.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">)</span>
+
+    <span class="c1"># Return the list of sequence objects.</span>
+    <span class="k">return</span> <span class="n">seq_obj</span></div>
+                
+
+<div class="viewcode-block" id="get_query_taxon_from_filename"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_query_taxon_from_filename">[docs]</a><span class="k">def</span> <span class="nf">get_query_taxon_from_filename</span><span class="p">(</span><span class="n">query_filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a query file name and extracts the database name (abbreviation of</span>
+<span class="sd">    species name usually) or taxon name/indicator from the file name.</span>
+
+<span class="sd">    Assumes that the file is named as:</span>
+<span class="sd">        query_title + &#39;_&#39; + dbname/taxon + &#39;_&#39; + accession (if appl.) + extension</span>
+
+<span class="sd">        where neither query_title nor dbname have underscores in them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">query_filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_query_title_from_filename"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_query_title_from_filename">[docs]</a><span class="k">def</span> <span class="nf">get_query_title_from_filename</span><span class="p">(</span><span class="n">query_filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a query file name and extracts the query title/name from the file</span>
+<span class="sd">    name.</span>
+
+<span class="sd">    Assumes that the file is named as:</span>
+<span class="sd">        query_title + &#39;_&#39; + dbname/taxon + &#39;_&#39; + accession (if appl.) + extension</span>
+
+<span class="sd">        where neither query_title nor dbname have underscores in them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">query_filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_query_title_from_csv"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_query_title_from_csv">[docs]</a><span class="k">def</span> <span class="nf">get_query_title_from_csv</span><span class="p">(</span><span class="n">query_filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a query filename, look up corresponding query title in the query</span>
+<span class="sd">    directory csv specified in the settings module, and return that.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Parse query info csv file.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">query_info_csv</span><span class="p">)</span>
+
+    <span class="c1"># Return query title.</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Filename&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">query_filename</span><span class="p">][</span><span class="s1">&#39;Query title&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_query_taxon_from_csv"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_query_taxon_from_csv">[docs]</a><span class="k">def</span> <span class="nf">get_query_taxon_from_csv</span><span class="p">(</span><span class="n">query_filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a query filename, look up corresponding query taxon in the query</span>
+<span class="sd">    directory csv specified in the settings module, and return that.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Parse query info csv file.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">query_info_csv</span><span class="p">)</span>
+
+    <span class="c1"># Return query title.</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Filename&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">query_filename</span><span class="p">][</span><span class="s1">&#39;Query taxon (species if applicable)&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_species_from_db_csv"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_species_from_db_csv">[docs]</a><span class="k">def</span> <span class="nf">get_species_from_db_csv</span><span class="p">(</span><span class="n">taxon</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a database name/species abbreviation from a taxon name extracted</span>
+<span class="sd">    from a query filename. If there is a corresponding species name in the</span>
+<span class="sd">    database directory information csv file specified in the settings module</span>
+<span class="sd">    return that.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">db_info_csv</span><span class="p">)</span>
+    <span class="c1"># Species name to return is not applicable by default.</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Filename&#39;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">taxon</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Filename&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">sp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">f</span><span class="p">][</span><span class="s1">&#39;Species (if applicable)&#39;</span><span class="p">]</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">sp</span></div>
+
+
+<div class="viewcode-block" id="get_db_filename_for_query_from_db_csv"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_db_filename_for_query_from_db_csv">[docs]</a><span class="k">def</span> <span class="nf">get_db_filename_for_query_from_db_csv</span><span class="p">(</span><span class="n">taxon</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a database name/species abbreviation or taxon name extracted from a</span>
+<span class="sd">    query filename, and if there is a corresponding database file name in the</span>
+<span class="sd">    database directory information csv file specified in the settings module,</span>
+<span class="sd">    then return that. Otherwise, just return &#39;N/A&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define database file name as not applicable, by default.</span>
+    <span class="n">dbfn</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
+    <span class="c1"># Check whether the given &quot;taxon&quot; name exists in the database info csv.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Try loading the dataframe.</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">db_info_csv</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="c1"># Print an error message.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Error: Could not load contents of csv file as pandas dataframe:</span><span class="se">\n\n</span><span class="s2"></span>
+<span class="s2">        </span><span class="se">\t</span><span class="si">%s</span><span class="se">\n\n</span><span class="s2">Check that the file was saved properly in comma separated value</span>
+<span class="s2">        format (UTF-8 encoding).&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">settings</span><span class="o">.</span><span class="n">db_info_csv</span><span class="p">)</span>
+
+        <span class="c1"># Exit the script.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Quitting script.&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+    <span class="n">col_list</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Taxon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="c1"># If it does, then get filename for corresponding database.</span>
+    <span class="k">if</span> <span class="n">taxon</span> <span class="ow">in</span> <span class="n">col_list</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Taxon&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dbfn</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">taxon</span><span class="p">][</span><span class="s1">&#39;Filename&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Return database file name or &#39;N/A&#39;.</span>
+    <span class="k">return</span> <span class="n">dbfn</span></div>
+
+
+<div class="viewcode-block" id="get_species_for_db_filename"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_species_for_db_filename">[docs]</a><span class="k">def</span> <span class="nf">get_species_for_db_filename</span><span class="p">(</span><span class="n">db_filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a database filename, and returns the species name that appears in</span>
+<span class="sd">    the database info csv file (may be &#39;-&#39; if not applicable).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">db_info_csv</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Filename&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">db_filename</span><span class="p">][</span><span class="s1">&#39;Species (if applicable)&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">sp</span></div>
+
+
+<div class="viewcode-block" id="write_seqs_to_fasta"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.write_seqs_to_fasta">[docs]</a><span class="k">def</span> <span class="nf">write_seqs_to_fasta</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">output_fasta</span><span class="p">,</span> <span class="n">abbrev</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_descr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subseq</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">all_hits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">split_by_top_rev_srch_hit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">split_by_query_title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a csv file (output by amoebae) and writes listed sequences to a</span>
+<span class="sd">    fasta file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Read csv file into a pandas dataframe.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+
+    <span class="c1"># Do it differently depending on if all hits are to be included or not.</span>
+    <span class="n">seq_objs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">all_hits</span><span class="p">:</span>
+        <span class="c1"># Get column header for column with Yes/No data.</span>
+        <span class="n">yes_no_col</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Get column header for column listing top reverse search hit id or</span>
+        <span class="c1"># description.</span>
+        <span class="n">top_rev_hit_id_col</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">split_by_top_rev_srch_hit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Top reverse hit description&#39;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">split_by_top_rev_srch_hit</span> <span class="ow">in</span> <span class="n">header</span><span class="p">:</span>
+                        <span class="n">top_rev_hit_id_col</span> <span class="o">=</span> <span class="n">header</span>
+                        <span class="k">break</span>
+
+            <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">header</span> <span class="o">==</span> <span class="s1">&#39;Collective interpretation of reverse search results&#39;</span><span class="p">:</span>
+                    <span class="n">yes_no_col</span> <span class="o">=</span> <span class="n">header</span>
+                    <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Represents an identifiably unique paralogue&#39;</span><span class="p">):</span>
+                    <span class="n">yes_no_col</span> <span class="o">=</span> <span class="n">header</span>
+                    <span class="k">break</span>
+
+        <span class="c1"># Check that the column was identified.</span>
+        <span class="k">assert</span> <span class="n">yes_no_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine which column to</span>
+<span class="s2">        use to decide whether each sequence should be written. Did you mean to</span>
+<span class="s2">        use the all_hits option?&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">split_by_top_rev_srch_hit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Iterate through rows and construct a list of relevant sequence objects.</span>
+            <span class="n">rev_srch_top_hit_seq_obj_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">yes_no_col</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span> <span class="ow">or</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span> 
+                    <span class="n">acc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit accession&#39;</span><span class="p">]</span>
+                    <span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">seq</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="n">subseq</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">]</span>
+                        <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">]</span> 
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span>
+                        <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit sequence&#39;</span><span class="p">]</span> 
+                    <span class="n">db_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Subject database species (if applicable)&#39;</span><span class="p">]</span>
+
+                    <span class="c1"># Use the species name if writing the file for input to</span>
+                    <span class="c1"># phylogenetics software.</span>
+                    <span class="k">if</span> <span class="n">abbrev</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">db_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+                        <span class="c1"># The output sequences may be aligned and visualized using</span>
+                        <span class="c1"># Mesquite, and if an alignment is saved in Mesquite, then</span>
+                        <span class="c1"># space characters will be randomly (not in all cases) replaced</span>
+                        <span class="c1"># with underscores, because Mesquite does not like nexus</span>
+                        <span class="c1"># alignments to have space characters in taxon names. This</span>
+                        <span class="c1"># prevents downstream parsing of the sequence names. So, if the</span>
+                        <span class="c1"># abbrev option is used, and the sequences are destined for an</span>
+                        <span class="c1"># alignment for phylogenetic analysis, etc. then it is best to</span>
+                        <span class="c1"># avoid spaces, and use a double-underscore to separate the</span>
+                        <span class="c1"># accession number from the species name (and convert that back</span>
+                        <span class="c1"># to a space in the final output tree file).</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">only_descr</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                        <span class="n">orig_descr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="n">acc</span> <span class="o">=</span> <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span>\
+                            <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">acc</span> <span class="o">=</span> <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span>\
+                            <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Instantiate a sequence object for the sequence of interest to</span>
+                    <span class="c1"># be written to output.</span>
+                    <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span>
+                            <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="p">)</span>
+
+                    <span class="c1"># Determine if the top hit id is already a key in the dict,</span>
+                    <span class="c1"># and add the sequence object to the list that is the value</span>
+                    <span class="c1"># for the appropriate key.</span>
+                    <span class="n">top_rev_hit_id</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">top_rev_hit_id_col</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">top_rev_hit_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rev_srch_top_hit_seq_obj_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">rev_srch_top_hit_seq_obj_dict</span><span class="p">[</span><span class="n">top_rev_hit_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">seq_obj</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">rev_srch_top_hit_seq_obj_dict</span><span class="p">[</span><span class="n">top_rev_hit_id</span><span class="p">]</span> <span class="o">=</span>\
+                        <span class="n">rev_srch_top_hit_seq_obj_dict</span><span class="p">[</span><span class="n">top_rev_hit_id</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">seq_obj</span><span class="p">]</span>
+
+                    <span class="c1">#else:</span>
+                    <span class="c1">#    seq_objs.append(seq_obj)</span>
+
+            <span class="c1"># Write sequences to different output files according to the</span>
+            <span class="c1"># reverse search hit that they retrieved.</span>
+            <span class="k">for</span> <span class="n">seq_obj_list_key</span> <span class="ow">in</span> <span class="n">rev_srch_top_hit_seq_obj_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">specific_output_fasta_path</span> <span class="o">=</span> <span class="n">output_fasta</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span>\
+                <span class="n">seq_obj_list_key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_matches.fa&#39;</span> 
+                <span class="nb">print</span><span class="p">(</span><span class="n">specific_output_fasta_path</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">specific_output_fasta_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+                    <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rev_srch_top_hit_seq_obj_dict</span><span class="p">[</span><span class="n">seq_obj_list_key</span><span class="p">],</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Split sequences into files based on query title if option selected.</span>
+        <span class="k">elif</span> <span class="n">split_by_query_title</span><span class="p">:</span>
+            <span class="c1"># Define output subdirectory.</span>
+            <span class="n">subdirpath</span> <span class="o">=</span> <span class="n">output_fasta</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_fasta_split_by_query_title&#39;</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">subdirpath</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Ouput directory already</span>
+<span class="s2">            exists.&quot;&quot;&quot;</span>
+
+            <span class="c1"># Iterate through rows and construct a list of relevant sequence</span>
+            <span class="c1"># objects for each query title.</span>
+            <span class="n">query_title_seq_obj_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">yes_no_col</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span> <span class="ow">or</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span> 
+                    <span class="n">program</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward search method&#39;</span><span class="p">]</span>
+                    <span class="n">db_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Subject database species (if applicable)&#39;</span><span class="p">]</span>
+                    <span class="n">acc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit accession&#39;</span><span class="p">]</span>
+                    <span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">seq</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">program</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;tblastn&#39;</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">subseq</span><span class="p">:</span>
+                            <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">]</span>
+                            <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">]</span> 
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span>
+                            <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit sequence&#39;</span><span class="p">]</span> 
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># If the hit is a tblastn (nucleotide) hit, then always</span>
+                        <span class="c1"># use the subsequence.</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">]</span>
+                        <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">]</span> 
+
+
+                    <span class="c1"># Use the species name if writing the file for input to</span>
+                    <span class="c1"># phylogenetics software.</span>
+                    <span class="k">if</span> <span class="n">abbrev</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">db_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">program</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;tblastn&#39;</span><span class="p">):</span>
+                            <span class="n">hit_range</span> <span class="o">=</span> <span class="n">get_hit_range_from_hsp_ranges</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit coordinates of subsequence(s) that align(s) to query&#39;</span><span class="p">])</span>
+                            <span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">hit_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;...&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">hit_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span>\
+                                    <span class="o">+</span> <span class="n">description</span>
+
+                        <span class="c1"># The output sequences may be aligned and visualized using</span>
+                        <span class="c1"># Mesquite, and if an alignment is saved in Mesquite, then</span>
+                        <span class="c1"># space characters will be randomly (not in all cases) replaced</span>
+                        <span class="c1"># with underscores, because Mesquite does not like nexus</span>
+                        <span class="c1"># alignments to have space characters in taxon names. This</span>
+                        <span class="c1"># prevents downstream parsing of the sequence names. So, if the</span>
+                        <span class="c1"># abbrev option is used, and the sequences are destined for an</span>
+                        <span class="c1"># alignment for phylogenetic analysis, etc. then it is best to</span>
+                        <span class="c1"># avoid spaces, and use a double-underscore to separate the</span>
+                        <span class="c1"># accession number from the species name (and convert that back</span>
+                        <span class="c1"># to a space in the final output tree file).</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">only_descr</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                        <span class="n">orig_descr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="n">acc</span> <span class="o">=</span> <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span>\
+                            <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">acc</span> <span class="o">=</span> <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span>\
+                            <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Instantiate a sequence object for the sequence of interest to</span>
+                    <span class="c1"># be written to output.</span>
+                    <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span>
+                            <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="p">)</span>
+
+                    <span class="c1"># Determine if the top hit id is already a key in the dict,</span>
+                    <span class="c1"># and add the sequence object to the list that is the value</span>
+                    <span class="c1"># for the appropriate key.</span>
+                    <span class="n">query_title</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Query title&#39;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">query_title</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">query_title_seq_obj_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">query_title_seq_obj_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">seq_obj</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">query_title_seq_obj_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">=</span>\
+                        <span class="n">query_title_seq_obj_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">seq_obj</span><span class="p">]</span>
+
+                    <span class="c1"># ????</span>
+                    <span class="c1">#else:</span>
+                    <span class="c1">#    seq_objs.append(seq_obj)</span>
+
+            <span class="c1"># Write sequences to different output files according to the</span>
+            <span class="c1"># reverse search hit that they retrieved.</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">subdirpath</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">seq_obj_list_key</span> <span class="ow">in</span> <span class="n">query_title_seq_obj_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">specific_output_fasta_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subdirpath</span><span class="p">,</span>\
+                        <span class="n">seq_obj_list_key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_matches.fa&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">specific_output_fasta_path</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">specific_output_fasta_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+                    <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">query_title_seq_obj_dict</span><span class="p">[</span><span class="n">seq_obj_list_key</span><span class="p">],</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
+
+        <span class="c1"># ????</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;YYYYYYYYYYYY&#39;</span><span class="p">)</span>
+            <span class="c1"># Write sequences to output file.</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_fasta</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+                <span class="c1">#for seq_obj in seq_objs:</span>
+                <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">seq_objs</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Iterate through rows and construct a list of relevant sequence objects.</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit accession&#39;</span><span class="p">]</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">seq</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">subseq</span><span class="p">:</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">]</span>
+                <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">]</span> 
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span>
+                <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit sequence&#39;</span><span class="p">]</span> 
+            <span class="n">db_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Subject database species (if applicable)&#39;</span><span class="p">]</span>
+            <span class="c1">#db_file = row[&#39;Forward hit description&#39;] # (For specific circumstances)</span>
+
+            <span class="c1"># Use the species name if writing the file for input to</span>
+            <span class="c1"># phylogenetics software.</span>
+            <span class="k">if</span> <span class="n">abbrev</span><span class="p">:</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="n">db_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># The output sequences may be aligned and visualized using</span>
+            <span class="c1"># Mesquite, and if an alignment is saved in Mesquite, then</span>
+            <span class="c1"># space characters will be randomly (not in all cases) replaced</span>
+            <span class="c1"># with underscores, because Mesquite does not like nexus</span>
+            <span class="c1"># alignments to have space characters in taxon names. This</span>
+            <span class="c1"># prevents downstream parsing of the sequence names. So, if the</span>
+            <span class="c1"># abbrev option is used, and the sequences are destined for an</span>
+            <span class="c1"># alignment for phylogenetic analysis, etc. then it is best to</span>
+            <span class="c1"># avoid spaces, and use a double-underscore to separate the</span>
+            <span class="c1"># accession number from the species name (and convert that back</span>
+            <span class="c1"># to a space in the final output tree file).</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">only_descr</span><span class="p">:</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">orig_descr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">acc</span> <span class="o">=</span> <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span>\
+                    <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">acc</span> <span class="o">=</span> <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span>\
+                    <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+
+            <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">seq</span><span class="p">,</span>
+                    <span class="n">abbrev</span><span class="p">)</span>
+            <span class="n">seq_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq_obj</span><span class="p">)</span>
+
+        <span class="c1"># Write sequences to output file.</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_fasta</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+            <span class="c1">#for seq_obj in seq_objs:</span>
+            <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">seq_objs</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="record_amoebae_info_in_log_file"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.record_amoebae_info_in_log_file">[docs]</a><span class="k">def</span> <span class="nf">record_amoebae_info_in_log_file</span><span class="p">(</span><span class="n">commandline</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span>
+        <span class="n">output_timestamp</span><span class="p">,</span> <span class="n">main_output_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Record info including full commandline command, git commit ID, time to</span>
+<span class="sd">    run, etc in a log file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Identify log file.</span>
+    <span class="n">log_basename</span> <span class="o">=</span> <span class="s1">&#39;0_amoebae_log.txt&#39;</span>
+    <span class="n">log_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">log_basename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">log_path</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Recording of AMOEBAE commands run with output to directory:</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n\n\n</span><span class="s1">&#39;</span>\
+                    <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">outdir</span><span class="p">))</span>
+
+    <span class="c1"># Open log file and append information.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="c1"># Record time.</span>
+        <span class="n">readable_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">()</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">readable_time</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Record command run.</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;AMOEBAE run as:</span><span class="se">\n\n\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">commandline</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Record main output file.</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Main output:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">main_output_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Record output timestamp.</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Output timestamp: &#39;</span> <span class="o">+</span> <span class="n">output_timestamp</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Record the time it took for the process to complete.</span>
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Total run time: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Record git repository version information.</span>
+        <span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> 
+        <span class="n">git_hash</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">],</span> <span class="n">cwd</span><span class="o">=</span><span class="n">script_dir</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="n">git_branch</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--abbrev-ref&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">],</span> <span class="n">cwd</span><span class="o">=</span><span class="n">script_dir</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>  
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Git repository (code) version: &#39;</span> <span class="o">+</span> <span class="n">git_hash</span> <span class="o">+</span> <span class="s1">&#39; (branch name: &#39;</span> <span class="o">+</span> <span class="n">git_branch</span> <span class="o">+</span> <span class="s1">&#39;)</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Record system information.</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;System info: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Write extra line break.</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="mask_alignment2"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.mask_alignment2">[docs]</a><span class="k">def</span> <span class="nf">mask_alignment2</span><span class="p">(</span><span class="n">alignment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes an alignment object and adds a &#39;MASK&#39; sequence using certain</span>
+<span class="sd">    criteria for inclusion of positions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get length of sequences and number of sequences in alignment.</span>
+    <span class="n">seq_len</span> <span class="o">=</span> <span class="n">alignment</span><span class="o">.</span><span class="n">get_alignment_length</span><span class="p">()</span>
+    <span class="n">num_seqs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
+
+    <span class="c1"># get a list of columns as strings in the original alignment.</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">alignment</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)]</span> 
+
+    <span class="c1"># Iterate over columns and make a mask sequence to append.</span>
+    <span class="n">mask_seq</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="n">mask_char</span> <span class="o">=</span> <span class="n">apply_mask_criteria2</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> 
+        <span class="n">mask_seq</span> <span class="o">=</span> <span class="n">mask_seq</span> <span class="o">+</span> <span class="n">mask_char</span>
+
+    <span class="c1"># Generate a SeqRecord object with the mask_seq.</span>
+    <span class="n">empty_mask_seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">mask_seq</span><span class="p">,</span> <span class="n">IUPAC</span><span class="o">.</span><span class="n">protein</span><span class="p">)</span>
+    <span class="n">empty_mask_rec</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">empty_mask_seq</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;MASK&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;MASK&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Add the mask_seq sequence to the alignment.</span>
+    <span class="n">masked_alignment</span> <span class="o">=</span> <span class="n">alignment</span>
+    <span class="n">masked_alignment</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">empty_mask_rec</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">masked_alignment</span></div>
+
+
+<div class="viewcode-block" id="mask_nex2"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.mask_nex2">[docs]</a><span class="k">def</span> <span class="nf">mask_nex2</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="n">outfilepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a filepath and adds a MASK sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Delete extra lines in input nexus file, if present, because biopython cannot</span>
+    <span class="c1"># read nexus alignments with these extra lines.</span>
+    <span class="n">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+
+    <span class="c1"># Define the name of the output file.</span>
+    <span class="n">outfilename</span> <span class="o">=</span> <span class="n">outfilepath</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfilename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="c1"># Check that the input file has the filename extension &quot;.nex&quot;.</span>
+        <span class="k">assert</span> <span class="n">infilepath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nex&#39;</span><span class="p">),</span> <span class="s2">&quot;Error: Input file name must have the</span><span class="se">\</span>
+<span class="s2"> extension &#39;.nex&#39;.&quot;</span>
+
+        <span class="c1"># Read the alignment file.</span>
+        <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">infh</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span>
+
+        <span class="n">masked_alignment</span> <span class="o">=</span> <span class="n">mask_alignment2</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
+        <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">masked_alignment</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_seq_obj_from_srch_res_csv_info"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_seq_obj_from_srch_res_csv_info">[docs]</a><span class="k">def</span> <span class="nf">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes components and assembles a Bio.Seq sequence object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="n">seq_rec_obj</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">seq_obj</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">abbrev</span><span class="p">:</span>
+        <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">acc</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span> <span class="n">description</span>
+        <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">acc</span>
+        <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+
+    <span class="k">return</span> <span class="n">seq_rec_obj</span></div>
+
+
+<div class="viewcode-block" id="get_hit_range_from_hsp_ranges"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_hit_range_from_hsp_ranges">[docs]</a><span class="k">def</span> <span class="nf">get_hit_range_from_hsp_ranges</span><span class="p">(</span><span class="n">subseq_coord</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take subsequence coordinates as a string, and return a list containing</span>
+<span class="sd">    the lowest and highest numbers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Compile regular expressions to identify relevant substrings.</span>
+    <span class="n">low</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\[\d+,&#39;</span><span class="p">)</span>
+    <span class="n">high</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;,\d+\]&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Compile lists of numbers.</span>
+    <span class="n">low_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">low</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">subseq_coord</span><span class="p">)]</span>
+    <span class="n">high_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">high</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">subseq_coord</span><span class="p">)]</span>
+
+    <span class="c1"># Return a list containing the lowest and highest numbers.</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">low_list</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">high_list</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="apply_mask_criteria2"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.apply_mask_criteria2">[docs]</a><span class="k">def</span> <span class="nf">apply_mask_criteria2</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply simple masking criteria to a single column, and return &#39;-&#39; if the</span>
+<span class="sd">    column does not meet the criteria, and &#39;I&#39; if it does.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Return &#39;-&#39; by default.</span>
+    <span class="n">mask_char</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
+    <span class="c1"># Get column features.</span>
+    <span class="n">num_seqs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="n">half_num_seqs</span> <span class="o">=</span> <span class="n">num_seqs</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">num_gaps_in_col</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">column_no_gaps</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that the column is not entirely composed of gaps.</span>
+    <span class="c1">#assert not column_no_gaps == &#39;&#39;, &quot;Error: Empty positions in input alignment.&quot;</span>
+
+    <span class="k">if</span> <span class="n">column_no_gaps</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mask_char</span>
+
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">column_no_gaps</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+
+        <span class="n">most_common_residue</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">column_no_gaps</span><span class="p">)</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">most_common_residue_count</span> <span class="o">=</span> <span class="n">most_common_residue</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">percent_identity</span> <span class="o">=</span> <span class="n">most_common_residue_count</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">num_seqs</span> 
+
+        <span class="c1"># If less than half the sequences have a gap at this position of the</span>
+        <span class="c1"># alignment, then include the position. </span>
+        <span class="c1">#if num_gaps_in_col &lt; half_num_seqs:</span>
+        <span class="c1">#    mask_char = &#39;I&#39;</span>
+
+        <span class="c1">#if num_gaps_in_col &lt; (num_seqs * 0.30):</span>
+        <span class="c1">#    mask_char = &#39;I&#39;</span>
+
+        <span class="c1"># If percent identity is at least 50, then include position.</span>
+        <span class="c1">#if percent_identity &gt;= 50:</span>
+        <span class="c1">#    mask_char = &#39;I&#39;</span>
+
+        <span class="c1"># If the last row in the column has a residue and at least one of the</span>
+        <span class="c1"># other rows in the column has a residue instead of a gap, then include</span>
+        <span class="c1"># the column/position in the trimmed alignment.</span>
+        <span class="n">last_row_value</span> <span class="o">=</span> <span class="n">column</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">original_row_values</span> <span class="o">=</span> <span class="n">column</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_row_values</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">mask_char</span> <span class="o">=</span> <span class="s1">&#39;I&#39;</span>
+        <span class="c1">#if last_row_value != &#39;-&#39; and len(column_no_gaps) &gt; 1:</span>
+        <span class="c1">#    mask_char = &#39;I&#39;</span>
+
+        <span class="c1"># If at least one original sequence has a residue at the position, then</span>
+        <span class="c1"># it should be included.</span>
+
+        <span class="k">return</span> <span class="n">mask_char</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>
