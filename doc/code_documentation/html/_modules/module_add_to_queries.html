@@ -258,6 +258,9 @@
     <span class="c1"># Append new row to dataframe.</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_row</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+    <span class="c1"># Re-order columns in output dataframe.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">new_row</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
     <span class="c1"># Write updated dataframe to csv file.</span>
     <span class="c1">#df[1:].to_csv(csv_file) </span>
     <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> </div>

@@ -4,6 +4,7 @@ amoebaelib
 .. toctree::
    :maxdepth: 4
 
+   get_nonredun_import_statements_for_amoebae
    misc_functions
    module_add_to_db
    module_add_to_db_test
@@ -11,6 +12,7 @@ amoebaelib
    module_add_to_queries
    module_add_to_queries_test
    module_afa_to_nex
+   module_align_to_profile_iter
    module_amoebae
    module_amoebae_column_header_lists
    module_amoebae_constrain_mb
@@ -22,21 +24,30 @@ amoebaelib
    module_amoebae_plot
    module_amoebae_prune
    module_amoebae_run_searches
-   module_amoebae_scrollsaw
    module_amoebae_search
+   module_amoebae_select_positions
+   module_amoebae_select_seqs
    module_amoebae_srchresfile
    module_amoebae_srchresfile_test
    module_amoebae_test
    module_amoebae_trim_nex
+   module_boots_on_mb
    module_dacksify_pos_hmmer_hits
    module_eml
    module_find_pos_hmmer_hits
    module_get_fas_from_db_dir
    module_get_redun_hits
+   module_mask_nex
    module_nhmmer_scaffolds
    module_paralogue_counter
    module_search_scaffolds
    module_search_scaffolds_test
    module_similarity_score
+   replace_seqs
+   search_alignment_space
+   test_module_amoebae_get_datatype
+   test_module_amoebae_get_datatype_testseqs
    test_module_nhmmer_scaffolds
    test_search_scaffolds
+   visualize_trees
+   visualize_trees_test

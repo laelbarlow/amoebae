@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="module_amoebae_column_header_lists module" href="module_amoebae_column_header_lists.html" />
-    <link rel="prev" title="module_afa_to_nex module" href="module_afa_to_nex.html" /> 
+    <link rel="prev" title="module_align_to_profile_iter module" href="module_align_to_profile_iter.html" /> 
   </head>
   <body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -40,7 +40,7 @@
           <a href="module_amoebae_column_header_lists.html" title="module_amoebae_column_header_lists module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="module_afa_to_nex.html" title="module_afa_to_nex module"
+          <a href="module_align_to_profile_iter.html" title="module_align_to_profile_iter module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
       </ul>
@@ -133,8 +133,10 @@ name.</p>
 
 <dl class="function">
 <dt id="module_amoebae.get_seq_obj_from_srch_res_csv_info">
-<code class="descclassname">module_amoebae.</code><code class="descname">get_seq_obj_from_srch_res_csv_info</code><span class="sig-paren">(</span><em>acc</em>, <em>description</em>, <em>seq</em>, <em>abbrev=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae.html#get_seq_obj_from_srch_res_csv_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae.get_seq_obj_from_srch_res_csv_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes components and assembles a Bio.Seq sequence object.</p>
+<code class="descclassname">module_amoebae.</code><code class="descname">get_seq_obj_from_srch_res_csv_info</code><span class="sig-paren">(</span><em>acc</em>, <em>description</em>, <em>seq</em>, <em>abbrev=False</em>, <em>paralogue_names=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae.html#get_seq_obj_from_srch_res_csv_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae.get_seq_obj_from_srch_res_csv_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes components and assembles a Bio.Seq sequence object.
+If abbreviating, now puts the description before the assession, but used to be the other way
+around.</p>
 </dd></dl>
 
 <dl class="function">
@@ -180,7 +182,8 @@ criteria for inclusion of positions.</p>
 <dl class="function">
 <dt id="module_amoebae.mask_nex2">
 <code class="descclassname">module_amoebae.</code><code class="descname">mask_nex2</code><span class="sig-paren">(</span><em>infilepath</em>, <em>outfilepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae.html#mask_nex2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae.mask_nex2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a filepath and adds a MASK sequence.</p>
+<dd><p>Takes a filepath and adds a MASK sequence.
+<a href="#id1"><span class="problematic" id="id2">**</span></a><a href="#id3"><span class="problematic" id="id4">*</span></a>Includes all positions!!!</p>
 </dd></dl>
 
 <dl class="function">
@@ -192,7 +195,7 @@ run, etc in a log file.</p>
 
 <dl class="function">
 <dt id="module_amoebae.write_seqs_to_fasta">
-<code class="descclassname">module_amoebae.</code><code class="descname">write_seqs_to_fasta</code><span class="sig-paren">(</span><em>csv_file</em>, <em>output_fasta</em>, <em>abbrev=False</em>, <em>only_descr=False</em>, <em>subseq=False</em>, <em>all_hits=False</em>, <em>split_by_top_rev_srch_hit=None</em>, <em>split_by_query_title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae.html#write_seqs_to_fasta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae.write_seqs_to_fasta" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">module_amoebae.</code><code class="descname">write_seqs_to_fasta</code><span class="sig-paren">(</span><em>csv_file</em>, <em>output_fasta</em>, <em>abbrev=False</em>, <em>paralogue_names=False</em>, <em>only_descr=False</em>, <em>subseq=False</em>, <em>all_hits=False</em>, <em>split_by_top_rev_srch_hit=None</em>, <em>split_by_query_title=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae.html#write_seqs_to_fasta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae.write_seqs_to_fasta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a csv file (output by amoebae) and writes listed sequences to a
 fasta file.</p>
 </dd></dl>
@@ -206,8 +209,8 @@ fasta file.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="module_afa_to_nex.html"
-                        title="previous chapter">module_afa_to_nex module</a></p>
+  <p class="topless"><a href="module_align_to_profile_iter.html"
+                        title="previous chapter">module_align_to_profile_iter module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="module_amoebae_column_header_lists.html"
                         title="next chapter">module_amoebae_column_header_lists module</a></p>
@@ -238,7 +241,7 @@ fasta file.</p>
           <a href="module_amoebae_column_header_lists.html" title="module_amoebae_column_header_lists module"
              >next</a> |</li>
         <li class="right" >
-          <a href="module_afa_to_nex.html" title="module_afa_to_nex module"
+          <a href="module_align_to_profile_iter.html" title="module_align_to_profile_iter module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
       </ul>

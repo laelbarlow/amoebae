@@ -56,10 +56,71 @@
 <p>Module for amoebae script with functions for parsing trees using the ETE3
 library.</p>
 <dl class="function">
+<dt id="module_amoebae_prune.automatically_select_nodes_and_remove_seqs">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">automatically_select_nodes_and_remove_seqs</code><span class="sig-paren">(</span><em>input_tree_one</em>, <em>alignment_file</em>, <em>max_bl_iqr_above_third_quartile</em>, <em>remove_redun_seqs</em>, <em>remove_redun_seqs_threshold</em>, <em>output_file=None</em>, <em>name_replace_table=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#automatically_select_nodes_and_remove_seqs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.automatically_select_nodes_and_remove_seqs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a tree file (newick) and the corresponding alignment file (nexus)
+and write a new alignment without the selected nodes/sequences.</p>
+<p>ToDo: Automate selection of long branches for removal. Allow manual
+selection of leaf nodes for removal.</p>
+<p>Problem: Interactive tree viewer is not working.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.automatically_select_nodes_and_remove_seqs_in_dir">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">automatically_select_nodes_and_remove_seqs_in_dir</code><span class="sig-paren">(</span><em>indp</em>, <em>max_bl_iqr_above_third_quartile</em>, <em>remove_redun_seqs</em>, <em>remove_redun_seqs_threshold</em>, <em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#automatically_select_nodes_and_remove_seqs_in_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.automatically_select_nodes_and_remove_seqs_in_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify appropriate files and call function to use those to remove
+seqs.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="module_amoebae_prune.get_conversion_table_dict">
 <code class="descclassname">module_amoebae_prune.</code><code class="descname">get_conversion_table_dict</code><span class="sig-paren">(</span><em>table_with_quotation_marks</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#get_conversion_table_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.get_conversion_table_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take a conversion table, and return a dictionary with coded names as
 values and original names as keys.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.get_key_nodes_list">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">get_key_nodes_list</code><span class="sig-paren">(</span><em>to_remove_list_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#get_key_nodes_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.get_key_nodes_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get list of names of nodes to remove from input text file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.get_prune_tree_style">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">get_prune_tree_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#get_prune_tree_style"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.get_prune_tree_style" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.get_seqs_to_remove_file">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">get_seqs_to_remove_file</code><span class="sig-paren">(</span><em>to_remove_list_file</em>, <em>t</em>, <em>remove_redun_seqs</em>, <em>min_support</em>, <em>max_bl_iqr_above_third_quartile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#get_seqs_to_remove_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.get_seqs_to_remove_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prompt user to list nodes and sequence names to remove in a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.get_seqs_to_remove_file_from_user">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">get_seqs_to_remove_file_from_user</code><span class="sig-paren">(</span><em>to_remove_list_file</em>, <em>tree_file_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#get_seqs_to_remove_file_from_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.get_seqs_to_remove_file_from_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prompt user to list nodes and sequence names to remove in a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.get_seqs_to_remove_from_dataset">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">get_seqs_to_remove_from_dataset</code><span class="sig-paren">(</span><em>key_nodes_list</em>, <em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#get_seqs_to_remove_from_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.get_seqs_to_remove_from_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a list of nodes and an ete3 Tree object, and return a list of
+sequences to remove from dataset.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.get_tree_string_with_readable_supports">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">get_tree_string_with_readable_supports</code><span class="sig-paren">(</span><em>tree_with_long_names</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#get_tree_string_with_readable_supports"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.get_tree_string_with_readable_supports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change node support values to a format that is readable by ETE3.
+Overwrites input file as output file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.leaves_all_same_species">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">leaves_all_same_species</code><span class="sig-paren">(</span><em>leaves</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#leaves_all_same_species"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.leaves_all_same_species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a list of TreeNodes (leaves) and return True if they represent
+sequences that all came from the same species.</p>
 </dd></dl>
 
 <dl class="function">
@@ -76,6 +137,7 @@ with quotation marks around the long names.</p>
 and write a new alignment without the selected nodes/sequences.</p>
 <p>ToDo: Automate selection of long branches for removal. Allow manual
 selection of leaf nodes for removal.</p>
+<p>Problem: Interactive tree viewer is not working.</p>
 </dd></dl>
 
 <dl class="function">
@@ -100,6 +162,21 @@ is readable by ETE3.</p>
 <dt id="module_amoebae_prune.remove_nodes_to_match_ali">
 <code class="descclassname">module_amoebae_prune.</code><code class="descname">remove_nodes_to_match_ali</code><span class="sig-paren">(</span><em>alignment</em>, <em>tree_file</em>, <em>output_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#remove_nodes_to_match_ali"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.remove_nodes_to_match_ali" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write tree file with only sequences represented in the alignment.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.root_tree_manually">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">root_tree_manually</code><span class="sig-paren">(</span><em>t</em>, <em>tx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#root_tree_manually"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.root_tree_manually" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-root a given ete3 Tree manually.
+t is the tree object to modify.
+tx is the tree object to view in terminal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="module_amoebae_prune.write_reduced_alignment">
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">write_reduced_alignment</code><span class="sig-paren">(</span><em>alignment_file</em>, <em>coded_seqs_to_remove_from_dataset</em>, <em>conversion_table_dict</em>, <em>output_alignment_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#write_reduced_alignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.write_reduced_alignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an alignment and a list of sequences to remove, and write a new
+alignment file with those sequences removed.</p>
 </dd></dl>
 
 </div>

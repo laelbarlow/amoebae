@@ -21,7 +21,7 @@ that AMOEBAE is currently under development and is not yet fully functional.
 1) Ensure that the following dependencies are installed and working on your
 system:
 
-- Python3 (Anaconda distribution works well)
+- Python3 (Anaconda distribution works well on personal computers)
 
 - pandas (packaged with the Anaconda Python3 distribution)
 

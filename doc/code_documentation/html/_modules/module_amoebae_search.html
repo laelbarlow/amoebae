@@ -802,7 +802,7 @@
     <span class="n">new_row_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Query description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_res_obj</span><span class="o">.</span><span class="n">description</span>
     <span class="n">new_row_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Query length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_len</span>
     <span class="n">new_row_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Subject database species (if applicable)&#39;</span><span class="p">]</span> <span class="o">=</span>\
-        <span class="n">module_amoebae</span><span class="o">.</span><span class="n">get_species_for_db_filename</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">module_amoebae</span><span class="o">.</span><span class="n">get_species_for_db_filename</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="c1">### PROBLEM?</span>
     <span class="n">new_row_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Subject database file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
     <span class="n">new_row_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Forward search method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">srch_file_prog</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">srch_file_prog_vers</span>
 
@@ -1051,7 +1051,7 @@
                 <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Result &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; of &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num_searches</span><span class="p">))</span>
                 <span class="c1"># Temporary &#39;if&#39; statement???</span>
-                <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;afaa&#39;</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;afaa&#39;</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fna&#39;</span><span class="p">:</span>
                     <span class="n">warning_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2">WARNING: Assuming that did not search</span>
 <span class="s2">                    with profile query </span><span class="si">%s</span><span class="s2"> in nucleotide data </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">warning_text</span><span class="p">)</span>
@@ -1302,18 +1302,19 @@
         <span class="n">db_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Database File&#39;</span><span class="p">]</span>
         <span class="n">decis</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Positive/redundant (+) or negative (-) hit for queries with query title (edit this column)&#39;</span><span class="p">]</span>
         <span class="n">acc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Accession&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Make an empty list to begin with.</span>
+        <span class="k">if</span> <span class="n">query_title</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">redun_hit_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">redun_hit_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#if query_file not in redun_hit_dict[query_title].keys():</span>
+        <span class="c1">#    redun_hit_dict[query_title][query_file] = {}</span>
+        <span class="c1">#if db_file not in redun_hit_dict[query_title][query_file].keys():</span>
+        <span class="c1">#    redun_hit_dict[query_title][query_file][db_file] = []</span>
+        <span class="k">if</span> <span class="n">db_file</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">redun_hit_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">redun_hit_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">][</span><span class="n">db_file</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="c1"># Update dictionary if the row corresponds to a redundant hit.</span>
         <span class="k">if</span> <span class="n">decis</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
-            <span class="c1"># Make an empty list to begin with.</span>
-            <span class="k">if</span> <span class="n">query_title</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">redun_hit_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">redun_hit_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="c1">#if query_file not in redun_hit_dict[query_title].keys():</span>
-            <span class="c1">#    redun_hit_dict[query_title][query_file] = {}</span>
-            <span class="c1">#if db_file not in redun_hit_dict[query_title][query_file].keys():</span>
-            <span class="c1">#    redun_hit_dict[query_title][query_file][db_file] = []</span>
-            <span class="k">if</span> <span class="n">db_file</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">redun_hit_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">redun_hit_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">][</span><span class="n">db_file</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
             <span class="c1"># Otherwise just add accession to list.</span>
             <span class="c1">#redun_hit_dict[query_title][query_file][db_file] =\</span>
             <span class="c1">#    redun_hit_dict[query_title][query_file][db_file] + [acc]</span>
@@ -1533,7 +1534,7 @@
                         <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Difference in score between top hit and first non-redundant hit&#39;</span><span class="p">]</span> <span class="o">=</span>\
                                 <span class="n">scorediff</span>
                         <span class="c1"># Determine whether the criteria are met.</span>
-                        <span class="k">if</span> <span class="n">evaldiff</span> <span class="o">&gt;=</span> <span class="n">min_evaldiff</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">evaldiff</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">min_evaldiff</span><span class="p">):</span>
                             <span class="c1"># Result is positive.</span>
                             <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Note&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;The order of magnitude difference is greater than or equal to </span><span class="si">%s</span><span class="s1">&#39;</span>\
                                     <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">min_evaldiff</span><span class="p">)</span>
@@ -1583,7 +1584,7 @@
     <span class="k">return</span> <span class="n">final_outfp</span> </div>
 
 
-<div class="viewcode-block" id="write_interp_csv"><a class="viewcode-back" href="../module_amoebae_search.html#module_amoebae_search.write_interp_csv">[docs]</a><span class="k">def</span> <span class="nf">write_interp_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">outfp</span><span class="p">):</span>
+<div class="viewcode-block" id="write_interp_csv"><a class="viewcode-back" href="../module_amoebae_search.html#module_amoebae_search.write_interp_csv">[docs]</a><span class="k">def</span> <span class="nf">write_interp_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">outfp</span><span class="p">,</span> <span class="n">fwd_evalue_cutoff</span><span class="p">,</span> <span class="n">rev_evalue_cutoff</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Take a csv file and write a new one with an additional column with</span>
 <span class="sd">    interpretation of which forward search results are positive based on all</span>
 <span class="sd">    the reverse search results performed.</span>
@@ -1592,13 +1593,26 @@
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
 
     <span class="c1"># Compile a list of headers for columns that contain relevant +/-</span>
-    <span class="c1"># information.</span>
+    <span class="c1"># information, and E-values.</span>
     <span class="n">relev_col_headers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fwd_evalue_header</span> <span class="o">=</span> <span class="kc">None</span> 
+    <span class="n">rev_evalue_headers</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1"># Record if the column has +/- info.</span>
         <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Positive (+) or negative (-) hit based on reverse search criteria&#39;</span><span class="p">):</span>
             <span class="n">relev_col_headers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="c1"># Record if the column contains forward search E-values.</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="s1">&#39;Forward hit E-value (top HSP)&#39;</span><span class="p">:</span>
+            <span class="n">fwd_evalue_header</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="c1"># Record if the column contains reverse search E-values.</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Top reverse search hit E-value&#39;</span><span class="p">):</span>
+            <span class="n">rev_evalue_headers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">relev_col_headers</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify columns</span>
 <span class="s2">    containing relevant information in input spreadsheet: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">csv_file</span>
+    <span class="k">assert</span> <span class="n">fwd_evalue_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify column</span>
+<span class="s2">    containing forward search E-values in input spreadsheet: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">csv_file</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">rev_evalue_headers</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify columns</span>
+<span class="s2">    containing reverse search E-values in input spreadsheet: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">csv_file</span>
 
     <span class="c1"># Define a list of new column headers to be appended.</span>
     <span class="n">new_column_label_list</span> <span class="o">=</span> <span class="n">module_amoebae_column_header_lists</span><span class="o">.</span><span class="n">interp_column_label_list</span>
@@ -1618,13 +1632,21 @@
     <span class="c1"># determine which reverse search data needs to be found, and update the row</span>
     <span class="c1"># by adding this information.</span>
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="n">decis</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">decis</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
         <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">relev_col_headers</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
-                <span class="n">decis</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
-                <span class="k">break</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
                 <span class="n">decis</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">fwd_evalue_cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">decis</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">fwd_evalue_header</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">fwd_evalue_cutoff</span><span class="p">):</span>
+                    <span class="n">decis</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+        <span class="k">if</span> <span class="n">rev_evalue_cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">decis</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">rev_evalue_headers</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">header</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">rev_evalue_cutoff</span><span class="p">):</span>
+                        <span class="n">decis</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+                        <span class="k">break</span>
 
         <span class="c1"># Check that a decision could be made.</span>
         <span class="k">assert</span> <span class="n">decis</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span> <span class="ow">or</span> <span class="n">decis</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not determine whether the</span>

@@ -333,10 +333,22 @@
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">db_info_csv</span><span class="p">)</span>
     <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Filename&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">sp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">db_filename</span><span class="p">][</span><span class="s1">&#39;Species (if applicable)&#39;</span><span class="p">]</span>
+
+    <span class="c1">#print(&#39;\nTrying to get species name from genome info csv file.&#39;)</span>
+    <span class="c1">#print(&#39;genome info file path: &#39; + settings.db_info_csv)</span>
+    <span class="c1">#print(&#39;db_filename: &#39; + db_filename)</span>
+    <span class="c1">#print(&#39;value in species column: &#39; + sp)</span>
+
+    <span class="c1"># Check that the value retrieved makes sense.</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;There is more than one entry (row) for the</span>
+<span class="s2">    filename </span><span class="si">%s</span><span class="s2"> in the file </span><span class="si">%s</span><span class="s2">.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">db_filename</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">db_info_csv</span><span class="p">)</span>
+
+    <span class="c1"># Return the species name from the spreadsheet.</span>
     <span class="k">return</span> <span class="n">sp</span></div>
 
 
-<div class="viewcode-block" id="write_seqs_to_fasta"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.write_seqs_to_fasta">[docs]</a><span class="k">def</span> <span class="nf">write_seqs_to_fasta</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">output_fasta</span><span class="p">,</span> <span class="n">abbrev</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_descr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subseq</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="write_seqs_to_fasta"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.write_seqs_to_fasta">[docs]</a><span class="k">def</span> <span class="nf">write_seqs_to_fasta</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">output_fasta</span><span class="p">,</span> <span class="n">abbrev</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">paralogue_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_descr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subseq</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">all_hits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">split_by_top_rev_srch_hit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">split_by_query_title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Takes a csv file (output by amoebae) and writes listed sequences to a</span>
@@ -385,7 +397,7 @@
                     <span class="n">acc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit accession&#39;</span><span class="p">]</span>
                     <span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="n">seq</span> <span class="o">=</span> <span class="kc">None</span>
-                    <span class="k">if</span> <span class="n">subseq</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">subseq</span> <span class="ow">or</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward search method&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;tblastn&#39;</span><span class="p">):</span>
                         <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">]</span>
                         <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">]</span> 
                     <span class="k">else</span><span class="p">:</span>
@@ -411,6 +423,18 @@
                         <span class="c1"># to a space in the final output tree file).</span>
                         <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
 
+
+                    <span class="c1"># Using paralogue names only works if not using the</span>
+                    <span class="c1"># abbreviation option.</span>
+                    <span class="k">elif</span> <span class="n">paralogue_names</span><span class="p">:</span>
+                        <span class="n">col_name</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Paralogue name &#39;</span><span class="p">):</span>
+                                <span class="n">col_name</span> <span class="o">=</span> <span class="n">x</span>
+                        <span class="k">assert</span> <span class="n">col_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not find column with</span>
+<span class="s2">                        paralogue names.&quot;&quot;&quot;</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">col_name</span><span class="p">]</span>
+
                     <span class="k">elif</span> <span class="n">only_descr</span><span class="p">:</span>
                         <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
                         <span class="n">orig_descr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -424,7 +448,7 @@
                     <span class="c1"># Instantiate a sequence object for the sequence of interest to</span>
                     <span class="c1"># be written to output.</span>
                     <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span>
-                            <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="p">)</span>
+                            <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="p">,</span> <span class="n">paralogue_names</span><span class="p">)</span>
 
                     <span class="c1"># Determine if the top hit id is already a key in the dict,</span>
                     <span class="c1"># and add the sequence object to the list that is the value</span>
@@ -443,7 +467,7 @@
             <span class="c1"># reverse search hit that they retrieved.</span>
             <span class="k">for</span> <span class="n">seq_obj_list_key</span> <span class="ow">in</span> <span class="n">rev_srch_top_hit_seq_obj_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">specific_output_fasta_path</span> <span class="o">=</span> <span class="n">output_fasta</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span>\
-                <span class="n">seq_obj_list_key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_matches.fa&#39;</span> 
+                <span class="n">seq_obj_list_key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_matches.fa&#39;</span> 
                 <span class="nb">print</span><span class="p">(</span><span class="n">specific_output_fasta_path</span><span class="p">)</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">specific_output_fasta_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
                     <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rev_srch_top_hit_seq_obj_dict</span><span class="p">[</span><span class="n">seq_obj_list_key</span><span class="p">],</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
@@ -452,7 +476,7 @@
         <span class="k">elif</span> <span class="n">split_by_query_title</span><span class="p">:</span>
             <span class="c1"># Define output subdirectory.</span>
             <span class="n">subdirpath</span> <span class="o">=</span> <span class="n">output_fasta</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_fasta_split_by_query_title&#39;</span>
-            <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">subdirpath</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Ouput directory already</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">subdirpath</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Output directory already</span>
 <span class="s2">            exists.&quot;&quot;&quot;</span>
 
             <span class="c1"># Iterate through rows and construct a list of relevant sequence</span>
@@ -502,6 +526,15 @@
                         <span class="c1"># to a space in the final output tree file).</span>
                         <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
 
+                    <span class="k">elif</span> <span class="n">paralogue_names</span><span class="p">:</span>
+                        <span class="n">col_name</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Paralogue name &#39;</span><span class="p">):</span>
+                                <span class="n">col_name</span> <span class="o">=</span> <span class="n">x</span>
+                        <span class="k">assert</span> <span class="n">col_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not find column with</span>
+<span class="s2">                        paralogue names.&quot;&quot;&quot;</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">col_name</span><span class="p">]</span>
+
                     <span class="k">elif</span> <span class="n">only_descr</span><span class="p">:</span>
                         <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
                         <span class="n">orig_descr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -515,7 +548,7 @@
                     <span class="c1"># Instantiate a sequence object for the sequence of interest to</span>
                     <span class="c1"># be written to output.</span>
                     <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span>
-                            <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="p">)</span>
+                            <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="p">,</span> <span class="n">paralogue_names</span><span class="p">)</span>
 
                     <span class="c1"># Determine if the top hit id is already a key in the dict,</span>
                     <span class="c1"># and add the sequence object to the list that is the value</span>
@@ -547,7 +580,7 @@
             <span class="c1"># Write sequences to output file.</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_fasta</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
                 <span class="c1">#for seq_obj in seq_objs:</span>
-                <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">seq_objs</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
+                <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">seq_objs</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span> <span class="c1"># DOES NOT WORK.</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Iterate through rows and construct a list of relevant sequence objects.</span>
@@ -582,6 +615,15 @@
             <span class="c1"># to a space in the final output tree file).</span>
                 <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
 
+            <span class="k">elif</span> <span class="n">paralogue_names</span><span class="p">:</span>
+                <span class="n">col_name</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Paralogue name &#39;</span><span class="p">):</span>
+                        <span class="n">col_name</span> <span class="o">=</span> <span class="n">x</span>
+                <span class="k">assert</span> <span class="n">col_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not find column with</span>
+<span class="s2">                paralogue names.&quot;&quot;&quot;</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">col_name</span><span class="p">]</span>
+
             <span class="k">elif</span> <span class="n">only_descr</span><span class="p">:</span>
                 <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
                 <span class="n">orig_descr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -593,7 +635,7 @@
                     <span class="n">orig_descr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
 
             <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">seq</span><span class="p">,</span>
-                    <span class="n">abbrev</span><span class="p">)</span>
+                    <span class="n">abbrev</span><span class="p">,</span> <span class="n">paralogue_names</span><span class="p">)</span>
             <span class="n">seq_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq_obj</span><span class="p">)</span>
 
         <span class="c1"># Write sequences to output file.</span>
@@ -678,6 +720,7 @@
 
 <div class="viewcode-block" id="mask_nex2"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.mask_nex2">[docs]</a><span class="k">def</span> <span class="nf">mask_nex2</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="n">outfilepath</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Takes a filepath and adds a MASK sequence.</span>
+<span class="sd">    ***Includes all positions!!!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Delete extra lines in input nexus file, if present, because biopython cannot</span>
     <span class="c1"># read nexus alignments with these extra lines.</span>
@@ -698,14 +741,22 @@
         <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">masked_alignment</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_seq_obj_from_srch_res_csv_info"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_seq_obj_from_srch_res_csv_info">[docs]</a><span class="k">def</span> <span class="nf">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_seq_obj_from_srch_res_csv_info"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_seq_obj_from_srch_res_csv_info">[docs]</a><span class="k">def</span> <span class="nf">get_seq_obj_from_srch_res_csv_info</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">seq</span><span class="p">,</span> <span class="n">abbrev</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">paralogue_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Takes components and assembles a Bio.Seq sequence object.</span>
+<span class="sd">    If abbreviating, now puts the description before the assession, but used to be the other way</span>
+<span class="sd">    around.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">seq_obj</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
     <span class="n">seq_rec_obj</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">seq_obj</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">abbrev</span><span class="p">:</span>
-        <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">acc</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span> <span class="n">description</span>
+        <span class="c1">#seq_rec_obj.id = acc + &#39;__&#39; + description</span>
+        <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">description</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span> <span class="n">acc</span>
+        <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">elif</span> <span class="n">paralogue_names</span><span class="p">:</span>
+        <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">description</span>
         <span class="n">seq_rec_obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
     <span class="k">else</span><span class="p">:</span> 

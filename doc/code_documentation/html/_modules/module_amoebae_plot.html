@@ -223,6 +223,55 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outpdfpath</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="generate_stats_file"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.generate_stats_file">[docs]</a><span class="k">def</span> <span class="nf">generate_stats_file</span><span class="p">(</span><span class="n">column_labels</span><span class="p">,</span> <span class="n">row_labels</span><span class="p">,</span> <span class="n">data_count</span><span class="p">,</span>
+        <span class="n">out_summary_stats_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take relevant data, and write a file with average positive hit counts</span>
+<span class="sd">    (averaged over genomes and over protein queries).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Start writing output file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_summary_stats_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="c1"># Get average positive hits among all genomes and all queries.</span>
+
+        <span class="c1"># Sum all positive hits.</span>
+        <span class="n">total_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_count</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">total_sum</span> <span class="o">+=</span> <span class="n">j</span>
+
+        <span class="c1"># Divide by number of columns times the number of rows.</span>
+        <span class="n">overall_average</span> <span class="o">=</span> <span class="n">total_sum</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">column_labels</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_labels</span><span class="p">))</span> 
+
+        <span class="c1"># Write overall average.</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Overall average number of positive hits among all species and all queries:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">overall_average</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get average positive hits over all queries for each genome (row).</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Average number of positive hits among all queries for each species:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">glist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
+        <span class="k">for</span> <span class="n">genome_name</span> <span class="ow">in</span> <span class="n">row_labels</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">glist</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">genome_name</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data_count</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_labels</span><span class="p">)))</span>
+        <span class="n">glist</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">glist</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row_labels</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get average positive hits over all genomes for each query (query title) (column).</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Average number of positive hits among all species for each query:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">qlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
+        <span class="k">for</span> <span class="n">query_name</span> <span class="ow">in</span> <span class="n">column_labels</span><span class="p">:</span>
+            <span class="n">col</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">qlist</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">query_name</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data_count</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">col</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_labels</span><span class="p">)))</span>
+        <span class="n">qlist</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">qlist</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">column_labels</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="get_sector_label"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.get_sector_label">[docs]</a><span class="k">def</span> <span class="nf">get_sector_label</span><span class="p">(</span><span class="n">pct</span><span class="p">,</span> <span class="n">iterable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get sector label from iterable list. For constructing coulson plots.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -264,6 +313,7 @@
         <span class="c1"># none of the proteins form a relevant complex).</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">column_labels_simple</span><span class="p">:</span>
             <span class="n">complex_info_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">query_titles_accounted_for</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
     <span class="c1"># Check that a list of complexes was compiled.</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">complex_info_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No input complexes.&quot;&quot;&quot;</span>
@@ -338,6 +388,7 @@
     <span class="c1"># Iterate over subplots, encoding information:</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">species</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row_labels_simple</span><span class="p">):</span>
         <span class="n">jnum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">compl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">complex_info_list</span><span class="p">):</span>
             <span class="n">jnum</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -582,6 +633,7 @@
     <span class="k">if</span> <span class="n">outpdfpath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">outpdfpath</span> <span class="o">=</span> <span class="n">csv_file</span> <span class="o">+</span> <span class="s1">&#39;_plot.pdf&#39;</span>
     <span class="n">outpdfpath_simple</span> <span class="o">=</span> <span class="n">outpdfpath</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_simple.pdf&#39;</span>  
+    <span class="n">out_summary_stats_path</span> <span class="o">=</span> <span class="n">outpdfpath</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_stats.txt&#39;</span> 
 
     <span class="n">final_output_path</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -596,6 +648,23 @@
     <span class="c1">#outpdfpath_coulson = outpdfpath_simple.rsplit(&#39;_&#39;, 1)[0] + &#39;_coulson.pdf&#39;</span>
     <span class="c1">#make_coulson_plot(column_labels_simple, row_labels_simple, data_labels_simple, data_count_simple,</span>
     <span class="c1">#    data_heat_simple, outpdfpath_coulson, complex_info)</span>
+
+    <span class="c1"># Define a dictionary for identifying the right columns.</span>
+    <span class="n">column_header_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;query title&#39;</span><span class="p">:</span> <span class="s1">&#39;Query title&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;query file&#39;</span><span class="p">:</span> <span class="s1">&#39;Query file&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;alignment name&#39;</span><span class="p">:</span> <span class="s1">&#39;Alignment for sequence comparison&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;taxon name&#39;</span><span class="p">:</span> <span class="s1">&#39;Subject database species (if applicable)&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;database filename&#39;</span><span class="p">:</span> <span class="s1">&#39;Subject database file&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;positive or not&#39;</span><span class="p">:</span> <span class="s1">&#39;Collective interpretation of reverse search results&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;accession&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit accession&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;program&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward search method&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;seq&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit sequence&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;subseq&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;seq descr&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit description&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;subseq descr&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;evalue&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit E-value (top HSP)&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit score&#39;</span>
+                          <span class="p">}</span>
 
     <span class="c1"># Initiate variables for comparing more than one csv file.</span>
     <span class="n">column_labels_simple_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -616,23 +685,6 @@
         <span class="c1"># Get data from input file.</span>
         <span class="n">indf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file_x</span><span class="p">)</span>
 
-        <span class="c1"># Define a dictionary for identifying the right columns.</span>
-        <span class="n">column_header_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;query title&#39;</span><span class="p">:</span> <span class="s1">&#39;Query title&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;query file&#39;</span><span class="p">:</span> <span class="s1">&#39;Query file&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;alignment name&#39;</span><span class="p">:</span> <span class="s1">&#39;Alignment for sequence comparison&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;taxon name&#39;</span><span class="p">:</span> <span class="s1">&#39;Subject database species (if applicable)&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;database filename&#39;</span><span class="p">:</span> <span class="s1">&#39;Subject database file&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;positive or not&#39;</span><span class="p">:</span> <span class="s1">&#39;Collective interpretation of reverse search results&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;accession&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit accession&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;program&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward search method&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;seq&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit sequence&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;subseq&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;seq descr&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit description&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;subseq descr&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;evalue&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit E-value (top HSP)&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="s1">&#39;Forward hit score&#39;</span>
-                              <span class="p">}</span>
-
         <span class="c1"># construct an additional dataframe with each datapoint being a list of</span>
         <span class="c1"># relevant information.</span>
 
@@ -644,6 +696,7 @@
             <span class="n">index_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">taxon_name</span><span class="p">,</span> <span class="n">db_file</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">index_tuple</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_row_index_list</span><span class="p">:</span>
                 <span class="n">new_row_index_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index_tuple</span><span class="p">)</span>
+
 
         <span class="c1"># If a database filename list file is provided, then re-order the</span>
         <span class="c1"># new_row_index_list list to reflect that order.</span>
@@ -672,6 +725,10 @@
             <span class="c1"># Replace list with reordered list.</span>
             <span class="n">new_row_index_list</span> <span class="o">=</span> <span class="n">new_db_file_list</span>
 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Sort new row indexes.</span>
+            <span class="n">new_row_index_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
         <span class="c1"># Define a simplified list of index values for another new dataframe.</span>
         <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
@@ -685,11 +742,14 @@
             <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">query_title</span><span class="p">,</span> <span class="n">query_file</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">header_tuple</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_column_header_list</span><span class="p">:</span>
                 <span class="n">new_column_header_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header_tuple</span><span class="p">)</span>
+
+        <span class="c1"># Sort new column headers.</span>
+        <span class="n">new_column_header_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
         <span class="c1"># Define a simplified list of header values for another new dataframe.</span>
         <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
         <span class="n">new_column_header_list_simple</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_column_header_list</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">seen</span> <span class="ow">or</span> <span class="n">seen_add</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span>
-
 
         <span class="c1"># Determine column header for column that contains final paralogue count</span>
         <span class="c1"># information.</span>
@@ -702,13 +762,12 @@
         <span class="k">assert</span> <span class="n">unique_positive_hit_decis_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify</span>
 <span class="s2">        which column contains information regarding unique paralogue counts.&quot;&quot;&quot;</span>
 
-
         <span class="c1"># Initiate new dataframes.</span>
         <span class="n">odf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">new_column_header_list</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_row_index_list</span><span class="p">)</span>
         <span class="n">odf_simple</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">new_column_header_list_simple</span><span class="p">,</span>
                 <span class="n">index</span><span class="o">=</span><span class="n">new_row_index_list_simple</span><span class="p">)</span>
 
-        <span class="c1"># Set all value in dataframes to &#39;-&#39; by default.</span>
+        <span class="c1"># Set all values in dataframes to &#39;-&#39; by default.</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_row_index_list</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">new_column_header_list</span><span class="p">:</span>
                 <span class="n">odf</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
@@ -722,6 +781,9 @@
             <span class="c1"># Determine where in the new dataframes the info should be put.</span>
             <span class="n">index_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;taxon name&#39;</span><span class="p">]],</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;database filename&#39;</span><span class="p">]])</span>
             <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]],</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]])</span>
+
+            <span class="c1">#if index_tuple[0] == &#39;Capsella grandiflora&#39;:</span>
+            <span class="c1">#    print(str(index_tuple) + &#39; &#39; + str(header_tuple))</span>
 
             <span class="n">index_simple</span> <span class="o">=</span> <span class="n">index_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">header_simple</span> <span class="o">=</span> <span class="n">header_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -816,21 +878,27 @@
         <span class="c1">#print(data_heat)</span>
 
         <span class="c1"># Make rectangular (heatmaps) of only the first csv input file.</span>
-        <span class="k">if</span> <span class="n">file_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1">#######</span>
-            <span class="c1"># Step 3: Plot results.</span>
-                        
-            <span class="c1"># Plot.</span>
-            <span class="n">column_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf</span><span class="p">)</span>
-            <span class="n">row_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-            <span class="n">generate_heatmap_figure</span><span class="p">(</span><span class="n">column_labels</span><span class="p">,</span> <span class="n">row_labels</span><span class="p">,</span> <span class="n">data_labels</span><span class="p">,</span> <span class="n">data_count</span><span class="p">,</span>
-                <span class="n">data_heat</span><span class="p">,</span> <span class="n">outpdfpath</span><span class="p">)</span>
+        <span class="c1">#if file_num == 1:</span>
+        <span class="c1">#######</span>
+        <span class="c1"># Step 3: Plot results.</span>
+                    
+        <span class="c1"># Plot.</span>
+        <span class="n">column_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf</span><span class="p">)</span>
+        <span class="n">row_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">generate_heatmap_figure</span><span class="p">(</span><span class="n">column_labels</span><span class="p">,</span> <span class="n">row_labels</span><span class="p">,</span> <span class="n">data_labels</span><span class="p">,</span> <span class="n">data_count</span><span class="p">,</span>
+            <span class="n">data_heat</span><span class="p">,</span> <span class="n">outpdfpath</span><span class="p">)</span>
 
-            <span class="c1"># Simple plot.</span>
-            <span class="n">column_labels_simple</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf_simple</span><span class="p">)</span>
-            <span class="n">row_labels_simple</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf_simple</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-            <span class="n">generate_heatmap_figure</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">,</span> <span class="n">row_labels_simple</span><span class="p">,</span> <span class="n">data_labels_simple</span><span class="p">,</span> <span class="n">data_count_simple</span><span class="p">,</span>
-                <span class="n">data_heat_simple</span><span class="p">,</span> <span class="n">outpdfpath_simple</span><span class="p">)</span>
+        <span class="c1"># Simple plot.</span>
+        <span class="n">column_labels_simple</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf_simple</span><span class="p">)</span>
+        <span class="n">row_labels_simple</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">odf_simple</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">generate_heatmap_figure</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">,</span> <span class="n">row_labels_simple</span><span class="p">,</span> <span class="n">data_labels_simple</span><span class="p">,</span> <span class="n">data_count_simple</span><span class="p">,</span>
+            <span class="n">data_heat_simple</span><span class="p">,</span> <span class="n">outpdfpath_simple</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="n">file_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Generate text file with stats.</span>
+            <span class="n">generate_stats_file</span><span class="p">(</span><span class="n">column_labels_simple</span><span class="p">,</span> <span class="n">row_labels_simple</span><span class="p">,</span> <span class="n">data_count_simple</span><span class="p">,</span>
+                <span class="n">out_summary_stats_path</span><span class="p">)</span>
 
             <span class="c1"># Only make a coulson plot at this point if there was only one</span>
             <span class="c1"># input file.</span>
@@ -849,11 +917,12 @@
         <span class="n">data_count_simple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_count_simple</span><span class="p">)</span>
         <span class="n">data_heat_simple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_heat_simple</span><span class="p">)</span>
 
+
     <span class="c1"># If comparing two csv files, then call the make_coulson_plot function</span>
     <span class="c1"># with different input.</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">csv_paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># Check that the two input coulson plots are comparable.</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">csv_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Can only handle to input csv files.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">csv_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Can only handle up to two input csv files.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">column_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">column_labels_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">assert</span> <span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_count_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_count_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>

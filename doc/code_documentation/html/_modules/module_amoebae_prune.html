@@ -69,9 +69,11 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">statistics</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="c1">#import settings</span>
 <span class="c1">#import shutil</span>
-<span class="c1">#import glob</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 <span class="c1">#import time</span>
 <span class="c1">#import pandas as pd</span>
 
@@ -95,6 +97,8 @@
 <span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">IUPAC</span><span class="p">,</span> <span class="n">Gapped</span>
 <span class="kn">from</span> <span class="nn">Bio.Align</span> <span class="k">import</span> <span class="n">MultipleSeqAlignment</span>
 
+<span class="kn">from</span> <span class="nn">visualize_trees</span> <span class="k">import</span> <span class="n">translate_int_node_names_to_support</span><span class="p">,</span> <span class="n">visualize_tree</span><span class="p">,</span> <span class="n">find_input_file_in_parent_directory</span>
+
 <span class="c1"># Define functions to be used in amoebae.</span>
 
 
@@ -105,24 +109,25 @@
 <span class="sd">    Currently have to choose one support value to show either &#39;boostrap&#39; or</span>
 <span class="sd">    &#39;alrt&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#print(&#39;Parsing node support values:&#39;)</span>
     <span class="c1">#cs = re.compile(r&#39;\)\d+(\.\d)?/\d+:&#39;)</span>
     <span class="n">cs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\)\d+.?\d?/\d+:&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">cs</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">tree_string</span><span class="p">):</span>
         <span class="c1">#print(instance)</span>
         <span class="c1"># Define a reformatted support string.</span>
         <span class="n">supcomb</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;supcomb:&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">supcomb</span><span class="p">)</span>
+        <span class="c1">#print(&#39;supcomb:&#39;)</span>
+        <span class="c1">#print(supcomb)</span>
 
         <span class="n">alrt</span> <span class="o">=</span> <span class="n">supcomb</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;alrt:&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">alrt</span><span class="p">)</span>
+        <span class="c1">#print(&#39;alrt:&#39;)</span>
+        <span class="c1">#print(alrt)</span>
         <span class="n">alrt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">alrt</span><span class="p">)))</span>
         <span class="n">alrt</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">alrt</span><span class="p">))</span> <span class="o">+</span> <span class="n">alrt</span>
 
         <span class="n">boot</span> <span class="o">=</span> <span class="n">supcomb</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;boot:&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">boot</span><span class="p">)</span>
+        <span class="c1">#print(&#39;boot:&#39;)</span>
+        <span class="c1">#print(boot)</span>
         <span class="n">boot</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">boot</span><span class="p">)))</span>
         <span class="n">boot</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">boot</span><span class="p">))</span> <span class="o">+</span> <span class="n">boot</span>
 
@@ -184,6 +189,377 @@
     <span class="k">return</span> <span class="n">conversion_table_dict</span></div>
 
 
+<div class="viewcode-block" id="get_tree_string_with_readable_supports"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.get_tree_string_with_readable_supports">[docs]</a><span class="k">def</span> <span class="nf">get_tree_string_with_readable_supports</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Change node support values to a format that is readable by ETE3.</span>
+<span class="sd">    Overwrites input file as output file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">treestring</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">treestring</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="k">if</span> <span class="n">treestring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">reformat_combined_supports2</span><span class="p">(</span><span class="n">treestring</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="root_tree_manually"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.root_tree_manually">[docs]</a><span class="k">def</span> <span class="nf">root_tree_manually</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">tx</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Re-root a given ete3 Tree manually.</span>
+<span class="sd">    t is the tree object to modify.</span>
+<span class="sd">    tx is the tree object to view in terminal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Print simple tree.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Input tree:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+    <span class="c1"># Get node for a key clade. </span>
+    <span class="c1"># Or, just require to root it before inputting (figtree can export</span>
+    <span class="c1"># re-rooted newick)?????</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Please define an arbitrary clade of interest for rooting the tree topology</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">clade_member_1</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Clade member 1: &#39;</span><span class="p">)</span>
+    <span class="n">clade_member_2</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Clade member 2: &#39;</span><span class="p">)</span>
+    <span class="c1">#ancestor1 = t2.get_common_ancestor(clade_member_1, clade_member_2)</span>
+    <span class="n">ancestor1</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_common_ancestor</span><span class="p">(</span><span class="n">clade_member_1</span><span class="p">,</span> <span class="n">clade_member_2</span><span class="p">)</span>
+    <span class="c1">#print(ancestor1)</span>
+
+    <span class="c1"># Re-root tree. </span>
+    <span class="n">t</span><span class="o">.</span><span class="n">set_outgroup</span><span class="p">(</span><span class="n">ancestor1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_prune_tree_style"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.get_prune_tree_style">[docs]</a><span class="k">def</span> <span class="nf">get_prune_tree_style</span><span class="p">():</span>
+    <span class="c1"># Set up tree style for viewing.</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">TreeStyle</span><span class="p">()</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">show_leaf_name</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">def</span> <span class="nf">my_layout</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function for showing internal node names (numbers).&quot;&quot;&quot;</span>
+        <span class="c1">#F = TextFace(node.name, tight_text=True)</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">TextFace</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">add_face_to_node</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">&quot;branch-right&quot;</span><span class="p">)</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span>  <span class="mi">100</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">branch_vertical_margin</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">layout_fn</span> <span class="o">=</span> <span class="n">my_layout</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">show_branch_support</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># Return the tree style.</span>
+    <span class="k">return</span> <span class="n">ts</span></div>
+
+
+<div class="viewcode-block" id="get_seqs_to_remove_file_from_user"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.get_seqs_to_remove_file_from_user">[docs]</a><span class="k">def</span> <span class="nf">get_seqs_to_remove_file_from_user</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="n">tree_file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prompt user to list nodes and sequence names to remove in a file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Show tree with node names (render as PDF file).</span>
+    <span class="c1">#t1.show(tree_style=ts)</span>
+    <span class="c1">#subprocess.call([&#39;open&#39;, tree_file_name]) # uncomment later.</span>
+
+    <span class="c1"># Prompt user input.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\n</span><span class="s1">List node numbers and/or sequence accessions for sequences to</span>
+<span class="s1">    remove in file:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;&#39;&#39;</span> <span class="o">%</span> <span class="n">to_remove_list_file</span><span class="p">)</span>
+    <span class="n">editor</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EDITOR&#39;</span><span class="p">,</span><span class="s1">&#39;vim&#39;</span><span class="p">)</span> 
+    <span class="n">initial_message</span> <span class="o">=</span> <span class="s1">&#39;# List node numbers or sequence accessions for sequences to remove below.&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">initial_message</span><span class="p">)</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="n">editor</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+
+    <span class="c1"># Check that file was produced.</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Did not produce file listing</span>
+<span class="s2">    sequences to remove from dataset.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="leaves_all_same_species"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.leaves_all_same_species">[docs]</a><span class="k">def</span> <span class="nf">leaves_all_same_species</span><span class="p">(</span><span class="n">leaves</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a list of TreeNodes (leaves) and return True if they represent</span>
+<span class="sd">    sequences that all came from the same species.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">]))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="get_seqs_to_remove_file"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.get_seqs_to_remove_file">[docs]</a><span class="k">def</span> <span class="nf">get_seqs_to_remove_file</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">remove_redun_seqs</span><span class="p">,</span> <span class="n">min_support</span><span class="p">,</span>
+        <span class="n">max_bl_iqr_above_third_quartile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prompt user to list nodes and sequence names to remove in a file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">## Show tree with node names (render as PDF file).</span>
+    <span class="c1">#t1.show(tree_style=ts)</span>
+    <span class="c1">#subprocess.call([&#39;open&#39;, tree_file_name]) # uncomment later.</span>
+
+    <span class="c1">## Prompt user input.</span>
+    <span class="c1">#print(&#39;&#39;&#39;\nList node numbers and/or sequence accessions for sequences to</span>
+    <span class="c1">#remove in file:\n%s&#39;&#39;&#39; % to_remove_list_file)</span>
+    <span class="c1">#editor = os.environ.get(&#39;EDITOR&#39;,&#39;vim&#39;) </span>
+    <span class="c1">#initial_message = &#39;# List node numbers or sequence accessions for sequences to remove below.&#39;</span>
+    <span class="c1">#with open(to_remove_list_file, &#39;w&#39;) as o:</span>
+    <span class="c1">#    o.write(initial_message)</span>
+    <span class="c1">#    o.flush()</span>
+    <span class="c1">#    subprocess.call([editor, o.name])</span>
+
+
+
+    <span class="c1"># Initiate a list of leaf names for removal.</span>
+    <span class="n">names_of_seqs_to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Get furthest leaf node on either side of the root.</span>
+    <span class="n">far_leaves</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">leaves_in_midpoint_outgroup</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_midpoint_outgroup</span><span class="p">()</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+    <span class="n">names_of_leaves_in_midpoint_outgroup</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">leaves_in_midpoint_outgroup</span><span class="p">]</span>
+    <span class="n">leaves_on_other_side</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_of_leaves_in_midpoint_outgroup</span><span class="p">:</span>
+            <span class="n">leaves_on_other_side</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">furthest_leaf_in_midpoint_outgroup</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">leaves_in_midpoint_outgroup</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">x</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">far_leaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">furthest_leaf_in_midpoint_outgroup</span><span class="p">)</span>
+    <span class="n">furthest_leaf_on_other_side</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">leaves_on_other_side</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">x</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">far_leaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">furthest_leaf_on_other_side</span><span class="p">)</span>
+    
+    <span class="c1"># For each of the leaf nodes, re-root the tree on it, and find redundant</span>
+    <span class="c1"># and long branches (leaves) to add to list.</span>
+    <span class="k">for</span> <span class="n">far_leaf</span> <span class="ow">in</span> <span class="n">far_leaves</span> <span class="o">+</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">get_midpoint_outgroup</span><span class="p">()]:</span>
+        <span class="c1"># Re-root tree.</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">set_outgroup</span><span class="p">(</span><span class="n">far_leaf</span><span class="p">)</span>
+
+        <span class="c1">#print(&#39;\n\nRe-rooted tree:&#39;)</span>
+        <span class="c1">#print(t)</span>
+
+        <span class="c1"># Calculate interquartile range of all branch lengths.</span>
+        <span class="n">all_leaf_distances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">iter_leaves</span><span class="p">():</span>
+            <span class="n">leaf_distance</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span>
+            <span class="n">all_leaf_distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">leaf_distance</span><span class="p">)</span>
+        <span class="n">quartile3</span><span class="p">,</span> <span class="n">quartile1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">all_leaf_distances</span><span class="p">,</span> <span class="p">[</span><span class="mi">75</span> <span class="p">,</span><span class="mi">25</span><span class="p">])</span>
+        <span class="n">interquartile_range</span> <span class="o">=</span> <span class="n">quartile3</span> <span class="o">-</span> <span class="n">quartile1</span>
+
+
+        <span class="c1"># Determine the median branch length.</span>
+        <span class="n">distances_for_leaves</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">iter_leaves</span><span class="p">():</span>
+            <span class="n">distances_for_leaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">leaf</span><span class="p">))</span>
+        <span class="n">median_branch_length</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">distances_for_leaves</span><span class="p">)</span> 
+
+        <span class="c1"># Loop over all nodes.</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">remove_redun_seqs</span><span class="p">:</span>
+                <span class="c1"># Identify all nodes with leaves that are all from the same</span>
+                <span class="c1"># species, and remove all but the shortest branch in the clade.</span>
+                <span class="n">leaves</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">leaves_all_same_species</span><span class="p">(</span><span class="n">leaves</span><span class="p">):</span>
+                    <span class="c1"># Determine whether support is high enough.</span>
+                    <span class="c1"># Note: Support values are as modified by the</span>
+                    <span class="c1"># reformat_combined_supports2 function.</span>
+                    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">support</span> <span class="o">&gt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">min_support</span><span class="p">):</span> 
+                        <span class="c1"># Identify the longest of the branches.</span>
+                        <span class="n">all_but_shortest_leaf</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">leaves</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">x</span><span class="p">))[</span><span class="mi">1</span><span class="p">:]</span>
+                        <span class="c1"># List all but the shortest branch for removal.</span>
+                        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">all_but_shortest_leaf</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_of_seqs_to_remove</span><span class="p">:</span>
+                                <span class="n">names_of_seqs_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Identify leaves with branch lengths (measured from the root node</span>
+            <span class="c1"># to the leaf) that exceed the maximum number of interquartile</span>
+            <span class="c1"># ranges above the third quartile of all such lengths in the tree.</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+                <span class="n">leaf_distance</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="c1">#print(&#39;\nleaf_distance&#39;)</span>
+                <span class="c1">#print(leaf_distance)</span>
+                <span class="c1"># Compare to threshold.</span>
+                <span class="k">if</span> <span class="n">leaf_distance</span> <span class="o">&gt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">quartile3</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_bl_iqr_above_third_quartile</span> <span class="o">*</span> <span class="n">interquartile_range</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_of_seqs_to_remove</span><span class="p">:</span>
+                        <span class="n">names_of_seqs_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+    <span class="c1"># Open output file and write list of sequences to remove.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names_of_seqs_to_remove</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that file was produced.</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Did not produce file listing</span>
+<span class="s2">    sequences to remove from dataset.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="get_key_nodes_list"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.get_key_nodes_list">[docs]</a><span class="k">def</span> <span class="nf">get_key_nodes_list</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get list of names of nodes to remove from input text file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#key_nodes_list = key_node_numbers.split(&#39; &#39;)</span>
+    <span class="n">key_nodes_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                <span class="n">key_nodes_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+    <span class="c1"># Check that some nodes were found.</span>
+    <span class="c1">#assert len(key_nodes_list) &gt; 0, &quot;&quot;&quot;No nodes identified for removal.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Return list of key nodes.</span>
+    <span class="k">return</span> <span class="n">key_nodes_list</span></div>
+
+
+<div class="viewcode-block" id="get_seqs_to_remove_from_dataset"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.get_seqs_to_remove_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_seqs_to_remove_from_dataset</span><span class="p">(</span><span class="n">key_nodes_list</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a list of nodes and an ete3 Tree object, and return a list of</span>
+<span class="sd">    sequences to remove from dataset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seqs_to_remove_from_dataset</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">key_nodes_list</span><span class="p">:</span>
+            <span class="c1"># Get leaves.</span>
+            <span class="n">seqs_to_remove_from_dataset</span> <span class="o">=</span> <span class="n">seqs_to_remove_from_dataset</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">key_nodes_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">or</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">:</span>
+                    <span class="n">seqs_to_remove_from_dataset</span> <span class="o">=</span> <span class="n">seqs_to_remove_from_dataset</span> <span class="o">+</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+                    <span class="k">break</span>
+    <span class="c1"># Return list of sequences to remove from dataset.</span>
+    <span class="k">return</span> <span class="n">seqs_to_remove_from_dataset</span></div>
+
+
+<div class="viewcode-block" id="write_reduced_alignment"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.write_reduced_alignment">[docs]</a><span class="k">def</span> <span class="nf">write_reduced_alignment</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">,</span>
+                            <span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">,</span>
+                            <span class="n">conversion_table_dict</span><span class="p">,</span>
+                            <span class="n">output_alignment_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take an alignment and a list of sequences to remove, and write a new</span>
+<span class="sd">    alignment file with those sequences removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Remove extra mesquite lines if present.</span>
+    <span class="n">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">)</span>
+
+    <span class="n">coded_seqs_to_not_remove_from_dataset</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_alignment_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="c1"># Parse input nexus alignment.</span>
+        <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">infh</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Report number of sequences.</span>
+        <span class="c1">#print(&#39;Number of seqs in original alignment:&#39;)</span>
+        <span class="c1">#print(len(alignment))</span>
+        <span class="c1">#print(&#39;\nIDs of seqs in original alignment:&#39;)</span>
+        <span class="c1">#for i in alignment:</span>
+        <span class="c1">#    #print(i.id + &#39; (&#39; + conversion_table_dict[i.id] + &#39;)&#39;)</span>
+        <span class="c1">#    print(i.id)</span>
+
+        <span class="c1"># Report sequences to remove.</span>
+        <span class="c1">#print(&#39;\nSeqs to remove:&#39;)</span>
+        <span class="c1">#for i in coded_seqs_to_remove_from_dataset:</span>
+        <span class="c1">#    print(i + &#39; (&#39; + conversion_table_dict[i] + &#39;)&#39;) </span>
+
+        <span class="c1"># Initiate a new alignment object.</span>
+        <span class="n">alignment2</span> <span class="o">=</span> <span class="n">MultipleSeqAlignment</span><span class="p">([])</span>
+
+        <span class="c1">#print(&#39;number of seqs in alignment2:&#39;)</span>
+        <span class="c1">#print(len(alignment2))</span>
+        <span class="c1">#print(&#39;Removing sequences from alignment.&#39;)</span>
+        <span class="c1">#ali_len = len(alignment)</span>
+
+        <span class="c1"># Loop over sequences in input alignment.</span>
+        <span class="n">inum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
+            <span class="n">inum</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1">#if i.id not in coded_seqs_to_remove_from_dataset:</span>
+            <span class="c1">#print(i.id)</span>
+            <span class="c1"># Find corresponding key in dict, if present.</span>
+
+
+
+
+            <span class="c1"># *****************************************</span>
+
+
+            <span class="c1"># Determine key to use.</span>
+            <span class="c1">#print(i.id)</span>
+            <span class="n">key_to_use</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">conversion_table_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="c1">#print(key)</span>
+                <span class="c1">#if key.startswith(&#39;ConsensusfromContig11299&#39;):</span>
+                <span class="c1">#    print(&#39;\tkey: &#39; + key)</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="n">key_to_use</span> <span class="o">=</span> <span class="n">key</span>
+                    <span class="k">break</span>
+                <span class="k">elif</span> <span class="s1">&#39; &#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+                        <span class="n">key_to_use</span> <span class="o">=</span> <span class="n">key</span>
+                        <span class="k">break</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span>
+                            <span class="n">key_to_use</span> <span class="o">=</span> <span class="n">key</span>
+                            <span class="k">break</span>
+                <span class="k">if</span> <span class="n">key_to_use</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;_&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                    <span class="c1"># ***This is potentially problematic! ***</span>
+                    <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+                        <span class="n">key_to_use</span> <span class="o">=</span> <span class="n">key</span>
+
+
+            <span class="k">assert</span> <span class="n">key_to_use</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify name in</span>
+<span class="s2">            conversion table that corresponds to name in alignment: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>\
+            <span class="o">%</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span>
+
+            <span class="c1">#if conversion_table_dict[key_to_use] not in coded_seqs_to_remove_from_dataset:</span>
+            <span class="k">if</span> <span class="n">key_to_use</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">:</span>
+                <span class="n">alignment2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alignment</span><span class="p">[</span><span class="n">inum</span><span class="p">])</span>
+                <span class="n">coded_seqs_to_not_remove_from_dataset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key_to_use</span><span class="p">])</span>
+
+
+            <span class="c1">## This code works if the input alignment has coded instead of</span>
+            <span class="c1">## original names.</span>
+
+            <span class="c1">## If not in sequences identified for removal, add to new alignment.</span>
+            <span class="c1">#if i.id not in coded_seqs_to_remove_from_dataset:</span>
+            <span class="c1">#    alignment2.append(alignment[inum])</span>
+            <span class="c1">#    # Add to list.</span>
+            <span class="c1">#    coded_seqs_to_not_remove_from_dataset.append(i.id)</span>
+            <span class="c1">#else:</span>
+            <span class="c1">#    print(&#39;removed &#39; + i.id)</span>
+
+
+            <span class="c1"># *****************************************</span>
+
+
+
+
+        <span class="c1"># RESOLVED: PROBLEM: the sequences written to the output alignment file are wrong...</span>
+        <span class="c1">#print(&#39;\nNumber of seqs in new alignment:&#39;)</span>
+        <span class="c1">#print(len(alignment2))</span>
+        <span class="c1">#print(&#39;\nIDs of seqs in new alignment:&#39;)</span>
+        <span class="c1">#for i in alignment2:</span>
+        <span class="c1">#    print(i.id)# + &#39; (&#39; + conversion_table_dict[i.id] + &#39;)&#39;)</span>
+        <span class="c1">#print(&#39;\nNum seqs to remove:&#39;)</span>
+        <span class="c1">#print(len(set(coded_seqs_to_remove_from_dataset)))</span>
+        <span class="c1">#print(&#39;expected number of seqs in new alignment:&#39;)</span>
+        <span class="c1">#print(len(alignment) - len(set(coded_seqs_to_remove_from_dataset)))</span>
+
+        <span class="c1"># Check that expectation is met.</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">))</span>\
+        <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">alignment2</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Number of sequences in new alignment does not</span>
+<span class="s2">        match expectation.&quot;&quot;&quot;</span>
+
+        <span class="c1">#alignment3 =\</span>
+        <span class="c1">#MultipleSeqAlignment(alignment2[len(coded_seqs_to_remove_from_dataset) -1:,:])</span>
+        <span class="n">alignment3</span> <span class="o">=</span>\
+        <span class="n">MultipleSeqAlignment</span><span class="p">(</span><span class="n">alignment2</span><span class="p">[:,:])</span>
+        <span class="c1">#print(&#39;number of seqs in new alignment:&#39;)</span>
+        <span class="c1">#print(len(alignment3))</span>
+
+        <span class="c1"># Get list of sequences in new alignment.</span>
+        <span class="n">ids_in_alignment3</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">alignment3</span><span class="p">:</span>
+            <span class="n">ids_in_alignment3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">ids_in_alignment3</span><span class="p">)</span> <span class="o">==</span>\
+        <span class="nb">set</span><span class="p">(</span><span class="n">coded_seqs_to_not_remove_from_dataset</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Sequences in alignment</span>
+<span class="s2">        do not have the expected set of IDs.&quot;&quot;&quot;</span>
+
+        <span class="c1">## Decode names in alignment. (actually codes names)</span>
+        <span class="c1">#print(&#39;Decoding names in alignment.&#39;) </span>
+        <span class="c1">#for i in alignment3:</span>
+        <span class="c1">#    # Decode name.</span>
+        <span class="c1">#    for j in conversion_table_dict.keys():</span>
+        <span class="c1">#        if conversion_table_dict[j] == i.id:</span>
+        <span class="c1">#            i.id = j</span>
+        <span class="c1">#            break</span>
+
+        <span class="c1"># Write reduced alignment.</span>
+        <span class="c1">#print(&#39;Writing modified alignment file:\n\t%s&#39; % o.name)</span>
+        <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alignment3</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="manually_select_nodes_and_remove_seqs"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.manually_select_nodes_and_remove_seqs">[docs]</a><span class="k">def</span> <span class="nf">manually_select_nodes_and_remove_seqs</span><span class="p">(</span><span class="n">input_tree_one</span><span class="p">,</span> <span class="n">alignment_file</span><span class="p">,</span>
         <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_replace_table</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Take a tree file (newick) and the corresponding alignment file (nexus)</span>
@@ -191,6 +567,8 @@
 
 <span class="sd">    ToDo: Automate selection of long branches for removal. Allow manual</span>
 <span class="sd">    selection of leaf nodes for removal.</span>
+
+<span class="sd">    Problem: Interactive tree viewer is not working.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">## Check that necessary inputs are specified.</span>
     <span class="c1">#assert args.input_tree_one != None, &quot;Error: Missing input.&quot;</span>
@@ -222,22 +600,14 @@
     <span class="n">write_newick_tree_with_uncoded_names</span><span class="p">(</span><span class="n">input_tree_one</span><span class="p">,</span> <span class="n">tree_with_long_names</span><span class="p">,</span>
             <span class="n">name_replace_table</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
+
     <span class="c1"># Change node support values to a format that is readable by ETE3.</span>
-    <span class="n">treestring</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
-        <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
-            <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">treestring</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">break</span>
-    <span class="k">if</span> <span class="n">treestring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
-            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">reformat_combined_supports2</span><span class="p">(</span><span class="n">treestring</span><span class="p">))</span>
+    <span class="n">treestring</span> <span class="o">=</span> <span class="n">get_tree_string_with_readable_supports</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">)</span>
 
     <span class="c1"># Parse tree using ete3.</span>
     <span class="c1"># Note: parentheses and commas get replaced with underscores.</span>
     <span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">,</span> <span class="n">quoted_node_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 
     <span class="c1"># Define name for tree without branch lengths.</span>
     <span class="n">simple_tree</span> <span class="o">=</span> <span class="n">tree_with_long_names</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_TEMP2&#39;</span> 
@@ -253,18 +623,8 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Input tree:&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span>
 
-    <span class="c1"># Get node for a key clade. </span>
-    <span class="c1"># Or, just require to root it before inputting (figtree can export</span>
-    <span class="c1"># re-rooted newick)?????</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Please define an arbitrary clade of interest for rooting the tree topology</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">clade_member_1</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Clade member 1: &#39;</span><span class="p">)</span>
-    <span class="n">clade_member_2</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Clade member 2: &#39;</span><span class="p">)</span>
-    <span class="c1">#ancestor1 = t2.get_common_ancestor(clade_member_1, clade_member_2)</span>
-    <span class="n">ancestor1</span> <span class="o">=</span> <span class="n">t1</span><span class="o">.</span><span class="n">get_common_ancestor</span><span class="p">(</span><span class="n">clade_member_1</span><span class="p">,</span> <span class="n">clade_member_2</span><span class="p">)</span>
-    <span class="c1">#print(ancestor1)</span>
-
-    <span class="c1"># Re-root tree. </span>
-    <span class="n">t1</span><span class="o">.</span><span class="n">set_outgroup</span><span class="p">(</span><span class="n">ancestor1</span><span class="p">)</span>
+    <span class="c1"># Root tree.</span>
+    <span class="n">root_tree_manually</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
 
     <span class="c1"># Show new tree rooting.</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;New tree rooting:&#39;</span><span class="p">)</span>
@@ -272,18 +632,8 @@
     <span class="n">t2a</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">simple_tree</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">t2a</span><span class="p">)</span>
 
-    <span class="c1"># Set up tree style for viewing.</span>
-    <span class="n">ts</span> <span class="o">=</span> <span class="n">TreeStyle</span><span class="p">()</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">show_leaf_name</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">def</span> <span class="nf">my_layout</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Function for showing internal node names (numbers).&quot;&quot;&quot;</span>
-        <span class="c1">#F = TextFace(node.name, tight_text=True)</span>
-        <span class="n">F</span> <span class="o">=</span> <span class="n">TextFace</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">add_face_to_node</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">&quot;branch-right&quot;</span><span class="p">)</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span>  <span class="mi">100</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">branch_vertical_margin</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">layout_fn</span> <span class="o">=</span> <span class="n">my_layout</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">show_branch_support</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1"># Generate an ete3 tree style.</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">get_prune_tree_style</span><span class="p">()</span>
 
     <span class="c1"># Give all internal nodes unique names, and then visualize with the</span>
     <span class="c1"># interactive tree viewer.</span>
@@ -293,47 +643,27 @@
           <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
           <span class="n">edge</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="c1"># Show tree with node names (render as PDF file).</span>
-    <span class="c1">#t1.show(tree_style=ts)</span>
+    <span class="c1"># Render tree as a pdf.</span>
     <span class="n">tree_file_name</span> <span class="o">=</span> <span class="n">input_tree_one</span> <span class="o">+</span> <span class="s1">&#39;_ete3_render.pdf&#39;</span>
-    <span class="n">t1</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">tree_file_name</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">183</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">,</span> <span class="n">tree_style</span><span class="o">=</span><span class="n">ts</span><span class="p">)</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">tree_file_name</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Rendering tree.&#39;</span><span class="p">)</span>
+    <span class="n">t1</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">tree_file_name</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">183</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">,</span> <span class="n">tree_style</span><span class="o">=</span><span class="n">ts</span><span class="p">)</span> <span class="c1">#Temp. commented out.</span>
+
+    <span class="c1"># Define path of file to list sequences to remove.</span>
+    <span class="n">to_remove_list_file</span> <span class="o">=</span> <span class="n">alignment_file</span> <span class="o">+</span> <span class="s1">&#39;_to_remove_list.txt&#39;</span>
 
     <span class="c1"># Prompt user to list nodes and sequence names to remove in a file.</span>
-    <span class="n">to_remove_list_file</span> <span class="o">=</span> <span class="n">alignment_file</span> <span class="o">+</span> <span class="s1">&#39;_to_remove_list.txt&#39;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\n</span><span class="s1">List node numbers and/or sequence accessions for sequences to</span>
-<span class="s1">    remove in file:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;&#39;&#39;</span> <span class="o">%</span> <span class="n">to_remove_list_file</span><span class="p">)</span>
-    <span class="n">editor</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EDITOR&#39;</span><span class="p">,</span><span class="s1">&#39;vim&#39;</span><span class="p">)</span> 
-    <span class="n">initial_message</span> <span class="o">=</span> <span class="s1">&#39;# List node numbers or sequence accessions for sequences to remove below.&#39;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
-        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">initial_message</span><span class="p">)</span>
-        <span class="n">o</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="n">editor</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+    <span class="n">get_seqs_to_remove_file_from_user</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="n">tree_file_name</span><span class="p">)</span>
 
     <span class="c1"># Get list of nodes from file.</span>
-    <span class="c1">#key_nodes_list = key_node_numbers.split(&#39; &#39;)</span>
-    <span class="n">key_nodes_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
-                <span class="n">key_nodes_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-
+    <span class="n">key_nodes_list</span> <span class="o">=</span> <span class="n">get_key_nodes_list</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">)</span>
 
     <span class="c1"># Compile a list of sequences to remove from dataset.</span>
-    <span class="n">seqs_to_remove_from_dataset</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t1</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">key_nodes_list</span><span class="p">:</span>
-            <span class="c1"># Get leaves.</span>
-            <span class="n">seqs_to_remove_from_dataset</span> <span class="o">=</span> <span class="n">seqs_to_remove_from_dataset</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">key_nodes_list</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span> <span class="ow">or</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">:</span>
-                    <span class="n">seqs_to_remove_from_dataset</span> <span class="o">=</span> <span class="n">seqs_to_remove_from_dataset</span> <span class="o">+</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
-                    <span class="k">break</span>
+    <span class="n">seqs_to_remove_from_dataset</span> <span class="o">=</span>\
+    <span class="n">get_seqs_to_remove_from_dataset</span><span class="p">(</span><span class="n">key_nodes_list</span><span class="p">,</span> <span class="n">t1</span><span class="p">)</span>
 
     <span class="c1"># Record list of sequences to remove.</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Sequences to remove:&#39;</span><span class="p">)</span>
+        <span class="c1">#print(&#39;\nSequences to remove:&#39;)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">seqs_to_remove_from_dataset</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
             <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -355,100 +685,12 @@
     <span class="c1">#print(&#39;Coded names:&#39;)</span>
     <span class="c1">#print(coded_seqs_to_remove_from_dataset)</span>
 
-    <span class="c1"># Remove extra mesquite lines if present.</span>
-    <span class="n">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">)</span>
-
     <span class="c1"># Make a copy of the input alignment file with the listed sequences</span>
     <span class="c1"># removed.</span>
-    <span class="n">coded_seqs_to_not_remove_from_dataset</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_alignment_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
-        <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">infh</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of seqs in original alignment&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alignment</span><span class="p">))</span>
-        <span class="n">alignment2</span> <span class="o">=</span> <span class="n">MultipleSeqAlignment</span><span class="p">([])</span>
-        <span class="c1">#print(&#39;number of seqs in alignment2:&#39;)</span>
-        <span class="c1">#print(len(alignment2))</span>
-        <span class="c1">#print(&#39;Removing sequences from alignment.&#39;)</span>
-        <span class="c1">#ali_len = len(alignment)</span>
-        <span class="n">inum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
-            <span class="n">inum</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="c1">#if i.id not in coded_seqs_to_remove_from_dataset:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-            <span class="c1"># Find corresponding key in dict, if present.</span>
-            <span class="n">key_to_use</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">conversion_table_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;ConsensusfromContig11299&#39;</span><span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">key: &#39;</span> <span class="o">+</span> <span class="n">key</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-                    <span class="n">key_to_use</span> <span class="o">=</span> <span class="n">key</span>
-                    <span class="k">break</span>
-                <span class="k">elif</span> <span class="s1">&#39; &#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
-                        <span class="n">key_to_use</span> <span class="o">=</span> <span class="n">key</span>
-                        <span class="k">break</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span>
-                            <span class="n">key_to_use</span> <span class="o">=</span> <span class="n">key</span>
-                            <span class="k">break</span>
-                <span class="k">if</span> <span class="n">key_to_use</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;_&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
-                    <span class="c1"># ***This is potentially problematic! ***</span>
-                    <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
-                        <span class="n">key_to_use</span> <span class="o">=</span> <span class="n">key</span>
-
-
-            <span class="k">assert</span> <span class="n">key_to_use</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify name in</span>
-<span class="s2">            conversion table that corresponds to name in alignment: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>\
-            <span class="o">%</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span>
-
-            <span class="k">if</span> <span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key_to_use</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">:</span>
-                <span class="n">alignment2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alignment</span><span class="p">[</span><span class="n">inum</span><span class="p">])</span>
-                <span class="n">coded_seqs_to_not_remove_from_dataset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key_to_use</span><span class="p">])</span>
-
-            <span class="k">elif</span> <span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key_to_use</span><span class="p">]</span> <span class="ow">in</span> <span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">:</span>
-                <span class="c1">#for key in conversion_table_dict.keys():</span>
-                <span class="c1">#    if conversion_table_dict[key] == i.id:</span>
-                <span class="c1">#        print(&#39;\tremoved &#39; + key)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">removed &#39;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-
-        <span class="c1"># RESOLVED: PROBLEM: the sequences written to the output alignment file are wrong...</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of seqs in alignment2:&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alignment2</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;num seqs to remove:&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;expected number of seqs in alignment2 and alignment3:&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">))</span>
-
-        <span class="c1">#alignment3 =\</span>
-        <span class="c1">#MultipleSeqAlignment(alignment2[len(coded_seqs_to_remove_from_dataset) -1:,:])</span>
-        <span class="n">alignment3</span> <span class="o">=</span>\
-        <span class="n">MultipleSeqAlignment</span><span class="p">(</span><span class="n">alignment2</span><span class="p">[:,:])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of seqs in alignment3:&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alignment3</span><span class="p">))</span>
-
-        <span class="c1"># Get list of sequences in new alignment.</span>
-        <span class="n">ids_in_alignment3</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">alignment3</span><span class="p">:</span>
-            <span class="n">ids_in_alignment3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">ids_in_alignment3</span><span class="p">)</span> <span class="o">==</span>\
-        <span class="nb">set</span><span class="p">(</span><span class="n">coded_seqs_to_not_remove_from_dataset</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Sequences in alignment</span>
-<span class="s2">        do not have the expected set of IDs.&quot;&quot;&quot;</span>
-
-
-        <span class="c1"># Decode names in alignment.</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Decoding names in alignment.&#39;</span><span class="p">)</span> 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">alignment3</span><span class="p">:</span>
-            <span class="c1"># Decode name.</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">conversion_table_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
-                    <span class="n">i</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">j</span>
-                    <span class="k">break</span>
-
-        <span class="c1"># Write reduced alignment.</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing modified alignment file:</span><span class="se">\n\t</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alignment3</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span>
-
+    <span class="n">write_reduced_alignment</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">,</span>
+                            <span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">,</span>
+                            <span class="n">conversion_table_dict</span><span class="p">,</span>
+                            <span class="n">output_alignment_file</span><span class="p">)</span>
 
     <span class="c1"># Delete intermediate files.</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">simple_tree</span><span class="p">)</span>
@@ -457,6 +699,246 @@
 
     <span class="c1"># Return main output path.</span>
     <span class="k">return</span> <span class="n">output_alignment_file</span></div>
+
+
+<div class="viewcode-block" id="automatically_select_nodes_and_remove_seqs"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.automatically_select_nodes_and_remove_seqs">[docs]</a><span class="k">def</span> <span class="nf">automatically_select_nodes_and_remove_seqs</span><span class="p">(</span><span class="n">input_tree_one</span><span class="p">,</span>
+                                               <span class="n">alignment_file</span><span class="p">,</span>
+                                               <span class="n">max_bl_iqr_above_third_quartile</span><span class="p">,</span>
+                                               <span class="n">remove_redun_seqs</span><span class="p">,</span>
+                                               <span class="n">remove_redun_seqs_threshold</span><span class="p">,</span>
+                                               <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                               <span class="n">name_replace_table</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a tree file (newick) and the corresponding alignment file (nexus)</span>
+<span class="sd">    and write a new alignment without the selected nodes/sequences.</span>
+
+<span class="sd">    ToDo: Automate selection of long branches for removal. Allow manual</span>
+<span class="sd">    selection of leaf nodes for removal.</span>
+
+<span class="sd">    Problem: Interactive tree viewer is not working.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">## Check that necessary inputs are specified.</span>
+    <span class="c1">#assert args.input_tree_one != None, &quot;Error: Missing input.&quot;</span>
+    <span class="c1">#assert args.name_replace_table != None, &quot;Error: Missing input.&quot;</span>
+
+    <span class="c1"># Define output alignment name.</span>
+    <span class="n">output_alignment_file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">output_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_alignment_file</span> <span class="o">=</span> <span class="n">alignment_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_reduced.nex&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_alignment_file</span> <span class="o">=</span> <span class="n">output_file</span>
+
+
+    <span class="c1"># Make a new table file for putting quotation marks around taxon names in</span>
+    <span class="c1"># newick tree.</span>
+    <span class="c1">#table_with_quotation_marks = name_replace_table + &#39;TEMP1&#39;</span>
+    <span class="c1">#make_quoted_table(name_replace_table, table_with_quotation_marks) # untested </span>
+
+    <span class="c1"># Generate a dictionary from the new table file for conversion of names.</span>
+    <span class="c1">#conversion_table_dict = get_conversion_table_dict(table_with_quotation_marks)</span>
+    <span class="c1">#conversion_table_dict = get_conversion_table_dict(name_replace_table)</span>
+    <span class="n">conversion_table_dict</span> <span class="o">=</span> <span class="n">get_conversion_dict_from_table</span><span class="p">(</span><span class="n">name_replace_table</span><span class="p">)</span>
+
+    <span class="c1"># Run name_replace.pl using new table so that long taxon names can be</span>
+    <span class="c1"># visualized with ete3.</span>
+    <span class="n">tree_with_long_names</span> <span class="o">=</span> <span class="n">input_tree_one</span> <span class="o">+</span> <span class="s1">&#39;_TEMP1&#39;</span>
+    <span class="c1">#subprocess.call([&#39;name_replace.pl&#39;, &#39;-b&#39;, input_tree_one,</span>
+    <span class="c1">#    tree_with_long_names, table_with_quotation_marks])</span>
+    <span class="n">write_newick_tree_with_uncoded_names</span><span class="p">(</span><span class="n">input_tree_one</span><span class="p">,</span> <span class="n">tree_with_long_names</span><span class="p">,</span>
+            <span class="n">name_replace_table</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1">#*********</span>
+    <span class="c1"># Change node support values to a format that is readable by ETE3.</span>
+    <span class="c1">#treestring = get_tree_string_with_readable_supports(tree_with_long_names)</span>
+
+    <span class="c1"># Parse tree using ete3.</span>
+    <span class="c1"># Note: parentheses and commas get replaced with underscores.</span>
+    <span class="c1">#t1 = Tree(tree_with_long_names, quoted_node_names=True)</span>
+
+    <span class="c1"># Parse tree using ete3, with branch supports as internal node names.</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Translate node names (with aLRT/bootstrap percent support) to branch</span>
+    <span class="c1"># support (bootstrap proportion).</span>
+    <span class="n">translate_int_node_names_to_support</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+    <span class="c1">#*********</span>
+
+    <span class="c1"># Define name for tree without branch lengths.</span>
+    <span class="n">simple_tree</span> <span class="o">=</span> <span class="n">tree_with_long_names</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_TEMP2&#39;</span> 
+
+    <span class="c1"># Write simple tree to a new file </span>
+    <span class="n">t1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="n">simple_tree</span><span class="p">)</span>
+    <span class="c1">#t1.write(format=0, outfile=simple_tree)</span>
+
+    <span class="c1"># Parse simple tree.</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">simple_tree</span><span class="p">)</span>
+
+    <span class="c1"># Print simple tree.</span>
+    <span class="c1">#print(&#39;Input tree:&#39;)</span>
+    <span class="c1">#print(t2)</span>
+
+
+
+    <span class="c1"># Begin: Differs from manually_select_nodes_and_remove_seqs**************************************************</span>
+
+
+
+    <span class="c1"># Root tree on midpoint.</span>
+    <span class="c1">#root_tree_manually(t1, t2)</span>
+    <span class="n">t1</span><span class="o">.</span><span class="n">set_outgroup</span><span class="p">(</span><span class="n">t1</span><span class="o">.</span><span class="n">get_midpoint_outgroup</span><span class="p">())</span>
+
+    <span class="c1"># Show new tree rooting.</span>
+    <span class="c1">#print(&#39;New tree rooting:&#39;)</span>
+    <span class="c1">#t1.write(format=9, outfile=simple_tree)</span>
+    <span class="c1">#t2a = Tree(simple_tree)</span>
+    <span class="c1">#print(t2a)</span>
+
+    <span class="c1"># Generate an ete3 tree style.</span>
+    <span class="c1">#ts = get_prune_tree_style()</span>
+
+    <span class="c1"># Give all internal nodes unique names, and then visualize with the</span>
+    <span class="c1"># interactive tree viewer.</span>
+    <span class="n">edge</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t1</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+       <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+          <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+          <span class="n">edge</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1">## Render tree as a pdf.</span>
+    <span class="c1">#tree_file_name = input_tree_one + &#39;_ete3_render.pdf&#39;</span>
+    <span class="c1">#print(&#39;Rendering tree.&#39;)</span>
+    <span class="c1">#t1.render(tree_file_name, w=183, units=&quot;mm&quot;, tree_style=ts) #Temp. commented out.</span>
+
+    <span class="c1"># Define path of file to list sequences to remove.</span>
+    <span class="n">to_remove_list_file</span> <span class="o">=</span> <span class="n">alignment_file</span> <span class="o">+</span> <span class="s1">&#39;_to_remove_list.txt&#39;</span>
+
+    <span class="c1"># Identify and list nodes and sequence names to remove in a file.</span>
+    <span class="c1">#get_seqs_to_remove_file_from_user(to_remove_list_file, tree_file_name)</span>
+    <span class="n">get_seqs_to_remove_file</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span>
+                            <span class="n">remove_redun_seqs</span><span class="p">,</span> <span class="n">remove_redun_seqs_threshold</span><span class="p">,</span>
+                            <span class="n">max_bl_iqr_above_third_quartile</span><span class="p">)</span>
+
+
+
+    <span class="c1"># End: Differs from manually_select_nodes_and_remove_seqs**************************************************</span>
+
+
+
+
+    <span class="c1"># Get list of nodes from file.</span>
+    <span class="n">key_nodes_list</span> <span class="o">=</span> <span class="n">get_key_nodes_list</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">)</span>
+
+    <span class="c1"># Don&#39;t do anything more if no nodes are identified for removal.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_nodes_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No nodes identified for removal in alignment </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">alignment_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Not proceeding.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;None&#39;</span>
+
+
+    <span class="c1"># Compile a list of sequences to remove from dataset.</span>
+    <span class="n">seqs_to_remove_from_dataset</span> <span class="o">=</span>\
+    <span class="n">get_seqs_to_remove_from_dataset</span><span class="p">(</span><span class="n">key_nodes_list</span><span class="p">,</span> <span class="n">t1</span><span class="p">)</span>
+
+    <span class="c1"># Record list of sequences to remove.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">to_remove_list_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="c1">#print(&#39;\nSequences to remove:&#39;)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">seqs_to_remove_from_dataset</span><span class="p">:</span>
+            <span class="c1">#print(&#39;\t&#39; + i)</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Convert listed node names back to coded names.</span>
+    <span class="n">uncoded_leaf_names_to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">coded_seqs_to_remove_from_dataset</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">seqs_to_remove_from_dataset</span><span class="p">:</span>
+        <span class="c1"># Also add uncoded name to list.</span>
+        <span class="n">uncoded_leaf_names_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># This code is for if the alignment were coded:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">conversion_table_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">conversion_table_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">coded_name</span> <span class="o">=</span> <span class="n">key</span>
+                <span class="n">coded_seqs_to_remove_from_dataset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coded_name</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+        <span class="c1">## This code is for if the alignment were not coded???:</span>
+        <span class="c1">#coded_name = conversion_table_dict[name]</span>
+        <span class="c1">#coded_seqs_to_remove_from_dataset.append(coded_name.strip())</span>
+
+    <span class="c1">#print(&#39;Coded names:&#39;)</span>
+    <span class="c1">#print(coded_seqs_to_remove_from_dataset)</span>
+
+    <span class="c1"># Make a copy of the input alignment file with the listed sequences</span>
+    <span class="c1"># removed.</span>
+    <span class="n">write_reduced_alignment</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">,</span>
+                            <span class="n">coded_seqs_to_remove_from_dataset</span><span class="p">,</span>
+                            <span class="n">conversion_table_dict</span><span class="p">,</span>
+                            <span class="n">output_alignment_file</span><span class="p">)</span>
+
+    <span class="c1"># Delete intermediate files.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">simple_tree</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tree_with_long_names</span><span class="p">)</span>
+    <span class="c1">#os.remove(table_with_quotation_marks)</span>
+
+    <span class="c1"># Render a tree as pdf figures.</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;iqtree&#39;</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span>
+    <span class="n">taxa_to_root_on</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">highlight_paralogues</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">highlight_for_removal</span> <span class="o">=</span> <span class="n">uncoded_leaf_names_to_remove</span>
+    <span class="n">file_with_subs_model_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">pdf_files</span> <span class="o">=</span> <span class="n">visualize_tree</span><span class="p">(</span><span class="n">method</span><span class="p">,</span>
+                               <span class="n">timestamp</span><span class="p">,</span>
+                               <span class="n">taxa_to_root_on</span><span class="p">,</span>
+                               <span class="n">highlight_paralogues</span><span class="p">,</span>
+                               <span class="n">highlight_for_removal</span><span class="p">,</span>
+                               <span class="n">input_tree_one</span><span class="p">,</span>
+                               <span class="n">name_replace_table</span><span class="p">,</span>
+                               <span class="n">file_with_subs_model_name</span>
+                               <span class="p">)</span>
+
+    <span class="c1"># Return main output path.</span>
+    <span class="k">return</span> <span class="n">output_alignment_file</span></div>
+
+
+<div class="viewcode-block" id="automatically_select_nodes_and_remove_seqs_in_dir"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.automatically_select_nodes_and_remove_seqs_in_dir">[docs]</a><span class="k">def</span> <span class="nf">automatically_select_nodes_and_remove_seqs_in_dir</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span>
+                                                      <span class="n">max_bl_iqr_above_third_quartile</span><span class="p">,</span>
+                                                      <span class="n">remove_redun_seqs</span><span class="p">,</span>
+                                                      <span class="n">remove_redun_seqs_threshold</span><span class="p">,</span>
+                                                      <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Identify appropriate files and call function to use those to remove</span>
+<span class="sd">    seqs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Determine tree method (&#39;iqtree&#39;, &#39;mb&#39;, etc.).</span>
+    <span class="c1"># ...</span>
+
+    <span class="c1"># Identify input tree file (output from a phylogenetic analysis program,</span>
+    <span class="c1"># such as IQ-tree).</span>
+    <span class="n">input_tree_one</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;output.treefile&#39;</span><span class="p">)</span> <span class="c1"># Assumes IQtree. </span>
+
+    <span class="c1"># Check that the tree file was found.</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">input_tree_one</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Could not find tree file at path</span>
+<span class="s2">    </span><span class="si">%s</span><span class="s2">.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">input_tree_one</span>
+
+    <span class="c1"># Identify input alignment file (the one with sequences to be removed) with</span>
+    <span class="c1"># original sequence names.</span>
+    <span class="n">disqualifying_strings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">,</span> <span class="s1">&#39;trim&#39;</span><span class="p">]</span>
+    <span class="n">alignment_file</span> <span class="o">=</span> <span class="n">find_input_file_in_parent_directory</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;nex&#39;</span><span class="p">,</span>
+            <span class="n">disqualifying_strings</span><span class="p">)</span>
+
+    <span class="c1"># Identify name replace table to use for decoding names in input tree file</span>
+    <span class="c1"># so that they match those in the input alignment.</span>
+    <span class="n">name_replace_table</span> <span class="o">=</span> <span class="n">find_input_file_in_parent_directory</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="c1"># Call function on appropriate files.</span>
+    <span class="n">main_out_path</span> <span class="o">=</span> <span class="n">automatically_select_nodes_and_remove_seqs</span><span class="p">(</span><span class="n">input_tree_one</span><span class="p">,</span>
+                                               <span class="n">alignment_file</span><span class="p">,</span>
+                                               <span class="n">max_bl_iqr_above_third_quartile</span><span class="p">,</span>
+                                               <span class="n">remove_redun_seqs</span><span class="p">,</span>
+                                               <span class="n">remove_redun_seqs_threshold</span><span class="p">,</span>
+                                               <span class="n">output_file</span><span class="p">,</span>
+                                               <span class="n">name_replace_table</span><span class="p">)</span>
+
+    <span class="c1"># Return path of main output file.</span>
+    <span class="k">return</span> <span class="n">main_out_path</span> </div>
+
 
 
 <div class="viewcode-block" id="manually_select_nodes_to_constrain"><a class="viewcode-back" href="../module_amoebae_prune.html#module_amoebae_prune.manually_select_nodes_to_constrain">[docs]</a><span class="k">def</span> <span class="nf">manually_select_nodes_to_constrain</span><span class="p">(</span><span class="n">input_tree_one</span><span class="p">,</span> <span class="n">name_replace_table</span><span class="p">,</span>

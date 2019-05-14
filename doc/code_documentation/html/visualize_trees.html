@@ -1,0 +1,271 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>visualize_trees module &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="visualize_trees_test module" href="visualize_trees_test.html" />
+    <link rel="prev" title="test_search_scaffolds module" href="test_search_scaffolds.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="visualize_trees_test.html" title="visualize_trees_test module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="test_search_scaffolds.html" title="test_search_scaffolds module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-visualize_trees">
+<span id="visualize-trees-module"></span><h1>visualize_trees module<a class="headerlink" href="#module-visualize_trees" title="Permalink to this headline">¶</a></h1>
+<p>Module for visualizing phylogenetic trees (parsing newick trees and writing
+as formatted pdf files with images).</p>
+<dl class="function">
+<dt id="visualize_trees.add_borders_to_pdf_with_latex">
+<code class="descclassname">visualize_trees.</code><code class="descname">add_borders_to_pdf_with_latex</code><span class="sig-paren">(</span><em>in_tree_file</em>, <em>out_tree_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#add_borders_to_pdf_with_latex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.add_borders_to_pdf_with_latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a latex file, add the existing pdf as an image, and write to pdf,
+so that there are borders.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.customize_node_styles_for_clades_to_remove">
+<code class="descclassname">visualize_trees.</code><code class="descname">customize_node_styles_for_clades_to_remove</code><span class="sig-paren">(</span><em>t</em>, <em>highlight_for_removal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#customize_node_styles_for_clades_to_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.customize_node_styles_for_clades_to_remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an ete3 tree object and a list of nodes with paralogues, and modify
+the node styles to emphasize important features.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.customize_node_styles_for_paralogue_clades">
+<code class="descclassname">visualize_trees.</code><code class="descname">customize_node_styles_for_paralogue_clades</code><span class="sig-paren">(</span><em>t</em>, <em>nodes_with_paralogues</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#customize_node_styles_for_paralogue_clades"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.customize_node_styles_for_paralogue_clades" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an ete3 tree object and a list of nodes with paralogues, and modify
+the node styles to emphasize important features.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.customize_node_styles_for_visualization">
+<code class="descclassname">visualize_trees.</code><code class="descname">customize_node_styles_for_visualization</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#customize_node_styles_for_visualization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.customize_node_styles_for_visualization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an ete3 tree object , and modify the node styles for better
+visualization.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.determine_whether_first_subtrees_same_sp_overlap">
+<code class="descclassname">visualize_trees.</code><code class="descname">determine_whether_first_subtrees_same_sp_overlap</code><span class="sig-paren">(</span><em>i</em>, <em>j</em>, <em>overlapping_species</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#determine_whether_first_subtrees_same_sp_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.determine_whether_first_subtrees_same_sp_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take two TreeNode objects and determine whether the first object (i) has
+a top-level subtree that has the same overlap as the two nodes do.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.disqualifying_string_in_file_basename">
+<code class="descclassname">visualize_trees.</code><code class="descname">disqualifying_string_in_file_basename</code><span class="sig-paren">(</span><em>f</em>, <em>disqualifying_strings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#disqualifying_string_in_file_basename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.disqualifying_string_in_file_basename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if one or more of the strings in the input list is in the
+basename of the input file path.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.find_input_file_in_parent_directory">
+<code class="descclassname">visualize_trees.</code><code class="descname">find_input_file_in_parent_directory</code><span class="sig-paren">(</span><em>indp</em>, <em>extension</em>, <em>disqualifying_strings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#find_input_file_in_parent_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.find_input_file_in_parent_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a directory path (e.g., path to a directory that was downloaded
+after running a phylogenetic analysis on CIPRES) and the filename extension
+that your target file will have (e.g., ‘table’ or ‘nex’), return the path
+to a file in the parent directory of the input directory path that is the
+most similar to the input directory basename and has the specified
+extension.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.get_branch_support_from_node_name">
+<code class="descclassname">visualize_trees.</code><code class="descname">get_branch_support_from_node_name</code><span class="sig-paren">(</span><em>node_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#get_branch_support_from_node_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.get_branch_support_from_node_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse node name of internal nodes resulting from parsing a newick tree
+with ete3 with the format=1 option (branch supports become node names for
+internal nodes). Return a single float corresponding to the bootstrap
+proportion.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.get_first_leaf_from_species">
+<code class="descclassname">visualize_trees.</code><code class="descname">get_first_leaf_from_species</code><span class="sig-paren">(</span><em>tree_obj</em>, <em>species_start_string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#get_first_leaf_from_species"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.get_first_leaf_from_species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an ete3 TreeNode object and return a node object with a name that
+starts with a given string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.get_first_subtrees">
+<code class="descclassname">visualize_trees.</code><code class="descname">get_first_subtrees</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#get_first_subtrees"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.get_first_subtrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an ete3 TreeNode object and return the clades on either side of the
+root node.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.get_largest_subtree">
+<code class="descclassname">visualize_trees.</code><code class="descname">get_largest_subtree</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#get_largest_subtree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.get_largest_subtree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take an ete3 TreeNode object and return the largest subtree.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.get_nodes_with_paralogues">
+<code class="descclassname">visualize_trees.</code><code class="descname">get_nodes_with_paralogues</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#get_nodes_with_paralogues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.get_nodes_with_paralogues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find nodes that contain paralogues, and return as a list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.get_subs_model_from_iqtree_file">
+<code class="descclassname">visualize_trees.</code><code class="descname">get_subs_model_from_iqtree_file</code><span class="sig-paren">(</span><em>file_with_subs_model_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#get_subs_model_from_iqtree_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.get_subs_model_from_iqtree_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take the input directory path, and return the substitution model used
+(listed in the output.iqtree file).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.get_subs_model_from_mb_file">
+<code class="descclassname">visualize_trees.</code><code class="descname">get_subs_model_from_mb_file</code><span class="sig-paren">(</span><em>file_with_subs_model_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#get_subs_model_from_mb_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.get_subs_model_from_mb_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take the input directory path, and return the substitution model used
+(listed in the .nex file).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.label_pdf">
+<code class="descclassname">visualize_trees.</code><code class="descname">label_pdf</code><span class="sig-paren">(</span><em>in_tree_file</em>, <em>out_tree_file</em>, <em>method</em>, <em>subs_model</em>, <em>timestamp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#label_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.label_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Taka pdf file of a phylogenetic tree and label with a given substitution
+model and timestamp.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.lighten_color">
+<code class="descclassname">visualize_trees.</code><code class="descname">lighten_color</code><span class="sig-paren">(</span><em>color</em>, <em>amount=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#lighten_color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.lighten_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a hex colour code and returns a hex code for the same colour but
+lighter by multiplying (1-luminosity) by the given amount (fraction).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.plotImage">
+<code class="descclassname">visualize_trees.</code><code class="descname">plotImage</code><span class="sig-paren">(</span><em>image_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#plotImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.plotImage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.remove_nodes_that_are_subtrees_of_others">
+<code class="descclassname">visualize_trees.</code><code class="descname">remove_nodes_that_are_subtrees_of_others</code><span class="sig-paren">(</span><em>nodes_with_paralogues</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#remove_nodes_that_are_subtrees_of_others"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.remove_nodes_that_are_subtrees_of_others" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a list of ete3 TreeNode objects and return only those that are not
+subtrees of others in the list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.translate_int_node_names_to_support">
+<code class="descclassname">visualize_trees.</code><code class="descname">translate_int_node_names_to_support</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#translate_int_node_names_to_support"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.translate_int_node_names_to_support" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse branch support values out of internal node names, add one of them
+to each node as branch support (a single float), and delete the internal
+node names.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.translate_int_node_support_to_prob">
+<code class="descclassname">visualize_trees.</code><code class="descname">translate_int_node_support_to_prob</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#translate_int_node_support_to_prob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.translate_int_node_support_to_prob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse branch support values and change them to probabilities instead of
+perentages.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.visualize_tree">
+<code class="descclassname">visualize_trees.</code><code class="descname">visualize_tree</code><span class="sig-paren">(</span><em>method</em>, <em>timestamp</em>, <em>taxa_to_root_on</em>, <em>highlight_paralogues</em>, <em>highlight_for_removal</em>, <em>tree_file</em>, <em>tablefilename</em>, <em>file_with_subs_model_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#visualize_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.visualize_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take relevant files and write PDF files with tree figures, and return
+output file paths.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="visualize_trees.visualize_tree_in_dir">
+<code class="descclassname">visualize_trees.</code><code class="descname">visualize_tree_in_dir</code><span class="sig-paren">(</span><em>indp</em>, <em>method</em>, <em>timestamp</em>, <em>taxa_to_root_on</em>, <em>highlight_paralogues</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#visualize_tree_in_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.visualize_tree_in_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a path to a directory with output files from a phylogenetic
+analysis, write PDF files with images of the results, and return the paths
+to those files.</p>
+<p>indp is the path to the directory with results.
+method is either ‘iqtree’, ‘mrbayes’, or ‘raxml’.
+taxa_to_root_on is a list of names such as ‘Klebsormidium’ or
+‘Klebsormidium nitens’</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="test_search_scaffolds.html"
+                        title="previous chapter">test_search_scaffolds module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="visualize_trees_test.html"
+                        title="next chapter">visualize_trees_test module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="visualize_trees_test.html" title="visualize_trees_test module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="test_search_scaffolds.html" title="test_search_scaffolds module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,323 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_boots_on_mb &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_boots_on_mb</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module that defines functions for mapping bootstrap values onto a MrBayes</span>
+<span class="sd">tree topology.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="s1">&#39;amoebaelib&#39;</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">ete3</span> <span class="k">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">settings</span> <span class="k">import</span> <span class="n">raxmlname</span>
+<span class="kn">from</span> <span class="nn">module_amoebae_name_replace</span> <span class="k">import</span> <span class="n">write_newick_tree_with_uncoded_names</span>
+
+
+<div class="viewcode-block" id="reformat_combined_supports"><a class="viewcode-back" href="../module_boots_on_mb.html#module_boots_on_mb.reformat_combined_supports">[docs]</a><span class="k">def</span> <span class="nf">reformat_combined_supports</span><span class="p">(</span><span class="n">tree_string</span><span class="p">):</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\)\d+:&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">cs</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">tree_string</span><span class="p">):</span>
+        <span class="c1">#print(instance)</span>
+        <span class="c1"># Define a reformatted support string.</span>
+        <span class="n">supcomb</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">boot</span> <span class="o">=</span> <span class="n">supcomb</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="n">prob</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">supcomb</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">supcomb2</span> <span class="o">=</span> <span class="n">prob</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">boot</span>
+
+        <span class="c1"># Replace the instance with a reformatted support string in the</span>
+        <span class="c1"># tree_string.</span>
+        <span class="n">tree_string</span> <span class="o">=</span> <span class="n">tree_string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">instance</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>\
+                <span class="n">supcomb2</span> <span class="o">+</span> <span class="n">instance</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Return modified tree string.</span>
+    <span class="k">return</span> <span class="n">tree_string</span></div>
+
+
+<div class="viewcode-block" id="combine_supports"><a class="viewcode-back" href="../module_boots_on_mb.html#module_boots_on_mb.combine_supports">[docs]</a><span class="k">def</span> <span class="nf">combine_supports</span><span class="p">(</span><span class="n">boot_newick</span><span class="p">,</span> <span class="n">prob_newick</span><span class="p">,</span> <span class="n">combined_figtree_newick</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes two newick files and writes another newick file that when opened</span>
+<span class="sd">    in figtree will show posterior probabilities and bootstrap values together.</span>
+
+<span class="sd">    ***Should add a function to check whether the two trees being compared are</span>
+<span class="sd">    rooted on the same node, because that might affect the accuracy of</span>
+<span class="sd">    comparisons.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define function for adding zeros as necessary.</span>
+    <span class="n">get_3_digit</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="n">x</span>
+    
+    <span class="c1"># Parse the input newick tree files.</span>
+    <span class="n">boot_newick_tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">boot_newick</span><span class="p">)</span>
+    <span class="n">prob_newick_tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">prob_newick</span><span class="p">)</span>
+
+    <span class="c1"># Root trees on the same node arbitrarily.</span>
+    <span class="n">arbitrary_leaf_node</span> <span class="o">=</span> <span class="n">prob_newick_tree</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">prob_newick_tree</span><span class="o">.</span><span class="n">set_outgroup</span><span class="p">(</span><span class="n">arbitrary_leaf_node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">boot_newick_tree</span><span class="o">.</span><span class="n">set_outgroup</span><span class="p">(</span><span class="n">arbitrary_leaf_node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Iterate through the rooted trees matching nodes and combining the support</span>
+    <span class="c1"># values onto a single tree.</span>
+    <span class="k">for</span> <span class="n">n1</span> <span class="ow">in</span> <span class="n">prob_newick_tree</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="n">found_boot</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n1</span><span class="o">.</span><span class="n">get_leaf_names</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">n2</span> <span class="ow">in</span> <span class="n">boot_newick_tree</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">n1</span><span class="o">.</span><span class="n">get_leaf_names</span><span class="p">())</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">n2</span><span class="o">.</span><span class="n">get_leaf_names</span><span class="p">()):</span>
+                    <span class="n">found_boot</span> <span class="o">=</span> <span class="kc">True</span>
+
+                    <span class="n">mb_support</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n1</span><span class="o">.</span><span class="n">support</span><span class="p">)[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">raxml_support</span> <span class="o">=</span> <span class="n">get_3_digit</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">n2</span><span class="o">.</span><span class="n">support</span><span class="p">)[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+
+                    <span class="n">combined_support</span> <span class="o">=</span> <span class="n">mb_support</span> <span class="o">+</span> <span class="n">raxml_support</span>
+                    <span class="n">n1</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">combined_support</span><span class="p">)</span>
+
+        <span class="c1"># Make sure that all the right nodes were identified.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found_boot</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n1</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">found_boot</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">assert</span> <span class="n">found_boot</span><span class="p">,</span> <span class="s2">&quot;Error: could not identify one of the nodes in the&quot;</span>
+
+    <span class="c1"># Write the newick tree file to a temporary output file.</span>
+    <span class="n">temp_file</span> <span class="o">=</span> <span class="n">combined_figtree_newick</span> <span class="o">+</span> <span class="s1">&#39;_temp.newick&#39;</span>
+    <span class="n">prob_newick_tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outfile</span><span class="o">=</span><span class="n">temp_file</span><span class="p">)</span>
+
+    <span class="c1"># Reformat supports in temporary file with tree so that they will be</span>
+    <span class="c1"># displayed properly in FigTree.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">combined_figtree_newick</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="c1"># Call function to reformat tree string.</span>
+            <span class="n">new_tree_string</span> <span class="o">=</span> <span class="n">reformat_combined_supports</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="c1"># Write reformatted tree string.</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_tree_string</span><span class="p">)</span>
+
+    <span class="c1"># Remove temporary file.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="mbcontre_to_newick_w_probs"><a class="viewcode-back" href="../module_boots_on_mb.html#module_boots_on_mb.mbcontre_to_newick_w_probs">[docs]</a><span class="k">def</span> <span class="nf">mbcontre_to_newick_w_probs</span><span class="p">(</span><span class="n">intreepath</span><span class="p">,</span> <span class="n">outtreepath</span><span class="p">):</span>
+    <span class="c1"># Construct a taxon number: name dict.</span>
+    <span class="n">tax_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\t\t\d&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">intreepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="n">split</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">num</span> <span class="o">=</span> <span class="n">split</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">split</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">tax_dict</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="c1"># Get the line with the tree as a string.</span>
+    <span class="n">intreestring</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">intreepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;   tree con_all_compat&#39;</span><span class="p">):</span>
+                <span class="n">intreestring</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="c1"># Cleanup string.</span>
+    <span class="n">intreestring2</span> <span class="o">=</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">intreestring</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Define REs to identify unnecessary information in tree string.</span>
+    <span class="n">extra1_external</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d\[&amp;prob=[\w\s,.+-=</span><span class="si">{}</span><span class="s1">_()&quot;]+\]&#39;</span><span class="p">)</span>
+    <span class="n">extra1</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\[&amp;prob=[\w\s,.+-=</span><span class="si">{}</span><span class="s1">_()&quot;]+\]&#39;</span><span class="p">)</span>
+    <span class="n">extra2</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\[&amp;length_mean=[\w\s,.+-=</span><span class="si">{}</span><span class="s1">_()&quot;%]+\]&#39;</span><span class="p">)</span>
+
+    <span class="n">intreestring3</span> <span class="o">=</span> <span class="n">intreestring2</span>
+
+    <span class="c1"># Remove terminal node probability labels.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">extra1_external</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">intreestring3</span><span class="p">):</span>
+        <span class="n">intreestring3</span> <span class="o">=</span> <span class="n">intreestring3</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Reformat internal node probability labels.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">extra1</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">intreestring3</span><span class="p">):</span>
+        <span class="c1"># Calculate a replacement percent probability value.</span>
+        <span class="n">replacement</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+        <span class="c1">#if len(replacement) &lt; 3:</span>
+        <span class="c1">#    replacement = &#39;0&#39; + replacement</span>
+
+        <span class="c1"># Replace long annotation with replacement percent probability.</span>
+        <span class="n">intreestring3</span> <span class="o">=</span> <span class="n">intreestring3</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">replacement</span><span class="p">)</span>
+
+    <span class="c1"># Remove unnecessary branch length annotation.</span>
+    <span class="n">intreestring3</span> <span class="o">=</span> <span class="n">extra2</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">intreestring3</span><span class="p">)</span>
+    
+    <span class="c1"># Construct a list of taxon numbers in string.</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[(|,]\d+:&#39;</span><span class="p">)</span>
+    <span class="n">tax_nums</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">intreestring3</span><span class="p">)</span>
+
+    <span class="c1"># Replace taxon numbers with names.</span>
+    <span class="n">intreestring4</span> <span class="o">=</span> <span class="n">intreestring3</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">tax_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">tax_num</span> <span class="ow">in</span> <span class="n">tax_nums</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">tax_num</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">intreestring4</span> <span class="o">=</span> <span class="n">intreestring4</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tax_num</span><span class="p">,</span> <span class="n">tax_num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">tax_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="n">tax_num</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Replace scientific notation numbers to decimal form so RAxML can parse.</span>
+    <span class="c1"># (May not be necessary)</span>
+    <span class="c1">#y = re.compile(r&#39;:[\w.-]+&#39;)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;:[\w.-]+\+?\d+&#39;</span><span class="p">)</span>
+    <span class="n">numbers</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">intreestring4</span><span class="p">)</span>
+    <span class="n">intreestring5</span> <span class="o">=</span> <span class="n">intreestring4</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+        <span class="n">numx</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="n">repl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.7f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">numx</span><span class="p">))</span>
+        <span class="n">intreestring5</span> <span class="o">=</span> <span class="n">intreestring5</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">numx</span><span class="p">,</span> <span class="n">repl</span><span class="p">)</span>
+
+    <span class="c1"># Write final tree string to output file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outtreepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">intreestring5</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="contre_to_newick"><a class="viewcode-back" href="../module_boots_on_mb.html#module_boots_on_mb.contre_to_newick">[docs]</a><span class="k">def</span> <span class="nf">contre_to_newick</span><span class="p">(</span><span class="n">intreepath</span><span class="p">,</span> <span class="n">outtreepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a .con.tre file output from MrBayes and writes the same tree in</span>
+<span class="sd">    newick format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Construct a taxon number: name dict.</span>
+    <span class="n">tax_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\t\t\d&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">intreepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="n">split</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">num</span> <span class="o">=</span> <span class="n">split</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">split</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">tax_dict</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="c1"># Get the line with the tree as a string.</span>
+    <span class="n">intreestring</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">intreepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;   tree con_all_compat&#39;</span><span class="p">):</span>
+                <span class="n">intreestring</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="c1"># Cleanup string.</span>
+    <span class="n">intreestring2</span> <span class="o">=</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">intreestring</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Remove unnecessary information from tree string.</span>
+    <span class="n">extra1</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\[&amp;prob=[\w\s,.+-=</span><span class="si">{}</span><span class="s1">_()&quot;]+\]&#39;</span><span class="p">)</span>
+    <span class="n">extra2</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\[&amp;length_mean=[\w\s,.+-=</span><span class="si">{}</span><span class="s1">_()&quot;%]+\]&#39;</span><span class="p">)</span>
+    <span class="n">intreestring3</span> <span class="o">=</span> <span class="n">extra1</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">extra2</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">intreestring2</span><span class="p">))</span>
+
+    <span class="c1"># Construct a list of taxon numbers in string.</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[(|,]\d+:&#39;</span><span class="p">)</span>
+    <span class="n">tax_nums</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">intreestring3</span><span class="p">)</span>
+
+    <span class="c1"># Replace taxon numbers with names.</span>
+    <span class="n">intreestring4</span> <span class="o">=</span> <span class="n">intreestring3</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">tax_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">tax_num</span> <span class="ow">in</span> <span class="n">tax_nums</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">tax_num</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">intreestring4</span> <span class="o">=</span> <span class="n">intreestring4</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tax_num</span><span class="p">,</span> <span class="n">tax_num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">tax_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="n">tax_num</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Replace scientific notation numbers to decimal form so RAxML can parse.</span>
+    <span class="c1">#y = re.compile(r&#39;:[\w.-]+&#39;)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;:[\w.-]+\+?\d+&#39;</span><span class="p">)</span>
+    <span class="n">numbers</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">intreestring4</span><span class="p">)</span>
+    <span class="n">intreestring5</span> <span class="o">=</span> <span class="n">intreestring4</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+        <span class="n">numx</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="n">repl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.7f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">numx</span><span class="p">))</span>
+        <span class="n">intreestring5</span> <span class="o">=</span> <span class="n">intreestring5</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">numx</span><span class="p">,</span> <span class="n">repl</span><span class="p">)</span>
+    
+    <span class="c1"># Write final tree string to output file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outtreepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">intreestring5</span><span class="p">)</span></div>
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

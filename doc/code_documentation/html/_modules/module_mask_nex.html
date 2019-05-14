@@ -1,0 +1,213 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>module_mask_nex &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for module_mask_nex</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Mask a nex alignment by adding a new taxon, &quot;MASK&quot; sequence.</span>
+
+<span class="sd">This is only a rough mask that is applied based on very simple criteria.</span>
+
+<span class="sd">It would be good to eventually add more sophistocated criteria, especially</span>
+<span class="sd">criteria based on similarity (according to a scoring matrix) rather than just</span>
+<span class="sd">identity, or number of sequences without gaps.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="s1">&#39;amoebaelib&#39;</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">AlignIO</span>
+<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">IUPAC</span><span class="p">,</span> <span class="n">Gapped</span>
+<span class="kn">from</span> <span class="nn">module_afa_to_nex</span> <span class="k">import</span> <span class="n">delete_extra_mesquite_lines</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+
+<div class="viewcode-block" id="apply_mask_criteria"><a class="viewcode-back" href="../module_mask_nex.html#module_mask_nex.apply_mask_criteria">[docs]</a><span class="k">def</span> <span class="nf">apply_mask_criteria</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply simple masking criteria to a single column, and return &#39;-&#39; if the</span>
+<span class="sd">    column does not meet the criteria, and &#39;I&#39; if it does.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Return &#39;-&#39; by default.</span>
+    <span class="n">mask_char</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
+    <span class="c1"># Get column features.</span>
+    <span class="n">num_seqs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="n">half_num_seqs</span> <span class="o">=</span> <span class="n">num_seqs</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">num_gaps_in_col</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">column_no_gaps</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check that the column is not entirely composed of gaps.</span>
+    <span class="c1">#assert not column_no_gaps == &#39;&#39;, &quot;Error: Empty positions in input alignment.&quot;</span>
+
+    <span class="k">if</span> <span class="n">column_no_gaps</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mask_char</span>
+
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">column_no_gaps</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+
+        <span class="n">most_common_residue</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">column_no_gaps</span><span class="p">)</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">most_common_residue_count</span> <span class="o">=</span> <span class="n">most_common_residue</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">percent_identity</span> <span class="o">=</span> <span class="n">most_common_residue_count</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">num_seqs</span> 
+
+        <span class="c1"># If less than half the sequences have a gap at this position of the</span>
+        <span class="c1"># alignment, then include the position. </span>
+        <span class="c1">#if num_gaps_in_col &lt; half_num_seqs:</span>
+        <span class="c1">#    mask_char = &#39;I&#39;</span>
+
+        <span class="k">if</span> <span class="n">num_gaps_in_col</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">num_seqs</span> <span class="o">*</span> <span class="mf">0.30</span><span class="p">):</span>
+            <span class="n">mask_char</span> <span class="o">=</span> <span class="s1">&#39;I&#39;</span>
+
+        <span class="c1"># If percent identity is at least 50, then include position.</span>
+        <span class="k">if</span> <span class="n">percent_identity</span> <span class="o">&gt;=</span> <span class="mi">50</span><span class="p">:</span>
+            <span class="n">mask_char</span> <span class="o">=</span> <span class="s1">&#39;I&#39;</span>
+
+        <span class="k">return</span> <span class="n">mask_char</span></div>
+
+
+<div class="viewcode-block" id="mask_alignment"><a class="viewcode-back" href="../module_mask_nex.html#module_mask_nex.mask_alignment">[docs]</a><span class="k">def</span> <span class="nf">mask_alignment</span><span class="p">(</span><span class="n">alignment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes an alignment object and adds a &#39;MASK&#39; sequence using certain</span>
+<span class="sd">    criteria for inclusion of positions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get length of sequences and number of sequences in alignment.</span>
+    <span class="n">seq_len</span> <span class="o">=</span> <span class="n">alignment</span><span class="o">.</span><span class="n">get_alignment_length</span><span class="p">()</span>
+    <span class="n">num_seqs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
+
+    <span class="c1"># get a list of columns as strings in the original alignment.</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">alignment</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)]</span> 
+
+    <span class="c1"># Iterate over columns and make a mask sequence to append.</span>
+    <span class="n">mask_seq</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="n">mask_char</span> <span class="o">=</span> <span class="n">apply_mask_criteria</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> 
+        <span class="n">mask_seq</span> <span class="o">=</span> <span class="n">mask_seq</span> <span class="o">+</span> <span class="n">mask_char</span>
+
+    <span class="c1"># Generate a SeqRecord object with the mask_seq.</span>
+    <span class="n">empty_mask_seq</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="n">mask_seq</span><span class="p">,</span> <span class="n">IUPAC</span><span class="o">.</span><span class="n">protein</span><span class="p">)</span>
+    <span class="n">empty_mask_rec</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">empty_mask_seq</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;MASK&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;MASK&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Add the mask_seq sequence to the alignment.</span>
+    <span class="n">masked_alignment</span> <span class="o">=</span> <span class="n">alignment</span>
+    <span class="n">masked_alignment</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">empty_mask_rec</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">masked_alignment</span></div>
+
+
+<div class="viewcode-block" id="mask_nex"><a class="viewcode-back" href="../module_mask_nex.html#module_mask_nex.mask_nex">[docs]</a><span class="k">def</span> <span class="nf">mask_nex</span><span class="p">(</span><span class="n">infilepath</span><span class="p">,</span> <span class="n">outfilepath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a filepath and adds a MASK sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Delete extra lines in input nexus file, if present, because biopython cannot</span>
+    <span class="c1"># read nexus alignments with these extra lines.</span>
+    <span class="n">delete_extra_mesquite_lines</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span>
+
+    <span class="c1"># Define the name of the output file.</span>
+    <span class="k">if</span> <span class="n">outfilepath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outfilepath</span> <span class="o">=</span> <span class="n">infilepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nex&#39;</span><span class="p">,</span> <span class="s1">&#39;.mask.nex&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infilepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfilepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="c1"># Check that the input file has the filename extension &quot;.nex&quot;.</span>
+        <span class="k">assert</span> <span class="n">infilepath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nex&#39;</span><span class="p">),</span> <span class="s2">&quot;Error: Input file name must have the</span><span class="se">\</span>
+<span class="s2"> extension &#39;.nex&#39;.&quot;</span>
+
+        <span class="c1"># Read the alignment file.</span>
+        <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">infh</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span>
+
+        <span class="n">masked_alignment</span> <span class="o">=</span> <span class="n">mask_alignment</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
+        <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">masked_alignment</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;nexus&#39;</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

@@ -67,17 +67,38 @@
 <span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">AlignIO</span>
 
 
+<div class="viewcode-block" id="get_datatype_for_sequence_string"><a class="viewcode-back" href="../module_amoebae_get_datatype.html#module_amoebae_get_datatype.get_datatype_for_sequence_string">[docs]</a><span class="k">def</span> <span class="nf">get_datatype_for_sequence_string</span><span class="p">(</span><span class="n">concat_seq</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a sequence string and return &#39;prot&#39; or &#39;nucl&#39; depending on the</span>
+<span class="sd">    content of letters from the alphabet.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define regular expressions to identify different data types from sequence</span>
+    <span class="c1"># strings.</span>
+    <span class="c1">#alphabets = {&#39;dna&#39;: re.compile(&#39;^[acgtn]*$&#39;, re.I),</span>
+    <span class="c1">#             &#39;protein&#39;: re.compile(&#39;^[arndceqghoilkmfpustwyvx*]*$&#39;,</span>
+    <span class="c1">#                          re.I)}</span>
+    <span class="n">alphabets</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dna&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^[acgtny]*$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">),</span>
+                 <span class="s1">&#39;protein&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^[arndceqghoilkmfpustwyvx*]*$&#39;</span><span class="p">,</span>
+                              <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)}</span>
+    
+    <span class="c1"># Determine whether the concatenated sequence represents protein or DNA</span>
+    <span class="c1"># data.</span>
+    <span class="n">dbtype</span> <span class="o">=</span> <span class="s1">&#39;Undetermined&#39;</span>
+    <span class="k">if</span> <span class="n">alphabets</span><span class="p">[</span><span class="s1">&#39;dna&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">concat_seq</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dbtype</span> <span class="o">=</span> <span class="s1">&#39;nucl&#39;</span>
+    <span class="k">elif</span> <span class="n">alphabets</span><span class="p">[</span><span class="s1">&#39;protein&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">concat_seq</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dbtype</span> <span class="o">=</span> <span class="s1">&#39;prot&#39;</span>
+
+    <span class="c1"># Check that the data type was determined.</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">dbtype</span> <span class="o">==</span> <span class="s1">&#39;Undetermined&#39;</span><span class="p">,</span> <span class="s2">&quot;Error: could not identify data type&quot;</span>
+
+    <span class="c1"># Return the datatype.</span>
+    <span class="k">return</span> <span class="n">dbtype</span></div>
+
 
 <div class="viewcode-block" id="get_dbtype"><a class="viewcode-back" href="../module_amoebae_get_datatype.html#module_amoebae_get_datatype.get_dbtype">[docs]</a><span class="k">def</span> <span class="nf">get_dbtype</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Opens input fasta file, examines the first 10 records, and returns</span>
 <span class="sd">        either &#39;prot&#39; or &#39;nucl&#39; depending on what type the sequences are.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-    <span class="c1"># Define regular expressions to identify different data types from sequence</span>
-    <span class="c1"># strings.</span>
-    <span class="n">alphabets</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dna&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^[acgtn]*$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">),</span>
-                 <span class="s1">&#39;protein&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^[arndceqghoilkmfpustwyvx*]*$&#39;</span><span class="p">,</span>
-                              <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)}</span>
-    
     <span class="c1"># Get sequence to evaluate.</span>
     <span class="n">concat_seq</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     
@@ -125,14 +146,7 @@
 
     <span class="c1"># Determine whether the concatenated sequence represents protein or DNA</span>
     <span class="c1"># data.</span>
-    <span class="n">dbtype</span> <span class="o">=</span> <span class="s1">&#39;Undetermined&#39;</span>
-    <span class="k">if</span> <span class="n">alphabets</span><span class="p">[</span><span class="s1">&#39;dna&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">concat_seq</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dbtype</span> <span class="o">=</span> <span class="s1">&#39;nucl&#39;</span>
-    <span class="k">elif</span> <span class="n">alphabets</span><span class="p">[</span><span class="s1">&#39;protein&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">concat_seq</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dbtype</span> <span class="o">=</span> <span class="s1">&#39;prot&#39;</span>
-    
-    <span class="c1"># Check that the data type was determined.</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">dbtype</span> <span class="o">==</span> <span class="s1">&#39;Undetermined&#39;</span><span class="p">,</span> <span class="s2">&quot;Error: could not identify data type&quot;</span>
+    <span class="n">dbtype</span> <span class="o">=</span> <span class="n">get_datatype_for_sequence_string</span><span class="p">(</span><span class="n">concat_seq</span><span class="p">)</span>
     
     <span class="c1"># Return data type.</span>
     <span class="k">return</span> <span class="n">dbtype</span></div>

@@ -1,0 +1,1072 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>visualize_trees &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for visualize_trees</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+<span class="sd">&quot;&quot;&quot;Module for visualizing phylogenetic trees (parsing newick trees and writing</span>
+<span class="sd">as formatted pdf files with images).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="c1">#sys.path.append(os.path.join(os.path.dirname(sys.path[0]),&#39;amoebaelib&#39;))</span>
+<span class="c1">#sys.path.append(os.path.dirname(sys.path[0]))</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="c1"># from module_afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines</span>
+<span class="kn">from</span> <span class="nn">module_amoebae_name_replace</span> <span class="k">import</span> <span class="n">write_newick_tree_with_uncoded_names</span>
+<span class="kn">from</span> <span class="nn">ete3</span> <span class="k">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">NodeStyle</span><span class="p">,</span> <span class="n">TreeStyle</span><span class="p">,</span> <span class="n">TextFace</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="k">import</span> <span class="n">PdfPages</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="k">import</span> <span class="n">imread</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">Template</span>
+<span class="kn">from</span> <span class="nn">PyPDF2</span> <span class="k">import</span> <span class="n">PdfFileWriter</span><span class="p">,</span> <span class="n">PdfFileReader</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">reportlab.pdfgen</span> <span class="k">import</span> <span class="n">canvas</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="k">import</span> <span class="n">letter</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mc</span>
+<span class="kn">import</span> <span class="nn">colorsys</span>
+<span class="kn">from</span> <span class="nn">module_boots_on_mb</span> <span class="k">import</span> <span class="n">mbcontre_to_newick_w_probs</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1">## Get directory path from input.</span>
+<span class="c1">#command_line_list = sys.argv</span>
+<span class="c1">#indp = str(command_line_list[1])</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">## Set time for timestamp.</span>
+<span class="c1">#timestamp = time.strftime(&quot;%Y%m%d%H%M&quot;)</span>
+
+
+<div class="viewcode-block" id="disqualifying_string_in_file_basename"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.disqualifying_string_in_file_basename">[docs]</a><span class="k">def</span> <span class="nf">disqualifying_string_in_file_basename</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns True if one or more of the strings in the input list is in the</span>
+<span class="sd">    basename of the input file path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">in_basename</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">disqualifying_strings</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="n">in_basename</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">in_basename</span></div>
+
+
+<div class="viewcode-block" id="find_input_file_in_parent_directory"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.find_input_file_in_parent_directory">[docs]</a><span class="k">def</span> <span class="nf">find_input_file_in_parent_directory</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given a directory path (e.g., path to a directory that was downloaded</span>
+<span class="sd">    after running a phylogenetic analysis on CIPRES) and the filename extension</span>
+<span class="sd">    that your target file will have (e.g., &#39;table&#39; or &#39;nex&#39;), return the path</span>
+<span class="sd">    to a file in the parent directory of the input directory path that is the</span>
+<span class="sd">    most similar to the input directory basename and has the specified</span>
+<span class="sd">    extension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Identify parent directory.</span>
+    <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">indp</span><span class="p">)</span>
+
+    <span class="c1"># Identify all files in parent directory that have the given extension.</span>
+    <span class="n">all_rel_files_in_parent_dir</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="s1">&#39;*.&#39;</span> <span class="o">+</span> <span class="n">extension</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="c1"># Only look at files that don&#39;t have disqualifying strings (e.g.,</span>
+            <span class="c1"># masked and trimmed alignments instead of original alignment).</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">disqualifying_string_in_file_basename</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
+                <span class="n">all_rel_files_in_parent_dir</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="c1"># Check that there are any relevant files.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_rel_files_in_parent_dir</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No files in parent</span>
+<span class="s2">    directory </span><span class="si">%s</span><span class="s2"> with filename extension </span><span class="si">%s</span><span class="s2">.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span>
+
+    <span class="c1"># If there is only one file in the list, then it&#39;s the only option so you</span>
+    <span class="c1"># could just return that...</span>
+    
+    <span class="c1"># Find the file with the longest identical prefix to the input directory</span>
+    <span class="c1"># basename.</span>
+    <span class="n">indp_bn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">indp</span><span class="p">)</span>
+    <span class="c1"># Loop over prefixes from longest to shortest.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">indp_bn</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">indp_bn</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> 
+        <span class="n">files_with_prefix</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_rel_files_in_parent_dir</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+                <span class="n">files_with_prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="c1"># Return path if there is only one.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_with_prefix</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1">#print(files_with_prefix[0])</span>
+            <span class="k">return</span> <span class="n">files_with_prefix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Report an error if there is more than one.</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_with_prefix</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;More than one relevant file</span>
+<span class="s2">        found with extension </span><span class="si">%s</span><span class="s2"> in directory </span><span class="si">%s</span><span class="s2">.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">extension</span><span class="p">,</span> <span class="n">parent_dir</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plotImage"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.plotImage">[docs]</a><span class="k">def</span> <span class="nf">plotImage</span><span class="p">(</span><span class="n">image_file</span><span class="p">):</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">image_file</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># We don&#39;t need axis ticks</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_first_leaf_from_species"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.get_first_leaf_from_species">[docs]</a><span class="k">def</span> <span class="nf">get_first_leaf_from_species</span><span class="p">(</span><span class="n">tree_obj</span><span class="p">,</span> <span class="n">species_start_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take an ete3 TreeNode object and return a node object with a name that</span>
+<span class="sd">    starts with a given string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">first_leaf</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="n">tree_obj</span><span class="o">.</span><span class="n">iter_leaves</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">leaf</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">species_start_string</span><span class="p">):</span>
+            <span class="n">first_leaf</span> <span class="o">=</span> <span class="n">leaf</span>
+            <span class="k">break</span>
+    <span class="c1">#print(species_start_string)</span>
+    <span class="c1">#assert first_leaf is not None</span>
+    <span class="k">return</span> <span class="n">first_leaf</span></div>
+
+<div class="viewcode-block" id="get_largest_subtree"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.get_largest_subtree">[docs]</a><span class="k">def</span> <span class="nf">get_largest_subtree</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take an ete3 TreeNode object and return the largest subtree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="n">node_with_most_leaves</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">node_with_most_leaves</span></div>
+
+
+<div class="viewcode-block" id="get_first_subtrees"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.get_first_subtrees">[docs]</a><span class="k">def</span> <span class="nf">get_first_subtrees</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take an ete3 TreeNode object and return the clades on either side of the</span>
+<span class="sd">    root node.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initiate a list of the two clades on either side of the root.</span>
+    <span class="n">first_subtrees</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Add largest subtree to list.</span>
+    <span class="c1">#largest_subtree = get_largest_subtree(t)</span>
+    <span class="c1">#largest_subtree_leaf_names_set = set([x.name for x in largest_subtree])</span>
+    <span class="c1">#first_subtrees.append(largest_subtree)</span>
+
+    <span class="c1"># Add the other clade to the list.</span>
+    <span class="c1">#other_nodes = []</span>
+    <span class="c1">#for node in t.traverse():</span>
+    <span class="c1">#    node_leaf_names_set = set([x.name for x in node.get_leaves()])</span>
+    <span class="c1">#    # *****This line seems to be the problem... ********</span>
+    <span class="c1">#    if node_leaf_names_set.intersection(largest_subtree_leaf_names_set) == 0:</span>
+    <span class="c1">#        other_nodes.append(node)</span>
+    <span class="c1">#other_node_with_most_leaves = sorted(other_nodes, key=lambda x: len(x.get_leaves()), reverse=True)[0]</span>
+    <span class="c1">#first_subtrees.append(other_node_with_most_leaves)</span>
+
+    <span class="c1">#print(&#39;\n\nt:&#39;)</span>
+    <span class="c1">#print(t)</span>
+    <span class="c1"># Loop over all the nodes in the TreeNode object.</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">subtree</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Look for just the first two subtrees (either side of the root).</span>
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="c1">#print(subtree)</span>
+            <span class="c1"># Add the clade to the list.</span>
+            <span class="n">first_subtrees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subtree</span><span class="p">)</span>
+
+    <span class="c1"># Return the list of two nodes.</span>
+    <span class="k">return</span> <span class="n">first_subtrees</span></div>
+
+
+<div class="viewcode-block" id="remove_nodes_that_are_subtrees_of_others"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.remove_nodes_that_are_subtrees_of_others">[docs]</a><span class="k">def</span> <span class="nf">remove_nodes_that_are_subtrees_of_others</span><span class="p">(</span><span class="n">nodes_with_paralogues</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a list of ete3 TreeNode objects and return only those that are not</span>
+<span class="sd">    subtrees of others in the list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nodes_with_paralogues2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes_with_paralogues</span><span class="p">:</span>
+        <span class="n">nested</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">nodes_with_paralogues</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">i_leaf_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()])</span>
+                <span class="n">j_leaf_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">j</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()])</span>
+
+                <span class="c1"># See if they are nested.</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_leaf_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">j_leaf_names</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+                    <span class="c1"># Include if j is a subtree of i, but not vice versa.</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">j_leaf_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_leaf_names</span><span class="p">):</span>
+                        <span class="n">nested</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">nested</span><span class="p">:</span>
+            <span class="n">nodes_with_paralogues2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># Make list of nodes with paralogues non-redundant.</span>
+    <span class="n">nodes_with_paralogues2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">nodes_with_paralogues2</span><span class="p">))</span>
+
+    <span class="c1"># Return reduced list.</span>
+    <span class="k">return</span> <span class="n">nodes_with_paralogues2</span></div>
+
+
+<div class="viewcode-block" id="determine_whether_first_subtrees_same_sp_overlap"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.determine_whether_first_subtrees_same_sp_overlap">[docs]</a><span class="k">def</span> <span class="nf">determine_whether_first_subtrees_same_sp_overlap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span>
+        <span class="n">overlapping_species</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take two TreeNode objects and determine whether the first object (i) has</span>
+<span class="sd">    a top-level subtree that has the same overlap as the two nodes do.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get set of species represented in the other clade.</span>
+    <span class="n">j_leaves</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+    <span class="n">j_leaf_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">j_leaves</span><span class="p">])</span>
+    <span class="n">j_sp_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">j_leaf_names</span><span class="p">])</span>
+
+    <span class="c1"># Call function to get top-level subtrees of the first node.</span>
+    <span class="n">i_first_subtrees</span> <span class="o">=</span> <span class="n">get_first_subtrees</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Get species name set for first subtree.</span>
+    <span class="n">i_first_subtree_sp_set1</span> <span class="o">=</span>\
+    <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>\
+        <span class="n">i_first_subtrees</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()])</span>
+
+    <span class="c1"># Get species name set for second subtree.</span>
+    <span class="n">i_first_subtree_sp_set2</span> <span class="o">=</span>\
+    <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>\
+        <span class="n">i_first_subtrees</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()])</span>
+
+    <span class="c1"># Determine whether either set overlaps just as much with the second node</span>
+    <span class="c1"># as the entire first node does.</span>
+    <span class="n">first_subtrees_same_sp_overlap</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">i_first_subtree_sp_set1</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">j_sp_names</span><span class="p">)</span> <span class="o">==</span> <span class="n">overlapping_species</span><span class="p">:</span>
+        <span class="n">first_subtrees_same_sp_overlap</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="n">i_first_subtree_sp_set2</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">j_sp_names</span><span class="p">)</span> <span class="o">==</span> <span class="n">overlapping_species</span><span class="p">:</span>
+        <span class="n">first_subtrees_same_sp_overlap</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Return the result.</span>
+    <span class="k">return</span> <span class="n">first_subtrees_same_sp_overlap</span></div>
+
+
+<div class="viewcode-block" id="get_nodes_with_paralogues"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.get_nodes_with_paralogues">[docs]</a><span class="k">def</span> <span class="nf">get_nodes_with_paralogues</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find nodes that contain paralogues, and return as a list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initiate a final list of nodes with paralogues (can be nested).  </span>
+    <span class="n">established_nodes_with_paralogues</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="c1"># remember to slice this first element out later.</span>
+    <span class="c1">#print(&#39;established_nodes_with_paralogues&#39;)</span>
+    <span class="c1">#print(len(established_nodes_with_paralogues))</span>
+
+    <span class="c1"># Initiate variable to store True until no new nodes with paralogues are</span>
+    <span class="c1"># identified.</span>
+    <span class="n">finding_new_nodes_with_paralogues</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">new_nodes_with_paralogues</span> <span class="o">=</span> <span class="n">established_nodes_with_paralogues</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">finding_new_nodes_with_paralogues</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">found_new_nodes_this_round</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Initiate list of new nodes with paralogues found this round (of the</span>
+        <span class="c1"># while loop).</span>
+        <span class="n">new_nodes_found_this_round</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Initiate list of nodes with paralogues (to be highlighted).</span>
+        <span class="n">nodes_with_paralogues</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Loop over new nodes.</span>
+        <span class="c1">#print(&#39;looping over &#39; + str(len(new_nodes_with_paralogues)) + &#39; new nodes with paralogues iteration # &#39; + str(num))</span>
+        <span class="k">for</span> <span class="n">t1</span> <span class="ow">in</span> <span class="n">new_nodes_with_paralogues</span><span class="p">:</span>
+
+            <span class="c1"># Loop over all nodes to identify those with paralogues.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">t1</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+
+                <span class="c1"># Determine whether the clade may contain paralogues of those in</span>
+                <span class="c1"># another clade in the tree.</span>
+                <span class="c1"># Find the set of species names.</span>
+                <span class="n">i_leaves</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+                <span class="n">i_leaf_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">i_leaves</span><span class="p">])</span>
+                <span class="n">i_sp_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">i_leaf_names</span><span class="p">])</span>
+                <span class="c1"># Only consider clades with two or more species represented.</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_sp_names</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+
+                    <span class="c1"># Identify other clades that may contain paralogues of the</span>
+                    <span class="c1"># sequences in the clade.</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">t1</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+
+                        <span class="c1"># Get set of species represented in the other clade.</span>
+                        <span class="n">j_leaves</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+                        <span class="n">j_leaf_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">j_leaves</span><span class="p">])</span>
+                        <span class="n">j_sp_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">j_leaf_names</span><span class="p">])</span>
+
+                        <span class="c1"># Only consider the second clade if it is not nested with the</span>
+                        <span class="c1"># first.</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_leaf_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">j_leaf_names</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+                            <span class="c1"># Determine whether the second clade has an overlapping set</span>
+                            <span class="c1"># of species represented compared to the first clade (at</span>
+                            <span class="c1"># least two of the same species).</span>
+                            <span class="n">overlapping_species</span> <span class="o">=</span> <span class="n">i_sp_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">j_sp_names</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlapping_species</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+
+                                <span class="c1"># Determine whether the two subtrees on either side of</span>
+                                <span class="c1"># the root of the first clade also have the same number</span>
+                                <span class="c1"># of overlapping species names with the second clade.</span>
+                                <span class="n">first_subtrees_same_sp_overlap</span> <span class="o">=</span>\
+                                <span class="n">determine_whether_first_subtrees_same_sp_overlap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">overlapping_species</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">first_subtrees_same_sp_overlap</span><span class="p">:</span>
+
+                                    <span class="c1"># Add node to the list of nodes with paralogues.</span>
+                                    <span class="n">nodes_with_paralogues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+            <span class="c1"># Remove nodes from the list that are subtrees of other nodes in the list.</span>
+            <span class="n">nodes_with_paralogues2</span> <span class="o">=</span>\
+            <span class="n">remove_nodes_that_are_subtrees_of_others</span><span class="p">(</span><span class="n">nodes_with_paralogues</span><span class="p">)</span>
+
+            <span class="c1"># If any new nodes identified...</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes_with_paralogues2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="c1">#print(&#39;Identified nodes:&#39;)</span>
+                <span class="c1">#for i in nodes_with_paralogues2:</span>
+                <span class="c1">#    print(i)</span>
+
+                <span class="c1"># Add new nodes to list of established nodes with paralogues.</span>
+                <span class="n">established_nodes_with_paralogues</span> <span class="o">=</span> <span class="n">established_nodes_with_paralogues</span> <span class="o">+</span> <span class="n">nodes_with_paralogues2</span>
+
+                <span class="c1"># Add nodes to list of nodes found this round.</span>
+                <span class="n">new_nodes_found_this_round</span> <span class="o">=</span> <span class="n">new_nodes_found_this_round</span> <span class="o">+</span> <span class="n">nodes_with_paralogues2</span>
+
+                <span class="c1"># Change variable to True so that the while loop continues.</span>
+                <span class="n">found_new_nodes_this_round</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># The list of new nodes becomes the list of nodes compiled</span>
+        <span class="c1"># here.</span>
+        <span class="n">new_nodes_with_paralogues</span> <span class="o">=</span> <span class="n">new_nodes_found_this_round</span>
+        <span class="c1">#print(str(len(new_nodes_found_this_round)) + &#39; new nodes found this round&#39;)</span>
+
+        <span class="c1"># Stop looking if no new nodes found.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found_new_nodes_this_round</span><span class="p">:</span>
+            <span class="n">finding_new_nodes_with_paralogues</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># Return final non-redundant list of established nodes with paralogues.</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">established_nodes_with_paralogues</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+
+<div class="viewcode-block" id="label_pdf"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.label_pdf">[docs]</a><span class="k">def</span> <span class="nf">label_pdf</span><span class="p">(</span><span class="n">in_tree_file</span><span class="p">,</span> <span class="n">out_tree_file</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">subs_model</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Taka pdf file of a phylogenetic tree and label with a given substitution</span>
+<span class="sd">    model and timestamp.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Determine what to report the support as.</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;iqtree&#39;</span><span class="p">:</span>
+        <span class="n">node_support_type</span> <span class="o">=</span> <span class="s1">&#39;Bootstrap proportion&#39;</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;mb&#39;</span><span class="p">:</span>
+        <span class="n">node_support_type</span> <span class="o">=</span> <span class="s1">&#39;Prior probability&#39;</span>
+    <span class="n">packet</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="c1"># create a new PDF with Reportlab</span>
+    <span class="n">can</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">Canvas</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">pagesize</span><span class="o">=</span><span class="n">letter</span><span class="p">)</span>
+    <span class="c1">## Define string and position to add.</span>
+    <span class="c1">#can.setFont(&quot;Helvetica&quot;, 40) # Choose your font type and size (Arial is tricky).</span>
+    <span class="c1">#can.drawString(450, 30, &#39;Model: &#39; + subs_model)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">can</span><span class="o">.</span><span class="n">beginText</span><span class="p">()</span>
+    <span class="c1">#t.setCharSpace(3)</span>
+
+    <span class="c1">#t.setFont(&#39;Helvetica&#39;, 12)</span>
+    <span class="c1">#t.setTextOrigin(250, 45)</span>
+
+    <span class="n">t</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="s1">&#39;Helvetica&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">setTextOrigin</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span> <span class="mi">145</span><span class="p">)</span>
+
+    <span class="n">t</span><span class="o">.</span><span class="n">textLines</span><span class="p">(</span><span class="s1">&#39;Model: &#39;</span> <span class="o">+</span> <span class="n">subs_model</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Topology: IQ-tree&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Node support: &#39;</span> <span class="o">+</span> <span class="n">node_support_type</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Timestamp: &#39;</span> <span class="o">+</span> <span class="n">timestamp</span><span class="p">)</span>
+    <span class="n">can</span><span class="o">.</span><span class="n">drawText</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">can</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    
+    <span class="c1"># Move to the beginning of the StringIO buffer</span>
+    <span class="n">packet</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">new_pdf</span> <span class="o">=</span> <span class="n">PdfFileReader</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
+    <span class="c1"># Read your existing PDF</span>
+    <span class="n">existing_pdf</span> <span class="o">=</span> <span class="n">PdfFileReader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">in_tree_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">PdfFileWriter</span><span class="p">()</span>
+    <span class="c1"># add the &quot;watermark&quot; (which is the new pdf) on the existing page</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="n">existing_pdf</span><span class="o">.</span><span class="n">getPage</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">page</span><span class="o">.</span><span class="n">mergePage</span><span class="p">(</span><span class="n">new_pdf</span><span class="o">.</span><span class="n">getPage</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">addPage</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+    <span class="c1"># finally, write &quot;output&quot; to a real file</span>
+    <span class="n">outputStream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_tree_file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outputStream</span><span class="p">)</span>
+    <span class="n">outputStream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="add_borders_to_pdf_with_latex"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.add_borders_to_pdf_with_latex">[docs]</a><span class="k">def</span> <span class="nf">add_borders_to_pdf_with_latex</span><span class="p">(</span><span class="n">in_tree_file</span><span class="p">,</span> <span class="n">out_tree_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a latex file, add the existing pdf as an image, and write to pdf,</span>
+<span class="sd">    so that there are borders.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Define template for latex file text.</span>
+    <span class="n">latex_template_string</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span>\
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    \documentclass[12pt]{article}</span>
+<span class="sd">    \usepackage{graphicx}</span>
+<span class="sd">    \graphicspath{ {./} }</span>
+<span class="sd">    \usepackage[margin=0.5in]{geometry}</span>
+<span class="sd">    \begin{document}</span>
+<span class="sd">    \pagestyle{empty}</span>
+<span class="sd">    %\includegraphics[width=\textwidth]{$treefile}</span>
+<span class="sd">    %\includeimage[width=\textwidth,height=\textheight,keepaspectration=true]{myimage}</span>
+<span class="sd">    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio=true]{$treefile}</span>
+<span class="sd">    \end{document}</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Define text for latex file.</span>
+    <span class="n">latex_file_contents</span> <span class="o">=</span>\
+    <span class="n">latex_template_string</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">treefile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">in_tree_file</span><span class="p">))</span>
+    
+    <span class="c1"># Write latex to text file.</span>
+    <span class="n">latex_file_path</span> <span class="o">=</span> <span class="n">out_tree_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.tex&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">latex_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">latex_file_contents</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">latex_file_path</span><span class="p">)</span>
+    
+    <span class="c1"># Make pdf file from latex file.</span>
+    <span class="c1">#os.chdir(indp)</span>
+    <span class="c1">#os.system(&quot;pdflatex &quot; + os.path.basename(latex_file_path))</span>
+    <span class="n">tempstdout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">in_tree_file</span><span class="p">),</span> <span class="s1">&#39;tempfile.txt&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tempstdout</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="c1"># If you want to show latex output for debugging:</span>
+        <span class="c1">#subprocess.call([&quot;pdflatex&quot;, os.path.basename(latex_file_path)], cwd=indp)</span>
+    
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s2">&quot;pdflatex&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">latex_file_path</span><span class="p">)],</span>
+                <span class="n">cwd</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">latex_file_path</span><span class="p">),</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
+    
+    <span class="c1"># Remove temporary files.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">latex_file_path</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">latex_file_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.log&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">latex_file_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.aux&#39;</span><span class="p">)</span>
+    <span class="c1">#os.remove(tempstdout)</span>
+
+    <span class="c1"># Check that correct output file path exists.</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">out_tree_file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_subs_model_from_iqtree_file"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.get_subs_model_from_iqtree_file">[docs]</a><span class="k">def</span> <span class="nf">get_subs_model_from_iqtree_file</span><span class="p">(</span><span class="n">file_with_subs_model_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take the input directory path, and return the substitution model used</span>
+<span class="sd">    (listed in the output.iqtree file).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subs_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># Open the appropriate file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_with_subs_model_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="c1"># Find the substitution mode.</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Model of substitution:&#39;</span><span class="p">):</span>
+                <span class="n">subs_model</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;: &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">break</span>
+    <span class="c1"># Check that a substitution model was found.</span>
+    <span class="k">assert</span> <span class="n">subs_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not find substitution model.&quot;&quot;&quot;</span>
+    <span class="c1"># Return the substitution model.</span>
+    <span class="k">return</span> <span class="n">subs_model</span></div>
+
+
+<div class="viewcode-block" id="get_subs_model_from_mb_file"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.get_subs_model_from_mb_file">[docs]</a><span class="k">def</span> <span class="nf">get_subs_model_from_mb_file</span><span class="p">(</span><span class="n">file_with_subs_model_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take the input directory path, and return the substitution model used</span>
+<span class="sd">    (listed in the .nex file).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subs_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># Open the appropriate file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_with_subs_model_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+            <span class="c1"># Find the substitution mode.</span>
+            <span class="k">if</span> <span class="s1">&#39;aamodelpr&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                <span class="n">subs_model</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;aamodelpr=fixed(&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">break</span>
+    <span class="c1"># Check that a substitution model was found.</span>
+    <span class="k">assert</span> <span class="n">subs_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not find substitution model.&quot;&quot;&quot;</span>
+    <span class="c1"># Return the substitution model.</span>
+    <span class="k">return</span> <span class="n">subs_model</span></div>
+
+
+<div class="viewcode-block" id="customize_node_styles_for_visualization"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.customize_node_styles_for_visualization">[docs]</a><span class="k">def</span> <span class="nf">customize_node_styles_for_visualization</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take an ete3 tree object , and modify the node styles for better</span>
+<span class="sd">    visualization. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Add a face to internal nodes with branch support string.</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+            <span class="c1">#node.add_face(TextFace(node.name, fsize=5), column=0, position=&#39;branch-top&#39;)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">add_face</span><span class="p">(</span><span class="n">TextFace</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">support</span><span class="p">,</span> <span class="n">fsize</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;branch-top&#39;</span><span class="p">)</span>
+    
+    <span class="c1">## Change node names to branch support values for internal nodes.</span>
+    <span class="c1">#for node in t.traverse():</span>
+    <span class="c1">#    if not node.is_leaf():</span>
+    <span class="c1">#        #node.support = float(node.name.split(&quot;/&quot;)[1])</span>
+    <span class="c1">#        if node.name != &#39;&#39;:</span>
+    <span class="c1">#            node.support = float(node.name.split(&quot;/&quot;)[1])</span>
+    <span class="c1">#        else:</span>
+    <span class="c1">#            node.support = float(0.0)</span>
+
+    <span class="c1"># Remove blue dots before leaf names.</span>
+    <span class="c1"># Draws nodes as small red spheres of diameter equal to 10 pixels</span>
+    <span class="n">nstyle</span> <span class="o">=</span> <span class="n">NodeStyle</span><span class="p">()</span>
+    <span class="n">nstyle</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
+    <span class="n">nstyle</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Gray dashed branch lines</span>
+    <span class="c1">#nstyle[&quot;hz_line_type&quot;] = 1</span>
+    <span class="c1">#nstyle[&quot;hz_line_color&quot;] = &quot;#cccccc&quot;</span>
+    <span class="c1">#nstyle[&quot;fgcolor&quot;] = &quot;#0f0f0f&quot;</span>
+    <span class="n">nstyle</span><span class="p">[</span><span class="s2">&quot;vt_line_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>
+    <span class="n">nstyle</span><span class="p">[</span><span class="s2">&quot;hz_line_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>
+    <span class="n">nstyle</span><span class="p">[</span><span class="s2">&quot;vt_line_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">nstyle</span><span class="p">[</span><span class="s2">&quot;hz_line_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">nstyle</span><span class="p">[</span><span class="s2">&quot;vt_line_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 0 solid, 1 dashed, 2 dotted</span>
+    <span class="n">nstyle</span><span class="p">[</span><span class="s2">&quot;hz_line_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Applies the same static style to all nodes in the tree. Note that,</span>
+    <span class="c1"># if &quot;nstyle&quot; is modified, changes will affect to all nodes</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+       <span class="n">n</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">nstyle</span><span class="p">)</span>
+       <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+           <span class="c1"># Set font size for leaf/taxon labels.</span>
+           <span class="n">name_face</span> <span class="o">=</span> <span class="n">TextFace</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fgcolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">fsize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+           <span class="n">n</span><span class="o">.</span><span class="n">add_face</span><span class="p">(</span><span class="n">name_face</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;branch-right&#39;</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="customize_node_styles_for_paralogue_clades"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.customize_node_styles_for_paralogue_clades">[docs]</a><span class="k">def</span> <span class="nf">customize_node_styles_for_paralogue_clades</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">nodes_with_paralogues</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take an ete3 tree object and a list of nodes with paralogues, and modify</span>
+<span class="sd">    the node styles to emphasize important features. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check that there are no redundant nodes listed in the input list of</span>
+    <span class="c1"># TreeNode objects.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">nodes_with_paralogues</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes_with_paralogues</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Redundant objects in input list.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Make a list of colours as an iterable.</span>
+    <span class="c1"># Colour scheme source: https://www.nature.com/articles/nmeth.1618?WT.ec_id=NMETH-201106</span>
+    <span class="n">colour_iterable</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([</span><span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">230</span><span class="p">,</span> <span class="mi">159</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span><span class="c1">#Orange</span>
+                            <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">86</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">233</span><span class="p">),</span><span class="c1">#Sky blue</span>
+                            <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">158</span><span class="p">,</span> <span class="mi">115</span><span class="p">),</span><span class="c1">#Bluish green</span>
+                            <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">240</span><span class="p">,</span> <span class="mi">228</span><span class="p">,</span> <span class="mi">66</span><span class="p">),</span><span class="c1">#Yellow</span>
+                            <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">178</span><span class="p">),</span><span class="c1">#Blue</span>
+                            <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">213</span><span class="p">,</span> <span class="mi">94</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span><span class="c1">#Vermillion</span>
+                            <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">204</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">167</span><span class="p">)</span><span class="c1">#Reddish purple</span>
+                            <span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="c1"># Sort list of nodes with paralogues by descending leaf node count.</span>
+    <span class="n">nodes_with_paralogues</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Highlight nodes with identified paralogues.</span>
+    <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes_with_paralogues</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_nodes</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">nodes_with_paralogues</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="c1"># Get current highlight colour, if any.</span>
+        <span class="n">current_bgcolor</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">img_style</span><span class="p">[</span><span class="s1">&#39;bgcolor&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Set up a node style for clades with paralogues.</span>
+        <span class="n">nstyle2</span> <span class="o">=</span> <span class="n">NodeStyle</span><span class="p">()</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;vt_line_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;hz_line_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;vt_line_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;hz_line_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;vt_line_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 0 solid, 1 dashed, 2 dotted</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;hz_line_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Make sure that the new colour is different than the old color (so that</span>
+        <span class="c1"># all highlighted clades are actually visible.</span>
+        <span class="n">same_bgcolor</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">new_bgcolor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">while</span> <span class="n">same_bgcolor</span><span class="p">:</span>
+            <span class="n">new_bgcolor</span> <span class="o">=</span> <span class="n">lighten_color</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">colour_iterable</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">new_bgcolor</span> <span class="o">!=</span> <span class="n">current_bgcolor</span><span class="p">:</span> 
+                <span class="n">same_bgcolor</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">assert</span> <span class="n">new_bgcolor</span> <span class="o">!=</span> <span class="n">current_bgcolor</span>
+
+        <span class="c1"># Set new background color.</span>
+        <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;bgcolor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_bgcolor</span>
+
+        <span class="c1">## Temp.</span>
+        <span class="c1">#print(&#39;\n\nNode:&#39;)</span>
+        <span class="c1">#print(node)</span>
+        <span class="c1">#print(&#39;current_bgcolor&#39;)</span>
+        <span class="c1">#print(current_bgcolor)</span>
+        <span class="c1">#print(&#39;new_bgcolor&#39;)</span>
+        <span class="c1">#print(new_bgcolor)</span>
+
+        <span class="c1"># Set the node style for node and all subnodes.</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">nstyle2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+            <span class="n">sn</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">nstyle2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="customize_node_styles_for_clades_to_remove"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.customize_node_styles_for_clades_to_remove">[docs]</a><span class="k">def</span> <span class="nf">customize_node_styles_for_clades_to_remove</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">highlight_for_removal</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take an ete3 tree object and a list of nodes with paralogues, and modify</span>
+<span class="sd">    the node styles to emphasize important features. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define highlight colour.</span>
+    <span class="c1"># Colour scheme source: https://www.nature.com/articles/nmeth.1618?WT.ec_id=NMETH-201106</span>
+    <span class="n">highlight_hex_colour</span> <span class="o">=</span> <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">240</span><span class="p">,</span> <span class="mi">228</span><span class="p">,</span> <span class="mi">66</span><span class="p">)</span> <span class="c1">#Yellow</span>
+
+    <span class="c1"># Highlight leaf nodes identified for removal. </span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">iter_leaves</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">highlight_for_removal</span><span class="p">:</span> 
+            <span class="c1"># Set up a node style for leaf. Mostly similar to that defiined in</span>
+            <span class="c1"># customize_node_styles_for_paralogue_clades and</span>
+            <span class="c1"># customize_node_styles_for_visualization functions.</span>
+            <span class="n">nstyle2</span> <span class="o">=</span> <span class="n">NodeStyle</span><span class="p">()</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;vt_line_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;hz_line_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;vt_line_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;hz_line_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;vt_line_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 0 solid, 1 dashed, 2 dotted</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;hz_line_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1">#nstyle2[&quot;bgcolor&quot;] = lighten_color(next(colour_iterable), 0.5)</span>
+            <span class="n">nstyle2</span><span class="p">[</span><span class="s2">&quot;bgcolor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">highlight_hex_colour</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">nstyle2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lighten_color"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.lighten_color">[docs]</a><span class="k">def</span> <span class="nf">lighten_color</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a hex colour code and returns a hex code for the same colour but</span>
+<span class="sd">    lighter by multiplying (1-luminosity) by the given amount (fraction).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">cnames</span><span class="p">[</span><span class="n">color</span><span class="p">]</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">color</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">colorsys</span><span class="o">.</span><span class="n">rgb_to_hls</span><span class="p">(</span><span class="o">*</span><span class="n">mc</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="n">ct</span> <span class="o">=</span> <span class="n">colorsys</span><span class="o">.</span><span class="n">hls_to_rgb</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">amount</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="s1">&#39;#</span><span class="si">%02x%02x%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">255</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">255</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">255</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_branch_support_from_node_name"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.get_branch_support_from_node_name">[docs]</a><span class="k">def</span> <span class="nf">get_branch_support_from_node_name</span><span class="p">(</span><span class="n">node_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse node name of internal nodes resulting from parsing a newick tree</span>
+<span class="sd">    with ete3 with the format=1 option (branch supports become node names for</span>
+<span class="sd">    internal nodes). Return a single float corresponding to the bootstrap</span>
+<span class="sd">    proportion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get bootstrap proportion from tree generated by IQ-tree with bootstrap</span>
+    <span class="c1"># and aLRT options specified (first value is aLRT).</span>
+    <span class="n">bootstrap_proportion</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">node_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="c1"># Return bootstrap proportion as a float.</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">bootstrap_proportion</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="translate_int_node_names_to_support"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.translate_int_node_names_to_support">[docs]</a><span class="k">def</span> <span class="nf">translate_int_node_names_to_support</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse branch support values out of internal node names, add one of them</span>
+<span class="sd">    to each node as branch support (a single float), and delete the internal</span>
+<span class="sd">    node names.  &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="c1"># Assign support attribute value to node.</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">get_branch_support_from_node_name</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="c1"># Delete existing node name attribute for node.</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+
+<div class="viewcode-block" id="translate_int_node_support_to_prob"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.translate_int_node_support_to_prob">[docs]</a><span class="k">def</span> <span class="nf">translate_int_node_support_to_prob</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse branch support values and change them to probabilities instead of</span>
+<span class="sd">    perentages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+            <span class="c1">#if node.name != &#39;&#39;:</span>
+            <span class="c1"># Change node support value.</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">support</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;3.2f&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="visualize_tree"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.visualize_tree">[docs]</a><span class="k">def</span> <span class="nf">visualize_tree</span><span class="p">(</span><span class="n">method</span><span class="p">,</span>
+                   <span class="n">timestamp</span><span class="p">,</span>
+                   <span class="n">taxa_to_root_on</span><span class="p">,</span>
+                   <span class="n">highlight_paralogues</span><span class="p">,</span>
+                   <span class="n">highlight_for_removal</span><span class="p">,</span>
+                   <span class="n">tree_file</span><span class="p">,</span>
+                   <span class="n">tablefilename</span><span class="p">,</span>
+                   <span class="n">file_with_subs_model_name</span>
+                   <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take relevant files and write PDF files with tree figures, and return</span>
+<span class="sd">    output file paths.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">## Check that necessary files are input if not just highlighting for</span>
+    <span class="c1">## removal.</span>
+    <span class="c1">#if len(highlight_for_removal) == 0:</span>
+    <span class="c1">#    assert file_with_subs_model_name is not None, &quot;&quot;&quot;No file with</span>
+    <span class="c1">#    substitution model name was input.&quot;&quot;&quot;</span>
+
+    <span class="c1"># If method is mb, then generate a .tre file.</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;mb&#39;</span><span class="p">:</span>
+        <span class="c1"># Modify nexus file to use second code block. </span>
+        <span class="n">temp_nexus</span> <span class="o">=</span> <span class="n">tree_file</span> <span class="o">+</span> <span class="s1">&#39;_temp&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tree_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_nexus</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+            <span class="c1"># Get text from file.</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">infh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="c1"># Parse text.</span>
+            <span class="n">delimiters</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(BEGIN \w+;\n|END;\n)&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+            <span class="n">split_on_delimiters</span> <span class="o">=</span> <span class="n">delimiters</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">inum</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="c1">#for i in split_on_delimiters:</span>
+            <span class="c1">#    inum += 1</span>
+            <span class="c1">#    print(&#39;\n\n\n\n\n&#39;)</span>
+            <span class="c1">#    print(&#39;&lt;&#39; + str(inum) + &#39;&gt;&#39;)</span>
+            <span class="c1">#    print(i)</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_on_delimiters</span><span class="p">)</span> <span class="o">==</span> <span class="mi">13</span>
+            <span class="n">line1</span> <span class="o">=</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ali_block</span> <span class="o">=</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">code_block1</span> <span class="o">=</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+            <span class="n">code_block2</span> <span class="o">=</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">+</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">+</span> <span class="n">split_on_delimiters</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span>
+            <span class="c1"># Make new text with brackets around first block instead of second.</span>
+            <span class="n">new_text</span> <span class="o">=</span> <span class="n">line1</span> <span class="o">+</span> <span class="n">ali_block</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">[</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">code_block1</span> <span class="o">+</span> <span class="s1">&#39;]</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">code_block2</span>
+            <span class="c1">#print(new_text)</span>
+            <span class="c1"># Write new text to temp file.</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_text</span><span class="p">)</span>
+        <span class="c1"># Replace old file with new file.</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tree_file</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">temp_nexus</span><span class="p">,</span> <span class="n">tree_file</span><span class="p">)</span>
+
+        <span class="c1"># Generate line graphs from .p files.</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">tree_file</span><span class="p">),</span> <span class="s1">&#39;*.p&#39;</span><span class="p">)):</span>
+            <span class="c1"># Parse the data.</span>
+            <span class="n">generations</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">log_likelihoods</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;[ID&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Gen&#39;</span><span class="p">):</span>
+                        <span class="c1"># Parse relevant lines add relevant values to data</span>
+                        <span class="c1"># lists.</span>
+                        <span class="n">spliti</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">generation</span> <span class="o">=</span> <span class="n">spliti</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">generations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">generation</span><span class="p">))</span>
+                        <span class="n">log_likelihood</span> <span class="o">=</span> <span class="n">spliti</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">log_likelihoods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">log_likelihood</span><span class="p">))</span>
+
+            <span class="c1"># Make data into an array.</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">generations</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">log_likelihoods</span><span class="p">)</span>
+
+            <span class="c1"># Use matplotlib to plot the data array.</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Generation&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Log likelihood&#39;</span><span class="p">,</span>
+                   <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Plot of log likelihood change over &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">generations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; MCMC generations&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+            <span class="c1"># Write the plot to a pdf file.</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">f</span> <span class="o">+</span> <span class="s1">&#39;_line_graph.pdf&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Add end; to .t files if necessary.</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">tree_file</span><span class="p">),</span> <span class="s1">&#39;*.t&#39;</span><span class="p">)):</span>
+            <span class="c1"># Check for end;.</span>
+            <span class="n">has_end</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">infh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;end;&#39;</span><span class="p">):</span>
+                    <span class="n">has_end</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># If no end; then append an end;.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_end</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
+                    <span class="n">infh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">end;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Run mb on the modified nexus alignment file.</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;mb&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">tree_file</span><span class="p">)],</span>
+                <span class="n">cwd</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">tree_file</span><span class="p">))</span> 
+
+        <span class="c1"># Change &quot;tree_file&quot; to actual tree file (.con.tre).</span>
+        <span class="n">tree_file</span> <span class="o">=</span>\
+        <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">tree_file</span><span class="p">),</span><span class="s1">&#39;*.con.tre&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Convert nexus .tre file to newick format.</span>
+        <span class="n">newick_file_path</span> <span class="o">=</span> <span class="n">tree_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.newick&#39;</span> 
+        <span class="c1">#contre_to_newick(tree_file, newick_file_path) # This erases supports!</span>
+        <span class="n">mbcontre_to_newick_w_probs</span><span class="p">(</span><span class="n">tree_file</span><span class="p">,</span> <span class="n">newick_file_path</span><span class="p">)</span>
+
+        <span class="c1"># Set tree file path to the newick file instead of the nexus file.</span>
+        <span class="n">tree_file</span> <span class="o">=</span> <span class="n">newick_file_path</span>
+
+    <span class="c1"># Define name for decoded tree file.</span>
+    <span class="n">tree_file2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">tree_file</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">tree_file</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_DC.tre&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">highlight_for_removal</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tree_file2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">tree_file</span><span class="p">),</span>\
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">tree_file</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span>\
+                <span class="s1">&#39;_DC_for_removal.tre&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Use module to uncode names.</span>
+    <span class="n">write_newick_tree_with_uncoded_names</span><span class="p">(</span><span class="n">tree_file</span><span class="p">,</span> <span class="n">tree_file2</span><span class="p">,</span> <span class="n">tablefilename</span><span class="p">)</span>
+    
+    <span class="c1"># Parse tree from file with ete3.</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;iqtree&#39;</span><span class="p">:</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">tree_file2</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Parse branch support values out of internal node names, add one of</span>
+        <span class="c1"># them to each node as branch support (a single float), and delete the</span>
+        <span class="c1"># internal node names.</span>
+        <span class="n">translate_int_node_names_to_support</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;mb&#39;</span><span class="p">:</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">tree_file2</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Translate branch support values by multiplying by 0.01 (to get prior</span>
+        <span class="c1"># probabilities instead of percentages.</span>
+        <span class="n">translate_int_node_support_to_prob</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+
+
+    <span class="c1">## Find a K. nitens sequence if present.</span>
+    <span class="c1">#first_leaf_from_species = get_first_leaf_from_species(t1, &#39;Klebsormidium&#39;)</span>
+    
+    <span class="c1">## Root tree on K. nitens sequence if possible.</span>
+    <span class="c1">#t1.set_outgroup(first_leaf_from_species)</span>
+    
+    <span class="c1">## If no K. nitens sequence is present, then root on the midpoint node.</span>
+    <span class="c1">#if first_leaf_from_species is None:</span>
+    <span class="c1">#    t1.set_outgroup(t1.get_midpoint_outgroup())</span>
+    
+    <span class="c1"># Initiate a dictionary of nodes and labels for the nodes on which to root the</span>
+    <span class="c1"># tree.</span>
+    <span class="n">root_node_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="c1"># Add midpoint to dict of nodes to root on.</span>
+    <span class="n">root_node_dict</span><span class="p">[</span><span class="s1">&#39;midpoint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">t1</span><span class="o">.</span><span class="n">get_midpoint_outgroup</span><span class="p">()</span>
+
+    <span class="c1"># Check that the midpoint outgroup node was found.</span>
+    <span class="k">assert</span> <span class="n">root_node_dict</span><span class="p">[</span><span class="s1">&#39;midpoint&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No midpoint outgroup was</span>
+<span class="s2">    identified.&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Add specific species to dict of nodes to root on.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">taxa_to_root_on</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">taxa_to_root_on</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">taxon</span> <span class="ow">in</span> <span class="n">taxa_to_root_on</span><span class="p">:</span>
+            <span class="n">fl</span> <span class="o">=</span> <span class="n">get_first_leaf_from_species</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">taxon</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">root_node_dict</span><span class="p">[</span><span class="n">taxon</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_first_leaf_from_species</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">taxon</span><span class="p">)</span>
+    
+    <span class="c1"># Loop over nodes too root on, and generate tree files for each.</span>
+    <span class="n">list_of_output_pdf_file_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">list_of_rerooted_tree_objects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">root_node_label</span> <span class="ow">in</span> <span class="n">root_node_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># Root on corresponding node from dictionary.</span>
+        <span class="n">t1</span><span class="o">.</span><span class="n">set_outgroup</span><span class="p">(</span><span class="n">root_node_dict</span><span class="p">[</span><span class="n">root_node_label</span><span class="p">])</span>
+    
+        <span class="c1"># Make a copy of the TreeNode object.</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">t1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+        <span class="c1"># Customize the node styles generally.</span>
+        <span class="n">customize_node_styles_for_visualization</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">highlight_paralogues</span><span class="p">:</span>
+            <span class="c1"># Identify nodes that contain paralogoues.</span>
+            <span class="n">nodes_with_paralogues</span> <span class="o">=</span> <span class="n">get_nodes_with_paralogues</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span>
+
+            <span class="c1">## Temp.</span>
+            <span class="c1">#print(&#39;\n\nFor tree n:&#39;)</span>
+            <span class="c1">#for n in nodes_with_paralogues:</span>
+            <span class="c1">#    print(n)</span>
+
+            <span class="c1"># Customize the node styles of clades with paralogues.</span>
+            <span class="n">customize_node_styles_for_paralogue_clades</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">nodes_with_paralogues</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">highlight_for_removal</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Customize the node styles of leaf nodes identified for removal.</span>
+            <span class="n">customize_node_styles_for_clades_to_remove</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="n">highlight_for_removal</span><span class="p">)</span>
+
+
+        <span class="c1"># Initiate a tree style.</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">TreeStyle</span><span class="p">()</span>
+        
+        <span class="c1"># Specify not showing leaf names, because need to define font size, so add as a &quot;face&quot; (see above).</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">show_leaf_name</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="c1"># Stretch branches.</span>
+        <span class="c1">#ts.scale =  100 # 120 pixels per branch length unit (Throws of dimensions).</span>
+        <span class="c1">#ts.branch_vertical_margin = 6 # 10 pixels between adjacent branches # Not useful.</span>
+        
+        <span class="c1"># Specify showing branch support values (not necessary if showing branch</span>
+        <span class="c1"># supports (node names) as text faces for each node.</span>
+        <span class="c1">#ts.show_branch_support = True</span>
+    
+        <span class="c1"># Define path to intermediate pdf file.</span>
+        <span class="n">tree_file3</span> <span class="o">=</span> <span class="n">tree_file2</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">root_node_label</span> <span class="o">+</span> <span class="s1">&#39;Root.pdf&#39;</span>
+        
+        <span class="c1"># Write tree to intermediate pdf file.</span>
+        <span class="c1">#print(&#39;Rendering PDF image of tree.&#39;)</span>
+        <span class="c1">#t1.render(tree_file3, w=183, units=&quot;mm&quot;, tree_style=ts)</span>
+        <span class="c1">#t1.render(tree_file3, tree_style=ts, w=8.5, h=11, units=&#39;in&#39;, dpi=600)</span>
+        <span class="c1">#t1.render(tree_file3, tree_style=ts, dpi=600) # Results in prepended blank page, and image exceding length of page.</span>
+        <span class="n">t2</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">tree_file3</span><span class="p">,</span> <span class="n">tree_style</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">8.5</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span> 
+        <span class="c1"># Check that tree was rendered as a pdf file.</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tree_file3</span><span class="p">)</span>
+        
+        <span class="n">subs_model</span> <span class="o">=</span> <span class="s1">&#39;N/A&#39;</span>
+        <span class="k">if</span> <span class="n">file_with_subs_model_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;iqtree&#39;</span><span class="p">:</span>
+                <span class="c1"># Get model used from iqtree file.</span>
+                <span class="n">subs_model</span> <span class="o">=</span> <span class="n">get_subs_model_from_iqtree_file</span><span class="p">(</span><span class="n">file_with_subs_model_name</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;mb&#39;</span><span class="p">:</span>
+                <span class="n">subs_model</span> <span class="o">=</span> <span class="n">get_subs_model_from_mb_file</span><span class="p">(</span><span class="n">file_with_subs_model_name</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">subs_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;N/A&#39;</span>
+        
+        <span class="c1"># Define output filename.</span>
+        <span class="n">tree_file4</span> <span class="o">=</span> <span class="n">tree_file3</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_labeled.pdf&#39;</span>
+        
+        <span class="c1"># Add a label to the intermediate pdf file with the substitution model and</span>
+        <span class="c1"># timestamp.</span>
+        <span class="c1">#print(&#39;Labeling PDF image of tree.&#39;)</span>
+        <span class="n">label_pdf</span><span class="p">(</span><span class="n">tree_file3</span><span class="p">,</span> <span class="n">tree_file4</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">subs_model</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+        
+        <span class="c1"># Define file path for pdf with borders.</span>
+        <span class="n">latex_file_path</span> <span class="o">=</span> <span class="n">tree_file4</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_latex.pdf&#39;</span>
+        
+        <span class="c1"># Make a latex file (so that there are borders around the tree image).</span>
+        <span class="c1">#print(&#39;Adding PDF image of tree to a PDF document.&#39;)</span>
+        <span class="n">add_borders_to_pdf_with_latex</span><span class="p">(</span><span class="n">tree_file4</span><span class="p">,</span> <span class="n">latex_file_path</span><span class="p">)</span>
+    
+        <span class="c1"># Remove intermediate files.</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tree_file3</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tree_file4</span><span class="p">)</span>
+    
+        <span class="c1"># Append output file path to list.</span>
+        <span class="n">list_of_output_pdf_file_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latex_file_path</span><span class="p">)</span>
+
+    <span class="c1"># Return list of output file paths.</span>
+    <span class="k">return</span> <span class="n">list_of_output_pdf_file_paths</span></div>
+
+
+<div class="viewcode-block" id="visualize_tree_in_dir"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.visualize_tree_in_dir">[docs]</a><span class="k">def</span> <span class="nf">visualize_tree_in_dir</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">taxa_to_root_on</span><span class="p">,</span>
+                          <span class="n">highlight_paralogues</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given a path to a directory with output files from a phylogenetic</span>
+<span class="sd">    analysis, write PDF files with images of the results, and return the paths</span>
+<span class="sd">    to those files.</span>
+
+<span class="sd">    indp is the path to the directory with results.</span>
+<span class="sd">    method is either &#39;iqtree&#39;, &#39;mrbayes&#39;, or &#39;raxml&#39;.</span>
+<span class="sd">    taxa_to_root_on is a list of names such as &#39;Klebsormidium&#39; or</span>
+<span class="sd">    &#39;Klebsormidium nitens&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Find input tree path based on phylogenetic method used.</span>
+    <span class="n">tree_file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">file_with_subs_model_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;iqtree&#39;</span><span class="p">:</span>
+        <span class="c1"># Names for input files.</span>
+        <span class="n">tree_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;output.treefile&#39;</span><span class="p">)</span>
+        <span class="c1"># Identify file listing which substitution model was used.</span>
+        <span class="n">file_with_subs_model_name</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;*.iqtree&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;mb&#39;</span><span class="p">:</span>
+        <span class="c1"># Names for input files.</span>
+        <span class="n">tree_file</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;*.nex&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Identify file listing which substitution model was used.</span>
+        <span class="n">file_with_subs_model_name</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;*.nex&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1"># Check that the files are present in the input directory.</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tree_file</span><span class="p">),</span> <span class="s1">&#39;Missing file.&#39;</span>
+    
+    <span class="c1">## Get tablefilename list.</span>
+    <span class="c1">#tablefilenames = glob.glob(indp + &#39;/*.table&#39;)</span>
+
+    <span class="c1">## Make sure one and only one table file path was found.</span>
+    <span class="c1">#assert len(tablefilenames) &gt; 0, &#39;Error: No conversion tables identified in\</span>
+    <span class="c1"># directory &#39; + indp</span>
+    <span class="c1">#</span>
+    <span class="c1">#assert len(tablefilenames) &lt; 2, &#39;Error: More than one potential conversion\</span>
+    <span class="c1"># table files identified in directory &#39;+ indp + &#39; \nFiles: &#39; +\</span>
+    <span class="c1">#str(tablefilenames)</span>
+    <span class="c1">#</span>
+    <span class="c1">## Get tablefilename</span>
+    <span class="c1">#tablefilename = tablefilenames[0]</span>
+
+    <span class="n">tablefilename</span> <span class="o">=</span> <span class="n">find_input_file_in_parent_directory</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="c1"># Do not highlight leaves for removal.</span>
+    <span class="n">highlight_for_removal</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Call a function to visualize tree represented by the identified files.</span>
+    <span class="n">list_of_output_pdf_file_paths</span> <span class="o">=</span> <span class="n">visualize_tree</span><span class="p">(</span><span class="n">method</span><span class="p">,</span>
+                                                   <span class="n">timestamp</span><span class="p">,</span>
+                                                   <span class="n">taxa_to_root_on</span><span class="p">,</span>
+                                                   <span class="n">highlight_paralogues</span><span class="p">,</span>
+                                                   <span class="n">highlight_for_removal</span><span class="p">,</span>
+                                                   <span class="n">tree_file</span><span class="p">,</span>
+                                                   <span class="n">tablefilename</span><span class="p">,</span>
+                                                   <span class="n">file_with_subs_model_name</span>
+                                                   <span class="p">)</span>
+
+    <span class="c1"># Return final output pdf file paths as a list.</span>
+    <span class="k">return</span> <span class="n">list_of_output_pdf_file_paths</span> </div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

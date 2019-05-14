@@ -187,7 +187,7 @@
             <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;ZZ&#39;</span><span class="p">):</span>
                 <span class="n">cur_code</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">conv_dict</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cur_code</span>
+                <span class="n">conv_dict</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cur_code</span>
     <span class="k">return</span> <span class="n">conv_dict</span></div>
 
 
@@ -889,6 +889,7 @@
 
         <span class="c1"># Iterate over rows in dataframe.</span>
         <span class="n">ali_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ali_used_num</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
             <span class="n">ali_num</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -897,10 +898,11 @@
             <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">yes_no_col</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span> <span class="ow">or</span> <span class="n">result</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span> 
+                <span class="n">ali_used_num</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">acc</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit accession&#39;</span><span class="p">]</span>
                 <span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">seq</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="n">subseq</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">subseq</span> <span class="ow">or</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward search method&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;tblastn&#39;</span><span class="p">):</span>
                     <span class="n">description</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit description of subsequence(s) that align(s) to query&#39;</span><span class="p">]</span>
                     <span class="n">seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit subsequence(s) that align(s) to query&#39;</span><span class="p">]</span> 
                 <span class="k">else</span><span class="p">:</span>
@@ -929,7 +931,7 @@
                 <span class="c1"># Call function to classify the sequence and add corresponding rows</span>
                 <span class="c1"># to the (intermediate) summary spreadsheet.</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">place</span><span class="p">:</span>
-                    <span class="n">classify_one_seq_record</span><span class="p">(</span><span class="n">ali_num</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> 
+                    <span class="n">classify_one_seq_record</span><span class="p">(</span><span class="n">ali_used_num</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> 
                         <span class="n">outdirpath1</span><span class="p">,</span> <span class="n">summary_csv_fp</span><span class="p">,</span> <span class="n">summary_header_line</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">place_one_seq_record</span><span class="p">(</span><span class="n">ali_num</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> 
@@ -1018,7 +1020,11 @@
         <span class="n">outdirpath1</span><span class="p">,</span> <span class="n">summary_csv_fp</span><span class="p">,</span> <span class="n">summary_header_line</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Classify one sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Trying not to use this function.&quot;&quot;&quot;</span> <span class="c1"># Temp.</span>
+    <span class="c1">#assert 1 == 2, &quot;&quot;&quot;Trying not to use this function.&quot;&quot;&quot; # Temp.</span>
+
+    <span class="c1"># Check that the input sequence record is not just &#39;-&#39;.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Input sequence is only one residue long.&quot;&quot;&quot;</span>
+
     <span class="c1"># Get info about model that is relevant.</span>
     <span class="n">model_info</span> <span class="o">=</span> <span class="n">ModelInfoFromCSV</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="n">alignment</span> <span class="o">=</span> <span class="n">model_info</span><span class="o">.</span><span class="n">alignment_file</span>
@@ -1030,7 +1036,9 @@
     <span class="n">logfile</span> <span class="o">=</span> <span class="n">get_phylo_class_logfile_path</span><span class="p">(</span><span class="n">outdirpath1</span><span class="p">)</span>
 
     <span class="c1">#ali = os.path.join(outdirpath1, &#39;1.nex&#39;) </span>
-    <span class="n">ali</span> <span class="o">=</span> <span class="n">add_seq_to_alignment3</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">alignment</span><span class="p">,</span> <span class="n">outdirpath1</span><span class="p">)</span>
+    <span class="c1">#ali = add_seq_to_alignment3(record, alignment, outdirpath1)</span>
+    <span class="n">ali</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdirpath1</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ali_num</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.nex&#39;</span><span class="p">)</span> 
+    <span class="n">add_seq_to_alignment3</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">alignment</span><span class="p">,</span> <span class="n">ali</span><span class="p">)</span>
 
     <span class="c1"># Convert nexus alignment to afa.</span>
     <span class="n">temp_fa_1</span> <span class="o">=</span> <span class="n">ali</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_temp1.afa&#39;</span>
@@ -1049,6 +1057,7 @@
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_fa_1</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">outalifp</span><span class="p">)</span>
 
+
     <span class="c1"># Only do the following steps once for all the alignments, because all the</span>
     <span class="c1"># constrained topology analyses will use the same constraint trees.</span>
     <span class="k">if</span> <span class="n">ali_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1058,6 +1067,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span> <span class="k">as</span> <span class="n">intreefh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">outtreefp</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">intreefh</span><span class="p">:</span>
                 <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">quote_tree</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">outtablefp</span><span class="p">))</span>
+
 
 
         <span class="c1"># Make topology constraint trees.   </span>
@@ -1134,10 +1144,13 @@
 
                 <span class="c1"># Get node corresponding to a different &quot;type&quot; sequence.</span>
                 <span class="n">other_type_seq_node</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="c1">#print(other_type_seq_node_name)</span>
                 <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t2</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+                    <span class="c1">#print(node.name)</span>
                     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other_type_seq_node_name</span><span class="p">:</span>
                         <span class="n">other_type_seq_node</span> <span class="o">=</span> <span class="n">node</span>
                         <span class="k">break</span>
+                <span class="k">assert</span> <span class="n">other_type_seq_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
                 <span class="c1"># Root on the other &quot;type&quot; sequence node.</span>
                 <span class="n">t2</span><span class="o">.</span><span class="n">set_outgroup</span><span class="p">(</span><span class="n">other_type_seq_node</span><span class="p">)</span>
@@ -1279,13 +1292,19 @@
         <span class="n">lines</span> <span class="o">=</span> <span class="n">tablefh</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
         <span class="n">additional_seq_orig_name</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
+    <span class="c1"># Check that the output folder is a directory.</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outalifpnex</span><span class="p">)),</span> <span class="s2">&quot;&quot;&quot;Directory does not exist: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outalifpnex</span><span class="p">)</span>
+
     <span class="c1"># Loop through trees, parse them, change the &quot;AddSeq&quot; node name to the name</span>
     <span class="c1"># of the additional sequence for this particular alignment, then write to a</span>
     <span class="c1"># file. # SEPARATE</span>
     <span class="n">constraint_tree_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">starting_tree_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">tf</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outalifpnex</span><span class="p">),</span> <span class="s1">&#39;clade_*.tre&#39;</span><span class="p">))):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outalifpnex</span><span class="p">))</span>
+    <span class="n">trees_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outalifpnex</span><span class="p">),</span> <span class="s1">&#39;clade_*.tre&#39;</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">trees_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No constraint or starting trees identified.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">tf</span> <span class="ow">in</span> <span class="n">trees_list</span><span class="p">:</span> 
         <span class="nb">print</span><span class="p">(</span><span class="n">tf</span><span class="p">)</span>
         <span class="c1"># Parse tree.</span>
         <span class="n">tx</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">quoted_node_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1308,6 +1327,10 @@
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">tf</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;starting&#39;</span><span class="p">:</span>
             <span class="n">starting_tree_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outtreename2</span><span class="p">)</span>
 
+    <span class="c1"># Check that constraint trees were found.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">constraint_tree_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No constraint trees in list.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">starting_tree_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No starting trees in list.&quot;&quot;&quot;</span>
+
 
     <span class="c1"># Make a copy of the alignment in phylip format for input to IQtree.</span>
     <span class="n">phy_out</span> <span class="o">=</span> <span class="n">outalifpnex</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.phy&#39;</span>
@@ -1320,10 +1343,17 @@
     <span class="c1"># Print to see whether the tree files are in the right order.</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ctf</span><span class="p">,</span> <span class="n">stf</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">constraint_tree_list</span><span class="p">,</span> <span class="n">starting_tree_list</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ctf&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">ctf</span><span class="p">)</span>
+        <span class="c1"># Check that the constraint tree is a file.</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">ctf</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Could not find constraint tree file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">ctf</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;stf&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">stf</span><span class="p">)</span>
+        <span class="c1"># Check that the starting tree is a file.</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">ctf</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Could not find starting tree file: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">stf</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
 
     <span class="c1"># Do phylogenetic analysis. # SEPARATE</span>
     <span class="n">outtree_files_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2192,8 +2222,11 @@
 
     <span class="c1"># Determine whether the place command was used or not.</span>
     <span class="n">place</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="s1">&#39;Accept (+) or reject (-) hypothesis based on consensus of topology tests&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">place</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1">#if &#39;Accept (+) or reject (-) hypothesis based on consensus of topology tests&#39; not in df.loc[0]:</span>
+    <span class="c1">#if &#39;Accept (+) or reject (-) hypothesis based on consensus of topology tests&#39; not in open(full_summary_csv_path).read():</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_summary_csv_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">x</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;Accept (+) or reject (-) hypothesis based on consensus of topology tests&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">readline</span><span class="p">():</span>
+            <span class="n">place</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">place</span><span class="p">:</span>
         <span class="c1"># Define a list of new column headers to be appended.</span>
@@ -2277,7 +2310,7 @@
                         <span class="n">all_but_top_rejected</span> <span class="o">=</span> <span class="s1">&#39;Yes&#39;</span>
 
                     <span class="c1"># Add info to output df.</span>
-                    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Model/backbone tree name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_name</span>
+                    <span class="c1">#row[&#39;Model/backbone tree name&#39;] = model_name</span>
                     <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Classification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_clade</span>
                     <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Second most likely classification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">second_clade</span>
                     <span class="n">row</span><span class="p">[</span><span class="s1">&#39;AU topology test p-value for comparison with next most likely classification/topology&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">au_pvalue</span>

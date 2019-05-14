@@ -469,34 +469,50 @@
 <span class="sd">    Note: The coordinates are the literal start and end residue numbers for the</span>
 <span class="sd">    relevant portion of the subject sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">#domainstart = int(linelist[10]) - 1</span>
-    <span class="n">domainstart</span> <span class="o">=</span> <span class="n">searchio_hit_obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hit_start</span> <span class="o">-</span> <span class="mi">1</span>
-    <span class="c1">#domainend = int(linelist[11])</span>
-    <span class="n">domainend</span> <span class="o">=</span> <span class="n">searchio_hit_obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hit_end</span>
-    <span class="c1">#seqlen = len(str(seq_record.seq))</span>
-    <span class="c1">#seqlen = get_seq_len_from_db(searchio_hit_obj.id,\</span>
-    <span class="c1">#        db_file)</span>
-    <span class="c1"># Get sequence length from sequence in database.</span>
-    <span class="n">seqlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_seqs_from_fasta_db</span><span class="p">(</span><span class="n">db_file</span><span class="p">,</span> <span class="p">[</span><span class="n">searchio_hit_obj</span><span class="o">.</span><span class="n">id</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">nterm_margin</span> <span class="o">=</span> <span class="n">domainstart</span>
-    <span class="n">cterm_margin</span> <span class="o">=</span> <span class="n">seqlen</span> <span class="o">-</span> <span class="n">domainend</span>
-    <span class="n">nterm_extra</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
-    <span class="n">cterm_extra</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">nterm_margin</span> <span class="o">&lt;</span> <span class="n">nterm_extra</span><span class="p">:</span>
-        <span class="n">nterm_extra</span> <span class="o">=</span> <span class="n">nterm_margin</span>
-    <span class="k">if</span> <span class="n">cterm_margin</span> <span class="o">&lt;</span> <span class="n">cterm_extra</span><span class="p">:</span>
-        <span class="n">cterm_extra</span> <span class="o">=</span> <span class="n">cterm_margin</span>
-    <span class="n">cut_start</span> <span class="o">=</span> <span class="n">domainstart</span> <span class="o">-</span> <span class="n">nterm_extra</span>
-    <span class="n">cut_end</span> <span class="o">=</span> <span class="n">domainend</span> <span class="o">+</span> <span class="n">cterm_extra</span> <span class="c1">#+ 1</span>
-    <span class="c1">#domain = seq_record.seq[cut_start:cut_end]</span>
-    <span class="c1">#domain = seq_record.seq[cut_start:cut_end]</span>
-    <span class="c1">#seq_record.seq = domain</span>
-    <span class="c1">#o.write(&#39;&gt;&#39; + seq_record.id + &#39;\n&#39; </span>
-    <span class="c1">#        + str(seq_record.seq) + &#39;\n&#39;)</span>
 
-    <span class="c1"># Return coordinates.</span>
-    <span class="k">return</span> <span class="p">[[</span><span class="n">cut_start</span><span class="p">,</span> <span class="n">cut_end</span><span class="p">]]</span></div>
-    
+    <span class="c1"># Check that the hit object is usable.</span>
+    <span class="c1">#print(&#39;\n&#39;)</span>
+    <span class="c1">#print(searchio_hit_obj.__dict__)</span>
+    <span class="c1">#assert searchio_hit_obj.domain_obs_num &gt;= 1, &quot;&quot;&quot;No domains identified, so</span>
+    <span class="c1">#no hit sequence coordinates exist.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">searchio_hit_obj</span><span class="o">.</span><span class="n">domain_obs_num</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Just return coordinates that will give you an empty string when</span>
+        <span class="c1"># slicing the sequence.</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#domainstart = int(linelist[10]) - 1</span>
+        <span class="n">domainstart</span> <span class="o">=</span> <span class="n">searchio_hit_obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hit_start</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1">#domainend = int(linelist[11])</span>
+        <span class="n">domainend</span> <span class="o">=</span> <span class="n">searchio_hit_obj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hit_end</span>
+
+        <span class="c1">#seqlen = len(str(seq_record.seq))</span>
+        <span class="c1">#seqlen = get_seq_len_from_db(searchio_hit_obj.id,\</span>
+        <span class="c1">#        db_file)</span>
+        <span class="c1"># Get sequence length from sequence in database.</span>
+        <span class="n">seqlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_seqs_from_fasta_db</span><span class="p">(</span><span class="n">db_file</span><span class="p">,</span> <span class="p">[</span><span class="n">searchio_hit_obj</span><span class="o">.</span><span class="n">id</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">nterm_margin</span> <span class="o">=</span> <span class="n">domainstart</span>
+        <span class="n">cterm_margin</span> <span class="o">=</span> <span class="n">seqlen</span> <span class="o">-</span> <span class="n">domainend</span>
+        <span class="n">nterm_extra</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
+        <span class="n">cterm_extra</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">extra</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nterm_margin</span> <span class="o">&lt;</span> <span class="n">nterm_extra</span><span class="p">:</span>
+            <span class="n">nterm_extra</span> <span class="o">=</span> <span class="n">nterm_margin</span>
+        <span class="k">if</span> <span class="n">cterm_margin</span> <span class="o">&lt;</span> <span class="n">cterm_extra</span><span class="p">:</span>
+            <span class="n">cterm_extra</span> <span class="o">=</span> <span class="n">cterm_margin</span>
+        <span class="n">cut_start</span> <span class="o">=</span> <span class="n">domainstart</span> <span class="o">-</span> <span class="n">nterm_extra</span>
+        <span class="n">cut_end</span> <span class="o">=</span> <span class="n">domainend</span> <span class="o">+</span> <span class="n">cterm_extra</span> <span class="c1">#+ 1</span>
+        <span class="c1">#domain = seq_record.seq[cut_start:cut_end]</span>
+        <span class="c1">#domain = seq_record.seq[cut_start:cut_end]</span>
+        <span class="c1">#seq_record.seq = domain</span>
+        <span class="c1">#o.write(&#39;&gt;&#39; + seq_record.id + &#39;\n&#39; </span>
+        <span class="c1">#        + str(seq_record.seq) + &#39;\n&#39;)</span>
+
+        <span class="c1"># Return coordinates.</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">cut_start</span><span class="p">,</span> <span class="n">cut_end</span><span class="p">]]</span></div>
+        
 
 
 

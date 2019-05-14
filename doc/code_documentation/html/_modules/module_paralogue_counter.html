@@ -1344,7 +1344,7 @@
 
     <span class="c1"># Use pandas to parse the input csv (spreadsheet) file.</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reading input csv file into a pandas dataframe.&#39;</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># Define a dictionary of relevant column labels (so I can change the title</span>
     <span class="c1"># that it looks for without changing the name that that tile is referred to</span>
@@ -1382,9 +1382,12 @@
     <span class="c1">#                         &#39;Comparison with other positive hits in the same genome&#39;, </span>
     <span class="c1">#                         &#39;Accessions for sequences that are redundant with the sequence&#39;,</span>
     <span class="c1">#                         &#39;Represents an identifiably unique paralogue&#39;]</span>
-    <span class="n">new_column_label_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Comparison with other positive hits in the same genome&#39;</span><span class="p">,</span> 
+    <span class="n">new_column_label_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Does not have same ID or locus as another hit&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;Meets length criteria&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;Comparison with other positive hits in the same genome&#39;</span><span class="p">,</span> 
                              <span class="s1">&#39;Accessions for sequences that are redundant with the sequence&#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;Represents an identifiably unique paralogue&#39;</span><span class="p">]</span>
+                             <span class="s1">&#39;Represents an identifiably unique paralogue&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;Paralogue name&#39;</span><span class="p">]</span>
 
     <span class="c1"># Check that a column containing the name of the alignment to use is</span>
     <span class="c1"># present in the input file.</span>
@@ -1487,6 +1490,20 @@
                 <span class="n">index_dict</span><span class="p">[</span><span class="n">combo</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">alignment_path</span><span class="p">,</span> <span class="n">index_dict</span><span class="p">[</span><span class="n">combo</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>\
                         <span class="o">+</span> <span class="p">[</span><span class="n">info_tuple</span><span class="p">]]</span>
 
+
+    <span class="c1"># Make the values in the &#39;Does not have same ID or locus as another</span>
+    <span class="c1"># hit&#39; and &#39;Meets length criteria&#39; columns the same as for the</span>
+    <span class="c1"># &#39;positive or not&#39; column to start with.</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;positive or not&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+            <span class="c1"># Ignore negative hits.</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Change values in the appropriate columns to &#39;+&#39;.</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Does not have same ID or locus as another hit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Meets length criteria&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
+
+
     <span class="c1"># Iterate over relevant information and feed it into paralogue_counter</span>
     <span class="c1"># module for processing, and then put the relevant results in the right place</span>
     <span class="c1"># in the dataframe.</span>
@@ -1530,6 +1547,12 @@
                             <span class="c1"># Mark the one with the lower or equivalent E-value for removal.</span>
                             <span class="n">hit_indexes_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
+                            <span class="c1"># Change value in column for ID or locus redundancy</span>
+                            <span class="c1"># to &#39;-&#39;.</span>
+                            <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                                <span class="s1">&#39;Does not have same ID or locus as another hit&#39;</span><span class="p">]</span>\
+                                <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
                             <span class="c1"># Make a note in the spreadsheet, explaining why</span>
                             <span class="c1"># this hit was excluded.</span>
                             <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
@@ -1569,10 +1592,20 @@
                         <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Filename&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">sequence_filename</span><span class="p">:</span>
                             <span class="n">annotation_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Annotations file&#39;</span><span class="p">]</span>
 
+                            <span class="c1"># Change the value back to None if it is NaN in the</span>
+                            <span class="c1"># DataFrame.</span>
+                            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">annotation_file</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;float&#39;</span><span class="p">:</span>
+                                <span class="n">annotation_file</span> <span class="o">=</span> <span class="kc">None</span>
+
+
                 <span class="c1"># If there is an annotation file available, determine whether</span>
                 <span class="c1"># the hit is at the same locus in the nucleotide sequence as</span>
                 <span class="c1"># the peptide sequence hit.</span>
                 <span class="k">if</span> <span class="n">annotation_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Check that the type is string.</span>
+                    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">annotation_file</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;str&#39;</span>
+
+                    <span class="c1"># Join the paths.</span>
                     <span class="n">annotation_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">dbdirpath</span><span class="p">,</span>
                             <span class="n">annotation_file</span><span class="p">)</span>
 
@@ -1588,6 +1621,12 @@
                         <span class="c1"># nucleotide tuple and make a note. This only makes sense</span>
                         <span class="c1"># if the relevant protein sequences are also being searched</span>
                         <span class="c1"># with a similar query.</span>
+
+                        <span class="c1"># Change value in column for ID or locus redundancy</span>
+                        <span class="c1"># to &#39;-&#39;.</span>
+                        <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                            <span class="s1">&#39;Does not have same ID or locus as another hit&#39;</span><span class="p">]</span>\
+                            <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
 
                         <span class="c1"># Make a note in the dataframe/spreadsheet.</span>
                         <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
@@ -1609,6 +1648,13 @@
                                 <span class="c1"># ***Note: This may not work for all gene ID/accession</span>
                                 <span class="c1"># nomenclature schemes.</span>
                                 <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prot_hit_acc</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+
+                                    <span class="c1"># Change value in column for ID or locus redundancy</span>
+                                    <span class="c1"># to &#39;-&#39;.</span>
+                                    <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                                        <span class="s1">&#39;Does not have same ID or locus as another hit&#39;</span><span class="p">]</span>\
+                                        <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
                                     <span class="c1"># Make note in spreadsheet.</span>
                                     <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
                                         <span class="s1">&#39;Comparison with other positive hits in the same genome&#39;</span><span class="p">]</span>\
@@ -1656,13 +1702,19 @@
                                 <span class="c1"># Mark the one with the lower or equivalent E-value for removal.</span>
                                 <span class="n">more_nucl_tuples_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
 
+                                <span class="c1"># Change value in column for ID or locus redundancy</span>
+                                <span class="c1"># to &#39;-&#39;.</span>
+                                <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                                    <span class="s1">&#39;Does not have same ID or locus as another hit&#39;</span><span class="p">]</span>\
+                                    <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
                                 <span class="c1"># Make a note in the spreadsheet, explaining why</span>
                                 <span class="c1"># this hit was excluded.</span>
                                 <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
                                     <span class="s1">&#39;Comparison with other positive hits in the same genome&#39;</span><span class="p">]</span>\
                                     <span class="o">=</span> <span class="s1">&#39;(This hit is at the same locus as nucleotide hit with ID: </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-                                <span class="k">assert</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Chr5[17020882..17021032]&#39;</span>
+                                <span class="k">assert</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Chr5[17020882..17021032]&#39;</span> <span class="c1"># REMOVE THIS???</span>
         <span class="c1"># Remove the identified redundant tuples. </span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">more_nucl_tuples_to_remove</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">nucl_hit_indexes_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">more_nucl_tuples_to_remove</span><span class="p">]</span>
@@ -1683,12 +1735,22 @@
             <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="p">)</span> <span class="o">&lt;</span>\
             <span class="nb">int</span><span class="p">(</span><span class="n">minimum_length_of_query_to_be_distinct_paralogue</span><span class="p">):</span>
                 <span class="n">remove</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># Change value in column for length criteria.</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                    <span class="s1">&#39;Meets length criteria&#39;</span><span class="p">]</span>\
+                    <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+                <span class="c1"># Make a note in the spreadsheet.</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;Comparison with other positive hits in the same genome&#39;</span><span class="p">]</span> <span class="o">=</span>\
                 <span class="s1">&#39;(Hit length is less than </span><span class="si">%s</span><span class="s1">, therefore too short to be a potential distinct paralogue)&#39;</span>\
                     <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">minimum_length_of_query_to_be_distinct_paralogue</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">percent_length</span><span class="p">)</span> <span class="o">&lt;</span>\
             <span class="nb">int</span><span class="p">(</span><span class="n">minimum_percent_length_of_query_to_be_distinct_paralogue</span><span class="p">):</span>
                 <span class="n">remove</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># Change value in column for length criteria.</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                    <span class="s1">&#39;Meets length criteria&#39;</span><span class="p">]</span>\
+                    <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+                <span class="c1"># Make a note in the spreadsheet.</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;Comparison with other positive hits in the same genome&#39;</span><span class="p">]</span> <span class="o">=</span>\
                 <span class="s1">&#39;(Hit length is less than </span><span class="si">%s</span><span class="s1"> percent of query length, therefore too short to be a potential distinct paralogue)&#39;</span>\
                     <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">minimum_percent_length_of_query_to_be_distinct_paralogue</span><span class="p">)</span>
@@ -1712,12 +1774,22 @@
             <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="p">)</span> <span class="o">&lt;</span>\
             <span class="nb">int</span><span class="p">(</span><span class="n">minimum_length_of_query_to_be_distinct_paralogue</span><span class="p">):</span>
                 <span class="n">remove</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># Change value in column for length criteria.</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                    <span class="s1">&#39;Meets length criteria&#39;</span><span class="p">]</span>\
+                    <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+                <span class="c1"># Make a note in the spreadsheet.</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;Comparison with other positive hits in the same genome&#39;</span><span class="p">]</span> <span class="o">=</span>\
                 <span class="s1">&#39;(Hit length is less than </span><span class="si">%s</span><span class="s1">, therefore too short to be a potential distinct paralogue)&#39;</span>\
                     <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">minimum_length_of_query_to_be_distinct_paralogue</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">percent_length</span><span class="p">)</span> <span class="o">&lt;</span>\
             <span class="nb">int</span><span class="p">(</span><span class="n">minimum_percent_length_of_query_to_be_distinct_paralogue</span><span class="p">):</span>
                 <span class="n">remove</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># Change value in column for length criteria.</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                    <span class="s1">&#39;Meets length criteria&#39;</span><span class="p">]</span>\
+                    <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+                <span class="c1"># Make a note in the spreadsheet.</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;Comparison with other positive hits in the same genome&#39;</span><span class="p">]</span> <span class="o">=</span>\
                 <span class="s1">&#39;(Hit length is less than </span><span class="si">%s</span><span class="s1"> percent of query length, therefore too short to be a potential distinct paralogue)&#39;</span>\
                     <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">minimum_percent_length_of_query_to_be_distinct_paralogue</span><span class="p">)</span>
@@ -1747,6 +1819,11 @@
                         <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">j</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
                             <span class="c1"># Mark the one with the lower or equivalent E-value for removal.</span>
                             <span class="n">hit_indexes_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                            <span class="c1"># Change value in column for length criteria.</span>
+                            <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                                <span class="s1">&#39;Meets length criteria&#39;</span><span class="p">]</span>\
+                                <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
 
                             <span class="c1"># Make a note in the spreadsheet, explaining why</span>
                             <span class="c1"># this hit was excluded.</span>
@@ -1827,6 +1904,7 @@
             <span class="c1"># Extract info from full redundant gene model dict, and add to</span>
             <span class="c1"># corresponding cells in dataframe.</span>
             <span class="n">key_num</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">unique_paralogue_num</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">full_redundant_gene_model_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>\
                     <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">full_redundant_gene_model_dict</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="mi">0</span><span class="p">]):</span>
                 <span class="n">key_num</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1861,6 +1939,14 @@
                 <span class="c1">#print(df.loc[index_in_dataframe, &#39;Comparison with other positive hits in the same genome&#39;])</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_in_dataframe</span><span class="p">,</span> <span class="s1">&#39;Accessions for sequences that are redundant with the sequence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">full_redundant_gene_model_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_in_dataframe</span><span class="p">,</span> <span class="s1">&#39;Represents an identifiably unique paralogue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span>
+
+                <span class="c1"># Assign paralogue name to &quot;Paralogue name&quot; column, if it is</span>
+                <span class="c1"># unique.</span>
+                <span class="k">if</span> <span class="n">unique</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span><span class="p">:</span>
+                    <span class="n">unique_paralogue_num</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_in_dataframe</span><span class="p">,</span> <span class="s1">&#39;Paralogue name&#39;</span><span class="p">]</span> <span class="o">=</span>\
+                    <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_in_dataframe</span><span class="p">,</span> <span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;taxon name&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>\
+                    <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span> <span class="n">combo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">unique_paralogue_num</span><span class="p">)</span>
 
                 <span class="c1"># Check that a note was made for the current index (row) in the</span>
                 <span class="c1"># dataframe.</span>
@@ -1943,22 +2029,34 @@
     <span class="n">complete_query_title_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">query_title_alignment_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;positive or not&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
-            <span class="n">query_title</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]]</span>
-            <span class="n">query_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query filename&#39;</span><span class="p">]]</span>
-            <span class="n">complete_query_title_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">query_title</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">query_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.afaa&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">query_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.afna&#39;</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">query_title</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">query_title_alignment_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="n">query_title_alignment_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">query_file</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">query_file</span> <span class="ow">in</span> <span class="n">query_title_alignment_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]:</span>
-                        <span class="n">query_title_alignment_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_title_alignment_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">query_file</span><span class="p">]</span>
+        <span class="c1">#if row[column_header_dict[&#39;positive or not&#39;]] == &#39;+&#39;:</span>
+        <span class="c1">#    query_title = row[column_header_dict[&#39;query title&#39;]]</span>
+        <span class="c1">#    query_file = row[column_header_dict[&#39;query filename&#39;]]</span>
+        <span class="c1">#    complete_query_title_list.append(query_title)</span>
+        <span class="c1">#    if query_file.endswith(&#39;.afaa&#39;) or query_file.endswith(&#39;.afna&#39;):</span>
+        <span class="c1">#        if query_title not in query_title_alignment_dict.keys():</span>
+        <span class="c1">#            query_title_alignment_dict[query_title] = [query_file]</span>
+        <span class="c1">#        else:</span>
+        <span class="c1">#            if not query_file in query_title_alignment_dict[query_title]:</span>
+        <span class="c1">#                query_title_alignment_dict[query_title] = query_title_alignment_dict[query_title] + [query_file]</span>
 
-            <span class="c1"># TEMPORARY!!:</span>
-            <span class="c1">#elif query_title in [&#39;AP5_mu&#39;, &#39;TTRAY1&#39;, &#39;AP3_sigma&#39;, &#39;COPI_beta&#39;,&#39;ClathrinHC&#39;]:</span>
-            <span class="c1">#        query_title_alignment_dict[query_title] = [query_file]</span>
-            <span class="c1">#if query_title == &#39;COPI_alpha&#39;:</span>
-            <span class="c1">#        query_title_alignment_dict[query_title] = [&#39;COPI_Alpha_3.afaa&#39;]</span>
+        <span class="c1">#    # TEMPORARY!!:</span>
+        <span class="c1">#    #elif query_title in [&#39;AP5_mu&#39;, &#39;TTRAY1&#39;, &#39;AP3_sigma&#39;, &#39;COPI_beta&#39;,&#39;ClathrinHC&#39;]:</span>
+        <span class="c1">#    #        query_title_alignment_dict[query_title] = [query_file]</span>
+        <span class="c1">#    #if query_title == &#39;COPI_alpha&#39;:</span>
+        <span class="c1">#    #        query_title_alignment_dict[query_title] = [&#39;COPI_Alpha_3.afaa&#39;]</span>
+        <span class="c1">#    elif query_title in [&#39;AP5_sigma&#39;]:</span>
+        <span class="c1">#            query_title_alignment_dict[query_title] = [query_file]</span>
+
+        <span class="n">query_title</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]]</span>
+        <span class="n">query_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query filename&#39;</span><span class="p">]]</span>
+        <span class="n">complete_query_title_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">query_title</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">query_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.afaa&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">query_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.afna&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">query_title</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">query_title_alignment_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">query_title_alignment_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">query_file</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">query_file</span> <span class="ow">in</span> <span class="n">query_title_alignment_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]:</span>
+                    <span class="n">query_title_alignment_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_title_alignment_dict</span><span class="p">[</span><span class="n">query_title</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">query_file</span><span class="p">]</span>
 
     
     <span class="c1"># Check that an alignment file name was assigned to each query title.</span>

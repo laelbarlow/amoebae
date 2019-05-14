@@ -24,28 +24,28 @@
 # Set path to directory containing genome data (predicted peptide sequences,
 # nucleotide scaffolds, etc.).
 dbdirpath =\
-'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Genomes'
+'/Path/To/Genomes'
 
 # Set path to csv file with information about the relevant genome data.
 db_info_csv =\
-'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Genomes/0_genome_info.csv'
+'/Path/To/Genomes/0_genome_info.csv'
 
 # Set path to directory containing query files (.faa, .afaa, etc.).
 querydirpath =\
-'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Queries'
+'/Path/To/Queries'
 
 # Set path to csv file with information about the relevant query files.
 query_info_csv =\
-'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Queries/0_query_info.csv'
+'/Path/To/Queries/0_query_info.csv'
 
 # Set path to directory containing reference tree (and alignment) files.
 model_dir_path =\
-'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Models'
+'/Path/To/Models'
 
 # Set path to csv file with information about reference tree (and alignment)
 # files.
 model_info_csv =\
-'/Users/Lael/Documents/Data/Data_archaeplastid_adaptins_2018/Models/0_models_info.csv'
+'/Path/To/Models/0_models_info.csv'
 
 
 # The following settings are required for AMOEBAE to setup similarity
@@ -129,7 +129,7 @@ date
 # Set variables to be used for the align_fa.py script.
 blosum62_path = '~/Documents/Scripts/amoebae/amoebaelib/blosum62'
 cc140_path = '~/Documents/Scripts/amoebae/amoebaelib/CC140.txt'
-align_fa_matrix = 'cc140' # 'blosum62' or 'cc140', only optional for mafft.
+align_fa_matrix = 'blosum62' # 'blosum62' or 'cc140', only optional for mafft.
 align_fa_program = 'muscle' # 'muscle' or 'mafft'
 
 # Set name of RAxML installation as called from the command line.
