@@ -44,6 +44,9 @@ for filename in filenames:
     # create a new PDF with Reportlab
     can = canvas.Canvas(packet, pagesize=letter)
     can.drawString(30, 30, os.path.basename(filename))
+    #can.drawString(30, 30,
+    #        os.path.join(os.path.basename(os.path.dirname(filename)),
+    #            os.path.basename(filename)))
     can.save()
 
     #move to the beginning of the StringIO buffer

@@ -92,9 +92,9 @@ def constrain_mb_with_tree(alignment, tree, out_alignment=None):
     total_leaf_count = len(total_leafs)
 
     # Check that the number of keys in the taxon number dict is the same as the
-    # number of leaves in the tree.
-    assert total_leaf_count == len(taxon_number_dict.keys()), """Apparently
-    different numbers of sequence names in tree compared to alignment."""
+    # number of leaves in the tree (not always necessary).
+    #assert total_leaf_count == len(taxon_number_dict.keys()), """Apparently
+    #different numbers of sequence names in tree compared to alignment.""" 
 
     # Check that every leaf name can be coded using the dictionary.
     for node in t1.traverse():

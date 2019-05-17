@@ -2029,7 +2029,7 @@ Miscellaneous commands:
         # Get current time for timestamp.
         timestamp = time.strftime("%Y%m%d%H%M%S")
 
-        main_output_path = constrain_mb_with_tree(args.alignment, args.tree, args.out_alignment)
+        main_out_path = constrain_mb_with_tree(args.alignment, args.tree, args.out_alignment)
 
         # Record end time.
         end_time = time.time()
