@@ -68,11 +68,14 @@ def constrain_mb_with_tree(alignment, tree, out_alignment=None):
     """
     # Set output file path.
     if out_alignment is None:
-        out_alignment = alignment.rsplit('.', 1)[0] + '_constrained.nex'
+        out_alignment = alignment.rsplit('.', 1)[0] + '_constrained_mb.nex'
 
     # Check that output file does not exist already.
     assert not os.path.isfile(out_alignment), """Specified output file already
     exists: %s""" % out_alignment
+
+    # Check that output alignment path is not over 99 characters long.
+    assert len(out_alignment) > 99, """Alignment file name too long."""
     
     # Get taxon number dict for converting names to numbers.
     taxon_number_dict = get_taxon_number_dict(alignment)
@@ -143,7 +146,10 @@ def constrain_mb_with_tree(alignment, tree, out_alignment=None):
                 insert = True
                 o.write(i)
             else:
-                o.write(i)
+                if 'filename=' in i:
+                    o.write(i.replace('.mb.', '.mb_constrained_mb.'))
+                else:
+                    o.write(i)
 
             if insert and insertnum == 0:
                 o.write(constraint_commands)
