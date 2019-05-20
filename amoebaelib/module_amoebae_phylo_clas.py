@@ -42,9 +42,7 @@ from module_amoebae import mask_nex2
 from module_paralogue_counter import add_seq_to_alignment3,\
 modify_seq_descr_for_tree
 from module_amoebae_name_replace import write_afa_with_code_names
-
-
-
+from get_alt_topos import get_all_alt_topologies
 
 
 
@@ -2362,9 +2360,11 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
     return output_csv_path
 
 
-def polyt_model_backbone(model_name, outfilepath=None):
-    """Take a tree and make internal branches/nodes outside specified clades of
-    interest into a polytomy.
+def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False):
+    """Take a tree and make all alternative topologies for internal branches
+    outside specific clades of interest. Or, take a tree and make internal
+    branches/nodes outside specified clades of interest into a polytomy (by
+    setting the polytomy option to True).
     """
     # Get info from model.
     model_info = ModelInfoFromCSV(model_name)
@@ -2474,6 +2474,7 @@ def polyt_model_backbone(model_name, outfilepath=None):
     # the largest number of child nodes that are leaf (terminal) nodes,
     # containing the "type" sequence of interest, but not containing any of
     # the other "type" sequences.
+    # This loop should be its own function.
 
     # Make a list of nodes of interest.
     nodes_of_interest_for_polytomy = []
@@ -2564,24 +2565,32 @@ def polyt_model_backbone(model_name, outfilepath=None):
         nodes_of_interest_for_polytomy.append(node_w_most_leaves)
 
 
-    # Construct a polytomy of the nodes of interest.
+    if polytomy:
+        # Construct a polytomy of the nodes of interest.
 
-    # Count number of nodes.
-    numnodes = len(nodes_of_interest_for_polytomy)
+        # Count number of nodes.
+        numnodes = len(nodes_of_interest_for_polytomy)
 
-    # Make a backbone polytomy. 
-    subtrees = []
-    for n in nodes_of_interest_for_polytomy:
-        # Append modified node to list.
-        #subtrees.append(n.write(format=9, quoted_node_names=True).rstrip(';'))
-        subtrees.append(n.write(format=9).rstrip(';'))
+        # Make a backbone polytomy. 
+        subtrees = []
+        for n in nodes_of_interest_for_polytomy:
+            # Append modified node to list.
+            #subtrees.append(n.write(format=9, quoted_node_names=True).rstrip(';'))
+            subtrees.append(n.write(format=9).rstrip(';'))
 
-    newick_backbone = '(' + ','.join(subtrees) + ')'
+        newick_backbone = '(' + ','.join(subtrees) + ')'
 
-    print('newick_backbone:')
-    print(newick_backbone)
-    with open(outfilepath, 'w') as o:
-        o.write(newick_backbone)
+        print('newick_backbone:')
+        print(newick_backbone)
+        with open(outfilepath, 'w') as o:
+            o.write(newick_backbone)
+
+    else:
+        # Make all alternative bifurcating topologies.
+        alt_topos = get_all_alt_topologies(nodes_of_interest_for_polytomy)
+        print('alternative newick backbones:')
+        for i in alt_topos:
+            print(i)
 
     # Delete temporary files.
     os.remove(simple_tree)

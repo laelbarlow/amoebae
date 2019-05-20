@@ -95,8 +95,11 @@ Commands for phylogenetic analysis using a reference tree:
    srch_ali_space    Iteratively modify an alignment/tree and assess measures
                      of support for branches of interest to find alignments
                      that support a given topology.
-   polyt_backbone    Take a tree and make each internal branch/node other than
+   OBSOLETE: polyt_backbone    Take a tree and make each internal branch/node other than
                      specified clades/nodes of interest into a polytomy.
+   get_alt_topos     Take a tree and make copies with every alternative
+                     topology for the branches connecting the clades of
+                     interest.
 
 Commands for phylogenetic analysis without a reference tree:
    prune             Identify sequences in a tree, and remove them from a
@@ -1975,8 +1978,7 @@ Miscellaneous commands:
                 start_time, end_time, timestamp, main_out_path)
 
 
-    # Add functionality for polyt_backbone to produce all alternative
-    # topologies for a given tree (keeping clades of interest constrained)...
+    # OBSOLETE
     def polyt_backbone(self):
         parser = argparse.ArgumentParser(
             description='''Take a tree and make internal branches/nodes outside
@@ -2007,6 +2009,41 @@ Miscellaneous commands:
         #module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
         #        start_time, end_time, timestamp, main_out_path)
 
+
+    def get_alt_topos(self):
+        parser = argparse.ArgumentParser(
+            description='''Take a tree and make copies with every alternative
+            topology for the branches connecting the clades of interest. Output
+            as additional models in the Models directory.''',
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        parser.add_argument('model_name', help='''Name of model/backbone tree
+                to modify (other info provided in the model info csv file).''')
+        parser.add_argument('--polytomy', help='''Just make one big polytomy
+                connecting the clades of interest intead of making alternative
+                bifurcating trees.''',
+                action='store_true')
+        args = parser.parse_args(sys.argv[2:])
+
+        # Import command-specific modules.
+        from module_amoebae_phylo_clas import get_all_alt_model_backbones
+
+        ## Record start time.
+        #start_time = time.time()
+        ## Get current time for timestamp.
+        #timestamp = time.strftime("%Y%m%d%H%M%S")
+
+
+        get_all_alt_model_backbones(args.model_name)
+
+        ## Record end time.
+        #end_time = time.time()
+        ## Define command line input.
+        #commandline = ' '.join(sys.argv)
+        ## Define output directory.
+        #outdir = os.path.dirname(args.tree_file)
+        ## Record info to log file.
+        #module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        #        start_time, end_time, timestamp, main_out_path)
 
     def constrain_mb(self):
         parser = argparse.ArgumentParser(
