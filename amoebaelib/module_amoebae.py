@@ -79,7 +79,7 @@ def get_dbtype_from_file_exten(infp):
     return dbtype
 
 
-def get_seqs_from_fasta_db(db_name, accs):
+def get_seqs_from_fasta_db(db_name, accs, slow=False):
     """Returns a list of SeqRecord objects corresponding to the given accessions
     in the given database file. 
     """
@@ -101,14 +101,56 @@ def get_seqs_from_fasta_db(db_name, accs):
     #        if len(seq_objs) == len(accs):
     #            break
 
-    # Use esl-sfetch to retrieve the sequences and write to a temporary file.
+
+    # Retrieve sequences from fasta file and write to a temporary file.
     temp_fa_path = db_path + '_TEMP_FASTA.fa'
-    if os.path.isfile(temp_fa_path):
-        os.remove(temp_fa_path)
-    with open(temp_fa_path, 'a') as o:
-        for acc in accs:
-            # Get sequence as text.
-            subprocess.call(['esl-sfetch', db_path, acc], stdout=o)
+    if not slow:
+        # Use esl-sfetch to retrieve the sequences and write to a temporary file.
+        if os.path.isfile(temp_fa_path):
+            os.remove(temp_fa_path)
+        with open(temp_fa_path, 'a') as o:
+            for acc in accs:
+                # Get sequence as text.
+                subprocess.call(['esl-sfetch', db_path, acc], stdout=o)
+    elif slow:
+        # Parse sequence using a slower method that does not make use of
+        # esl-sfetch.
+        if os.path.isfile(temp_fa_path):
+            os.remove(temp_fa_path)
+        with open(temp_fa_path, 'a') as o, open(db_path) as db_handle:
+            for acc in accs:
+                # Get sequence as text.
+                all_seq_ids = None
+                with open(db_path) as db_handle:
+                    all_seq_ids = [x.id for x in SeqIO.parse(db_handle, 'fasta')]  
+                if acc in all_seq_ids:
+                    with open(db_path) as db_handle:
+                        for x in SeqIO.parse(db_handle, 'fasta'):
+                            if x.id == acc:
+                                # Write to temp fasta file.
+                                SeqIO.write([x], o, 'fasta')
+                                break
+                else:
+                    accs_that_start_with_acc = []
+                    with open(db_path) as db_handle:
+                        for x in SeqIO.parse(db_handle, 'fasta'):
+                            if x.id.startswith(acc):
+                                accs_that_start_with_acc.append(x.id)
+                    # Check that only one accession starts with.
+                    #assert len(accs_that_start_with_acc) == 1, """More than one
+                    #accession in file starts with %s""" % acc
+                    if len(accs_that_start_with_acc) < 1:
+                        print("No accessions start with %s" % acc)
+                    elif len(accs_that_start_with_acc) > 1:
+                        print("More than one accession starts with %s" % acc)
+
+                    if len(accs_that_start_with_acc) >= 1:
+                        with open(db_path) as db_handle:
+                            for x in SeqIO.parse(db_handle, 'fasta'):
+                                if x.id.startswith(acc):
+                                    # Write to temp fasta file.
+                                    SeqIO.write([x], o, 'fasta')
+                                    break
 
     # Parse the fasta file to get Seq objects.
     seq_objs = []

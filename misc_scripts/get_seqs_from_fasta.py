@@ -28,7 +28,8 @@ acc_list = command_line_list[2:]
 
 if __name__ == '__main__':
     startTime = datetime.now()
-    seq_objs = get_seqs_from_fasta_db(db_name, acc_list)
+    #seq_objs = get_seqs_from_fasta_db(db_name, acc_list)
+    seq_objs = get_seqs_from_fasta_db(db_name, acc_list, True)
     for s in seq_objs:
         #print(s.id)
         #print('')

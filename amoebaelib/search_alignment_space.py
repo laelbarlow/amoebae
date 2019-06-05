@@ -43,6 +43,13 @@ uncode_tree, uncode_tree_obj
 from module_paralogue_counter import add_seq_to_alignment3
 from module_amoebae_select_seqs import get_ml_tree_branch_lengths
 
+#from module_amoebae_select_seqs import get_clade_name_from_model2,\
+#get_nodes_of_interest, get_list_of_leaf_names_for_node, TaxonomicInfo,\
+#get_taxonomic_info, define_nodestyles_dict_for_colourcoding,\
+#define_textface_for_labeling_stem, get_corresponding_node,\
+#get_ml_tree_branch_lengths, get_branch_length_info, reduce_alignment
+
+
 # Import functions for working with sequences, alignments, and trees.
 from Bio import AlignIO
 from Bio import SeqIO
@@ -64,7 +71,29 @@ class TaxonomicInfo():
         self.group= group
         self.species = species
 
+
+
+
 # Define functions.
+
+
+def trim_one_column_from_alignment(alignment, alignment2, column_index):
+    """Take a nexus alignment file path and remove column at a given index
+    (first column has index 0).
+    """
+    with open(alignment) as infh, open(alignment2, 'w') as o:
+        # Parse input alignment file.
+        alignment_obj = AlignIO.read(infh, 'nexus')
+        # Record input alignment length.
+        len1 = len(alignment_obj[0].seq)
+        # Remove relevant column from alignment object.
+        alignment_obj2 = alignment_obj[:, :column_index] + alignment_obj[:, column_index + 1:]
+        # Check that the alignment length is shorter by one column.
+        len2 = len(alignment_obj2[0].seq)
+        assert len1 - len2 == 1
+        # Write modified alignment object to output file path.
+        AlignIO.write(alignment_obj2, o, 'nexus')
+
 
 def get_taxa_represented_in_clade(clade, ml_tree_info_dict):
     """Make a list of taxonomic terms currently represented in the clade.
@@ -347,8 +376,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
 
     #############################################
     #############################################
-    # This code is can be modified depending on what type of modification is
-    # needed:
+    # This portion of the code is different depending on what type of
+    # modification is needed:
 
     if mod_type == 'remove_seqs':
         # Check that essential taxa were specified.
@@ -421,14 +450,16 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                 # use that as a constraint tree.
                 # Copy tree.
                 #t2 = t1.copy()
-                t2 = Tree(tree, quoted_node_names=False)
+                #t2 = Tree(tree, quoted_node_names=False)
+                t2 = Tree(tree, quoted_node_names=True) # Whether quoted_node_names is true or false may be different for older trees.
 
                 # Get a list of all node objects with the same name as the
                 # sequence of interest.
                 seq_nodes = t2.search_nodes(name=seqname)
 
-                # Check that only one such node was found.
-                assert len(seq_nodes) == 1
+                # Check that one and only one such node was found.
+                assert len(seq_nodes) == 1, """Sequence names in tree may not
+                be formatted as expected."""
 
                 # Remove the node from the new tree object.
                 node_to_remove = seq_nodes[0]
@@ -776,15 +807,88 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
             stop = True
 
 
-        #...
-        #assert 2 != 2
-
-
-
     elif mod_type == 'remove_columns':
-        # ...code...
-        assert 2 != 2
-        pass
+        # Set variables that won't be modified.
+        subs_model2 = subs_model
+        seqs_attempted_to_remove2 = seqs_attempted_to_remove
+        type_seqs_dict2 = type_seqs_dict
+        seqs_attempted_to_add2 = seqs_attempted_to_add
+
+        # Initiate variables that will be modified later.
+        positions_attempted_to_remove2 = positions_attempted_to_remove
+        
+        # The tree topology will be the same, so just copy the tree topology
+        # file to the new path.
+        # Read input tree and write to a new file.
+        t2 = Tree(tree, quoted_node_names=True) # Whether quoted_node_names is true or false may be different for older trees.
+        t2.write(outfile=tree2, format=9)
+
+        #shutil.copyfile(tree, tree2)
+
+        # Define variable for storing True if a column was removed.
+        removed_a_column = False
+
+        # Parse input alignment, and find a column to try to remove.
+        with open(alignment) as infh:
+            alignment_obj = AlignIO.read(infh, 'nexus')
+
+            # Get length of sequences in alignment.
+            seq_len = alignment_obj.get_alignment_length()
+
+            # get a list of columns as strings in the original alignment.
+            columns = [alignment_obj[:, col] for col in range(seq_len)] 
+
+            # Iterate over column sequences and remove a column that has
+            # not been removed before.
+            column_index = -1
+            for column in columns:
+                column_index += 1
+                # Determine whether the column has been removed before.
+                if not column in positions_attempted_to_remove:
+                    # Remove column from alignment.
+                    trim_one_column_from_alignment(alignment, alignment2,
+                            column_index)
+                    # Define path to new modified alignment file.
+                    new_alignment = alignment2
+
+                    print('\t\t\tRemoved column from alignment')
+
+                    # Set variable to indicate that a column was successfully
+                    # removed.
+                    removed_a_column = True
+
+                    # Add column to list of columns that have been removed.
+                    positions_attempted_to_remove2.append(column)
+                    
+                    # Break this loop if a column was removed.
+                    if removed_a_column:
+                        break
+
+        # Check that a sequence was removed, if not then stop iterating.
+        if removed_a_column:
+            # Check that the output alignment has one less column than the
+            # input alignment.
+            # ... redundant with another check?
+            pass
+
+        else:
+            print('Could not find a column to remove.')
+            # Stop iterative calling of modify_seq_in_x_way function (at least
+            # with the current modification type).
+            stop = True
+
+    # Write code for the following options... 
+
+    # elif mod_type == 'refine_alignment':
+    #     ...Use the muscle -refine option...
+
+    # elif mod_type == 'update_subs_model':
+    #     ...use iqtree ModelFinder to find the best fit model for the modified
+    #     alignment...
+
+    # elif mod_type == 'reduce_tree':
+    #    ...remove taxonomically redundant and long-branching sequences.
+
 
     else:
         assert 2 != 2, """mod_type variable not set properly."""
@@ -1809,7 +1913,8 @@ def get_essential_taxa_list(essential_taxa_file):
     return essential_taxa
 
 
-def get_y_measure_of_support(previous_ali_tree_tuple):
+def get_y_measure_of_support(previous_ali_tree_tuple,
+                             include_internal_branches=False):
     """Take a tuple with objects containing info about an alignment and tree,
     and extract specific info to use as a measure of support for nodes of
     interest.
@@ -1834,22 +1939,69 @@ def get_y_measure_of_support(previous_ali_tree_tuple):
     #         'abayes support': abayes_support_value
     #         }
 
-    # Sort clades by alrt support.
+    # Initiate variable for storing lowest support value.
+    lowest_support_value = None 
+
+    # Remove info list for internal branches from dict keys for
+    # consideration.
     clade_list = list(ml_tree_info_dict.keys())
     clade_list.remove('internal branches info list')
 
-    clades_by_ascending_alrt_support =\
-    sorted(clade_list, key=lambda x: ml_tree_info_dict[x]['alrt support'])
+    if not include_internal_branches:
+        # Just consider branch supports for the specific clades of interest.
 
-    #clades_by_ascending_alrt_support = sorted(ml_tree_info_dict.keys(),\
-    #        key=lambda x: ml_tree_info_dict[x]['alrt support'])
+        # Compile a list of all the relevant support values (both alrt and
+        # abayes).
+        lowest_alrt_support_value =\
+            min([float(ml_tree_info_dict[x]['alrt support']) for x in clade_list])
+        #print(lowest_alrt_support_value)
+        lowest_abayes_support_value =\
+            min([float(ml_tree_info_dict[x]['abayes support']) for x in clade_list])
+        #print(lowest_abayes_support_value)
+        lowest_support_value =\
+            min([lowest_alrt_support_value, lowest_abayes_support_value])
 
-    # Get alrt branch support for the clade with the lowest alrt branch
-    # support.
-    lowest_alrt = ml_tree_info_dict[clades_by_ascending_alrt_support[0]]['alrt support']
+    else:
+        # Consider the branch supports for the specific clades of interest, as well
+        # as all branches that are internal to those clades.
+
+        # Get values for internal branches.
+        internal_alrt_values =\
+            [float(x['alrt support']) for x in ml_tree_info_dict['internal branches info list']]
+        internal_abayes_values =\
+            [float(x['abayes support']) for x in ml_tree_info_dict['internal branches info list']]
+
+        # Compile a list of all the relevant support values (both alrt and
+        # abayes).
+        lowest_alrt_support_value =\
+            min([float(ml_tree_info_dict[x]['alrt support']) for x in clade_list]\
+                + internal_alrt_values)
+        #print(lowest_alrt_support_value)
+        lowest_abayes_support_value =\
+            min([float(ml_tree_info_dict[x]['abayes support']) for x in clade_list]\
+                + internal_abayes_values)
+        #print(lowest_abayes_support_value)
+        lowest_support_value =\
+            min([lowest_alrt_support_value, lowest_abayes_support_value])
+
+    # Check that the value was found.
+    assert lowest_support_value is not None
 
     # Return measure of support.
-    return lowest_alrt
+    return lowest_support_value
+
+
+def get_ali_length(alignment):
+    """Take a filepath to an alignment file in nexus format and return the
+    length of the sequences in the alignment.
+    """
+    alignment_length = None
+    with open(alignment) as infh:
+        ali_obj = AlignIO.read(infh, 'nexus')
+        first_seq_obj = ali_obj[0]
+        alignment_length = len(first_seq_obj)
+    assert alignment_length is not None
+    return alignment_length 
 
 
 def search_alignment_space(model_name,
@@ -1982,7 +2134,7 @@ def search_alignment_space(model_name,
 
     # Handle mixed modification type if needed.
     if mod_type == 'mixed':
-        assert 2 != 2, """Doesn't work yet. Add code for using mutltiple
+        assert 2 != 2, """Doesn't work yet. Add code for using multiple
         strategies..."""
 
     # Handle number of iterations.
@@ -1993,7 +2145,7 @@ def search_alignment_space(model_name,
         # loop before 10000!).
         max_iterations = 10000
     else:
-        max_iterations = iterations
+        max_iterations = int(iterations)
     assert max_iterations > 0
     # Specify number of iterations that do not find improved support before the
     # loop gets broken.
@@ -2003,8 +2155,8 @@ def search_alignment_space(model_name,
     elif mod_type == 'add_seqs':
         max_failed_iterations = len(seqs) * 2
     elif mod_type == 'remove_columns':
-        original_alignment_length = ...
-        max_failed_iterations = original_alignment_length * 2
+        original_alignment_length = get_ali_length(alignment)
+        max_failed_iterations = original_alignment_length
     elif mod_type == 'mixed':
         max_failed_iterations = 0
     assert max_failed_iterations > 0
@@ -2057,17 +2209,23 @@ def search_alignment_space(model_name,
 
 
 
-        # Get measures of support for both trees.
-        prev_tree_measure = get_y_measure_of_support(previous_ali_tree_tuple)
-        new_tree_measure = get_y_measure_of_support(new_ali_tree_tuple)
+        # Get measures of support for both trees (lowest value among abayes and
+        # alrt supports for all branches for specific clades of interest as
+        # well as branches that are internal to those branches).
+        prev_tree_measure = get_y_measure_of_support(previous_ali_tree_tuple, True)
+        new_tree_measure = get_y_measure_of_support(new_ali_tree_tuple, True)
 
         # Decide whether to use new alignment/tree based on various criteria.
         print('\t\tComparing measures of branch support in new tree to those of the previous tree...')
-        if new_tree_measure < prev_tree_measure:
+        print('\t\t\tOld tree support measure: ' + str(prev_tree_measure))
+        print('\t\t\tNew tree support measure: ' + str(new_tree_measure))
+        # The measures of support are support values (such as probabilities
+        # from alrt branch tests), so better trees have higher values.
+        if new_tree_measure > prev_tree_measure:
             print('\t\t\tNew tree is better.')
             previous_ali_tree_tuple = new_ali_tree_tuple
         else:
-            print('\t\t\tNew tree is not better.')
+            print('\t\t\tOld tree is better.')
             failed_iterations_tally += 1
             # Just update the lists of modifications that have already been
             # attempted.

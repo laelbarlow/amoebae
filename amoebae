@@ -87,16 +87,9 @@ Commands for phylogenetic analysis using a reference tree:
                      IQtree or simply placing it in the tree with an ML search.
    sum_phylo_class   Add phylo_class results to summary spreadsheet.
    interp_phylo*     Interpret results of phylogenetic analyses.
-   select_seqs       OBSOLETE??? Systematically add/remove sequences from a tree to find
-                     the most informative sequence set.
-   select_positions  OBSOLETE??? Systematically remove position/columns from an input
-                     alignment for a tree to find the mask that results in the
-                     best resolution/backbone support for the tree.
    srch_ali_space    Iteratively modify an alignment/tree and assess measures
                      of support for branches of interest to find alignments
                      that support a given topology.
-   OBSOLETE: polyt_backbone    Take a tree and make each internal branch/node other than
-                     specified clades/nodes of interest into a polytomy.
    get_alt_topos     Take a tree and make copies with every alternative
                      topology for the branches connecting the clades of
                      interest.
