@@ -72,7 +72,8 @@ def split_fasta(infilepath, subdirname):
 
             #filename = dbname + '_' + acc[:25] + '_' + protname
             #filename = dbname + '_' + protname + '_' + acc[:25]
-            filename = 'QcSNARE2' + '_' + acc[:25].replace('|', '_').replace(' ', '_').replace('/', '_') + '_2'
+            #filename = 'QcSNARE2' + '_' + acc[:25].replace('|', '_').replace(' ', '_').replace('/', '_') + '_2'
+            filename = acc[:25].replace('|', '_').replace(' ', '_').replace('/', '_') + '_2'
 
             print('Writing file: ' + filename + '.fa')
             
