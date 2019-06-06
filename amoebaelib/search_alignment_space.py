@@ -1941,6 +1941,7 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
 
     # Initiate variable for storing lowest support value.
     lowest_support_value = None 
+    average_support_value = None
 
     # Remove info list for internal branches from dict keys for
     # consideration.
@@ -1973,19 +1974,23 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
 
         # Compile a list of all the relevant support values (both alrt and
         # abayes).
-        lowest_alrt_support_value =\
-            min([float(ml_tree_info_dict[x]['alrt support']) for x in clade_list]\
-                + internal_alrt_values)
+        all_alrt_values = [float(ml_tree_info_dict[x]['alrt support']) for x in clade_list]\
+                + internal_alrt_values
+        all_abayes_values = [float(ml_tree_info_dict[x]['abayes support']) for x in clade_list]\
+                + internal_abayes_values
+
+        # Get the lowest values.
+        lowest_alrt_support_value = min(all_alrt_values)
         #print(lowest_alrt_support_value)
         lowest_abayes_support_value =\
-            min([float(ml_tree_info_dict[x]['abayes support']) for x in clade_list]\
-                + internal_abayes_values)
+            min(all_abayes_values)
         #print(lowest_abayes_support_value)
         lowest_support_value =\
             min([lowest_alrt_support_value, lowest_abayes_support_value])
 
     # Check that the value was found.
     assert lowest_support_value is not None
+    assert average_support_value is not None
 
     # Return measure of support.
     return lowest_support_value

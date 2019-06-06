@@ -711,6 +711,12 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
             if header.startswith('Represents an identifiably unique paralogue'):
                 unique_positive_hit_decis_header = header
                 break
+        if unique_positive_hit_decis_header is None:
+            print('\nWarning: reporting all hits that meet the reverse search criteria.')
+            for header in indf.columns:
+                if header.startswith('Collective interpretation of reverse search results'):
+                    unique_positive_hit_decis_header = header
+                    break
         # Check that the header was found.
         assert unique_positive_hit_decis_header is not None, """Could not identify
         which column contains information regarding unique paralogue counts."""
@@ -780,7 +786,7 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
             if positive_or_not == '-' or unique_positive_hit_decis == 'No':
                 if odf_simple.at[index_simple, header_simple] == '-':
                     odf_simple.at[index_simple, header_simple] = 'negative'
-            elif unique_positive_hit_decis == 'Yes':
+            elif unique_positive_hit_decis == 'Yes' or unique_positive_hit_decis == '+':
                 if odf_simple.at[index_simple, header_simple] == '-' or odf_simple.at[index_simple, header_simple] == 'negative':
                     # First hit to add info for.
                     # Format: [[positive hit acc list], top fwd hit E-value, top fwd hit
