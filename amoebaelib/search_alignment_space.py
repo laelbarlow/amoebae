@@ -2206,10 +2206,6 @@ def search_alignment_space(model_name,
                                essential_taxa,
                                stop)
 
-    # Handle mixed modification type if needed.
-    if mod_type == 'mixed':
-        assert 2 != 2, """Doesn't work yet. Add code for using multiple
-        strategies..."""
 
     # Handle number of iterations.
     max_iterations = 0
@@ -2217,7 +2213,7 @@ def search_alignment_space(model_name,
         # Specify a very large number by default so that it will run until no
         # further modifications result in improvements (it should break the
         # loop before 10000!).
-        max_iterations = 10000
+        max_iterations = 1000
     else:
         max_iterations = int(iterations)
     assert max_iterations > 0
@@ -2226,9 +2222,11 @@ def search_alignment_space(model_name,
     max_failed_iterations = 0
     if mod_type == 'remove_seqs':
         #max_failed_iterations = len(names_of_seqs_in_tree) * 2
-        max_failed_iterations = len(names_of_seqs_in_tree)
+        max_failed_iterations = len(names_of_seqs_in_tree) / 2
     elif mod_type == 'add_seqs':
-        max_failed_iterations = len(seqs) * 2
+        #max_failed_iterations = len(seqs) * 2
+        #max_failed_iterations = len(seqs)
+        max_failed_iterations = len(names_of_seqs_in_tree)
     elif mod_type == 'remove_columns':
         original_alignment_length = get_ali_length(alignment)
         max_failed_iterations = original_alignment_length
@@ -2236,6 +2234,27 @@ def search_alignment_space(model_name,
         max_failed_iterations = max_iterations
     assert max_failed_iterations > 0
 
+    # Define iterable to provide order of different modification types if the
+    # mod_type is set to 'mixed'. The mod_type will repeat through this
+    # sequence, switching the value of the mod_type variable when the default
+    # maximum number of failed modifications are reached for each modification
+    # type.
+    mod_type_mix_iterable = iter([
+                                 'remove_seqs',
+                                 'add_seqs'
+                                 ])
+
+    # Set initial mod_type value if mod_type was set to mixed. 
+    mixed_mod_type = False
+    if mod_type == 'mixed':
+        # Set this variable to True so that the mod_type will be switched
+        # instead of exiting after one modification type is completed.
+        mixed_mod_type = True
+
+        # Get initial value from iterable.
+        mod_type = next(mod_type_mix_iterable)
+
+    # Initiate variable for storing the number of the best alignment.
     best_alignment_num = 'the original input alignment'
 
     # Iteratively modify the alignment and assess support in the tree.
@@ -2325,9 +2344,16 @@ def search_alignment_space(model_name,
 
         # Break the loop if the max number of failed iterations have occured.
         if failed_iterations_tally >= max_failed_iterations:
-            print("""\nReached maximum number of failed iterations (modifications that
-            do not result in a tree with better support).""")
-            break
+            # Switch to a different modification type if the mod_type was
+            # mixed.
+            if mixed_mod_type:
+                mod_type = next(mod_type_mix_iterable)
+
+            # Otherwise stop further modification of the alignment.
+            else:
+                print("""\nReached maximum number of failed iterations (modifications that
+                do not result in a tree with better support).""")
+                break
 
     # Report which alignment is the best.
     print('\nBest alignment is ' + best_alignment_num)
