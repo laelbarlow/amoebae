@@ -108,7 +108,7 @@ def get_taxa_represented_in_clade(clade, ml_tree_info_dict):
         ti = get_taxonomic_info(species_name)
         # Add taxon names to taxa represented.
         taxa_represented = taxa_represented\
-                + [ti.superbranch, ti.supergroup, ti.group, ti.species]
+                + list(set([ti.superbranch, ti.supergroup, ti.group, ti.species]))
     return taxa_represented
 
 
@@ -126,17 +126,40 @@ def get_species_name_from_seq_id(seq_id):
 
 def get_names_of_dispensable_seqs_in_clade(clade,
                                            ml_tree_info_dict,
-                                           essential_taxa,
-                                           taxa_represented):
+                                           essential_taxa):
     """Take a clade name and a dictionary of info for the tree that it came
     from, and determine which ones are dispensable taxonomically.
     """
+    # Make a list of taxonomic terms currently represented in the clade.
+    taxa_represented = get_taxa_represented_in_clade(clade, ml_tree_info_dict)
+
+    ## Print.
+    #print('\n--------------------------------')
+    #print('BEGIN get_names_of_dispensable_seqs_in_clade function call\n')
+
+    #print('Essential taxa:')
+    #for i in essential_taxa:
+    #    print(i)
+
+    #print('\nTaxa represented already:')
+    #for i in list(set(taxa_represented)):
+    #    print(i)
+
+    #print('\nEssential taxa represented already, but only once:')
+    #for i in list(set(taxa_represented)):
+    #    if i in essential_taxa:
+    #        if taxa_represented.count(i) == 1:
+    #            print(i)
+
+    #print('\nDecisions for each sequence:')
+
     # Initiate list of names for dispensable sequences.
     names_of_dispensable_seqs = []
 
     # Iterate over all the sequence names in the clade.
     for seqname in\
     ml_tree_info_dict[clade]['seq names by descending length']:
+
         # Get species name from sequence name.
         species_name = get_species_name_from_seq_id(seqname)
 
@@ -146,13 +169,14 @@ def get_names_of_dispensable_seqs_in_clade(clade,
 
         # Determine whether any of the taxonomy terms are in the essential
         # list.
-        seq_is_essential = False
         essential_terms = []
         for x in ti_list:
             if x in essential_taxa:
                 essential_terms.append(x)
+
         # Check whether any of the terms appear in the taxa_represented list
         # only once (if so then the sequence is essential).
+        seq_is_essential = False
         for term in essential_terms:
             if taxa_represented.count(term) == 1:
                 seq_is_essential = True
@@ -160,6 +184,21 @@ def get_names_of_dispensable_seqs_in_clade(clade,
         # Add to list if not essential.
         if not seq_is_essential:
             names_of_dispensable_seqs.append(seqname)
+
+        #x = 'Essential'
+        #if not seq_is_essential:
+        #    x = 'Dispensable'
+        #print(', '.join([seqname, species_name] + ti_list + [x]))
+        #print(seqname)
+        #print('\tessential terms: ' + ', '.join(essential_terms))
+        #print('\t' + x)
+
+    ## Print.
+    #print('\nDispensable seqs:')
+    #for i in names_of_dispensable_seqs:
+    #    print(i)
+    #print('\nEND get_names_of_dispensable_seqs_in_clade function call')
+    #print('--------------------------------\n')
 
     # Return list of sequence names for dispensable sequences.
     return names_of_dispensable_seqs
@@ -404,16 +443,13 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
         removed_a_sequence = False
 
         for clade in clades_by_ascending_support_measure:
-            # Make a list of taxonomic terms currently represented in the clade.
-            taxa_represented = get_taxa_represented_in_clade(clade, ml_tree_info_dict)
-
             # Determine which seqs in the clade are dispensable, considering their
             # taxonomic placement.
             names_of_dispensable_seqs_in_clade =\
             get_names_of_dispensable_seqs_in_clade(clade,
                                                    ml_tree_info_dict,
                                                    essential_taxa,
-                                                   taxa_represented) 
+                                                   ) 
             ## Get list of sequence names in clade by descending order of branch
             ## length (from the root of the clade).
             #seqnames = ml_tree_info_dict[clade]['seq names by descending length']
@@ -1910,6 +1946,7 @@ def get_essential_taxa_list(essential_taxa_file):
                 if not i.startswith('#') and not i.startswith('\n'):
                     taxon = i.strip()
                     essential_taxa.append(taxon)
+        assert len(essential_taxa) > 0
     return essential_taxa
 
 
@@ -1948,19 +1985,44 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
     clade_list = list(ml_tree_info_dict.keys())
     clade_list.remove('internal branches info list')
 
+    # Get list of stem/branch length ratios for all clades of interest.
+    all_stem_branch_ratios = [float(ml_tree_info_dict[clade]['stem/branch ratio'])\
+                              for clade in clade_list] 
+
+    # Get minimum stem/branch ratio. 
+    minimum_stem_branch_ratio = min(all_stem_branch_ratios)
+
+    # Get average stem/branch ratio.
+    average_stem_branch_ratio = sum(all_stem_branch_ratios) / len(all_stem_branch_ratios)
+
+    # Get all average branch length ratios.
+    # ...
+
+    # Get ratio of all backbone branch lengths to all average branch lengths
+    # within clades.
+    # ...
+    
+
     if not include_internal_branches:
         # Just consider branch supports for the specific clades of interest.
 
         # Compile a list of all the relevant support values (both alrt and
         # abayes).
-        lowest_alrt_support_value =\
-            min([float(ml_tree_info_dict[x]['alrt support']) for x in clade_list])
+        all_alrt_values = [float(ml_tree_info_dict[x]['alrt support']) for x in clade_list]
+        all_abayes_values = [float(ml_tree_info_dict[x]['abayes support']) for x in clade_list]
+
+        # Get the lowest values.
+        lowest_alrt_support_value = min(all_alrt_values)
         #print(lowest_alrt_support_value)
         lowest_abayes_support_value =\
-            min([float(ml_tree_info_dict[x]['abayes support']) for x in clade_list])
+            min(all_abayes_values)
         #print(lowest_abayes_support_value)
         lowest_support_value =\
             min([lowest_alrt_support_value, lowest_abayes_support_value])
+
+        # Calculate the average over all the values.
+        all_values = all_alrt_values + all_abayes_values
+        average_support_value = sum(all_values) / len(all_values)
 
     else:
         # Consider the branch supports for the specific clades of interest, as well
@@ -1988,12 +2050,19 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
         lowest_support_value =\
             min([lowest_alrt_support_value, lowest_abayes_support_value])
 
+        # Calculate the average over all the values.
+        all_values = all_alrt_values + all_abayes_values
+        average_support_value = sum(all_values) / len(all_values)
+
     # Check that the value was found.
     assert lowest_support_value is not None
     assert average_support_value is not None
 
     # Return measure of support.
-    return lowest_support_value
+    #return lowest_support_value
+    #return average_support_value
+    return (lowest_support_value, average_support_value,
+            minimum_stem_branch_ratio, average_stem_branch_ratio)
 
 
 def get_ali_length(alignment):
@@ -2156,15 +2225,18 @@ def search_alignment_space(model_name,
     # loop gets broken.
     max_failed_iterations = 0
     if mod_type == 'remove_seqs':
-        max_failed_iterations = len(names_of_seqs_in_tree) * 2
+        #max_failed_iterations = len(names_of_seqs_in_tree) * 2
+        max_failed_iterations = len(names_of_seqs_in_tree)
     elif mod_type == 'add_seqs':
         max_failed_iterations = len(seqs) * 2
     elif mod_type == 'remove_columns':
         original_alignment_length = get_ali_length(alignment)
         max_failed_iterations = original_alignment_length
     elif mod_type == 'mixed':
-        max_failed_iterations = 0
+        max_failed_iterations = max_iterations
     assert max_failed_iterations > 0
+
+    best_alignment_num = 'the original input alignment'
 
     # Iteratively modify the alignment and assess support in the tree.
     print('\nIteratively modifying and assessing alignments/trees...')
@@ -2212,8 +2284,6 @@ def search_alignment_space(model_name,
             # trying another modification.
             continue
 
-
-
         # Get measures of support for both trees (lowest value among abayes and
         # alrt supports for all branches for specific clades of interest as
         # well as branches that are internal to those branches).
@@ -2226,9 +2296,14 @@ def search_alignment_space(model_name,
         print('\t\t\tNew tree support measure: ' + str(new_tree_measure))
         # The measures of support are support values (such as probabilities
         # from alrt branch tests), so better trees have higher values.
-        if new_tree_measure > prev_tree_measure:
+        #if new_tree_measure[0] >= prev_tree_measure[0] and new_tree_measure[1] >= prev_tree_measure[1]:
+        if new_tree_measure[2] >= prev_tree_measure[2] and new_tree_measure[3] >= prev_tree_measure[3]:
             print('\t\t\tNew tree is better.')
             previous_ali_tree_tuple = new_ali_tree_tuple
+
+            # Set best tree to this tree.
+            best_alignment_num = 'alignment number ' + str(iteration + 1)
+
         else:
             print('\t\t\tOld tree is better.')
             failed_iterations_tally += 1
@@ -2250,9 +2325,12 @@ def search_alignment_space(model_name,
 
         # Break the loop if the max number of failed iterations have occured.
         if failed_iterations_tally >= max_failed_iterations:
-            print("""Reached maximum number of failed iterations (modifications that
+            print("""\nReached maximum number of failed iterations (modifications that
             do not result in a tree with better support).""")
             break
+
+    # Report which alignment is the best.
+    print('\nBest alignment is ' + best_alignment_num)
 
     # Return path to main/final output file or directory.
     return outputdir
