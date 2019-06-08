@@ -363,6 +363,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
     # Unpack objects from input tuple.
     iteration = previous_ali_tree_tuple[0]
     tree = previous_ali_tree_tuple[1]
+    #print('tree:')
+    #print(tree)
     alignment = previous_ali_tree_tuple[2]
     positions_attempted_to_remove = previous_ali_tree_tuple[3]
     subs_model = previous_ali_tree_tuple[4]
@@ -606,9 +608,17 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
             # Add sequence to alignment.
             add_seq_to_alignment3(seq_to_add, alignment, alignment2)
 
-            # Use the previous tree as a constraint tree...
-            #constraint_tree_fp = get_constraint_tree_fp(alignment)
-            constraint_tree_fp = tree
+            # Use the previous constraint tree as a constraint tree.
+            constraint_tree_fp = get_constraint_tree_fp(alignment)
+            #constraint_tree_fp = tree
+            # Unless the path to such a file doesn't exist, then just use
+            # whatever tree was input.
+            if not os.path.isfile(constraint_tree_fp):
+                print('\n\n\nConstraint tree doesnt exist:')
+                print(constraint_tree_fp)
+                print('\n\n\n')
+                assert 2!=2
+                constraint_tree_fp = tree
 
             ## Temp.
             #print('\n\nConstraint trees identified by modify_alignment_in_x_way') 
@@ -938,6 +948,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
     if not stop:
         # Run IQ-tree to get ML tree with branch supports for new alignment and/or
         # tree topology.
+        #print('tree2:')
+        #print(tree2)
         ml_tree_path2 =\
         run_tree_for_branch_lengths_and_supports_for_topology(tree2,
                                                               alignment2,
@@ -1739,7 +1751,8 @@ def get_constraint_tree_fp(outalifpnex):
     """Take a path to an alignment, and return a path to use for a
     corresponding contraint tree topology.
     """
-    constraint_tree_fp = outalifpnex.rsplit('.', 1)[0] + '_constraint_tree.newick'
+    #constraint_tree_fp = outalifpnex.rsplit('.', 1)[0] + '_constraint_tree.newick'
+    constraint_tree_fp = outalifpnex.rsplit('.', 1)[0] + '.C_constraint_tree.newick'
     return constraint_tree_fp
 
 
@@ -1812,6 +1825,10 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
 
     # Write unrooted tree to a new file.
     t1.write(outfile=tree2, format=9)
+    #print('tree2:')
+    #print(tree2)
+    assert os.path.isfile(tree2), """Tree topology file not produced:
+    %s""" % tree2
 
     # Define path for constraint tree file.
     constraint_tree_fp_coded = None
@@ -1826,16 +1843,28 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
         # option is used (because using the previous topology without the new
         # sequence to constrain the ML tree search).
         constraint_tree_fp = tree
+        #constraint_tree_fp = get_constraint_tree_fp(alignment)
+        #print('\n\n')
+        #print(tree)
+        #print(alignment)
+        assert os.path.isfile(constraint_tree_fp), """Expected to find
+        constraint tree at this file path:\n%s""" % constraint_tree_fp
     else:
-        constraint_tree_fp = get_constraint_tree_fp(outalifpnex)
+        constraint_tree_fp = get_constraint_tree_fp(alignment)
 
         with open(tree2) as intreefh, open(constraint_tree_fp, 'w') as o:
             for t in intreefh:
                 o.write(quote_tree(t, outtablefp))
+    assert os.path.isfile(constraint_tree_fp), """Expected to find
+    constraint tree at this file path:\n%s""" % constraint_tree_fp
 
     # Make constraint tree with coded names.
     constraint_tree_fp_coded = constraint_tree_fp.rsplit('.', 1)[0] + '.C.tre'
     code_tree(constraint_tree_fp, constraint_tree_fp_coded, outtablefp)
+    #print('constraint_tree_fp_coded:')
+    #print(constraint_tree_fp_coded)
+    assert os.path.isfile(constraint_tree_fp_coded), """Coded constraint tree
+    not produced."""
 
     # Get list of all leaf names for tree.
     tx = Tree(constraint_tree_fp_coded)
@@ -1879,9 +1908,16 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
                                '-pre', output_file_prefix, 
                                '-nt', '2'
                                ]
+        #print(' '.join(iqtree_command_list))
+        #print('constraint_tree_fp_coded')
+        #print(constraint_tree_fp_coded)
         stdout_path = output_file_prefix + '.stdout.txt'
         with open(stdout_path, 'w') as o:
             subprocess.call(iqtree_command_list, stdout=o, stderr=subprocess.STDOUT)
+        assert os.path.isfile(stdout_path), """IQtree standard output not
+        written to a file."""
+        #print('stdout_path:')
+        #print(stdout_path)
 
     else:
         # Make subdir for output.
@@ -1899,9 +1935,14 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
                                '-pre', output_file_prefix, 
                                '-nt', '2'
                                ]
+        #print(' '.join(iqtree_command_list))
+        print('constraint_tree_fp_coded')
+        print(constraint_tree_fp_coded)
         stdout_path = output_file_prefix + '.stdout.txt'
         with open(stdout_path, 'w') as o:
             subprocess.call(iqtree_command_list, stdout=o, stderr=subprocess.STDOUT)
+        assert os.path.isfile(stdout_path), """IQtree standard output not
+        written to a file."""
 
     # Define path to output file.
     tree_file_path = output_file_prefix + '.treefile'
@@ -2156,9 +2197,10 @@ def search_alignment_space(model_name,
                                                           outputdir)
 
     # Define path to tree to use as a constraint tree for further analysis.
-    #constraint_tree_fp_for_future = get_constraint_tree_fp(alignment)
-    constraint_tree_fp_for_future = alignment.rsplit('.', 1)[0] + '.C_constraint_tree.newick'
-    assert os.path.isfile(constraint_tree_fp_for_future)
+    constraint_tree_fp_for_future = get_constraint_tree_fp(alignment)
+    #constraint_tree_fp_for_future = alignment.rsplit('.', 1)[0] + '_constraint_tree.newick'
+    assert os.path.isfile(constraint_tree_fp_for_future), """Expected to find
+    constraint tree with file path:\n%s""" % constraint_tree_fp_for_future
 
     # Define output path for annotated tree image file.
     annotated_tree_outpath =\
@@ -2217,21 +2259,36 @@ def search_alignment_space(model_name,
     else:
         max_iterations = int(iterations)
     assert max_iterations > 0
+
+    ## Specify number of iterations that do not find improved support before the
+    ## loop gets broken.
+    #max_failed_iterations = 0
+    #if mod_type == 'remove_seqs':
+    #    #max_failed_iterations = len(names_of_seqs_in_tree) * 2
+    #    #max_failed_iterations = len(names_of_seqs_in_tree) / 2
+    #    max_failed_iterations = 2
+    #elif mod_type == 'add_seqs':
+    #    #max_failed_iterations = len(seqs) * 2
+    #    #max_failed_iterations = len(seqs)
+    #    #max_failed_iterations = len(names_of_seqs_in_tree)
+    #    max_failed_iterations = 2
+    #elif mod_type == 'remove_columns':
+    #    original_alignment_length = get_ali_length(alignment)
+    #    max_failed_iterations = original_alignment_length
+    #elif mod_type == 'mixed':
+    #    max_failed_iterations = max_iterations
+    #assert max_failed_iterations > 0
+
     # Specify number of iterations that do not find improved support before the
     # loop gets broken.
     max_failed_iterations = 0
-    if mod_type == 'remove_seqs':
-        #max_failed_iterations = len(names_of_seqs_in_tree) * 2
-        max_failed_iterations = len(names_of_seqs_in_tree) / 2
-    elif mod_type == 'add_seqs':
-        #max_failed_iterations = len(seqs) * 2
-        #max_failed_iterations = len(seqs)
-        max_failed_iterations = len(names_of_seqs_in_tree)
-    elif mod_type == 'remove_columns':
-        original_alignment_length = get_ali_length(alignment)
-        max_failed_iterations = original_alignment_length
-    elif mod_type == 'mixed':
-        max_failed_iterations = max_iterations
+    max_failed_iterations_dict = {
+                                 'remove_seqs': 2,
+                                 'add_seqs': 100,
+                                 'remove_columns': 2,
+                                 'mixed': 1
+                                 }
+    max_failed_iterations = max_failed_iterations_dict[mod_type]
     assert max_failed_iterations > 0
 
     # Define iterable to provide order of different modification types if the
@@ -2242,7 +2299,7 @@ def search_alignment_space(model_name,
     mod_type_mix_iterable = iter([
                                  'remove_seqs',
                                  'add_seqs'
-                                 ])
+                                 ] * 10000)
 
     # Set initial mod_type value if mod_type was set to mixed. 
     mixed_mod_type = False
@@ -2343,11 +2400,15 @@ def search_alignment_space(model_name,
                                        )
 
         # Break the loop if the max number of failed iterations have occured.
+        max_failed_iterations = max_failed_iterations_dict[mod_type]
         if failed_iterations_tally >= max_failed_iterations:
             # Switch to a different modification type if the mod_type was
             # mixed.
             if mixed_mod_type:
+                # Define the new modification type.
                 mod_type = next(mod_type_mix_iterable)
+                # Reset tally of failed iterations.
+                failed_iterations_tally = 0
 
             # Otherwise stop further modification of the alignment.
             else:

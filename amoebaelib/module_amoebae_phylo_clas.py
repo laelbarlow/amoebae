@@ -164,7 +164,13 @@ def code_tree(intreefp, outtreefp, table):
     conv_dict = get_conversion_dict(table)
 
     # Parse input tree file.
-    intree = Tree(intreefp, quoted_node_names=True)
+    intree = None
+    with open(intreefp) as infh:
+        if '\"' in infh.read(): 
+            intree = Tree(intreefp, quoted_node_names=True)
+        else:
+            intree = Tree(intreefp, quoted_node_names=False)
+    assert intree is not None
 
     ## Check that the number of keys in the conversion dict is the same as the
     ## number of leaf nodes in the tree.
