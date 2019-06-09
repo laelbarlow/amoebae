@@ -602,8 +602,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
             assert seq_to_add is not None
             print('\t\tAdding sequence ' + seq_to_add.id)
 
-           # Add to list of sequences added to to the tree.
-            seqs_attempted_to_add.append(seq_to_add.description)
+            # Add to list of sequences added to to the tree.
+            seqs_attempted_to_add2.append(seq_to_add.description)
 
             # Add sequence to alignment.
             add_seq_to_alignment3(seq_to_add, alignment, alignment2)
@@ -1156,11 +1156,22 @@ def get_nodes_from_actual_tree_obj(t3, nodes_of_interest):
             for side in [side1, side2]:
                 side_longest_length = 0
                 side_longest_leaf = None
-                for leaf in side.get_leaves():
-                    length = side.get_distance(leaf)
+                # Apparently need to account for the strange case that one
+                # sequence constitutes one side of the tree rooted on the
+                # midpoint.
+                if side.is_leaf():
+                    length = t3.get_distance(side)
                     if length > side_longest_length:
                         side_longest_length = length
-                        side_longest_leaf = leaf
+                        side_longest_leaf = side
+                # In most cases there will be multiple leaves on both sides of
+                # the midpoint root.
+                else:
+                    for leaf in side.get_leaves():
+                        length = side.get_distance(leaf)
+                        if length > side_longest_length:
+                            side_longest_length = length
+                            side_longest_leaf = leaf
                 # Check that a leaf was identified.
                 assert side_longest_leaf is not None
                 # Add the longest leaf on this side of the midpoint to the list
@@ -1179,35 +1190,59 @@ def get_nodes_from_actual_tree_obj(t3, nodes_of_interest):
                     if node_leaf_names == i_leaf_names:
                         corresponding_node = node
                         break
+                # Break loop so that tree does not get re-rooted unnecessarily.
+                if corresponding_node is not None:
+                    break
 
             # Try finding the corresponding node again by rooting on every
             # single leaf until the node of interest is found.
-            for leaf in t3.get_leaves():
-                t3.set_outgroup(leaf)
-                #print('Rerooted tree:')
-                #print(t3)
-                for node in t3.traverse():
-                    node_leaf_names = set([x.name for x in node.get_leaves()])
-                    # If the node has the same set of leaf names, then it is the
-                    # corresponding node.
-                    if node_leaf_names == i_leaf_names:
-                        corresponding_node = node
+            if corresponding_node is None:
+                for leaf in t3.get_leaves():
+                    t3.set_outgroup(leaf)
+                    #print('Rerooted tree:')
+                    #print(t3)
+                    for node in t3.traverse():
+                        node_leaf_names = set([x.name for x in node.get_leaves()])
+                        # If the node has the same set of leaf names, then it is the
+                        # corresponding node.
+                        if node_leaf_names == i_leaf_names:
+                            corresponding_node = node
+                            break
+                    # Break loop so that tree does not get re-rooted unnecessarily.
+                    if corresponding_node is not None:
                         break
 
             # Check that the corresponding node was found.
             assert corresponding_node is not None
 
-            # Root on the corresponding node identified.
+            # Root on the corresponding node identified. This is important,
+            # because if the tree is not rooted on such a node, then the set of
+            # leaves may be different for the node when it is identified again.
             t3.set_outgroup(corresponding_node)
 
         # Check that the corresponding node was found.
         assert corresponding_node is not None
 
+
+        # Temp.
+        if len(i.get_leaves()) != len(corresponding_node.get_leaves()):
+            print('Query node:')
+            print(i)
+            print('Corresponding node:')
+            print(corresponding_node)
+
+        # Check that the corresponding node has the same number of leaves.
+        assert len(i.get_leaves()) ==\
+        len(corresponding_node.get_leaves()), """Identified node has a different
+        number of leaves than expected."""
+
         # Append the corresponding node to the list.
         new_node_list.append(corresponding_node)
 
-    # Re-root the tree object on the original root node.
-    t3.set_outgroup(original_outgroup)
+    # Don't do this, because the leaves for the clades of interest may not be
+    # properly identified after re-rooting.
+    ## Re-root the tree object on the original root node.
+    #t3.set_outgroup(original_outgroup)
 
     # Return the list of corresponding nodes.
     return new_node_list
@@ -1483,16 +1518,20 @@ def get_ml_tree_info_dict(ml_tree_path,
     orthogroup_nodes_t3 = get_nodes_from_actual_tree_obj(t3, [x[1] for x in orthogroup_nodes])
     orthogroup_nodes_t3_abayes = get_nodes_from_actual_tree_obj(t3_abayes, [x[1] for x in orthogroup_nodes])
 
-    # Re-root on one of the nodes of interest.
-    t3.set_outgroup(orthogroup_nodes_t3[0])
-    t3_abayes.set_outgroup(orthogroup_nodes_t3_abayes[0])
+    # Not necessary, because this is done in the get_nodes_from_actual_tree_obj
+    # function.
+    ## Re-root on one of the nodes of interest.
+    #t3.set_outgroup(orthogroup_nodes_t3[0])
+    #t3_abayes.set_outgroup(orthogroup_nodes_t3_abayes[0])
 
     #print('\nt3 before detaching nodes of interest:')
     #print(t3)
 
     # Detach all nodes of interest in the copy of the tree.
     #for i in to_remove_list:
+    #print('orthogroup nodes:')
     for i in orthogroup_nodes_t3:
+        #print(i)
         for j in i.iter_descendants():
             j.detach()
     for i in orthogroup_nodes_t3_abayes:
@@ -1775,7 +1814,11 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
     assert os.path.isfile(tree), """Input tree file path doesn't exist."""
 
     # Get list of all leaf names for tree.
-    tx = Tree(tree)
+    quoted_node_names_var = False
+    with open(tree) as infh:
+        if '\"' in infh.read(): 
+            quoted_node_names_var = True
+    tx = Tree(tree, quoted_node_names=quoted_node_names_var)
     all_leaf_names = [x.name for x in tx.get_leaves()]
 
     # Check that the list of leaf names is the same as the list of sequence
@@ -1818,7 +1861,11 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
     # Parse tree using ete3.
     # Note: parentheses and commas and colons get replaced with underscores by
     # ete3.
-    t1 = Tree(tree, quoted_node_names=False)
+    quoted_node_names_var = False
+    with open(tree) as infh:
+        if '\"' in infh.read(): 
+            quoted_node_names_var = True
+    t1 = Tree(tree, quoted_node_names=quoted_node_names_var)
 
     # Unroot tree.
     t1.unroot()
@@ -1867,7 +1914,11 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
     not produced."""
 
     # Get list of all leaf names for tree.
-    tx = Tree(constraint_tree_fp_coded)
+    quoted_node_names_var = False
+    with open(constraint_tree_fp_coded) as infh:
+        if '\"' in infh.read(): 
+            quoted_node_names_var = True
+    tx = Tree(constraint_tree_fp_coded, quoted_node_names=quoted_node_names_var)
     all_leaf_names = [x.name for x in tx.get_leaves()]
 
     # Check that the list of leaf names is the same as the list of sequence
@@ -2162,7 +2213,11 @@ def search_alignment_space(model_name,
 
     # Parse tree using ete3.
     # Note: parentheses and commas get replaced with underscores.
-    t1 = Tree(tree, quoted_node_names=False)
+    quoted_node_names_var = False
+    with open(tree) as infh:
+        if '\"' in infh.read():
+            quoted_node_names_var = True
+    t1 = Tree(tree, quoted_node_names=quoted_node_names_var)
 
     # Print tree.
     print('Input tree:')

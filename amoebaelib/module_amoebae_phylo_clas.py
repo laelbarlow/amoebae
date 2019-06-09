@@ -165,11 +165,11 @@ def code_tree(intreefp, outtreefp, table):
 
     # Parse input tree file.
     intree = None
+    quoted_node_names_var = False
     with open(intreefp) as infh:
         if '\"' in infh.read(): 
-            intree = Tree(intreefp, quoted_node_names=True)
-        else:
-            intree = Tree(intreefp, quoted_node_names=False)
+            quoted_node_names_var = True
+    intree = Tree(intreefp, quoted_node_names=quoted_node_names_var)
     assert intree is not None
 
     ## Check that the number of keys in the conversion dict is the same as the
