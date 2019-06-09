@@ -1936,8 +1936,8 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
                                '-nt', '2'
                                ]
         #print(' '.join(iqtree_command_list))
-        print('constraint_tree_fp_coded')
-        print(constraint_tree_fp_coded)
+        #print('constraint_tree_fp_coded')
+        #print(constraint_tree_fp_coded)
         stdout_path = output_file_prefix + '.stdout.txt'
         with open(stdout_path, 'w') as o:
             subprocess.call(iqtree_command_list, stdout=o, stderr=subprocess.STDOUT)
@@ -2279,13 +2279,17 @@ def search_alignment_space(model_name,
     #    max_failed_iterations = max_iterations
     #assert max_failed_iterations > 0
 
+    # Determine number of positions in the input alignment (length of the
+    # sequences including gaps).
+    original_alignment_length = get_ali_length(alignment)
+
     # Specify number of iterations that do not find improved support before the
     # loop gets broken.
     max_failed_iterations = 0
     max_failed_iterations_dict = {
-                                 'remove_seqs': 2,
-                                 'add_seqs': 100,
-                                 'remove_columns': 2,
+                                 'remove_seqs': len(names_of_seqs_in_tree) / 10,
+                                 'add_seqs': len(names_of_seqs_in_tree) / 10,
+                                 'remove_columns': original_alignment_length,
                                  'mixed': 1
                                  }
     max_failed_iterations = max_failed_iterations_dict[mod_type]
