@@ -439,8 +439,11 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
         #        key=lambda x: branch_length_info_dict[x]['stem/branch ratio'])
         clade_list = list(ml_tree_info_dict.keys())
         clade_list.remove('internal branches info list')
+        #clades_by_ascending_support_measure =\
+        #sorted(clade_list, key=lambda x: ml_tree_info_dict[x]['alrt support'])
         clades_by_ascending_support_measure =\
-        sorted(clade_list, key=lambda x: ml_tree_info_dict[x]['alrt support'])
+        sorted(clade_list,\
+                key=lambda x: ml_tree_info_dict[x]['stem/branch ratio'])
 
         removed_a_sequence = False
 
@@ -2098,14 +2101,40 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
     # Get average stem/branch ratio for clades of interest.
     average_stem_branch_ratio = sum(all_stem_branch_ratios) / len(all_stem_branch_ratios)
 
-    # Get all average branch length ratios.
-    # ...
+    # Get list of all deep branch lengths.
+    all_dbranch_lengths = [float(x['branch length']) for x in ml_tree_info_dict['internal branches info list']]
 
-    # Get ratio of all backbone branch lengths to all average branch lengths
-    # within clades.
-    # ...
-    
+    ## Get average length of stems for clades of interest.
+    #all_clade_stem_lengths = [float(ml_tree_info_dict[clade]['stem length'])\
+    #                          for clade in clade_list]
+    #average_clade_stem_lengths = sum(all_clade_stem_lengths) / len(all_clade_stem_lengths)
 
+    ## Get list of all deep branch/average stem length ratios.
+    #all_dbranch_avgstem_ratios = [float(x / average_clade_stem_lengths)\
+    #                              for x in all_dbranch_lengths]
+
+    ## Get minimum deep branch/average stem length ratio.
+    ## Get all average branch length ratios.
+    #min_dbranch_avgstem_ratio = min(all_dbranch_avgstem_ratios)
+
+    # Get average of average leaf lengths (measured from the parent node of the
+    # clade of interest that the leaf is in).
+    avg_leaf_length = sum([float(ml_tree_info_dict[clade]['average branch length'])\
+                       for clade in clade_list]) / len(clade_list)
+
+    # Get list of all deep branch/average leaf lengths (measured from nodes for
+    # specific clades of interest, averaged over all leaves).
+    all_dbranch_avgleaf_ratios = [float(x / avg_leaf_length)\
+                                  for x in all_dbranch_lengths]
+
+    # Get minimum ratio of deep branch length to average leaf length.
+    min_dbranch_avgleaf_ratio = min(all_dbranch_avgleaf_ratios)
+
+    # Get average ratio of deep branch length to average leaf length.
+    avg_dbranch_avgleaf_ratio = sum(all_dbranch_avgleaf_ratios)\
+                                / len(all_dbranch_avgleaf_ratios)
+
+    # Examine the alrt and abayes support values for relevant clades.
     if not include_internal_branches:
         # Just consider branch supports for the specific clades of interest.
 
@@ -2165,7 +2194,8 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
     #return lowest_support_value
     #return average_support_value
     return (lowest_support_value, average_support_value,
-            minimum_stem_branch_ratio, average_stem_branch_ratio)
+            minimum_stem_branch_ratio, average_stem_branch_ratio,
+            min_dbranch_avgleaf_ratio, avg_dbranch_avgleaf_ratio)
 
 
 def get_ali_length(alignment):
@@ -2444,7 +2474,7 @@ def search_alignment_space(model_name,
         # from alrt branch tests), so better trees have higher values.
         #if new_tree_measure[0] >= prev_tree_measure[0] and new_tree_measure[1] >= prev_tree_measure[1]:
         #if new_tree_measure[2] >= prev_tree_measure[2] and new_tree_measure[3] >= prev_tree_measure[3]:
-        if new_tree_measure[2] <= prev_tree_measure[2] and new_tree_measure[3] <= prev_tree_measure[3]:
+        if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
             print('\t\t\tNew tree is better.')
             previous_ali_tree_tuple = new_ali_tree_tuple
 
