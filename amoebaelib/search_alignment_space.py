@@ -815,8 +815,11 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
 
             # If the sequence was placed in a clade of interest, then the tree
             # is usable.
-            if ts_that_additional_seq_was_placed_in is not None:
+            if ts_that_additional_seq_was_placed_in is not None\
+            and ts_that_additional_seq_was_placed_in != 'None':
                 ali_and_tree_usable = True 
+            else:
+                print('\t\t\tThe sequence was not placed in any of the clades of interest')
 
             # Temp:
             # Check that the clade that the additional sequence was placed in was
@@ -1537,8 +1540,12 @@ def get_ml_tree_info_dict(ml_tree_path,
     for i in orthogroup_nodes_t3_abayes:
         for j in i.iter_descendants():
             j.detach()
+
+    ## Temp.
     #print('\ntree with nodes removed (is this right???***):')
     #print(t3)
+    #print('leaf nodes:')
+    #print(t3.get_leaves())
 
     # Record (reduced) number of nodes.
     reduced_node_num = len(list(t3.traverse()))
@@ -1555,28 +1562,32 @@ def get_ml_tree_info_dict(ml_tree_path,
     t3.unroot()
     t3_abayes.unroot()
 
-    # Get internal branch lengths and support values from pruned copy of the
+    # Get *internal* branch lengths and support values from pruned copy of the
     # tree (all the branches left are internal branches of interest).
     internal_branch_info_list = []
+    intbrnum = 0
     for node_alrt_sup, node_abayes_sup in zip(t3.traverse(), t3_abayes.traverse()):
-        # Get branch length.
-        assert node_alrt_sup.dist == node_abayes_sup.dist
-        branch_length = node_alrt_sup.dist
+        # ***Ignore the branches that lead to clades of interest. Note: This
+        # may not always be what is needed.
+        if len(list(node_alrt_sup.traverse())) > 1 and len(list(node_alrt_sup.traverse())) > 1:
+            # Get branch length.
+            assert node_alrt_sup.dist == node_abayes_sup.dist
+            branch_length = node_alrt_sup.dist
 
-        # Ignore the root node (branch length 0).
-        if branch_length > 0:
-            # Initiate dict to store info for this branch.
-            branch_dict = {}
+            # Ignore the root node (branch length 0).
+            if branch_length > 0:
+                # Initiate dict to store info for this branch.
+                branch_dict = {}
 
-            # Add branch length to dict.
-            branch_dict['branch length'] = branch_length
+                # Add branch length to dict.
+                branch_dict['branch length'] = branch_length
 
-            # Add branch supports to dict.
-            branch_dict['alrt support'] = node_alrt_sup.support
-            branch_dict['abayes support'] = node_abayes_sup.support
+                # Add branch supports to dict.
+                branch_dict['alrt support'] = node_alrt_sup.support
+                branch_dict['abayes support'] = node_abayes_sup.support
 
-            # Add dict to list of branch dicts.
-            internal_branch_info_list.append(branch_dict)
+                # Add dict to list of branch dicts.
+                internal_branch_info_list.append(branch_dict)
 
     # Check that a minimum number of internal nodes were identified.
     #assert len(internal_branch_lengths) >= len(orthogroup_nodes), """Too few
@@ -2081,10 +2092,10 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
     all_stem_branch_ratios = [float(ml_tree_info_dict[clade]['stem/branch ratio'])\
                               for clade in clade_list] 
 
-    # Get minimum stem/branch ratio. 
+    # Get minimum stem/branch ratio for clades of interest. 
     minimum_stem_branch_ratio = min(all_stem_branch_ratios)
 
-    # Get average stem/branch ratio.
+    # Get average stem/branch ratio for clades of interest.
     average_stem_branch_ratio = sum(all_stem_branch_ratios) / len(all_stem_branch_ratios)
 
     # Get all average branch length ratios.
@@ -2432,7 +2443,8 @@ def search_alignment_space(model_name,
         # The measures of support are support values (such as probabilities
         # from alrt branch tests), so better trees have higher values.
         #if new_tree_measure[0] >= prev_tree_measure[0] and new_tree_measure[1] >= prev_tree_measure[1]:
-        if new_tree_measure[2] >= prev_tree_measure[2] and new_tree_measure[3] >= prev_tree_measure[3]:
+        #if new_tree_measure[2] >= prev_tree_measure[2] and new_tree_measure[3] >= prev_tree_measure[3]:
+        if new_tree_measure[2] <= prev_tree_measure[2] and new_tree_measure[3] <= prev_tree_measure[3]:
             print('\t\t\tNew tree is better.')
             previous_ali_tree_tuple = new_ali_tree_tuple
 
