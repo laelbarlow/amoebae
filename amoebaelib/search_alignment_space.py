@@ -355,6 +355,46 @@ def reduce_alignment(alignment_file, output_alignment_file, removal_name_list):
     assert num_seqs2 + 1 == num_seqs1
 
 
+def write_constraint_tree_without_extra_parentheses(ete3_tree_obj, tree_outpath):
+    """Take an ETE3 TreeNode object and write to a file, but ensure that there
+    are not double outer parentheses in the output newick tree.
+    """
+    # Write tree object to a newick file without any branch info.
+    ete3_tree_obj.write(outfile=tree_outpath, format=9)
+
+    # Check whether there are double outer parentheses.
+    double_outer_parentheses = False
+    with open(tree_outpath, 'r') as infh:
+        newick_tree_string = infh.read().strip()
+        if newick_tree_string.startswith('(('):
+            last_parenthesis_position = len(newick_tree_string[2:-2])
+            string_position_num = 0
+            open_parenthesis_count = 1
+            for i in newick_tree_string[2:-2]:
+                string_position_num += 1
+                if string_position_num == last_parenthesis_position:
+                    double_outer_parentheses = True
+                    break
+                # This perhaps assumes that there are no parentheses in the
+                # taxon names.
+                if i == '(':
+                    open_parenthesis_count += 1
+                elif i == ')':
+                    open_parenthesis_count += -1
+                if open_parenthesis_count == 0:
+                    break
+
+    # If necessary, modify the newick tree string in the output file.
+    if double_outer_parentheses:
+        newick_tree_string = None
+        with open(tree_outpath) as infh:
+            newick_tree_string = infh.read().strip()
+        with open(tree_outpath, 'w') as o:
+            newick_tree_string_without_extra_parentheses =\
+                    newick_tree_string[1:-2] + ';\n'
+            o.write(newick_tree_string_without_extra_parentheses)
+
+
 def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
     """Modify an alignment (and associated tree) and return a tuple with all
     the same type of elements as the input tuple, except for the new
@@ -514,7 +554,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                 # Write modified tree to a file.
                 print('\t\t\tWriting annotated tree to ' +\
                         os.path.basename(tree2))
-                t2.write(outfile=tree2, format=9)
+                #t2.write(outfile=tree2, format=9)
+                write_constraint_tree_without_extra_parentheses(t2, tree2)
 
                 # Add sequence name to list of sequences that have been removed. 
                 seqs_attempted_to_remove2.append(seqname)
@@ -838,7 +879,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
             # Write modified tree to a file.
             print('\t\t\tWriting annotated tree to ' +\
                     os.path.basename(tree2))
-            t1.write(outfile=tree2, format=9)
+            #t1.write(outfile=tree2, format=9)
+            write_constraint_tree_without_extra_parentheses(t1, tree2)
 
 
         # *** This check may be redundant.
