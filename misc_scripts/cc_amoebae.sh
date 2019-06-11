@@ -1,14 +1,22 @@
 #!/bin/bash
-#SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=5000M
-#SBATCH --time=00:05:00
+# This script writes a script with which to run AMOEBAE commands with. The
+# output script must then be submitted via the sbatch command.
+
+# Define input amoebae command to be written to output script file.
+AMOEBAECOMMAND="$@"
+
+# Define a timestamp function
+timestamp() {
+    date +"%Y%m%d%H%M%S"
+}
+
+TEXT=$"#!/bin/bash
+#SBATCH --ntasks=8              # number of MPI processes (mb should be faster with 16, but for some reason when 16 is specified the job times out without starting on cedar).
+#SBATCH --mem-per-cpu=125000M   # maximum on cedar?
+#SBATCH --time=1:00:00
 #SBATCH --account=def-dacks
 #SBATCH --mail-user=lael@ualberta.ca
-
-# This script tests whether the environment (dependencies, modules, etc.) can
-# be set up properly on a computecanada account. To use, just navigate to the
-# amoebae/misc_scripts.py directory on the server (after cloning the amoebae
-# repository) and run the script ( ./test_computecanada_environment.sh ).
+#SBATCH --mail-type=END
 
 # Load python.
 #module load python/3.7.0
@@ -48,20 +56,25 @@ pip install six
 # Install ete3.
 pip install ete3 --no-index
 
-# Write a python script with an import statement. 
-PYTHONSCRIPT="test_pyqt5_import.py"
-echo #/usr/bin/env python3 > $PYTHONSCRIPT
-echo from PyQt5 import QtGui, QtCore >> $PYTHONSCRIPT
-PYTHONOUTPUT="test_pyqt5_import_output.txt"
-python3 $PYTHONSCRIPT > $PYTHONOUTPUT
+#*** AMOEBAE command here:
 
-# Run amoebae commands to check whether all the subprocess calls and import statements will work.
-printf "\n\n\nChecking dependencies of amoebae:\n"
-amoebae check_depend
-printf "\n\n\nChecking all import statements for amoebae:\n"
-amoebae check_imports
+amoebae $AMOEBAECOMMAND
+
+#***
 
 # Shut down the virtual environment.
 deactivate
 
+"
+#OUTPATH='cc_amoebae_' + timestamp + '.sh'
+OUTPATH='cc_amoebae.sh'
+printf "$TEXT" > $OUTPATH 
+
+printf "
+Now submit the job with the sbatch command.
+
+For example:
+    sbatch $OUTPATH
+    
+"
 
