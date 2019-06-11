@@ -66,8 +66,12 @@ amoebae $AMOEBAECOMMAND
 deactivate
 
 "
-#OUTPATH='cc_amoebae_' + timestamp + '.sh'
-OUTPATH='cc_amoebae.sh'
+
+# Define a path to an output script.
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+OUTPATH=cc_amoebae_$TIMESTAMP.sh
+
+# Write script text to output path.
 printf "$TEXT" > $OUTPATH 
 
 printf "
