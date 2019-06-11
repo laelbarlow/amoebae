@@ -11,9 +11,9 @@ timestamp() {
 }
 
 TEXT=$"#!/bin/bash
-#SBATCH --ntasks=8              # number of MPI processes (mb should be faster with 16, but for some reason when 16 is specified the job times out without starting on cedar).
-#SBATCH --mem-per-cpu=125000M   # maximum on cedar?
-#SBATCH --time=1:00:00
+#SBATCH --ntasks=1              # number of MPI processes (mb should be faster with 16, but for some reason when 16 is specified the job times out without starting on cedar).
+#SBATCH --mem-per-cpu=5000M   # maximum on cedar?
+#SBATCH --time=0:20:00
 #SBATCH --account=def-dacks
 #SBATCH --mail-user=lael@ualberta.ca
 #SBATCH --mail-type=END
@@ -55,6 +55,12 @@ pip install six
 
 # Install ete3.
 pip install ete3 --no-index
+
+# Run amoebae commands to check whether all the subprocess calls and import statements will work.
+printf \"\n\n\nChecking dependencies of amoebae:\n\"
+amoebae check_depend
+printf \"\n\n\nChecking all import statements for amoebae:\n\"
+amoebae check_imports
 
 #*** AMOEBAE command here:
 
