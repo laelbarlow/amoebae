@@ -55,6 +55,8 @@ indp = str(command_line_list[1])
 ## Convert MrBayes output .con.tre file to necessary newick files.
 
 # Convert .tre file to newick format.
+assert len(glob.glob(os.path.join(indp, '*.con.tre'))) == 1, """More or less
+than one .con.tre file identified in the input directory."""
 inbesttreecontre = glob.glob(os.path.join(indp, '*.con.tre'))[0] # Assumes only one .tre file.
 outbesttreenewick = inbesttreecontre + '.newick'
 contre_to_newick(inbesttreecontre, outbesttreenewick)
