@@ -83,6 +83,12 @@ def delete_extra_mesquite_lines(infilepath):
     inhandle = open(infilepath, 'r')
     lines = inhandle.readlines()
     inhandle.close()
+
+    # Move the original file to a new path temporarily.
+    temp_copy_path = infilepath + '_temp_copy'
+    os.rename(infilepath, temp_copy_path)
+
+    # Write a new file.
     inhandle = open(infilepath, 'w')
     x = False
     for line in lines:
@@ -91,6 +97,11 @@ def delete_extra_mesquite_lines(infilepath):
         if not x:
             inhandle.write(line)
     inhandle.close()
+
+    assert os.path.isfile(infilepath)
+    # Remove the temporary copy of the input file.
+    os.remove(temp_copy_path)
+
 
 def nex_to_phylip(infilepath, outfilepath):
     """Takes nexus format file and makes a phylip format file.
