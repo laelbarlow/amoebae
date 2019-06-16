@@ -42,8 +42,8 @@ module load muscle/3.8.31
 module load qt/5.10.1
 
 # Make a virtual environment for python and install python modules.
-virtualenv --no-download $SLURM_TMPDIR/env
-source $SLURM_TMPDIR/env/bin/activate
+virtualenv --no-download \$SLURM_TMPDIR/env
+source \$SLURM_TMPDIR/env/bin/activate
 pip install --upgrade pip
 pip install biopython --no-index
 #pip install gffutils
@@ -56,11 +56,11 @@ pip install six
 # Install ete3.
 pip install ete3 --no-index
 
-## Run amoebae commands to check whether all the subprocess calls and import statements will work.
-#printf \"\n\n\nChecking dependencies of amoebae:\n\"
-#amoebae check_depend
-#printf \"\n\n\nChecking all import statements for amoebae:\n\"
-#amoebae check_imports
+### Run amoebae commands to check whether all the subprocess calls and import statements will work.
+##printf \"\n\n\nChecking dependencies of amoebae:\n\"
+##amoebae check_depend
+##printf \"\n\n\nChecking all import statements for amoebae:\n\"
+##amoebae check_imports
 
 #*** AMOEBAE command here:
 
