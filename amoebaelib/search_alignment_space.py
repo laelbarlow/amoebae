@@ -415,6 +415,7 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
     seqs_attempted_to_add = previous_ali_tree_tuple[9]
     essential_taxa = previous_ali_tree_tuple[10]
     stop = previous_ali_tree_tuple[11]
+    new_seq_essential = previous_ali_tree_tuple[12]
 
     # Check that the stop variable was not set to True in the last iteration.
     assert not stop
@@ -1022,7 +1023,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                           seqs_attempted_to_remove2,
                           seqs_attempted_to_add2,
                           essential_taxa,
-                          stop)
+                          stop,
+                          added_seq_adds_essential_taxon)
 
     # Return the new tuple.
     return new_ali_tree_tuple
@@ -2384,7 +2386,8 @@ def search_alignment_space(model_name,
                                seqs_attempted_to_remove,
                                seqs_attempted_to_add,
                                essential_taxa,
-                               stop)
+                               stop,
+                               False)
 
 
     # Handle number of iterations.
@@ -2425,8 +2428,10 @@ def search_alignment_space(model_name,
     # loop gets broken.
     max_failed_iterations = 0
     max_failed_iterations_dict = {
-                                 'remove_seqs': len(names_of_seqs_in_tree) / 10,
-                                 'add_seqs': len(names_of_seqs_in_tree) / 10,
+                                 #'remove_seqs': len(names_of_seqs_in_tree) / 10,
+                                 'remove_seqs': len(names_of_seqs_in_tree),
+                                 #'add_seqs': len(names_of_seqs_in_tree) / 10,
+                                 'add_seqs': len(seqs) / 2,
                                  'remove_columns': original_alignment_length,
                                  'mixed': 1
                                  }
@@ -2496,7 +2501,8 @@ def search_alignment_space(model_name,
                                        seqs_attempted_to_remove,
                                        seqs_attempted_to_add,
                                        previous_ali_tree_tuple[10],
-                                       False
+                                       False,
+                                       previous_ali_tree_tuple[12],
                                        )
             # Go to the next iteration so that nothing else is done before
             # trying another modification.
@@ -2524,23 +2530,41 @@ def search_alignment_space(model_name,
             best_alignment_num = 'alignment number ' + str(iteration + 1)
 
         else:
-            print('\t\t\tOld tree is better.')
-            failed_iterations_tally += 1
-            # Just update the lists of modifications that have already been
-            # attempted.
-            previous_ali_tree_tuple = (iteration + 1,
-                                       previous_ali_tree_tuple[1],
-                                       previous_ali_tree_tuple[2],
-                                       new_ali_tree_tuple[3],
-                                       previous_ali_tree_tuple[4],
-                                       previous_ali_tree_tuple[5],
-                                       previous_ali_tree_tuple[6],
-                                       previous_ali_tree_tuple[7],
-                                       new_ali_tree_tuple[8],
-                                       new_ali_tree_tuple[9],
-                                       previous_ali_tree_tuple[10],
-                                       new_ali_tree_tuple[11]
-                                       )
+            # If a sequence was added, then make sure that it is not essential
+            # before discarding the new alignment.
+            new_seq_is_essential = new_ali_tree_tuple[12]
+            if new_seq_is_essential:
+                print('\t\t\tNew tree has an additional essential sequence in a clade of interest.')
+
+                previous_ali_tree_tuple = new_ali_tree_tuple
+
+                # Reset variable that stores True if the added sequence is
+                # essential.
+                new_ali_tree_tuple[12] = False
+
+                # Set best tree to this tree.
+                best_alignment_num = 'alignment number ' + str(iteration + 1)
+
+
+            else:
+                print('\t\t\tOld tree is better.')
+                failed_iterations_tally += 1
+                # Just update the lists of modifications that have already been
+                # attempted.
+                previous_ali_tree_tuple = (iteration + 1,
+                                           previous_ali_tree_tuple[1],
+                                           previous_ali_tree_tuple[2],
+                                           new_ali_tree_tuple[3],
+                                           previous_ali_tree_tuple[4],
+                                           previous_ali_tree_tuple[5],
+                                           previous_ali_tree_tuple[6],
+                                           previous_ali_tree_tuple[7],
+                                           new_ali_tree_tuple[8],
+                                           new_ali_tree_tuple[9],
+                                           previous_ali_tree_tuple[10],
+                                           new_ali_tree_tuple[11],
+                                           previous_ali_tree_tuple[12]
+                                           )
 
         # Break the loop if the max number of failed iterations have occured.
         max_failed_iterations = max_failed_iterations_dict[mod_type]
