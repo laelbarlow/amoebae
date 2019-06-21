@@ -24,9 +24,11 @@ Note: The sequence names must be formatted as: ACCESSION DBNAME_OTHERINFO
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
+sys.path.append(os.path.dirname(sys.path[0]))
 import argparse
 import settings
-from module_get_fas_from_db_dir import get_fas_from_db_dir
+#from module_get_fas_from_db_dir import get_fas_from_db_dir
+from module_get_fas_from_db_dir import get_seq_obj_from_db_fasta
 from Bio import AlignIO
 import module_afa_to_nex
 
@@ -82,9 +84,14 @@ def write_pos_seqs(infilepath, dbdirpath, outfilepath, prot_name=None):
             acc_list = [acc]
             id_list.append([dbname, acc_list])
          
-        for l in id_list:
-             o.write(get_fas_from_db_dir(l[0], l[1], dbdirpath,
-                 prot_name))
+        #for l in id_list:
+             #o.write(get_fas_from_db_dir(l[0], l[1], dbdirpath,
+             #    prot_name))
+        # This script does not work yet, because it is tricky to identify the
+        # right files...
+        seq_obj_list = get_seq_obj_from_db_fasta(id_list, ... 
+        o.write(get_seq_obj_from_db_fasta(l[0], l[1], dbdirpath,
+            prot_name))
 
 
 if __name__ == '__main__':

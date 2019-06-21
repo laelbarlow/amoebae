@@ -1383,10 +1383,12 @@ Miscellaneous commands:
                 args.model_name + '_' + os.path.basename(args.alignment))
         assert not os.path.isfile(alignmentfp), """File already exists: %s""" % alignmentfp
         shutil.copyfile(args.alignment, alignmentfp)
+
         topologyfp = os.path.join(settings.model_dir_path,
                 args.model_name + '_' + os.path.basename(args.tree_topology))
         assert not os.path.isfile(topologyfp), """File already exists: %s""" % topologyfp
         shutil.copyfile(args.tree_topology, topologyfp)
+
         type_seqsfp = os.path.join(settings.model_dir_path,
                 args.model_name + '_' + os.path.basename(args.type_seqs))
         assert not os.path.isfile(type_seqsfp), """File already exists: %s""" % type_seqsfp

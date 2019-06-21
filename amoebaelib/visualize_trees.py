@@ -801,6 +801,12 @@ def visualize_tree(method,
         # probabilities instead of percentages.
         translate_int_node_support_to_prob(t1)
 
+    # Define name for tree with no branch lengths or supports.
+    tree_file2_topo = tree_file2.rsplit('.', 1)[0] + '.topology.tre'
+
+    # Write topology to file path (this is not for use by this script).
+    t1.write(format=9, outfile=tree_file2_topo)
+
 
     ## Find a K. nitens sequence if present.
     #first_leaf_from_species = get_first_leaf_from_species(t1, 'Klebsormidium')

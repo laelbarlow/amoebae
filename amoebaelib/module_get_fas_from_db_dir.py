@@ -21,6 +21,8 @@ directory system.
 """
 
 from Bio import SeqIO
+import glob
+import os
 
 
 def get_seq_obj_from_db_fasta(acc_list, fa_path):
