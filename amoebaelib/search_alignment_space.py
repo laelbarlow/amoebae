@@ -848,6 +848,7 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                     # or not in the new clade.
                     if not additional_seq_dispensable:
                         added_seq_adds_essential_taxon = True
+                        new_seq_essential = True
                     
                     # Break the loop, because no other clades need to be
                     # considered after the relevant clade has been identified.
@@ -1024,7 +1025,7 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                           seqs_attempted_to_add2,
                           essential_taxa,
                           stop,
-                          added_seq_adds_essential_taxon)
+                          new_seq_essential)
 
     # Return the new tuple.
     return new_ali_tree_tuple

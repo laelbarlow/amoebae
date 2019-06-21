@@ -316,7 +316,8 @@ def get_seqs_to_remove_file(to_remove_list_file, t, remove_redun_seqs, min_suppo
                 #print('\nleaf_distance')
                 #print(leaf_distance)
                 # Compare to threshold.
-                if leaf_distance > float(quartile3 + (max_bl_iqr_above_third_quartile * interquartile_range)):
+                if leaf_distance > float(quartile3 +\
+                        (float(max_bl_iqr_above_third_quartile) * interquartile_range)):
                     if node.name not in names_of_seqs_to_remove:
                         names_of_seqs_to_remove.append(node.name)
 
