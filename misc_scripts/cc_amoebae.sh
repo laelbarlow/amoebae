@@ -46,7 +46,7 @@ virtualenv --no-download \$SLURM_TMPDIR/env
 source \$SLURM_TMPDIR/env/bin/activate
 pip install --upgrade pip
 pip install biopython --no-index
-#pip install gffutils
+pip install gffutils
 pip install PyPDF2 
 pip install reportlab
 
@@ -57,10 +57,10 @@ pip install six
 pip install ete3 --no-index
 
 ### Run amoebae commands to check whether all the subprocess calls and import statements will work.
-##printf \"\n\n\nChecking dependencies of amoebae:\n\"
-##amoebae check_depend
-##printf \"\n\n\nChecking all import statements for amoebae:\n\"
-##amoebae check_imports
+printf \"\n\n\nChecking dependencies of amoebae:\n\"
+amoebae check_depend
+printf \"\n\n\nChecking all import statements for amoebae:\n\"
+amoebae check_imports
 
 #*** AMOEBAE command here:
 
