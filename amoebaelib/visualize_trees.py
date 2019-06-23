@@ -59,7 +59,8 @@ def disqualifying_string_in_file_basename(f, disqualifying_strings):
     """
     in_basename = False
     for s in disqualifying_strings:
-        if s in os.path.basename(f):
+        # Only look in the last 15 characters for the disqualifying strings.
+        if s in os.path.basename(f)[-15:]:
             in_basename = True
             break
     return in_basename
@@ -96,19 +97,30 @@ def find_input_file_in_parent_directory(indp, extension, disqualifying_strings):
     # basename.
     indp_bn = os.path.basename(indp)
     # Loop over prefixes from longest to shortest.
+    file_found = False
     for i in range(0, len(indp_bn) + 1)[::-1]:
         prefix = indp_bn[:i] 
         files_with_prefix = []
         for f in all_rel_files_in_parent_dir:
             if os.path.basename(f).startswith(prefix):
                 files_with_prefix.append(f)
+        if len(files_with_prefix) > 0:
+            file_found = True
         # Return path if there is only one.
         if len(files_with_prefix) == 1:
             #print(files_with_prefix[0])
             return files_with_prefix[0]
-        # Report an error if there is more than one.
-        assert len(files_with_prefix) <= 1, """More than one relevant file
-        found with extension %s in directory %s.""" % (extension, parent_dir)
+        elif len(files_with_prefix) > 1:
+            # Return the path to the file with the shortest basename.
+            file_with_shortest_basename = sorted(files_with_prefix, key=lambda x: len(x))[0]
+            return file_with_shortest_basename
+        ## Report an error if there is more than one.
+        #assert len(files_with_prefix) > 1, """More than one relevant file
+        #found with extension %s in directory %s.""" % (extension, parent_dir)
+
+    # Check that a file was found.
+    assert file_found, """Could not identify an appropriate file with extension
+    %s in directory %s.""" % (extension, parent_dir)
 
 
 def plotImage(image_file):

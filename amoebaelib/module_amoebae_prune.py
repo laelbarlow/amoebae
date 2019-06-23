@@ -873,13 +873,16 @@ def automatically_select_nodes_and_remove_seqs_in_dir(indp,
 
     # Identify input alignment file (the one with sequences to be removed) with
     # original sequence names.
-    disqualifying_strings = ['mask', 'trim']
+    disqualifying_strings = ['mask', 'trim'] # Not always necessary? May be for srch_ali_space.
+    #disqualifying_strings = []
     alignment_file = find_input_file_in_parent_directory(indp, 'nex',
             disqualifying_strings)
+    print('\nUsing this alignment file:\n%s\n' % alignment_file)
 
     # Identify name replace table to use for decoding names in input tree file
     # so that they match those in the input alignment.
     name_replace_table = find_input_file_in_parent_directory(indp, 'table', [])
+    print('\nUsing this file for decoding names:\n%s\n' % name_replace_table)
 
     # Call function on appropriate files.
     main_out_path = automatically_select_nodes_and_remove_seqs(input_tree_one,
