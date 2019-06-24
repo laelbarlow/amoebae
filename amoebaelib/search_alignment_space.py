@@ -2523,7 +2523,10 @@ def search_alignment_space(model_name,
         # from alrt branch tests), so better trees have higher values.
         #if new_tree_measure[0] >= prev_tree_measure[0] and new_tree_measure[1] >= prev_tree_measure[1]:
         #if new_tree_measure[2] >= prev_tree_measure[2] and new_tree_measure[3] >= prev_tree_measure[3]:
-        if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+        # This is the best so far:
+        #if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+        # No attention to deep backbone:
+        if new_tree_measure[4] >= prev_tree_measure[4]:
             print('\t\t\tNew tree is better.')
             previous_ali_tree_tuple = new_ali_tree_tuple
 

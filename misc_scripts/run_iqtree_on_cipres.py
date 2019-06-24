@@ -255,7 +255,7 @@ def submit_iqtree_job_to_cipres_1(url, cra_user, password, key, timestamp, infil
                     #'-F',
                     #'input.partition_file_=@./' + partitionfp, # Specify path to partition file. 
                     '-F',
-                    'vparam.runtime_=' + '1.0', # Specify maximum hours to run (float).
+                    'vparam.runtime_=' + '2.0', # Specify maximum hours to run (float).
                     '-F',
                     'vparam.specify_mem_=' + '120', # Specify maximum hours to run (float).
                     #'-F',
