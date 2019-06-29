@@ -2430,9 +2430,9 @@ def search_alignment_space(model_name,
     max_failed_iterations = 0
     max_failed_iterations_dict = {
                                  #'remove_seqs': len(names_of_seqs_in_tree) / 10,
-                                 'remove_seqs': len(names_of_seqs_in_tree),
+                                 'remove_seqs': len(names_of_seqs_in_tree) * 2,
                                  #'add_seqs': len(names_of_seqs_in_tree) / 10,
-                                 'add_seqs': len(seqs) / 2,
+                                 'add_seqs': len(seqs),
                                  'remove_columns': original_alignment_length,
                                  'mixed': 1
                                  }
@@ -2526,7 +2526,11 @@ def search_alignment_space(model_name,
         # This is the best so far:
         #if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
         # No attention to deep backbone:
-        if new_tree_measure[4] >= prev_tree_measure[4]:
+        #if new_tree_measure[4] >= prev_tree_measure[4]:
+
+        # No criteria applied at all:
+        if 2 == 2:
+            print('\t\t\tWarning: No criteria applied.')
             print('\t\t\tNew tree is better.')
             previous_ali_tree_tuple = new_ali_tree_tuple
 

@@ -2594,9 +2594,10 @@ def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False):
     else:
         # Make all alternative bifurcating topologies.
         alt_topos = get_all_alt_topologies(nodes_of_interest_for_polytomy)
-        print('alternative newick backbones:')
+        print('\n\nAlternative newick backbones:\n')
         for i in alt_topos:
             print(i)
+            print('\n')
 
     # Delete temporary files.
     os.remove(simple_tree)
