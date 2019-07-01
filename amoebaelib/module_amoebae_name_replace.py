@@ -179,7 +179,8 @@ def write_newick_tree_with_coded_names(infile, outfile, tablefile,
     # name for the output tree.
     tree_string = None
     with open(infile) as infh:
-        tree_string = infh.readline()
+        #tree_string = infh.readline()
+        tree_string = infh.read()
 
     for code in conv_dict.keys():
         tree_string = tree_string.replace(conv_dict[code], code)

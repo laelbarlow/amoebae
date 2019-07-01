@@ -150,15 +150,19 @@ def manage_any_cipres_job(infile_path, submission_info, timestamp, cra_user,
     # Get job status URL.
     print('\nGetting job status URL.')
     job_status_url = get_job_status_url(submission_info)
+
+    # Wait for 60 seconds.
+    sleep(60)
     
     # Check job status, and wait until complete.
     job_status = False
     while not job_status:
-        sleep(60)
         print('\nChecking job status.\n')
         try:
             job_status = get_job_status(job_status_url, cra_user, password,
                 key)
+            # Wait for 60 seconds.
+            sleep(60)
         except:
             input('''\nEncountered a problem with checking job status (possibly
                   an internet interruption). Continue?''')
