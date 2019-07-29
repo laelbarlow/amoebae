@@ -2407,7 +2407,12 @@ def get_all_alt_model_backbones(model_name,
     outdirpath1 = main_out_path
 
     # Copy alignment to new directory.
-    new_ali_path = os.path.join(outdirpath1, os.path.basename(ali))
+    max_ali_filename_len = 50
+    basename = os.path.basename(ali)
+    shortname = basename
+    if len(basename) > max_ali_filename_len:
+        shortname = os.path.basename(ali).rsplit('.', 1)[0][:46] + '.nex'
+    new_ali_path = os.path.join(outdirpath1, shortname)
     shutil.copyfile(ali, new_ali_path)
     ali = new_ali_path
 
