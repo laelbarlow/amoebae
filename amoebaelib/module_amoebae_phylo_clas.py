@@ -42,8 +42,10 @@ import module_amoebae_column_header_lists
 from module_amoebae import mask_nex2
 from module_paralogue_counter import add_seq_to_alignment3,\
 modify_seq_descr_for_tree
-from module_amoebae_name_replace import write_afa_with_code_names
+from module_amoebae_name_replace import write_afa_with_code_names,\
+codenames_nex, write_newick_tree_with_coded_names
 from get_alt_topos import get_all_alt_topologies, get_polytomy_for_treenode
+from module_amoebae_constrain_mb import constrain_mb_with_tree
 
 
 
@@ -2634,18 +2636,81 @@ def get_all_alt_model_backbones(model_name,
 
     # Write each alternative topology to a separate newick file.
     topo_num = 0
+    topo_filepaths = []
     for topo in alt_topos:
         topo_num += 1
 
         # Define path to output text file.
         topo_filepath = outfilepath.rsplit('.', 2)[0] + '_' + str(topo_num) + '.newick.tre'
 
+        # Add filepath to list.
+        topo_filepaths.append(topo_filepath)
+
         # Write topology string to text file.
         with open(topo_filepath, 'w') as o:
             o.write(topo)
+
+        # Check that the file was written.
+        assert os.path.isfile(topo_filepath)
+        with open(topo_filepath, 'r') as topo_filehandle:
+            assert len(topo_filehandle.read()) > 0
 
     # Delete temporary files.
     os.remove(simple_tree)
     os.remove(outtreefp)
     os.remove(outtablefp)
     os.remove(outalifpnex)
+
+    # Write versions of the nexus alignment file formatted for input to
+    # phylogenetic analysis programs.
+    codenames_nex(ali, subs_model)
+
+    # Define path to conversion table file.
+    conversion_table_filepaths = glob.glob(os.path.join(main_out_path, '*C.table'))
+    assert len(conversion_table_filepaths) == 1, """Not the right number of potential
+    conversion table files in directory. Relevant files:\n%s""" % str(conversion_table_filepaths)
+    conversion_table_filepath = conversion_table_filepaths[0]
+
+    # Write new constraint tree files with names coded using the same table.
+    coded_topo_filepaths = []
+    for topo_file in topo_filepaths:
+        # Define path to coded file.
+        coded_topo_file = topo_file.rsplit('.', 1)[0] + '_C.tre'
+
+        # Write coded file.
+        write_newick_tree_with_coded_names(topo_file, coded_topo_file,
+                conversion_table_filepath)
+
+        # Check that the file was written.
+        assert os.path.isfile(coded_topo_file)
+        with open(coded_topo_file, 'r') as topo_filehandle:
+            assert len(topo_filehandle.read()) > 0
+
+        # Add coded file path to list.
+        coded_topo_filepaths.append(coded_topo_file)
+
+    # Define path to MrBayes input file.
+    mrbayes_inputs = glob.glob(os.path.join(main_out_path, '*C.mb.nex'))
+    assert len(mrbayes_inputs) == 1, """Not the right number of potential
+    MrBayes input files in directory. Relevant files:\n%s""" % str(mrbayes_inputs)
+    mrbayes_input = mrbayes_inputs[0]
+
+    # Write a copy of the MrBayes input file for each of the alternative
+    # constraint trees.
+    coded_topo_file_num = 0
+    for coded_topo_file in coded_topo_filepaths:
+        coded_topo_file_num += 1
+
+        # Define path to mrbayes input alignment with constraint encoded.
+        mrbayes_input_constrained = mrbayes_input.rsplit('.', 1)[0] +\
+        '_constrained_' + str(coded_topo_file_num) + '.nex'
+
+        # Write file with constraints.
+        constrain_mb_with_tree(mrbayes_input,
+                               coded_topo_file,
+                               mrbayes_input_constrained
+                               )
+
+
+    # Write scripts to run both IQtree and MrBayes on computecanada.ca.
+    # ...

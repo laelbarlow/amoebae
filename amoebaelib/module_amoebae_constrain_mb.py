@@ -139,10 +139,13 @@ def constrain_mb_with_tree(alignment, tree, out_alignment=None):
     # Write output file with constraint commands inserted into the appropriate
     # MrBayes code block.
     with open(alignment) as infh, open(out_alignment, 'w') as o:
+        prset_line = re.compile(r'^ +prset')
+        inserted = False
         insert = False
         insertnum = 0
         for i in infh:
-            if i.startswith('   prset'):
+            #if i.startswith('   prset'):
+            if prset_line.match(i):
                 insert = True
                 o.write(i)
             else:
@@ -153,8 +156,12 @@ def constrain_mb_with_tree(alignment, tree, out_alignment=None):
 
             if insert and insertnum == 0:
                 o.write(constraint_commands)
+                inserted = True
                 insert = False
                 insertnum = 1
+
+        # Check that the constraint commands were inserted.
+        assert inserted, """Constraint commands were not inserted."""
 
     # Return main output path.
     return out_alignment
