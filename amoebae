@@ -2017,6 +2017,9 @@ Miscellaneous commands:
                 connecting the clades of interest intead of making alternative
                 bifurcating trees.''',
                 action='store_true')
+        parser.add_argument('--polytomy_clades', help='''Make subtrees/clades of
+                interest polytomies in output topologies.''',
+                action='store_true')
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -2027,8 +2030,8 @@ Miscellaneous commands:
         ## Get current time for timestamp.
         #timestamp = time.strftime("%Y%m%d%H%M%S")
 
-
-        get_all_alt_model_backbones(args.model_name)
+        get_all_alt_model_backbones(args.model_name, None, args.polytomy,
+                args.polytomy_clades)
 
         ## Record end time.
         #end_time = time.time()

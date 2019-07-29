@@ -23,6 +23,23 @@ from math import factorial
 from ete3 import Tree
 from itertools import product
 
+
+def get_polytomy_for_treenode(treenode):
+    """Take an ETE3 TreeNode object and return a TreeNode object with all the
+    same leaf nodes, but just as a polytomy.
+    """
+    # Initiate a new TreeNode object.
+    new_treenode = Tree()
+
+    # Add each terminal (leaf) node from the original TreeNode object as a
+    # child to the new TreeNode object. 
+    for leaf in treenode.get_leaves():
+        new_treenode.add_child(leaf)
+
+    # Return polytomy.
+    return new_treenode
+
+
 def determine_if_polytomy(subtree):
     """Determine if the given subtree (represented as a set, which may contain
     sets) is a polytomy or not.

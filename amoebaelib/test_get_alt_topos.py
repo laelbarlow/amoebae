@@ -22,7 +22,7 @@ from ete3 import Tree
 from get_alt_topos import get_total_num_topos_for_n_taxa,\
     get_all_alt_topologies,\
     get_all_unique_unrooted_bifurcating_topologies_for_n_taxa,\
-    trees
+    trees, get_polytomy_for_treenode
 
 # Define a class with functions for performing tests.
 class TestGetAltTopos(unittest.TestCase):
@@ -131,6 +131,15 @@ class TestGetAltTopos(unittest.TestCase):
             subtrees.append(Tree(string))
 
         x = get_all_alt_topologies(subtrees)
+
+    def test_get_polytomy_for_treenode(self):
+        # Generate a TreeNode object.
+        input_treenode_1 = Tree('((A,B),(C,D));')
+
+        #print(input_treenode_1)
+        x = get_polytomy_for_treenode(input_treenode_1)
+        #print(x)
+
 
 
 

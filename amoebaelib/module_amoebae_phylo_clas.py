@@ -42,7 +42,7 @@ from module_amoebae import mask_nex2
 from module_paralogue_counter import add_seq_to_alignment3,\
 modify_seq_descr_for_tree
 from module_amoebae_name_replace import write_afa_with_code_names
-from get_alt_topos import get_all_alt_topologies
+from get_alt_topos import get_all_alt_topologies, get_polytomy_for_treenode
 
 
 
@@ -51,6 +51,7 @@ from get_alt_topos import get_all_alt_topologies
 # alignment. (there should be some checking to make sure the right domain was
 # aligned, for example in the case of proteins that contain two homologous
 # domains such as Qbc SNAREs).
+
 
 
 def add_seq_to_alignment(inseqobj, innexpath, outdp):
@@ -2366,7 +2367,8 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
     return output_csv_path
 
 
-def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False):
+def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False,
+        polytomy_clades=False):
     """Take a tree and make all alternative topologies for internal branches
     outside specific clades of interest. Or, take a tree and make internal
     branches/nodes outside specified clades of interest into a polytomy (by
@@ -2569,6 +2571,17 @@ def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False):
         print(node_w_most_leaves)
 
         nodes_of_interest_for_polytomy.append(node_w_most_leaves)
+
+
+    if polytomy_clades:
+        # Turn each of the nodes/clades/subtrees of interest into polytomies of
+        # all the sequences they contain.
+        nodes_of_interest_for_polytomy_as_polytomies = []
+        for node_of_interest in nodes_of_interest_for_polytomy:
+            node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
+            nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
+        # Switch to new list.
+        nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
 
 
     if polytomy:
