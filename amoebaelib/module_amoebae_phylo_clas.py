@@ -2711,6 +2711,7 @@ def get_all_alt_model_backbones(model_name,
                                mrbayes_input_constrained
                                )
 
+    print("""\n\nNow use cc_constrained_mb.sh and
+    cc_constrained_iqtree_ufboot_and_alrt.sh scripts to set up constrained tree
+    searches to run on computecanada.""")
 
-    # Write scripts to run both IQtree and MrBayes on computecanada.ca.
-    # ...
