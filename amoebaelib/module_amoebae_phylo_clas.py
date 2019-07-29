@@ -19,6 +19,7 @@
 import settings
 import sys
 import os
+import shutil
 from Bio import AlignIO
 from Bio import SeqIO
 from Bio.Alphabet import IUPAC, Gapped
@@ -2367,8 +2368,12 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
     return output_csv_path
 
 
-def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False,
-        polytomy_clades=False):
+def get_all_alt_model_backbones(model_name,
+                                out_dir_path,
+                                main_out_path,
+                                polytomy=False,
+                                polytomy_clades=False
+                                ):
     """Take a tree and make all alternative topologies for internal branches
     outside specific clades of interest. Or, take a tree and make internal
     branches/nodes outside specified clades of interest into a polytomy (by
@@ -2381,18 +2386,28 @@ def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False,
     subs_model = model_info.subs_model
     type_seqs = model_info.type_seqs_file
 
-    # Parse topology from tree for model info (need to decode names? similar to
-    # previous).
+    ## Parse topology from tree for model info (need to decode names? similar to
+    ## previous).
 
-    # identify the clades of interest (using type sequences as before), 
-    
-    # take those clades/nodes and construct a new topology (with ete3) that is
-    # just a polytomy of the clades.
+    ## identify the clades of interest (using type sequences as before), 
 
-    # Write that new tree to the output file.
+    ## take those clades/nodes and construct a new topology (with ete3) that is
+    ## just a polytomy of the clades.
+
+    ## Write that new tree to the output file.
+
+
+    # Make output directory.
+    os.mkdir(main_out_path)
 
     # Get output directory path.
-    outdirpath1 = os.path.dirname(ali)
+    #outdirpath1 = os.path.dirname(ali)
+    outdirpath1 = main_out_path
+
+    # Copy alignment to new directory.
+    new_ali_path = os.path.join(outdirpath1, os.path.basename(ali))
+    shutil.copyfile(ali, new_ali_path)
+    ali = new_ali_path
 
     # Convert nexus alignment to afa.
     temp_fa_1 = ali.rsplit('.', 1)[0] + '_temp1.afa'
@@ -2413,8 +2428,8 @@ def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False,
 
 
     # Get outfilepath.
-    if outfilepath is None:
-        outfilepath = ali.rsplit('.', 1)[0] + '_polytomy_backbone.newick.tre'
+    #if outfilepath is None:
+    outfilepath = ali.rsplit('.', 1)[0] + '_alt_topo_constraint.newick.tre'
 
     # Define output file path.
     #if outfilepath is None:
@@ -2583,7 +2598,10 @@ def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False,
         # Switch to new list.
         nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
 
+    # Initiate list of alternative tree topologies (newick strings).
+    alt_topos = []
 
+    # Generate relevant topologies.
     if polytomy:
         # Construct a polytomy of the nodes of interest.
 
@@ -2599,18 +2617,32 @@ def get_all_alt_model_backbones(model_name, outfilepath=None, polytomy=False,
 
         newick_backbone = '(' + ','.join(subtrees) + ')'
 
-        print('newick_backbone:')
-        print(newick_backbone)
-        with open(outfilepath, 'w') as o:
-            o.write(newick_backbone)
+        #print('Topology as polytomy:')
+        #print(newick_backbone)
+
+        # Add polytomy to list of alternative topologies.
+        alt_topos.append(newick_backbone)
 
     else:
-        # Make all alternative bifurcating topologies.
+        # Make all alternative bifurcating topologies of branches connecting
+        # the clades of interest.
         alt_topos = get_all_alt_topologies(nodes_of_interest_for_polytomy)
-        print('\n\nAlternative newick backbones:\n')
-        for i in alt_topos:
-            print(i)
-            print('\n')
+        #print('\n\nAlternative newick backbones:\n')
+        #for i in alt_topos:
+        #    print(i)
+        #    print('\n')
+
+    # Write each alternative topology to a separate newick file.
+    topo_num = 0
+    for topo in alt_topos:
+        topo_num += 1
+
+        # Define path to output text file.
+        topo_filepath = outfilepath.rsplit('.', 2)[0] + '_' + str(topo_num) + '.newick.tre'
+
+        # Write topology string to text file.
+        with open(topo_filepath, 'w') as o:
+            o.write(topo)
 
     # Delete temporary files.
     os.remove(simple_tree)

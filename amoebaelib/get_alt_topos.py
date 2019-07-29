@@ -226,8 +226,8 @@ def get_all_alt_topologies(subtrees):
     all_unrooted_trees_with_subtrees = all_unrooted_newick_trees
     for place_holder_name, subtree_string in\
             zip(leaf_names_in_all_trees, subtree_newick_strings):
-        print('Replacing %s with %s in all alternative topologies.' %\
-                (place_holder_name, subtree_string[:-1]))
+        #print('Replacing %s with %s in all alternative topologies.' %\
+        #        (place_holder_name, subtree_string[:-1]))
         all_unrooted_trees_with_subtrees =\
                 [t.replace(place_holder_name, subtree_string[:-1]) for t in\
                         all_unrooted_trees_with_subtrees] 

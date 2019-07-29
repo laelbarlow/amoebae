@@ -2013,6 +2013,8 @@ Miscellaneous commands:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('model_name', help='''Name of model/backbone tree
                 to modify (other info provided in the model info csv file).''')
+        parser.add_argument('out_dir_path', help='''Path to directory in which
+                output directory will be written.''')
         parser.add_argument('--polytomy', help='''Just make one big polytomy
                 connecting the clades of interest intead of making alternative
                 bifurcating trees.''',
@@ -2025,23 +2027,28 @@ Miscellaneous commands:
         # Import command-specific modules.
         from module_amoebae_phylo_clas import get_all_alt_model_backbones
 
-        ## Record start time.
-        #start_time = time.time()
-        ## Get current time for timestamp.
-        #timestamp = time.strftime("%Y%m%d%H%M%S")
+        # Record start time.
+        start_time = time.time()
+        # Get current time for timestamp.
+        timestamp = time.strftime("%Y%m%d%H%M%S")
 
-        get_all_alt_model_backbones(args.model_name, None, args.polytomy,
+        # Define output directory path.
+        main_out_path = os.path.join(args.out_dir_path, 'get_alt_topos_output_' + timestamp)
+
+        # Call function from the module.
+        get_all_alt_model_backbones(args.model_name, args.out_dir_path,
+                main_out_path, args.polytomy,
                 args.polytomy_clades)
 
-        ## Record end time.
-        #end_time = time.time()
-        ## Define command line input.
-        #commandline = ' '.join(sys.argv)
-        ## Define output directory.
-        #outdir = os.path.dirname(args.tree_file)
-        ## Record info to log file.
-        #module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
-        #        start_time, end_time, timestamp, main_out_path)
+        # Record end time.
+        end_time = time.time()
+        # Define command line input.
+        commandline = ' '.join(sys.argv)
+        # Define output directory.
+        outdir = main_out_path
+        # Record info to log file.
+        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+                start_time, end_time, timestamp, main_out_path)
 
     def constrain_mb(self):
         parser = argparse.ArgumentParser(
