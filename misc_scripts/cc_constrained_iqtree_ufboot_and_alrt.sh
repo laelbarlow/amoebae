@@ -30,7 +30,7 @@ do
 #SBATCH --mail-type=END
 
 mkdir $PREFIX
-iqtree -s $FILE -bb 1000 -wbt -alrt 1000 -m $SUBSMODEL -nt AUTO -pre $PREFIX -g $CONSTRAINT
+iqtree -s $FILE -bb 1000 -wbt -alrt 1000 -m $SUBSMODEL -nt AUTO -pre $PREFIX/output -g $CONSTRAINT
     "
     printf "$TEXT" > $FILE"_constraint_"$CONSTRAINTNUM"_iqtree_ufboot_and_alrt.sh" 
     done

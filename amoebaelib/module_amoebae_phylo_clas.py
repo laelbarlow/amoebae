@@ -2388,16 +2388,6 @@ def get_all_alt_model_backbones(model_name,
     subs_model = model_info.subs_model
     type_seqs = model_info.type_seqs_file
 
-    ## Parse topology from tree for model info (need to decode names? similar to
-    ## previous).
-
-    ## identify the clades of interest (using type sequences as before), 
-
-    ## take those clades/nodes and construct a new topology (with ete3) that is
-    ## just a polytomy of the clades.
-
-    ## Write that new tree to the output file.
-
 
     # Make output directory.
     os.mkdir(main_out_path)
