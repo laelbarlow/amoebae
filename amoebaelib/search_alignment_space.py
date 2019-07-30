@@ -2528,12 +2528,13 @@ def search_alignment_space(model_name,
         # No attention to deep backbone:
         #if new_tree_measure[4] >= prev_tree_measure[4]:
 
-        # No criteria applied at all:
-        if 2 == 2:
-            print('\t\t\tWarning: No criteria applied.')
-            print('\t\t\tNew tree is better.')
-            previous_ali_tree_tuple = new_ali_tree_tuple
+        ## No criteria applied at all:
+        #if 2 == 2:
+        #    print('\t\t\tWarning: No criteria applied.')
+        #    print('\t\t\tNew tree is better.')
+        #    previous_ali_tree_tuple = new_ali_tree_tuple
 
+        if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
             # Set best tree to this tree.
             best_alignment_num = 'alignment number ' + str(iteration + 1)
 
