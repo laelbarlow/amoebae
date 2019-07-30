@@ -2512,6 +2512,13 @@ def search_alignment_space(model_name,
         # Get measures of support for both trees (lowest value among abayes and
         # alrt supports for all branches for specific clades of interest as
         # well as branches that are internal to those branches).
+        # Contents of tuple returned by the get_y_measure_of_support function:
+        # 1. lowest_support_value,
+        # 2. average_support_value,
+        # 3. minimum_stem_branch_ratio,
+        # 4. average_stem_branch_ratio,
+        # 5. min_dbranch_avgleaf_ratio,
+        # 6. avg_dbranch_avgleaf_ratio
         prev_tree_measure = get_y_measure_of_support(previous_ali_tree_tuple, True)
         new_tree_measure = get_y_measure_of_support(new_ali_tree_tuple, True)
 
@@ -2521,6 +2528,8 @@ def search_alignment_space(model_name,
         print('\t\t\tNew tree support measure: ' + str(new_tree_measure))
         # The measures of support are support values (such as probabilities
         # from alrt branch tests), so better trees have higher values.
+
+        # Apply criteria based on comparing values between trees.
         #if new_tree_measure[0] >= prev_tree_measure[0] and new_tree_measure[1] >= prev_tree_measure[1]:
         #if new_tree_measure[2] >= prev_tree_measure[2] and new_tree_measure[3] >= prev_tree_measure[3]:
         # This is the best so far:
@@ -2536,6 +2545,8 @@ def search_alignment_space(model_name,
 
         if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
             # Set best tree to this tree.
+            print('\t\t\tNew tree is better.')
+            previous_ali_tree_tuple = new_ali_tree_tuple
             best_alignment_num = 'alignment number ' + str(iteration + 1)
 
         else:
