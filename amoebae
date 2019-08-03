@@ -1053,7 +1053,7 @@ Miscellaneous commands:
         parser.add_argument('--min_evaldiff', help='''Minimum difference in
                 E-value order of magnitude between top reverse search hit and first
                 reverse search hit that is not redundant with the original
-                query.''')
+                query.''', default=0)
         parser.add_argument('--aasubseq', help='''Use only the portion of each
                 (amino acid) forward hit sequence that aligns to the original query
                 used (top HSP subject sequence). This is default for nucleotide
@@ -1108,13 +1108,6 @@ Miscellaneous commands:
         #if args.redun_hit_csv is not None:
         #    # Get redundant hit dict from from input redundant hit csv file.
         #    redun_hit_dict = module_amoebae_search.get_redun_hit_dict(args.redun_hit_csv)
-
-        # Get minimum E-value (order of magnitude) difference cutoff.
-        if not args.min_evaldiff is None:
-            min_evaldiff = args.min_evaldiff
-        else:
-            # By default use the one in the settings file.
-            min_evaldiff = settings.min_evaldiff
 
         # Loop over files corresponding to results for reverse searches into
         # each reverse search database, in the correct order, extract

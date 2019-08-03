@@ -54,12 +54,6 @@ model_info_csv =\
 # Set maximum E-value cutoff to be used for similarity searches.
 evalue_cutoff = 0.05
 
-# Set the minimum order of magnitude difference between the E-value of the top
-# hit in a reverse search (assuming it represents the original query) and the
-# E-value of the first reverse search hit that does not represent the original
-# query.
-min_evaldiff = 2
-
 # Set maximum E-value cutoff for BLAST+ to report hits.
 blast_report_evalue_cutoff = 0.05
 
