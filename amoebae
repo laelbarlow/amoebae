@@ -1122,7 +1122,7 @@ Miscellaneous commands:
                     ')')
             final_outfp = module_amoebae_search.write_rev_srch_res_to_csv(rev_srch_timestamp + '-' + str(db_num), args.rev_srch_out,
                     query_file_list, db_file, args.csv_file, args.redun_hit_csv,
-                    min_evaldiff, timestamp, args.aasubseq)
+                    args.min_evaldiff, timestamp, args.aasubseq)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nForward search results written/appended to
