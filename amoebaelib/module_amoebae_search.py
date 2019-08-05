@@ -1290,6 +1290,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
     """
+    assert min_evaldiff == 0 # Temp.
     redun_hit_dict = None
     if redun_hit_csv is not None:
         # Get redundant hit dict from from input redundant hit csv file.
@@ -1490,7 +1491,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
                         if float(evaldiff) >= float(min_evaldiff):
                             # Result is positive.
                             row['Note'] = 'The order of magnitude difference is greater than or equal to %s'\
-                                    % str(settings.min_evaldiff)
+                                    % str(min_evaldiff)
                             row['Positive (+) or negative (-) hit based on reverse search criteria'] = '+'
 
                     else:

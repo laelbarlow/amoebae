@@ -630,7 +630,6 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
         # *** ToDo: Add functionality to add sequences with taxonomic terms in
         # the essential taxa list that are missing in the taxa_represented
         # list.
-
         if len(seqnames_to_be_added) == 0:
             print('Could not find a sequence to add.')
             # Stop iterative calling of modify_seq_in_x_way function (at least
@@ -2256,6 +2255,50 @@ def get_ali_length(alignment):
     return alignment_length 
 
 
+def new_tree_better(prev_tree_measure,
+                    new_tree_measure,
+                    mod_type,
+                    intensive_mod_type):
+    """Apply criteria to tuples containing information about two trees to
+    determine which is better (old or new), and return True if the new tree is
+    better.
+    """
+    # Note: Contents of tuple returned by the get_y_measure_of_support function
+    # (X_tree_measure variables):
+    # 1. lowest_support_value,
+    # 2. average_support_value,
+    # 3. minimum_stem_branch_ratio,
+    # 4. average_stem_branch_ratio,
+    # 5. min_dbranch_avgleaf_ratio,
+    # 6. avg_dbranch_avgleaf_ratio
+
+    # Apply criteria based on comparing values between trees.
+    #if new_tree_measure[0] >= prev_tree_measure[0] and new_tree_measure[1] >= prev_tree_measure[1]:
+    #if new_tree_measure[2] >= prev_tree_measure[2] and new_tree_measure[3] >= prev_tree_measure[3]:
+    # This is the best so far:
+    #if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+    # No attention to deep backbone:
+    #if new_tree_measure[4] >= prev_tree_measure[4]:
+
+    ## No criteria applied at all:
+    #if 2 == 2:
+    #    print('\t\t\tWarning: No criteria applied.')
+    #    print('\t\t\tNew tree is better.')
+    #    previous_ali_tree_tuple = new_ali_tree_tuple
+
+    if mod_type == 'add_seqs':
+        # Just say the new tree is better if a sequence has been added.
+        return True
+
+    else:
+        if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+            # Return True to indicate that the new tree is better.
+            return True
+        else:
+            # Return False to indicate that the old tree is better.
+            return False
+
+
 def search_alignment_space(model_name,
                            out_dir_path,
                            mod_type,
@@ -2274,7 +2317,8 @@ def search_alignment_space(model_name,
     optimize_position_selection functions.
     """
     # Check that modification type is valid.
-    assert mod_type in ['remove_seqs', 'add_seqs', 'remove_columns', 'mixed']
+    assert mod_type in ['remove_seqs', 'add_seqs', 'remove_columns', 'mixed',
+    'intensive']
     """Invalid value provided with --mod_type option."""
 
     # Define output directory path.
@@ -2434,7 +2478,8 @@ def search_alignment_space(model_name,
                                  #'add_seqs': len(names_of_seqs_in_tree) / 10,
                                  'add_seqs': len(seqs),
                                  'remove_columns': original_alignment_length,
-                                 'mixed': 1
+                                 'mixed': 1, # Not used.
+                                 'intensive': 1 # Not used.
                                  }
     max_failed_iterations = max_failed_iterations_dict[mod_type]
     assert max_failed_iterations > 0
@@ -2447,7 +2492,16 @@ def search_alignment_space(model_name,
     mod_type_mix_iterable = iter([
                                  'remove_seqs',
                                  'add_seqs'
-                                 ] * 10000)
+                                 ] * 100000)
+
+    # Define iterable to provide a program of different modification types for
+    # if the mod_type variable is set to 'intensive'. The iterative
+    # modifications will stop when the 'Stop' value is reached.
+    mod_type_intensive_iterable = iter(['add_seqs',
+                                        'remove_seqs',
+                                        'remove_seqs',
+                                        'Stop'
+                                        ])
 
     # Set initial mod_type value if mod_type was set to mixed. 
     mixed_mod_type = False
@@ -2458,6 +2512,12 @@ def search_alignment_space(model_name,
 
         # Get initial value from iterable.
         mod_type = next(mod_type_mix_iterable)
+
+    # Set initial mod_type value if mod_type was set to intensive.
+    intensive_mod_type = False
+    if mod_type == 'intensive':
+        intensive_mod_type = True
+        mod_type = next(mod_type_intensive_iterable)
 
     # Initiate variable for storing the number of the best alignment.
     best_alignment_num = 'the original input alignment'
@@ -2484,7 +2544,7 @@ def search_alignment_space(model_name,
 
             # Or, reset the list of items to be modified and continue instead of
             # break.
-            
+
             # Reset lists of elements that have been modified already.
             positions_attempted_to_remove = [] 
             seqs_attempted_to_remove = []
@@ -2505,6 +2565,23 @@ def search_alignment_space(model_name,
                                        False,
                                        previous_ali_tree_tuple[12],
                                        )
+
+            # If in the 'intensive' mode, then switch to the next stage of
+            # analysis.
+            if intensive_mod_type:
+                # Change the mod_type to the next stage.
+                mod_type = next(mod_type_intensive_iterable)
+
+                # If the mod_type is 'remove_seqs' then it should just keep
+                # going until there are no more sequences to try removing.
+
+                # If the mod_type is not 'Stop', then stop the analysis at the
+                # current best tree.
+                if mod_type == 'Stop':
+                    print("""\nReached the end of the intensive dataset
+                    searching strategy.""")
+                    break
+
             # Go to the next iteration so that nothing else is done before
             # trying another modification.
             continue
@@ -2512,7 +2589,8 @@ def search_alignment_space(model_name,
         # Get measures of support for both trees (lowest value among abayes and
         # alrt supports for all branches for specific clades of interest as
         # well as branches that are internal to those branches).
-        # Contents of tuple returned by the get_y_measure_of_support function:
+        # Contents of tuple returned by the get_y_measure_of_support function
+        # (X_tree_measure variables):
         # 1. lowest_support_value,
         # 2. average_support_value,
         # 3. minimum_stem_branch_ratio,
@@ -2529,21 +2607,14 @@ def search_alignment_space(model_name,
         # The measures of support are support values (such as probabilities
         # from alrt branch tests), so better trees have higher values.
 
-        # Apply criteria based on comparing values between trees.
-        #if new_tree_measure[0] >= prev_tree_measure[0] and new_tree_measure[1] >= prev_tree_measure[1]:
-        #if new_tree_measure[2] >= prev_tree_measure[2] and new_tree_measure[3] >= prev_tree_measure[3]:
-        # This is the best so far:
-        #if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
-        # No attention to deep backbone:
-        #if new_tree_measure[4] >= prev_tree_measure[4]:
+        # Apply criteria based on comparing values between trees to determine
+        # whether the new tree is better.
+        new_tree_is_better = new_tree_better(prev_tree_measure,
+                                             new_tree_measure,
+                                             mod_type, 
+                                             intensive_mod_type)
 
-        ## No criteria applied at all:
-        #if 2 == 2:
-        #    print('\t\t\tWarning: No criteria applied.')
-        #    print('\t\t\tNew tree is better.')
-        #    previous_ali_tree_tuple = new_ali_tree_tuple
-
-        if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+        if new_tree_is_better:
             # Set best tree to this tree.
             print('\t\t\tNew tree is better.')
             previous_ali_tree_tuple = new_ali_tree_tuple
@@ -2585,6 +2656,7 @@ def search_alignment_space(model_name,
                                            new_ali_tree_tuple[11],
                                            previous_ali_tree_tuple[12]
                                            )
+
 
         # Break the loop if the max number of failed iterations have occured.
         max_failed_iterations = max_failed_iterations_dict[mod_type]

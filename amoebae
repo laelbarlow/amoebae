@@ -2180,7 +2180,7 @@ Miscellaneous commands:
         parser.add_argument('--mod_type', help='''Name of type of modification to
         apply iteratively to the alignment and tree in the search for
         alignments that result in better support for clades of interest.
-        Options: remove_seqs, add_seqs, remove_columns, mixed''',
+        Options: remove_seqs, add_seqs, remove_columns, mixed, intensive.''',
         default='remove_seqs')
         parser.add_argument('--iterations', help='''Number of iterations of
         modification and assessment to do (by default as many iterations as
