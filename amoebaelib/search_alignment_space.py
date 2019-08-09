@@ -2303,6 +2303,7 @@ def search_alignment_space(model_name,
                            out_dir_path,
                            mod_type,
                            iterations,
+                           keep_all_output,
                            timestamp,
                            file_with_seqs=None, 
                            essential_taxa_file=None):
@@ -2677,6 +2678,18 @@ def search_alignment_space(model_name,
 
     # Report which alignment is the best.
     print('\nBest alignment is ' + best_alignment_num)
+
+    # Remove all output files, except those for the best alignment.
+    if not keep_all_output:
+        best_tree_name = os.path.basename(new_ali_path).rsplit('_', 1)[0] +\
+        '_' + best_alignment_num.rsplit(' ', 1)[1]
+        for output in glob.glob(new_ali_path.rsplit('_', 1)[0] + '*'):
+            if not best_tree_name in output:
+                if os.path.isdir(output):
+                    shutil.rmtree(output)
+                else:
+                    os.remove(output)
+
 
     # Return path to main/final output file or directory.
     return outputdir

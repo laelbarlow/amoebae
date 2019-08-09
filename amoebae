@@ -2192,6 +2192,9 @@ Miscellaneous commands:
         parser.add_argument('--essential_taxa_file', help='''Path to file
         containing a list of essential taxa which should ideally be represented
         in each clade of interest in the tree.''')
+        parser.add_argument('--keep_all_output', help='''Keep all intermediate
+        output files such as alignment files and .png images of trees
+        instead of deleting them.''', action='store_true')
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -2209,6 +2212,7 @@ Miscellaneous commands:
                                                args.out_dir_path,
                                                args.mod_type,
                                                args.iterations,
+                                               args.keep_all_output,
                                                timestamp,
                                                args.file_with_seqs, 
                                                args.essential_taxa_file)
