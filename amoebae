@@ -2280,9 +2280,10 @@ Miscellaneous commands:
 
     def replace_seqs(self):
         parser = argparse.ArgumentParser(
-            description='''Replace sequences in an alignment with their top
-            hits in a given fasta file, or with the full-length sequences from
-            the relevant files in the Genomes directory.''')
+            description='''Replace sequences in an alignment the full-length
+            sequences from the relevant file(s) in the Genomes directory, or
+            with their top hits in a given fasta file. And, align, mask, and
+            trim the identified sequences to the input alignment''')
         parser.add_argument('alignment', help='''Path to multiple sequence
         alignment file in nexus format (trimmed alignment).''')
         parser.add_argument('--fasta_file', help='''Path to file containing

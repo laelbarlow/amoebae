@@ -24,7 +24,11 @@ import shutil
 import glob
 import copy
 
+# Import major package modules.
+import pandas as pd
+
 # Import amoebae modules.
+import settings
 from module_afa_to_nex import nex_to_afa, afa_to_nex, determine_alphabet
 from module_add_to_db import make_blast_db
 from misc_functions import get_fa_record_text_from_obj
@@ -33,6 +37,7 @@ from module_align_to_profile_iter import do_align_iteratively
 from module_mask_nex import mask_nex
 from module_amoebae_trim_nex import trim_nex
 from module_afa_to_nex import delete_extra_mesquite_lines
+from module_amoebae import get_seqs_from_fasta_db
 
 # Import functions for working with sequences, alignments, and trees.
 #from ete3 import Tree, TreeStyle, Tree, TextFace, add_face_to_node
@@ -72,6 +77,8 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
     """
     # Make a folder to contain temporary files.
     tempdirpath = alignment + '_temp'
+    if os.path.isdir(tempdirpath):
+        shutil.rmtree(tempdirpath)
     os.mkdir(tempdirpath)
 
     # Copy nexus alignment into temporary directory.
@@ -101,7 +108,8 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
     with open(afa_alignment) as infh, open(afa_alignment2, 'w') as o:
         for i in infh:
             if i.startswith('>'):
-                new_header_line = i.replace(' ', '_')
+                #new_header_line = i.replace(' ', '_')
+                new_header_line = i.rstrip().replace(' ', '_') + '__ORIGNALSEQ\n'
                 o.write(new_header_line)
                 # Assumes that there are no multi-line fasta headers.
                 modified_original_seq_accs.append(new_header_line.strip()[1:])
@@ -117,6 +125,10 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
     # Initiate a variable to store the path to a fasta file with top hits or
     # full-length sequences with the same IDs from the same genomes.
     top_hit_fasta = None
+
+    # Initiate variable to store a list of all headers for sequences to be
+    # added to the alignment.
+    nonredun_top_hit_headers = None
 
     # If there is a fasta file provided, then find top hits for each sequence
     # in the input alignment.
@@ -232,14 +244,19 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
 
     # Otherwise look in relevant files in the Genomes directory.
     else:
-        # Iterate through sequences in the input alignment.
+        # Iterate through sequences in the input alignment and compile a list
+        # of sequence objects corresponding to each sequence.
+        seq_objects = []
+        nonredun_top_hit_headers = []
         with open(afa_alignment) as infh:
             for seq in SeqIO.parse(infh, 'fasta'):
                 # Extract the species name and sequence ID from the sequence header.
                 header = seq.id
-                print('\nFinding full-length sequence for sequence: %s' % header)
+                #print('\nFinding full-length sequence for sequence: %s' % header)
                 species_name = header.split('__')[0]
+                #print('species name: ' + species_name)
                 seq_id = header.split('__')[1]
+                #print('sequence identifier: ' + seq_id)
 
                 # Determine which databases could correspond to the species name,
                 # given information in the genome info spreadsheet.
@@ -250,7 +267,7 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
                         if species_name.replace('_', ' ') in row['Species (if applicable)']:
                             filename = row['Filename']
                             if filename.endswith('.faa'):
-                                print(filename)
+                                #print(filename)
                                 db_names_with_species_name.append(filename)
 
                 # Check that at least one database might have the full-length sequence.
@@ -259,12 +276,43 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
 
                 # For each possible database/file, try to retrieve a sequence with
                 # the ID.
+                full_length_seq_obj = None
                 for db_name in db_names_with_species_name:
                     # Call a function to retrieve the sequence from a database
                     # given an ID.
-                    full_length_seq_obj = get_seqs_from_fasta_db(db_name, [seq_id], False)
-                    ...XXX...
+                    try:
+                        # Try fast retrieval, and if that doesn't work then try
+                        # the slow method.
+                        full_length_seq_obj =\
+                        get_seqs_from_fasta_db(db_name, [seq_id], False)[0]
 
+                    except:
+                        print('Looking in another file.')
+                        continue
+
+                # Check that a sequence was found.
+                assert full_length_seq_obj is not None
+
+                # Change sequence header to be identical to that for the
+                # sequence that it is replacing.
+                full_length_seq_obj.description = ''
+                full_length_seq_obj.id = header
+
+                # Add sequence object to list. 
+                seq_objects.append(full_length_seq_obj)
+
+            # Append each sequence object in the list to a fasta file.
+            top_hit_fasta = alignment.rsplit('.', 1) [0] + '_full_length_seqs.faa'
+            with open(top_hit_fasta, 'w') as o:
+                for seq_object in seq_objects:
+                    # Add header to list of headers for sequences to add.
+                    nonredun_top_hit_headers.append(seq_object.id)
+
+                    # Write to file.
+                    SeqIO.write(seq_object, o, 'fasta')
+
+            # Make list of sequence headers for sequences to add non-redundant.
+            nonredun_top_hit_headers = list(set(nonredun_top_hit_headers))
 
     # Align top hits to copy of input alignment.
     print('\nAligning replacement sequences to input alignment')
@@ -298,22 +346,30 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
     # Remove temporary directory and contents.
     shutil.rmtree(tempdirpath)
 
-    # Report number of sequences for which top hits were not identified.
-    if len(queries_retrieving_no_hits) > 0:
-        print("""\nThe following sequences (%s percent)from the input alignment retrieved no
-        blastp hits from the input fasta file:""" % percent_of_queries_without_hits)
-        for i in queries_retrieving_no_hits:
-            print('\t' + i)
+    if fasta is not None:
+        # Report number of sequences for which top hits were not identified.
+        if len(queries_retrieving_no_hits) > 0:
+            print("""\nThe following sequences (%s percent)from the input alignment retrieved no
+            blastp hits from the input fasta file:""" % percent_of_queries_without_hits)
+            for i in queries_retrieving_no_hits:
+                print('\t' + i)
 
-    # Report stats again.
-    print('\nNumber of sequences in input alignment:')
-    print(alignment_seq_num)
-    print('\nNumber of top hits:')
-    print(len(top_hit_headers))
-    print('\nNumber of nonredundant top hits:')
-    print(len(nonredun_top_hit_headers))
-    print('\nNumber of redundant sequences among top hits:')
-    print(num_redun_top_hits)
+        # Report stats again.
+        print('\nNumber of sequences in input alignment:')
+        print(alignment_seq_num)
+        print('\nNumber of top hits:')
+        print(len(top_hit_headers))
+        print('\nNumber of nonredundant top hits:')
+        print(len(nonredun_top_hit_headers))
+        print('\nNumber of redundant sequences among top hits:')
+        print(num_redun_top_hits)
+
+    # Print paths to main output files.
+    print('\nFasta file with identified replacement sequences:')
+    print(top_hit_fasta)
+    print('\nTrimmed nexus alignment with only replacement sequences:')
+    print(final_output_nex)
+
 
     # Return the output alignment file path.
     return final_output_nex

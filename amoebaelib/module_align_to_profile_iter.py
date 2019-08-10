@@ -64,10 +64,11 @@ def align_iteratively(inalignfilepath, temp_subdirname, outfilepath):
     # Loop through the sorted list of files and align each sequence to the
     # input alignment.
     for f in file_list_sorted:
-        print('\n\n' + f + '\n\n')
+        #print('\n\n' + f + '\n\n')
         # Call MUSCLE with default options.
-        subprocess.call(["muscle", "-profile", "-in1", inalignfilepath, "-in2", f,
-            "-out", outfilepath])
+        with open(os.path.join(temp_subdirname, 'temp_muscle stdout.txt'), 'w') as o:
+            subprocess.call(["muscle", "-profile", "-in1", inalignfilepath, "-in2", f,
+                "-out", outfilepath], stdout=o, stderr=subprocess.STDOUT)
     
 def do_align_iteratively(innexpath, infapath, outnexpath=None):
     """Do the whole process
