@@ -1820,25 +1820,27 @@ def get_ml_tree_info_dict(ml_tree_path,
 
     # Show tree annotations.
 
-    # Remove underscores from leaf names.
-    for leaf in t2.iter_leaves():
-        leaf.name = leaf.name.replace('__', ' ').replace('_', ' ')
+    # Temporarily commented out for running on cedar:
 
-    # Stretch branches.
-    ts = TreeStyle()
-    ts.show_leaf_name = True
-    ts.scale =  120 # 120 pixels per branch length unit
+    ## Remove underscores from leaf names.
+    #for leaf in t2.iter_leaves():
+    #    leaf.name = leaf.name.replace('__', ' ').replace('_', ' ')
 
-    # Add title.
-    tree_title = "[Tree title here]"
-    ts.title.add_face(TextFace(tree_title, fsize=20), column=0)
+    ## Stretch branches.
+    #ts = TreeStyle()
+    #ts.show_leaf_name = True
+    #ts.scale =  120 # 120 pixels per branch length unit
 
-    # Show.
-    #t2.show(tree_style=ts)
+    ## Add title.
+    #tree_title = "[Tree title here]"
+    #ts.title.add_face(TextFace(tree_title, fsize=20), column=0)
 
-    # Write tree to file.
-    if annotated_tree_outpath is not None:
-        t2.render(annotated_tree_outpath, w=183, units="mm", tree_style=ts)
+    ## Show.
+    ##t2.show(tree_style=ts)
+
+    ## Write tree to file.
+    #if annotated_tree_outpath is not None:
+    #    t2.render(annotated_tree_outpath, w=183, units="mm", tree_style=ts)
 
     # Return main output path.
     return branch_length_info_dict

@@ -2281,13 +2281,14 @@ Miscellaneous commands:
     def replace_seqs(self):
         parser = argparse.ArgumentParser(
             description='''Replace sequences in an alignment with their top
-            hits in a given fasta file.''')
+            hits in a given fasta file, or with the full-length sequences from
+            the relevant files in the Genomes directory.''')
         parser.add_argument('alignment', help='''Path to multiple sequence
         alignment file in nexus format (trimmed alignment).''')
-        parser.add_argument('fasta_file', help='''Path to file containing
-        sequences with which to replace sequences in the alignment.''')
-        #parser.add_argument('--optional_argument_name', help='''optional
-        #argument help.''')
+        parser.add_argument('--fasta_file', help='''Path to file containing
+        sequences with which to replace sequences in the alignment. If this
+        option is not specified, then full-length sequences will be retrieved
+        from files in the Genomes directory.''')
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -2302,6 +2303,7 @@ Miscellaneous commands:
         main_out_path =\
         replace_seqs_in_alignment_with_seqs_from_fasta(args.alignment,
                 args.fasta_file)
+
 
         # Record end time.
         end_time = time.time()

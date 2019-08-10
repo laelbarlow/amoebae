@@ -59,7 +59,7 @@ def afa_to_fa(infilepath, outfilepath):
     outhandle.close()
 
 
-def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta):
+def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
     """Takes sequences from an alignment, finds the top blastp hit in a given
     fasta file for each one, then aligns the top hits to the alignment, then
     removes the original sequences from the alignment, writes the alignemnt,
@@ -114,117 +114,158 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta):
     nex_ali_copy = os.path.join(tempdirpath, os.path.basename(alignment))
     afa_to_nex(afa_alignment2, nex_ali_copy)
 
-    # Remove hyphens from fasta file (make it an unaligned fasta).
-    fa_query_file = afa_alignment2.rsplit('.', 1)[0] + '.faa'
-    afa_to_fa(afa_alignment2, fa_query_file)
+    # Initiate a variable to store the path to a fasta file with top hits or
+    # full-length sequences with the same IDs from the same genomes.
+    top_hit_fasta = None
 
-    # Copy the input fasta file into the temporary directory.
-    fasta_copy = os.path.join(tempdirpath, os.path.basename(fasta.rsplit('.',
-        1)[0] + '.faa'))
-    shutil.copyfile(fasta, fasta_copy) 
+    # If there is a fasta file provided, then find top hits for each sequence
+    # in the input alignment.
+    if fasta is not None:
+        # Remove hyphens from fasta file (make it an unaligned fasta).
+        fa_query_file = afa_alignment2.rsplit('.', 1)[0] + '.faa'
+        afa_to_fa(afa_alignment2, fa_query_file)
 
-    # Make input fasta file a blastable database.
-    make_blast_db(fasta_copy)
+        # Copy the input fasta file into the temporary directory.
+        fasta_copy = os.path.join(tempdirpath, os.path.basename(fasta.rsplit('.',
+            1)[0] + '.faa'))
+        shutil.copyfile(fasta, fasta_copy) 
 
-    # BLASTP search with the sequences from the alignment as the query into the
-    # input fasta file.
-    print('\nRunning blastp search')
-    blast_outpath = fasta_copy.rsplit('.', 1)[0] + '_blastp_out.txt'
-    subprocess.call(['blastp', '-query', fa_query_file, '-db', fasta_copy,
-    '-out', blast_outpath, '-outfmt', '5', '-evalue', str(0.000000001),
-    '-num_threads', str(4)]) 
+        # Make input fasta file a blastable database.
+        make_blast_db(fasta_copy)
 
-    # Parse the output, and make a list of all the top hits for each
-    # sequence/query/searchrecord.
-    # Iterate through each search record (one for each query sequence) and
-    # compile a list of headers for top hits.
-    print('\nParsing blastp output file\n')
-    top_hit_headers = []
-    queries_retrieving_no_hits = copy.copy(modified_original_seq_accs)
-    log_file_path = alignment.rsplit('.', 1)[0] + '_with_newseqs.csv' 
-    with open(log_file_path, 'w') as o:
-        o.write('Header of original sequence,Header of replacement sequence,E-value of top HSP\n')
-        idx = SearchIO.index(blast_outpath, 'blast-xml')
-        qnum = 0
-        for key in sorted(idx.keys()):
-            qnum += 1
-            query_id = idx[key].id
-            o.write(query_id + ',')
-            print('\tQuery ' + str(qnum) + ':' + query_id)
-            found_a_hit = False
-            for hit in idx[key]:
-                found_a_hit = True
-                print('\t\tTop hit:' + hit.id)
-                print('\t\tTop HSP E-value:' + str(hit[0].evalue))
-                top_hit_headers.append(hit.id)
-                #if query_id in queries_retrieving_no_hits:
-                #    queries_retrieving_no_hits.remove(query_id)
-                queries_retrieving_no_hits.remove(query_id)
-                o.write(hit.id + ', ' + str(hit[0].evalue) + '\n')
-                break
-            if not found_a_hit:
-                o.write('N/A,N/A\n')
-        idx.close()
+        # BLASTP search with the sequences from the alignment as the query into the
+        # input fasta file.
+        print('\nRunning blastp search')
+        blast_outpath = fasta_copy.rsplit('.', 1)[0] + '_blastp_out.txt'
+        subprocess.call(['blastp', '-query', fa_query_file, '-db', fasta_copy,
+        '-out', blast_outpath, '-outfmt', '5', '-evalue', str(0.000000001),
+        '-num_threads', str(4)]) 
 
-    # Remove redundant headers from the list.
-    nonredun_top_hit_headers = list(set(top_hit_headers))
+        # Parse the output, and make a list of all the top hits for each
+        # sequence/query/searchrecord.
+        # Iterate through each search record (one for each query sequence) and
+        # compile a list of headers for top hits.
+        print('\nParsing blastp output file\n')
+        top_hit_headers = []
+        queries_retrieving_no_hits = copy.copy(modified_original_seq_accs)
+        log_file_path = alignment.rsplit('.', 1)[0] + '_with_newseqs.csv' 
+        with open(log_file_path, 'w') as o:
+            o.write('Header of original sequence,Header of replacement sequence,E-value of top HSP\n')
+            idx = SearchIO.index(blast_outpath, 'blast-xml')
+            qnum = 0
+            for key in sorted(idx.keys()):
+                qnum += 1
+                query_id = idx[key].id
+                o.write(query_id + ',')
+                print('\tQuery ' + str(qnum) + ':' + query_id)
+                found_a_hit = False
+                for hit in idx[key]:
+                    found_a_hit = True
+                    print('\t\tTop hit:' + hit.id)
+                    print('\t\tTop HSP E-value:' + str(hit[0].evalue))
+                    top_hit_headers.append(hit.id)
+                    #if query_id in queries_retrieving_no_hits:
+                    #    queries_retrieving_no_hits.remove(query_id)
+                    queries_retrieving_no_hits.remove(query_id)
+                    o.write(hit.id + ', ' + str(hit[0].evalue) + '\n')
+                    break
+                if not found_a_hit:
+                    o.write('N/A,N/A\n')
+            idx.close()
 
-    # Calculate number of redundant sequences among top hits.
-    num_redun_top_hits = len(top_hit_headers) - len(nonredun_top_hit_headers)
+        # Remove redundant headers from the list.
+        nonredun_top_hit_headers = list(set(top_hit_headers))
 
-    # Report stats.
-    print('\nNumber of sequences in input alignment:')
-    print(alignment_seq_num)
-    print('\nNumber of top hits:')
-    print(len(top_hit_headers))
-    print('\nNumber of nonredundant top hits:')
-    print(len(nonredun_top_hit_headers))
-    print('\nNumber of redundant sequences among top hits:')
-    print(num_redun_top_hits)
+        # Calculate number of redundant sequences among top hits.
+        num_redun_top_hits = len(top_hit_headers) - len(nonredun_top_hit_headers)
 
-    # Check that the number of top hits is not below 90 percent of the number
-    # of query sequences.
-    percent_of_queries_without_hits = round((len(queries_retrieving_no_hits) /\
-        alignment_seq_num) * 100, 2)
-    print("""\nTotal queries that did not retrieve any hits in the input fasta
-    file: %s""" % str(len(queries_retrieving_no_hits)))
-    print("""\nPercent of queries that did not retrieve any hits in the input
-    fasta file: %s""" % str(percent_of_queries_without_hits))
-    assert percent_of_queries_without_hits <= 10, """More than 10% of queries
-    retrieved no hits in the input fasta file.""" 
+        # Report stats.
+        print('\nNumber of sequences in input alignment:')
+        print(alignment_seq_num)
+        print('\nNumber of top hits:')
+        print(len(top_hit_headers))
+        print('\nNumber of nonredundant top hits:')
+        print(len(nonredun_top_hit_headers))
+        print('\nNumber of redundant sequences among top hits:')
+        print(num_redun_top_hits)
 
-    ## Check that the number of top hits is the same as the number of query
-    ## sequences.
-    #assert len(top_hit_headers) == alignment_seq_num, """Different number
-    #of top hits than query sequences. There may be no hits for some sequences
-    #in the input alignment."""
+        # Check that the number of top hits is not below 90 percent of the number
+        # of query sequences.
+        percent_of_queries_without_hits = round((len(queries_retrieving_no_hits) /\
+            alignment_seq_num) * 100, 2)
+        print("""\nTotal queries that did not retrieve any hits in the input fasta
+        file: %s""" % str(len(queries_retrieving_no_hits)))
+        print("""\nPercent of queries that did not retrieve any hits in the input
+        fasta file: %s""" % str(percent_of_queries_without_hits))
+        assert percent_of_queries_without_hits <= 10, """More than 10% of queries
+        retrieved no hits in the input fasta file.""" 
 
-    # Retrieve the top hit sequences from the input fasta file, and align them
-    # to the input alignment file.
-    #print('\nAligning top hits to input alignment')
-    #with open(fasta_copy) as infp:
-    #    for seq in SeqIO.parse(infp, 'fasta'):
-    #        if seq.id in nonredun_top_hit_headers:
-    #            # Remove '?' characters from sequence?
-    #            #seq.seq = str(seq.seq).replace('?', '')
-    #            assert not '?' in str(seq.seq)
-    #            # Align to input alignment.
-    #            new_nex_path = nex_ali_copy + '_temp.nex' 
-    #            add_seq_to_alignment3(seq, nex_ali_copy, new_nex_path)
-    #            # Delete old nex.
-    #            os.remove(nex_ali_copy)
-    #            # Rename new nex as old nex.
-    #            os.rename(new_nex_path, nex_ali_copy)
-    print('\nGetting top hits from input fasta file')
-    top_hit_fasta = fasta_copy + '_top_hits.faa'
-    with open(fasta_copy) as infp, open(top_hit_fasta, 'w') as o:
-        for seq in SeqIO.parse(infp, 'fasta'):
-            if seq.id in nonredun_top_hit_headers:
-                # Write to file.
-                SeqIO.write(seq, o, 'fasta')
+        ## Check that the number of top hits is the same as the number of query
+        ## sequences.
+        #assert len(top_hit_headers) == alignment_seq_num, """Different number
+        #of top hits than query sequences. There may be no hits for some sequences
+        #in the input alignment."""
+
+        # Retrieve the top hit sequences from the input fasta file, and align them
+        # to the input alignment file.
+        #print('\nAligning top hits to input alignment')
+        #with open(fasta_copy) as infp:
+        #    for seq in SeqIO.parse(infp, 'fasta'):
+        #        if seq.id in nonredun_top_hit_headers:
+        #            # Remove '?' characters from sequence?
+        #            #seq.seq = str(seq.seq).replace('?', '')
+        #            assert not '?' in str(seq.seq)
+        #            # Align to input alignment.
+        #            new_nex_path = nex_ali_copy + '_temp.nex' 
+        #            add_seq_to_alignment3(seq, nex_ali_copy, new_nex_path)
+        #            # Delete old nex.
+        #            os.remove(nex_ali_copy)
+        #            # Rename new nex as old nex.
+        #            os.rename(new_nex_path, nex_ali_copy)
+        print('\nGetting top hits from input fasta file')
+        top_hit_fasta = fasta_copy + '_top_hits.faa'
+        with open(fasta_copy) as infp, open(top_hit_fasta, 'w') as o:
+            for seq in SeqIO.parse(infp, 'fasta'):
+                if seq.id in nonredun_top_hit_headers:
+                    # Write to file.
+                    SeqIO.write(seq, o, 'fasta')
+
+    # Otherwise look in relevant files in the Genomes directory.
+    else:
+        # Iterate through sequences in the input alignment.
+        with open(afa_alignment) as infh:
+            for seq in SeqIO.parse(infh, 'fasta'):
+                # Extract the species name and sequence ID from the sequence header.
+                header = seq.id
+                print('\nFinding full-length sequence for sequence: %s' % header)
+                species_name = header.split('__')[0]
+                seq_id = header.split('__')[1]
+
+                # Determine which databases could correspond to the species name,
+                # given information in the genome info spreadsheet.
+                db_names_with_species_name = []
+                with open(settings.db_info_csv) as infh2:
+                    dfx = pd.read_csv(infh2)
+                    for index, row in dfx.iterrows():
+                        if species_name in row['Species (if applicable)']:
+                            filename = row['Filename']
+                            if filename.endswith('.faa'):
+                                db_names_with_species_name.append(row['Filename'])
+
+                # Check that at least one database might have the full-length sequence.
+                assert len(db_names_with_species_name) > 0, """No databases
+                identified for species name %s.""" % species_name
+
+                # For each possible database/file, try to retrieve a sequence with
+                # the ID.
+                for db_name in db_names_with_species_name:
+                    # Call a function to retrieve the sequence from a database
+                    # given an ID.
+                    ...XXX...
+
 
     # Align top hits to copy of input alignment.
-    print('\nAligning top hits to input alignment')
+    print('\nAligning replacement sequences to input alignment')
     new_nex_path = alignment.rsplit('.', 1)[0] + '_with_newseqs.nex' 
     do_align_iteratively(nex_ali_copy, top_hit_fasta, new_nex_path)
     
