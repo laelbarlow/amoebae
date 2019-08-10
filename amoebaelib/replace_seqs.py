@@ -247,10 +247,11 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
                 with open(settings.db_info_csv) as infh2:
                     dfx = pd.read_csv(infh2)
                     for index, row in dfx.iterrows():
-                        if species_name in row['Species (if applicable)']:
+                        if species_name.replace('_', ' ') in row['Species (if applicable)']:
                             filename = row['Filename']
                             if filename.endswith('.faa'):
-                                db_names_with_species_name.append(row['Filename'])
+                                print(filename)
+                                db_names_with_species_name.append(filename)
 
                 # Check that at least one database might have the full-length sequence.
                 assert len(db_names_with_species_name) > 0, """No databases
@@ -261,6 +262,7 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
                 for db_name in db_names_with_species_name:
                     # Call a function to retrieve the sequence from a database
                     # given an ID.
+                    full_length_seq_obj = get_seqs_from_fasta_db(db_name, [seq_id], False)
                     ...XXX...
 
 

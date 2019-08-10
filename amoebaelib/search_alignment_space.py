@@ -1495,7 +1495,7 @@ def get_ml_tree_info_dict(ml_tree_path,
 
     # Define a dictionary of ete3 NodeStyle objects for different branch types
     # in the tree to be visualized.
-    style_dict = define_nodestyles_dict_for_colourcoding()
+    #style_dict = define_nodestyles_dict_for_colourcoding() # Temporarily commented out.
 
     # Get a list of nodes of interest (ancestral nodes for clades of interest).
     orthogroup_nodes = []
@@ -1708,58 +1708,62 @@ def get_ml_tree_info_dict(ml_tree_path,
             #print('\n\n\n\n')
             t2.set_outgroup(get_corresponding_node(node,t2))
 
-        # Make stem branch for clade of interest bold.
-        stem_node = get_corresponding_node(node, t2)
-        stem_node.set_style(style_dict['stem_node'])
 
-        # Add clade name to stem branch.
-        #stem_node.name = clade_name
-        stem_node.add_face(define_textface_for_labeling_stem(clade_name), column=0, position = "branch-top")
+        # This loop temporarily commented out to allow running on
+        # computecanada (see also below):
 
-        # Iterate over branches within clade and customize appearance.
-        for leaf in node.iter_leaves():
-            # Set general features for all leaf nodes.
-            style = NodeStyle()
-            style["fgcolor"] = "#0f0f0f"
-            style["size"] = 0
-            style["vt_line_color"] = "#000000"
-            style["hz_line_color"] = "#000000"
+        ## Make stem branch for clade of interest bold.
+        #stem_node = get_corresponding_node(node, t2)
+        #stem_node.set_style(style_dict['stem_node'])
 
-            #style["vt_line_width"] = 8
-            #style["hz_line_width"] = 8
-            #style["vt_line_type"] = 0 # 0 solid, 1 dashed, 2 dotted
-            #style["hz_line_type"] = 0
+        ## Add clade name to stem branch.
+        ##stem_node.name = clade_name
+        #stem_node.add_face(define_textface_for_labeling_stem(clade_name), column=0, position = "branch-top")
 
-            # Make shortest branch in clade of interest bold.
-            if leaf.name == min_len[0]:
-                #shortbranchnode = get_corresponding_node(t1.search_nodes(name=min_len[0])[0], t2)
-                #shortbranchnode.set_style(style_dict['shortest branch'])
-                style["hz_line_width"] = 5
+        ## Iterate over branches within clade and customize appearance.
+        #for leaf in node.iter_leaves():
+        #    # Set general features for all leaf nodes.
+        #    style = NodeStyle()
+        #    style["fgcolor"] = "#0f0f0f"
+        #    style["size"] = 0
+        #    style["vt_line_color"] = "#000000"
+        #    style["hz_line_color"] = "#000000"
 
-            # Make longest branch in clade of interest bold.
-            if leaf.name == max_len[0]:
-                #longbranchnode = get_corresponding_node(t1.search_nodes(name=max_len[0])[0], t2)
-                #longbranchnode.set_style(style_dict['longest branch'])
-                style["hz_line_width"] = 5
-                style["hz_line_type"] = 2
-            
-            # Customize leaf node appearance.
-            # Get species name.
-            #species_name = leaf.name.replace('__', ' ').replace('_', ' ').split(' ', 1)[1]
-            species_name = get_species_name_from_seq_id(leaf.name)
-            #print(species_name)
+        #    #style["vt_line_width"] = 8
+        #    #style["hz_line_width"] = 8
+        #    #style["vt_line_type"] = 0 # 0 solid, 1 dashed, 2 dotted
+        #    #style["hz_line_type"] = 0
 
-            # Check that the name does not end with '.copy'.
-            assert not species_name.endswith('.copy'), """A sequence with an
-            identical name to a sequence already in the alignment/tree was
-            apparently added: %s""" % leaf.name
+        #    # Make shortest branch in clade of interest bold.
+        #    if leaf.name == min_len[0]:
+        #        #shortbranchnode = get_corresponding_node(t1.search_nodes(name=min_len[0])[0], t2)
+        #        #shortbranchnode.set_style(style_dict['shortest branch'])
+        #        style["hz_line_width"] = 5
 
-            ti = get_taxonomic_info(species_name)
-            #print('\t' + ' '.join([str(ti.superbranch), str(ti.supergroup),
-            #    str(ti.group), str(ti.species)]))
+        #    # Make longest branch in clade of interest bold.
+        #    if leaf.name == max_len[0]:
+        #        #longbranchnode = get_corresponding_node(t1.search_nodes(name=max_len[0])[0], t2)
+        #        #longbranchnode.set_style(style_dict['longest branch'])
+        #        style["hz_line_width"] = 5
+        #        style["hz_line_type"] = 2
+        #    
+        #    # Customize leaf node appearance.
+        #    # Get species name.
+        #    #species_name = leaf.name.replace('__', ' ').replace('_', ' ').split(' ', 1)[1]
+        #    species_name = get_species_name_from_seq_id(leaf.name)
+        #    #print(species_name)
 
-            # Set style for node.
-            get_corresponding_node(leaf, t2).set_style(style)
+        #    # Check that the name does not end with '.copy'.
+        #    assert not species_name.endswith('.copy'), """A sequence with an
+        #    identical name to a sequence already in the alignment/tree was
+        #    apparently added: %s""" % leaf.name
+
+        #    ti = get_taxonomic_info(species_name)
+        #    #print('\t' + ' '.join([str(ti.superbranch), str(ti.supergroup),
+        #    #    str(ti.group), str(ti.species)]))
+
+        #    # Set style for node.
+        #    get_corresponding_node(leaf, t2).set_style(style)
 
         # Sort seq names by descending branch lengths.
         seq_names_by_br_len = [n.name for n in sorted(node.get_leaves(),\
@@ -1820,7 +1824,8 @@ def get_ml_tree_info_dict(ml_tree_path,
 
     # Show tree annotations.
 
-    # Temporarily commented out for running on cedar:
+    # Temporarily commented out for running on cedar (see also commented loop
+    # above):
 
     ## Remove underscores from leaf names.
     #for leaf in t2.iter_leaves():
