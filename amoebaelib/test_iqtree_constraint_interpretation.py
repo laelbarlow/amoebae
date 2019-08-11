@@ -77,6 +77,61 @@ def run_simple_constrained_iqtree_analysis(seqs,
     return topology_as_string
 
 
+def run_special_constrained_iqtree_analysis(seqs,
+                                           constraint_tree_obj,
+                                           starting_tree_obj):
+    """Takes a list of seq objects, aligns them, and runs an IQtree analysis
+    that is constained by the given tree. Returns the topologies of the output
+    trees.
+    """
+    # Make a temporary directory to store output files.
+    timestamp = time.strftime("%Y%m%d%H%M%S")
+    chars = ['A','B','C','D','E','F','G','H','I','G','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+    shuffle(chars)
+    random_char = chars[0]
+    outdirpath = 'TEMP_CONSTRAINT_TREE_TEST_OUTPUT_' + timestamp + random_char
+    os.mkdir(outdirpath)
+
+    # Write input aligned sequences to a phylip alignment file.
+    alignment = os.path.join(outdirpath, 'alignment.phy')
+    with open(alignment, 'w') as o:
+        o.write(seqs)
+
+    # Write constraint tree to a file.
+    constraint_tree_file = os.path.join(outdirpath, 'constraint_tree.tre')
+    constraint_tree_obj.write(format=9, outfile=constraint_tree_file)
+
+    # Write starting tree to a file.
+    starting_tree_file = os.path.join(outdirpath, 'starting_tree.tre')
+    starting_tree_obj.write(format=9, outfile=starting_tree_file)
+
+    # Run a tree search with IQtree.
+    output_prefix = os.path.join(outdirpath, 'output')
+    iqtree_command_list = ['iqtree',
+                           '-s', alignment,
+                           '-m', 'LG',
+                           '-g', constraint_tree_file,
+                           '-t', starting_tree_file,
+                           '-pre', output_prefix
+                           ]
+    #subprocess.call(iqtree_command_list)
+    with open(output_prefix + '.stdout.txt', 'w') as o:
+        subprocess.call(iqtree_command_list, stdout=o, stderr=subprocess.STDOUT)
+
+    # Parse the relevant output tree file.
+    output_tree = output_prefix + '.treefile'
+    assert os.path.isfile(output_tree), """IQtree did not produce a treefile
+    with the expected path."""
+    t1 = Tree(output_tree)
+    topology_as_string = t1.write(format=9)
+
+    # Delete temporary directory.
+    shutil.rmtree(outdirpath)
+
+    # Return the output topology.
+    return topology_as_string
+
+
 
 # Define a class with functions for performing tests.
 class TestConstInterp(unittest.TestCase):
@@ -211,6 +266,65 @@ class TestConstInterp(unittest.TestCase):
         # Where "unrootedfamilytree1" and "unrootedfamilytree2" do not have the
         # outer set of parentheses that would make this constraint tree rooted.
 
+
+    def test_constrained_analysis_with_starting_tree(self):
+        # Define a string constituting an alignment in phylip format.
+        alignment_string = '\n'.join([' 8 10',
+                                      'A  LLLLLLLLLL',
+                                      'B  LLLLLLLLAA',
+                                      'C  LLLLLLLAAA',
+                                      'D  LLLLLLLAAA',
+                                      'E  VVVVVVVVVV',
+                                      'F  FFVVVVVVVV',
+                                      'G  FFFVVVVVVV',
+                                      'H  FFFVVVVVVV',
+                                      ])
+
+        # Without constraint produces: (A,(B,(C,D)),(E,(F,(G,H))));
+        constraint_tree_string = "((A, B, (C, D)), E, F, (G, H));"
+        constraint_tree_obj = Tree(constraint_tree_string)
+
+        # Define starting tree.
+
+        #starting_tree_string = "(A, B, C, D, E, F, G, H);"
+        # produces: (A,B,C,D,E,F,G,H); (Error)
+
+        #starting_tree_string = "((A, B, (C, D)), E, F, (G, H));"
+        # produces: (A,B,(C,D),(E,F,(G,H))); (Error)
+
+        # *** Why does the output tree always match the starting tree exactly,
+        # even when it is multifurcating??? There's actually an error. It
+        # doesn't go beyond the starting tree.
+
+        #starting_tree_string = "((A, (B, (C, D))), E, (F, (G, H)));"
+        # produces: (A,(B,(C,D)),(E,(F,(G,H)))); (No error here!)
+
+        #starting_tree_string = "((A, (B, (C, D))), (E, (F, (G, H))));"
+        # produces: (A,(B,(C,D)),(E,(F,(G,H)))); (No error)
+
+        #starting_tree_string = "((C, (D, (A, B))), (G, (H, (E, F))));"
+        # produces: "ERROR: Initial tree is not compatible with constraint
+        # tree"
+
+        # Starting tree that is not identical to the constraint tree, but is
+        # compatible?
+        starting_tree_string = "((F, (E, (G, H))), (B, (A, (C, D))));"
+        # produces: (A,(B,(C,D)),(E,(F,(G,H)))); (Works)
+
+        # Parse starting tree string.
+        starting_tree_obj = Tree(starting_tree_string)
+
+        # Call function.
+        output_topo = run_special_constrained_iqtree_analysis(alignment_string,
+                                                              constraint_tree_obj,
+                                                              starting_tree_obj)
+
+        # Check that output topology is the same as the constraint topology.
+        self.assertEqual('(A,(B,(C,D)),(E,(F,(G,H))));', output_topo.replace(' ', ''))
+
+        # So, to make a usable starting tree, just need to root each of the two
+        # subtrees (for pairwise rooting analysis) in a way that is compatible
+        # with the constraint tree. Maybe this can be done with a script.
 
 
 if __name__ == '__main__':
