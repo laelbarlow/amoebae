@@ -39,11 +39,12 @@ from module_afa_to_nex import nex_to_afa, afa_to_nex
 from module_amoebae import mask_nex2
 from module_amoebae_trim_nex import trim_nex
 from module_amoebae_name_replace import codenames_nex
+from module_amoebae_constrain_mb import constrain_mb_with_tree
+from module_amoebae_name_replace import write_newick_tree_with_coded_names
 
 # Import modules from python3 packages.
 from ete3 import Tree
 
-from module_amoebae_name_replace import write_newick_tree_with_coded_names
 
 # Handle command line arguments.
 parser = argparse.ArgumentParser(
@@ -125,6 +126,9 @@ tablefile = alignment_combined_nex.rsplit('.', 1)[0] + '_C.table'
 
 # Define path to coded phylip alignment file.
 phylip_coded = alignment_combined_nex.rsplit('.', 1)[0] + '_C.phy'
+
+# Define path to coded nexus for MrBayes alignment file.
+mb_coded = alignment_combined_nex.rsplit('.', 1)[0] + '_C.mb.nex'
 
 # Copy tree topology files to output directory.
 unrooted_topology1 = os.path.join(main_out_path, os.path.basename(tree1))
@@ -256,6 +260,39 @@ starting_tree_file_coded = starting_tree_file.rsplit('.', 1)[0] + '_C.tre'
 write_newick_tree_with_coded_names(starting_tree_file,
         starting_tree_file_coded, tablefile)
  
+# Perform model selection using IQtree ModelFinder.
+subs_model = None
+model_finder_dir = os.path.join(main_out_path, 'ModelFinder_output')
+os.mkdir(model_finder_dir)
+prefix = os.path.join(model_finder_dir, 'output')
+iqtree_command_list = ['iqtree',
+                       '-s', phylip_coded,
+                       '-m', 'MFP',
+                       '-mset', 'LG,WAG,JTT,Dayhoff,VT',
+                       '-pre', prefix 
+                       ]
+#subprocess.call(iqtree_command_list)
+#file_with_model = prefix + '.iqtree'
+#with open(file_with_model) as fh:
+#    for i in fh:
+#        if i.startswith('Best-fit model'):
+#            subs_model = i.split(' ')[2]
+#            break
+
+# Check that a model was found.
+subs_model = 'LG'
+assert subs_model is not None
+
+# Change substitution model in MrBayes file. 
+mbmodelregex = re.compile(r'aamodelpr=fixed(.+)')
+temp_mb_file = mb_coded + '_TEMP'
+with open(mb_coded,'r') as infh, open(temp_mb_file, 'w') as o:
+    contents = infh.read()
+assert os.path.isfile(temp_mb_file)
+os.remove(mb_coded)
+shutil.copyfile(temp_mb_file, mb_coded)
+os.remove(temp_mb_file)
+
 
 # Write script to perform an IQtree bootstrap analysis using the constraint and
 # starting trees.
@@ -264,9 +301,13 @@ with open(iqtree_script, 'w') as o:
     script_template = Template("""\
 #!/usr/bin/env bash
 mkdir IQtree_output
-iqtree -s $alignment_var -g $constraint_var -t $starting_var -pre $alignment_var_iqtree_output/output -nt AUTO
+iqtree -s $alignment_var1 -m $subs_model_var -g $constraint_var -t $starting_var -pre $alignment_var2 -nt AUTO -bb 1000 -alrt 1000
 """)
-    script_text = script_template.substitute(alignment_var = os.path.basename(phylip_coded),
+    script_text = script_template.substitute(alignment_var1 = os.path.basename(phylip_coded),
+                                             alignment_var2 =\
+                                             os.path.basename(phylip_coded)\
+                                             + '_iqtree_output/output',
+                                             subs_model_var = subs_model,
                                              constraint_var =\
                                              os.path.basename(constraint_tree_file_coded),
                                              starting_var =\
@@ -274,9 +315,37 @@ iqtree -s $alignment_var -g $constraint_var -t $starting_var -pre $alignment_var
                                              )
     o.write(script_text)
 
-# Apply constraints and starting tree to MrBayes code block.
+# Make a subdirectory to contain MrBayes output files.
+mb_subdir = os.path.join(main_out_path, 'MrBayes_output')
+os.mkdir(mb_subdir)
+
+## Copy constraint tree into MrBayes subdir.
+#shutil.copyfile(constraint_tree_file_coded, os.path.join(mb_subdir,
+#    os.path.basename(constraint_tree_file_coded)))
+
+# Apply constraints to MrBayes code block.
+# Note: MrBayes appears not to have a way of defining a starting tree topology.
+mb_coded_constrained = os.path.join(mb_subdir,
+        os.path.basename(mb_coded).rsplit('.', 1)[0] + '.constrained.nex')
+constrain_mb_with_tree(mb_coded,
+                       constraint_tree_file_coded,
+                       mb_coded_constrained
+                       )
 
 
+# Write script for performing constrained tree search with MrBayes.
+mrbayes_script = os.path.join(main_out_path, '0_run_constrained_mrbayes.sh')
+with open(mrbayes_script, 'w') as o:
+    script_template = Template("""\
+#!/usr/bin/env bash
+cd $mb_subdir_var
+mb $mb_nex_var
+"""
+    )
+    script_text = script_template.substitute(mb_nex_var =\
+                     os.path.basename(mb_coded_constrained),
+                     mb_subdir_var = os.path.basename(mb_subdir))
+    o.write(script_text)
 
 
 
