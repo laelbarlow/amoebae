@@ -24,6 +24,7 @@ import argparse
 import time
 import shutil
 import subprocess
+from string import Template
 
 # Define paths to directories containing AMOEBAE modules.
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
@@ -122,6 +123,9 @@ codenames_nex(alignment_combined_nex)
 # Define path to table file.
 tablefile = alignment_combined_nex.rsplit('.', 1)[0] + '_C.table'
 
+# Define path to coded phylip alignment file.
+phylip_coded = alignment_combined_nex.rsplit('.', 1)[0] + '_C.phy'
+
 # Copy tree topology files to output directory.
 unrooted_topology1 = os.path.join(main_out_path, os.path.basename(tree1))
 shutil.copyfile(tree1, unrooted_topology1)
@@ -138,6 +142,23 @@ shutil.copyfile(tree2, unrooted_topology2)
 t1 = Tree(unrooted_topology1)
 t2 = Tree(unrooted_topology2)
 
+# Identify one of the clades of interest in the trees.
+orthogroup_nodes1 = get_nodes_of_interest(t1, type_seqs_dict1.values())
+orthogroup_nodes2 = get_nodes_of_interest(t2, type_seqs_dict2.values())
+
+# Root each tree object on a clade of interest.
+t1.set_outgroup(get_corresponding_node(orthogroup_nodes1[0][1], t1))
+t2.set_outgroup(get_corresponding_node(orthogroup_nodes2[0][1], t2))
+
+# Unroot each tree object in such a way that it will be compatible with the
+# starting tree.
+for t in [t1, t2]:
+    child_num = 0
+    for child_node in t.traverse():
+        child_num += 1
+        if child_num == 3:
+            child_node.delete()
+
 # Initiate variables for storing unrooted topology strings.
 unrooted_topology1_string = None
 unrooted_topology2_string = None
@@ -150,35 +171,35 @@ if args.polytomy_clades:
 
     # Loop over both trees.
     for t, tsd in zip([t1_copy, t2_copy], [type_seqs_dict1, type_seqs_dict2]):
-        print(t)
+        #print(t)
         # Get a list of nodes of interest.
         orthogroup_nodes = get_nodes_of_interest(t, tsd.values())
 
         # Iterate through corresponding nodes in the copies of the tree objects.
         for orthogroup_node in [x[1] for x in orthogroup_nodes]:
-            print('orthogroup_node:')
-            print(orthogroup_node)
-            # Make a list of leaf node objects in clade of interest.
-            leaf_nodes = orthogroup_node.get_leaves()
+            #print('orthogroup_node:')
+            #print(orthogroup_node)
 
-            # Remove all child nodes of clade of interest.
+            # Get corresponding node in actual tree object.
+            orthogroup_node = get_corresponding_node(orthogroup_node, t)
+
+            # Remove all child nodes that are not leaves from clade of interest
+            # (making the clade a polytomy).
             child_nodes_to_remove = []
             child_num = 0
             for child_node in orthogroup_node.traverse():
                 child_num += 1
                 if child_num > 1:
-                    child_nodes_to_remove.append(child_node)
+                    if not child_node.is_leaf():
+                        child_nodes_to_remove.append(child_node)
             for child_node in child_nodes_to_remove:
-                orthogroup_node.remove_child(child_node)
-            print('orthogroup_node without children:')
-            print(orthogroup_node)
-            ...XXX...
+                child_node.delete()
+
+            #print('orthogroup_node as polytomy:')
+            #print(orthogroup_node)
+
+        #print(t)
                     
-
-
-            # Add all original leaf node objects as child nodes to the clade of
-            # interest (to make a polytomy).
-
     # Get topology strings without outer set of parentheses from modified
     # topologies.
     unrooted_topology1_string = t1_copy.write(format=9)[1:-2]
@@ -208,8 +229,7 @@ with open(constraint_tree_file, 'w') as o:
 orthogroup_nodes1 = get_nodes_of_interest(t1, type_seqs_dict1.values())
 orthogroup_nodes2 = get_nodes_of_interest(t2, type_seqs_dict2.values())
 
-# Root each tree object on a clade of interest (to get a rooted tree topology
-# that is consistent with the constraint tree).
+# Root each tree object on a clade of interest.
 t1.set_outgroup(get_corresponding_node(orthogroup_nodes1[0][1], t1))
 t2.set_outgroup(get_corresponding_node(orthogroup_nodes2[0][1], t2))
 
@@ -239,6 +259,20 @@ write_newick_tree_with_coded_names(starting_tree_file,
 
 # Write script to perform an IQtree bootstrap analysis using the constraint and
 # starting trees.
+iqtree_script = os.path.join(main_out_path, '0_run_constrained_iqtree.sh')
+with open(iqtree_script, 'w') as o:
+    script_template = Template("""\
+#!/usr/bin/env bash
+mkdir IQtree_output
+iqtree -s $alignment_var -g $constraint_var -t $starting_var -pre $alignment_var_iqtree_output/output -nt AUTO
+""")
+    script_text = script_template.substitute(alignment_var = os.path.basename(phylip_coded),
+                                             constraint_var =\
+                                             os.path.basename(constraint_tree_file_coded),
+                                             starting_var =\
+                                             os.path.basename(starting_tree_file_coded)
+                                             )
+    o.write(script_text)
 
 # Apply constraints and starting tree to MrBayes code block.
 

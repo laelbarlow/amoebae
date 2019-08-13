@@ -16,11 +16,14 @@
 
 """Contains functions for replacing nodes of interest in a given ete3 TreeNode
 object with alternative nodes.
+
+***This module is not in use yet.
 """
 import sys
 import os
 #from math import factorial
 from ete3 import Tree
+from search_alignment_space import get_corresponding_node
 #from itertools import product
 
 def replace_nodes_of_interest_in_tree(t, nodes, replacement_nodes):
@@ -30,10 +33,10 @@ def replace_nodes_of_interest_in_tree(t, nodes, replacement_nodes):
     """
     t2 = t.copy()
     print(t2)
-    for n in t2.get_leaves():
-        print(n)
-        t2.remove_child(n.name)
-    print(t2)
+    for n, replacement_n in zip(nodes, replacement_nodes):
+        t2n = get_corresponding_node(n, t2)
+        # Replace t2n with replacement_n
+        ...XXX...
 
 
     return t2
