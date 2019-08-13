@@ -272,16 +272,15 @@ iqtree_command_list = ['iqtree',
                        '-mset', 'LG,WAG,JTT,Dayhoff,VT',
                        '-pre', prefix 
                        ]
-#subprocess.call(iqtree_command_list)
-#file_with_model = prefix + '.iqtree'
-#with open(file_with_model) as fh:
-#    for i in fh:
-#        if i.startswith('Best-fit model'):
-#            subs_model = i.split(' ')[2]
-#            break
+subprocess.call(iqtree_command_list)
+file_with_model = prefix + '.iqtree'
+with open(file_with_model) as fh:
+    for i in fh:
+        if i.startswith('Best-fit model'):
+            subs_model = i.split(' ')[2]
+            break
 
 # Check that a model was found.
-subs_model = 'LG'
 assert subs_model is not None
 
 # Change substitution model in MrBayes file. 
