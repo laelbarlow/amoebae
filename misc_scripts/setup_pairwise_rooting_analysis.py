@@ -25,6 +25,7 @@ import time
 import shutil
 import subprocess
 from string import Template
+import re
 
 # Define paths to directories containing AMOEBAE modules.
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
@@ -284,15 +285,28 @@ subs_model = 'LG'
 assert subs_model is not None
 
 # Change substitution model in MrBayes file. 
-mbmodelregex = re.compile(r'aamodelpr=fixed(.+)')
+# Define regular expression to identify the part of the file that needs to be
+# modified.
+#mbmodelregex = re.compile(r'aamodelpr=fixed((\w|\+)+);')
+mbmodelregex = re.compile(r'aamodelpr=fixed\(.+\);')
+# Define a path to a temporary copy of the file.
 temp_mb_file = mb_coded + '_TEMP'
+# Write modified contents to the new file.
 with open(mb_coded,'r') as infh, open(temp_mb_file, 'w') as o:
+    # Read text from original file.
     contents = infh.read()
+    # Check that the string of interest only occurs once in the original file.
+    assert len(mbmodelregex.findall(contents)) == 1
+    # Define replacement string with new substitution model.
+    new_model_string = 'aamodelpr=fixed(' + subs_model + ');'
+    # Write modified text to new file.
+    o.write(mbmodelregex.sub(new_model_string, contents))
+# Check that the new file was written.
 assert os.path.isfile(temp_mb_file)
+# Remove the original file.
 os.remove(mb_coded)
-shutil.copyfile(temp_mb_file, mb_coded)
-os.remove(temp_mb_file)
-
+# Rename the replacement file to the original file path.
+os.rename(temp_mb_file, mb_coded)
 
 # Write script to perform an IQtree bootstrap analysis using the constraint and
 # starting trees.
