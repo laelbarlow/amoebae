@@ -361,4 +361,5 @@ mb $mb_nex_var
     o.write(script_text)
 
 
+# ***Ask for input before procededing after mask so it can be adjusted manually...
 
