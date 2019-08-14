@@ -146,18 +146,40 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Check for similarity search programs.
+        print('\n\n\n')
         subprocess.call(['blastp', '-h'])
+        print('\n\n\n')
         subprocess.call(['hmmsearch', '-h'])
+        print('\n\n\n')
         subprocess.call(['esl-sfetch', '-h'])
 
         # Check for alignment programs.
+        print('\n\n\n')
         subprocess.call(['muscle', '-h'])
 
         # Check for phylogenetics programs.
+        print('\n\n\n')
         subprocess.call(['iqtree', '-h'])
 
         # Check for latex (pdflatex)?
         # ...
+
+        print('\n\n\n')
+
+
+    def check_qt(self):
+        parser = argparse.ArgumentParser(
+            description="""Check that all the problematic dependency qt is
+            running properly.""",
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        args = parser.parse_args(sys.argv[2:])
+
+        # Check for similarity search programs.
+        from check_qt import run_qt
+        
+        # Call function to run qt.
+        print('Running code that depends on qt.')
+        run_qt()
 
 
     def check_imports(self):
