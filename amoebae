@@ -174,8 +174,15 @@ Miscellaneous commands:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         args = parser.parse_args(sys.argv[2:])
 
+        # Print try importing modules.
+        print('Trying to import necessary modules.')
+        from ete3 import Tree, faces, AttrFace, TreeStyle, NodeStyle, TextFace
+        print('Successfully imported necessary modules.')
+
         # Check for similarity search programs.
+        print('Trying to import run_qt function from check_qt module')
         from check_qt import run_qt
+        print('Succesfully imported the run_qt function from the check_qt module')
         
         # Call function to run qt.
         print('Running code that depends on qt.')
