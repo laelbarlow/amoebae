@@ -62,6 +62,7 @@ amoebae check_depend
 printf \"\n\n\nChecking all import statements for amoebae:\n\"
 amoebae check_imports
 
+printf \"\n\n\nRunning amoebae command:\n\"
 #*** AMOEBAE command here:
 
 amoebae $AMOEBAECOMMAND

@@ -15,6 +15,9 @@
 # 
 """Sets up input files for tree searches (IQtree and MrBayes) for finding the
 root of homologous protein family trees.
+
+This script cannot be submitted to a cluster, because it requires manual input
+to confirm alignment masking.
 """
 
 # Import built-in modules.
@@ -112,24 +115,31 @@ subprocess.call(['muscle',
 alignment_combined_nex = alignment_combined_fasta.rsplit('.', 1)[0] + '.nex'
 afa_to_nex(alignment_combined_fasta, alignment_combined_nex)
 
-# May not be necessary:
-## Mask (include all positions) and Trim the combined alignment file.
-#alignment_combined_mask = alignment_combined_nex.rsplit('.', 1)[0] + '.mask.nex'
-#mask_nex2(alignment_combined_nex, alignment_combined_mask)
-#alignment_combined_trim = alignment_combined_mask.rsplit('.', 1)[0] + '.trim.nex'
-#trim_nex(alignment_combined_mask, alignment_combined_trim)
+# Mask (include all positions by default) the combined alignment file.
+alignment_combined_mask = alignment_combined_nex.rsplit('.', 1)[0] + '.mask.nex'
+mask_nex2(alignment_combined_nex, alignment_combined_mask)
+
+# Open the masked alignment in the default nexus alignment viewer.
+subprocess.call(['open', alignment_combined_mask])
+
+# Take user input to confirm the masking of the alignment.
+input('\nCheck the masking of the alignment and press ENTER:\n%s\n' % alignment_combined_mask)
+
+# Trim the combined alignment file.
+alignment_combined_trim = alignment_combined_mask.rsplit('.', 1)[0] + '.trim.nex'
+trim_nex(alignment_combined_mask, alignment_combined_trim)
 
 # Write coded alignment file.
-codenames_nex(alignment_combined_nex)
+codenames_nex(alignment_combined_trim)
 
 # Define path to table file.
-tablefile = alignment_combined_nex.rsplit('.', 1)[0] + '_C.table'
+tablefile = alignment_combined_trim.rsplit('.', 1)[0] + '_C.table'
 
 # Define path to coded phylip alignment file.
-phylip_coded = alignment_combined_nex.rsplit('.', 1)[0] + '_C.phy'
+phylip_coded = alignment_combined_trim.rsplit('.', 1)[0] + '_C.phy'
 
 # Define path to coded nexus for MrBayes alignment file.
-mb_coded = alignment_combined_nex.rsplit('.', 1)[0] + '_C.mb.nex'
+mb_coded = alignment_combined_trim.rsplit('.', 1)[0] + '_C.mb.nex'
 
 # Copy tree topology files to output directory.
 unrooted_topology1 = os.path.join(main_out_path, os.path.basename(tree1))
