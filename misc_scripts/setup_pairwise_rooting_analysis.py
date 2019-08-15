@@ -120,6 +120,7 @@ alignment_combined_mask = alignment_combined_nex.rsplit('.', 1)[0] + '.mask.nex'
 mask_nex2(alignment_combined_nex, alignment_combined_mask)
 
 # Open the masked alignment in the default nexus alignment viewer.
+print('\nOpening masked alignment file with default .nex file viewer for manual inspection and adjustment...')
 subprocess.call(['open', alignment_combined_mask])
 
 # Take user input to confirm the masking of the alignment.
@@ -291,12 +292,12 @@ with open(file_with_model) as fh:
             break
 
 # Check that a model was found.
+#subs_model = 'LG'
 assert subs_model is not None
 
 # Change substitution model in MrBayes file. 
 # Define regular expression to identify the part of the file that needs to be
 # modified.
-#mbmodelregex = re.compile(r'aamodelpr=fixed((\w|\+)+);')
 mbmodelregex = re.compile(r'aamodelpr=fixed\(.+\);')
 # Define a path to a temporary copy of the file.
 temp_mb_file = mb_coded + '_TEMP'
@@ -317,59 +318,98 @@ os.remove(mb_coded)
 # Rename the replacement file to the original file path.
 os.rename(temp_mb_file, mb_coded)
 
+# Define paths to scripts to run iqtree analyses.
+iqtree_script_unconstrained= os.path.join(main_out_path, '0_run_unconstrained_iqtree.sh')
+iqtree_script_constrained = os.path.join(main_out_path, '0_run_constrained_iqtree.sh')
+iqtree_scripts = [iqtree_script_unconstrained, iqtree_script_constrained]
+
 # Write script to perform an IQtree bootstrap analysis using the constraint and
 # starting trees.
-iqtree_script = os.path.join(main_out_path, '0_run_constrained_iqtree.sh')
-with open(iqtree_script, 'w') as o:
-    script_template = Template("""\
+iqtree_constraint_text =\
+        '-g ' + os.path.basename(constraint_tree_file_coded) +\
+        ' -t ' + os.path.basename(starting_tree_file_coded)
+iqtree_constraint_texts = [' ', iqtree_constraint_text]
+iqtree_labels = ['unconstrained', 'constrained']
+for label, script_path, constraint_text in zip(iqtree_labels, iqtree_scripts, iqtree_constraint_texts):
+    with open(script_path, 'w') as o:
+        script_template = Template("""\
 #!/usr/bin/env bash
-mkdir IQtree_output
-iqtree -s $alignment_var1 -m $subs_model_var -g $constraint_var -t $starting_var -pre $alignment_var2 -nt AUTO -bb 1000 -alrt 1000
-""")
-    script_text = script_template.substitute(alignment_var1 = os.path.basename(phylip_coded),
-                                             alignment_var2 =\
-                                             os.path.basename(phylip_coded)\
-                                             + '_iqtree_output/output',
-                                             subs_model_var = subs_model,
-                                             constraint_var =\
-                                             os.path.basename(constraint_tree_file_coded),
-                                             starting_var =\
-                                             os.path.basename(starting_tree_file_coded)
-                                             )
-    o.write(script_text)
+#SBATCH --ntasks=1
+#SBATCH --mem-per-cpu=100000M
+#SBATCH --time=01:00:00
+#SBATCH --account=def-dacks
+#SBATCH --mail-user=lael@ualberta.ca
+#SBATCH --mail-type=END
 
-# Make a subdirectory to contain MrBayes output files.
-mb_subdir = os.path.join(main_out_path, 'MrBayes_output')
-os.mkdir(mb_subdir)
-
-## Copy constraint tree into MrBayes subdir.
-#shutil.copyfile(constraint_tree_file_coded, os.path.join(mb_subdir,
-#    os.path.basename(constraint_tree_file_coded)))
+OUTDIR=$alignment_var'_iqtree_'$label_var'_cedar'
+mkdir $$OUTDIR
+iqtree -s $alignment_var $constraint_var -bb 1000 -wbt -alrt 1000 -m $subs_model_var -nt AUTO -pre $$OUTDIR'/output'
+"""
+        )
+        script_text = script_template.substitute(
+            alignment_var = os.path.basename(phylip_coded),
+            label_var = label,
+            subs_model_var = subs_model,
+            constraint_var = constraint_text
+            )
+        o.write(script_text)
 
 # Apply constraints to MrBayes code block.
 # Note: MrBayes appears not to have a way of defining a starting tree topology.
-mb_coded_constrained = os.path.join(mb_subdir,
-        os.path.basename(mb_coded).rsplit('.', 1)[0] + '.constrained.nex')
+mb_coded_constrained = mb_coded.rsplit('.', 1)[0] + '.constrained.nex'
 constrain_mb_with_tree(mb_coded,
                        constraint_tree_file_coded,
                        mb_coded_constrained
                        )
 
+# Define paths to scripts and alignments for MrBayes analyses.
+mrbayes_script_unconstrained = os.path.join(main_out_path, '0_run_unconstrained_mb.sh')
+mrbayes_script_constrained = os.path.join(main_out_path, '0_run_constrained_mb.sh')
+mrbayes_scripts = [mrbayes_script_unconstrained, mrbayes_script_constrained]
+mrbayes_alignment_paths = [mb_coded_constrained, mb_coded]
 
-# Write script for performing constrained tree search with MrBayes.
-mrbayes_script = os.path.join(main_out_path, '0_run_constrained_mrbayes.sh')
-with open(mrbayes_script, 'w') as o:
-    script_template = Template("""\
+# Write scripts for performing unconstrained and constrained tree searches with MrBayes.
+for script_path, alignment_path in zip(mrbayes_scripts, mrbayes_alignment_paths):
+    # Define path to a subdirectory to contain output files.
+    mb_subdir = os.path.join(main_out_path, os.path.basename(alignment_path) +
+                '_mb_cedar')
+
+    # Make subdir.
+    os.mkdir(mb_subdir)
+
+    # Copy alignments into subdirs.
+    shutil.copyfile(alignment_path, os.path.join(mb_subdir,
+        os.path.basename(alignment_path)))
+
+    # Write scripts.
+    with open(script_path, 'w') as o:
+        script_template = Template("""\
 #!/usr/bin/env bash
+#SBATCH --ntasks=8              # number of MPI processes (mb should be faster with 16, but for some reason when 16 is specified the job times out without starting on cedar).
+#SBATCH --mem-per-cpu=125000M   # maximum on cedar?
+#SBATCH --time=24:00:00
+#SBATCH --account=def-dacks
+#SBATCH --mail-user=lael@ualberta.ca
+#SBATCH --mail-type=END
+
 cd $mb_subdir_var
-mb $mb_nex_var
+mpirun -np $$SLURM_NTASKS mb $mb_nex_var > $mb_nex_var'_log.txt' 
 """
-    )
-    script_text = script_template.substitute(mb_nex_var =\
-                     os.path.basename(mb_coded_constrained),
-                     mb_subdir_var = os.path.basename(mb_subdir))
-    o.write(script_text)
+        )
+        script_text = script_template.substitute(mb_nex_var =\
+                         os.path.basename(alignment_path),
+                         mb_subdir_var = os.path.basename(mb_subdir))
+        o.write(script_text)
 
+# Print message to user indicating how to run on computecanada.
+print("""
+Now upload to cluster, make sure that the IQ-tree module is loaded, and
+submit each output script via sbatch.
 
-# ***Ask for input before procededing after mask so it can be adjusted manually...
+For example (for computecanada):
+    module load iq-tree/1.5.5
+    module load mrbayes/3.2.6
+    for VAR in *.sh; do sbatch \$VAR; done
+""")
+
 
