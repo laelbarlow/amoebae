@@ -43,6 +43,9 @@ uncode_tree, uncode_tree_obj
 from module_paralogue_counter import add_seq_to_alignment3
 from module_amoebae_select_seqs import get_ml_tree_branch_lengths
 
+# Set Qt to offscreen mode so that it works on clusters.
+os.environ['QT_QPA_PLATFORM']='offscreen'
+
 #from module_amoebae_select_seqs import get_clade_name_from_model2,\
 #get_nodes_of_interest, get_list_of_leaf_names_for_node, TaxonomicInfo,\
 #get_taxonomic_info, define_nodestyles_dict_for_colourcoding,\
