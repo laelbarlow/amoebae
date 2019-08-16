@@ -2018,6 +2018,27 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
             subdirp = ... 
         os.mkdir(subdirp)
 
+
+        # ***This code block may not always be necessary, and can be commented out
+        # later to speed up the analysis:
+        # Check that constraint tree is as expected:
+        # Check number of taxa in constraint tree.
+        tx = Tree(constraint_tree_fp_coded)
+        num_taxa_in_constraint_tree = len(tx.get_leaves())
+        nonredun_num_taxa_in_constraint_tree = len(list(set([x.name for x in tx.get_leaves()])))
+        # Check that there is at least one taxon represented in the constraint
+        # tree.
+        assert num_taxa_in_constraint_tree >= 1 
+        # Check that there are no redundant sequences in constraint tree.
+        assert num_taxa_in_constraint_tree == nonredun_num_taxa_in_constraint_tree
+        # Get number of sequences in alignment.
+        num_seqs_in_ali = int(open(phy_out, 'r').readline().strip().split(' ')[0])
+        # Check that the number of sequences in the constraint tree is one less
+        # than the number in the alignment, because the alignment should have
+        # the additional sequence to be placed.
+        assert num_taxa_in_constraint_tree == num_seqs_in_ali - 1
+
+
         # Use IQtree to do an ML search
         output_file_prefix = os.path.join(subdirp, 'iqtree')
         iqtree_command_list = ['iqtree',
