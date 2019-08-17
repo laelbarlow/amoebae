@@ -31,7 +31,7 @@ import shutil
 import re
 import statistics
 import pandas as pd
-from random import shuffle
+import random
 import copy
 
 from module_amoebae_trim_nex import trim_nex
@@ -640,7 +640,13 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
             stop = True
         else:
             # Select one of the sequences randomly from the list of candidates.
-            shuffle(seqs)
+            if iteration == 0:
+                # Define a seed for the random shuffle of sequences so that it
+                # can be reproduced.
+                seed = 12345
+                # Shuffle the list of sequences deterministically
+                # (reproducibly).
+                random.Random(seed).shuffle(seqs)
             seq_to_add = None
             for seq in seqs:
                 if seq.id in seqnames_to_be_added:
