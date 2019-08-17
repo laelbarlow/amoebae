@@ -20,6 +20,7 @@ import glob
 import os
 import sys
 import subprocess
+import random
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 sys.path.append(os.path.dirname(sys.path[0]))
 
@@ -37,7 +38,10 @@ def find_and_test_all_import_statements_in_amoebae():
         + glob.glob(os.path.join(sys.path[0],'amoebae'))
     
     # Define output file path.
-    output_path = os.path.join(sys.path[0], 'get_nonredun_import_statments_for_amoebae_output.py')
+    random_id_string = str(random.randint(1, 1000))
+    output_path = os.path.join(sys.path[0],
+            'get_nonredun_import_statments_for_amoebae_output_' +\
+            random_id_string + '.py')
     
     # Compile a complete list of import statements.
     nonredun_list = []
