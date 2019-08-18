@@ -2061,7 +2061,8 @@ def run_tree_for_branch_lengths_and_supports_for_topology(tree,
         subdirp = constraint_tree_fp.rsplit('.', 1)[0] +\
         '_IQ-tree_output_place_seq_' + iter_num_str
         if os.path.isdir(subdirp):
-            subdirp = ... 
+            random_id_string = str(random.randint(1, 1000))
+            subdirp = subdirp + '_' + random_id_string 
         os.mkdir(subdirp)
 
 
