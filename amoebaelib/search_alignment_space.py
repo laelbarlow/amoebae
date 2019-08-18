@@ -398,6 +398,177 @@ def write_constraint_tree_without_extra_parentheses(ete3_tree_obj, tree_outpath)
             o.write(newick_tree_string_without_extra_parentheses)
 
 
+def get_seq_placement_in_tree(ml_placement_tree_path,
+                              seq_to_add,
+                              type_seqs_dict,
+                              essential_taxa):
+    """Parse a tree to find out where a sequence was placed.
+    """
+    # Parse tree using ete3.
+    # Note: parentheses and commas get replaced with underscores.
+    t1 = Tree(ml_placement_tree_path, quoted_node_names=True)
+
+    ## Convert names in tree back to original names.
+    #uncode_tree_obj(t1, outtablefp)
+
+    ## Define name for tree without branch lengths.
+    #simple_tree = tree_file_path.rsplit('_', 1)[0] + '_TEMP2' 
+
+    ## Write simple tree to a new file 
+    #t1.write(format=9, outfile=simple_tree)
+
+    ## Parse simple tree.
+    #t2 = Tree(simple_tree)
+
+    # Print simple tree.
+    #print('ML tree:')
+    #print(t1)
+
+
+    # Make a copy of the tree object.
+    t2 = t1.copy()
+
+    # Get list of "type" sequences from input.
+    type_seq_list = type_seqs_dict.values()
+
+    # For each "type" sequence, traverse all nodes and find the node with
+    # the largest number of child nodes that are leaf (terminal) nodes,
+    # containing the "type" sequence of interest, but not containing any of
+    # the other "type" sequences.
+    ts_num = 0
+    first_type_seq_node_name = None
+    ts_that_additional_seq_was_placed_in = None
+    for ts in type_seq_list:
+        ts_num += 1
+
+        if ts_num == 1:
+            first_type_seq_node_name = ts
+            # Root on another "type" sequence for the first type sequence in
+            # the list to get whole clade, then root the tree on the ancestor
+            # node of that first clade.
+
+            # Get a node name for a node corresponding to a different
+            # "type" sequence.
+            other_type_seq_node_name = None
+            for i in type_seq_list:
+                if i != ts:
+                    other_type_seq_node_name = i
+                    break
+
+            # Get node corresponding to a different "type" sequence.
+            other_type_seq_node = None
+            for node in t2.traverse():
+                if node.name == other_type_seq_node_name:
+                    other_type_seq_node = node
+                    break
+
+            # Root on the other "type" sequence node.
+            t2.set_outgroup(other_type_seq_node)
+
+            #print('\n\n\nTree rooted on a type sequence other than the first type sequence.')
+            #print(t2)
+
+        elif ts_num == 2:
+            # Root on the first "type" sequence node for all subsequent
+            # clades.
+            first_type_seq_node = None
+            for node in t2.traverse():
+                leaf_list = []
+                for leaf in node.get_leaves():
+                    if leaf.name == first_type_seq_node_name:
+                        first_type_seq_node = node
+                        break
+            t2.set_outgroup(first_type_seq_node)
+            #print('\n\n\nTree re-rooted on first type sequence:')
+            #print(t2)
+
+
+        # Make a copy of the tree topology to work with for each run
+        # through this loop.
+        t3 = t2.copy()
+
+        # Make a list of nodes that contain type seq, but not any others. #
+        # SEPARATE
+        nodes_of_interest = []
+        for node in t3.traverse():
+            # Search in nodes that contain the type sequence.
+            if node.search_nodes(name=ts):
+                # Search in nodes that don't contain other type sequences.
+                contains_other_type_seqs = False
+                for ts2 in type_seq_list:
+                    if not ts2 == ts:
+                        if node.search_nodes(name=ts2):
+                            contains_other_type_seqs = True
+                if not contains_other_type_seqs:
+                    # Add nodes of interest to list.
+                    nodes_of_interest.append(node)
+
+        # find the node with the most child leaf nodes.
+        #node_num = 0
+        #for node in nodes_of_interest:
+        #    node_num += 1 
+        #    print('Node ' + str(node_num) + ' Number of leaves:  ' + str(len(node.get_leaves())))
+        #    print(node)
+        node_w_most_leaves = sorted(nodes_of_interest, key=lambda x:\
+                len(x.get_leaves()), reverse=True)[0]
+        node_w_most_leaves.name = 'X'
+        #print('\n\nClade defined by sequence ' + ts + ':')
+        #print(node_w_most_leaves)
+
+        #name_of_additional_seq = record.description
+        name_of_additional_seq = seq_to_add.id #record.id # + ' ' + record.description
+
+        #print('\n\n\n')
+        #print(name_of_additional_seq)
+        #print('\n\n\n')
+        #for i in [x.name for x in node_w_most_leaves.get_leaves()]:
+        #    print(i)
+        #print('\n\n\n')
+
+        if name_of_additional_seq.strip() in [x.name for x in node_w_most_leaves.get_leaves()]:
+            ts_that_additional_seq_was_placed_in = ts
+            #print('%s is in this clade.' % name_of_additional_seq)
+
+            ## Make a list of taxonomic terms currently represented in the clade.
+            #taxa_represented = get_taxa_represented_in_clade(node_w_most_leaves,
+            #                                                 ml_tree_info_dict)
+
+            ## Get clade name for type seq name from type seqs dict.
+            #clade_name = None
+            #for c in type_seqs_dict.keys():
+            #    if type_seqs_dict[c] ==\
+            #    ts_that_additional_seq_was_placed_in:
+            #        clade_name = c
+            #        break
+            #assert clade_name is not None
+
+            # Determine which seqs in the clade are dispensable, considering their
+            # taxonomic placement.
+            #names_of_dispensable_seqs_in_clade =\
+            #get_names_of_dispensable_seqs_in_clade(clade_name,
+            #                                       ml_tree_info_dict,
+            #                                       essential_taxa,
+            #                                       taxa_represented) 
+            additional_seq_dispensable =\
+            new_seq_in_clade_dispensable(essential_taxa,
+                                         node_w_most_leaves,
+                                         seq_to_add.id)
+
+            # Determine whether the additional sequence is dispensable
+            # or not in the new clade.
+            if not additional_seq_dispensable:
+                added_seq_adds_essential_taxon = True
+                new_seq_essential = True
+            
+            # Break the loop, because no other clades need to be
+            # considered after the relevant clade has been identified.
+            break
+
+    # Return the name of the type sequence of the clade that the sequence is
+    # placed in.
+    return ts_that_additional_seq_was_placed_in
+
+
 def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
     """Modify an alignment (and associated tree) and return a tuple with all
     the same type of elements as the input tuple, except for the new
@@ -639,7 +810,7 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
             # with the current modification type).
             stop = True
         else:
-            # Select one of the sequences randomly from the list of candidates.
+            # Shuffle the sequences if it's the first iteration.
             if iteration == 0:
                 # Define a seed for the random shuffle of sequences so that it
                 # can be reproduced.
@@ -647,267 +818,136 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                 # Shuffle the list of sequences deterministically
                 # (reproducibly).
                 random.Random(seed).shuffle(seqs)
+            
+            # Loop over candidate sequences and try adding them to the tree.
             seq_to_add = None
+            any_ali_and_tree_usable = False
             for seq in seqs:
                 if seq.id in seqnames_to_be_added:
                     seq_to_add = seq
-                    break
-            assert seq_to_add is not None
-            print('\t\tAdding sequence ' + seq_to_add.id)
+                else:
+                    # Try another sequence in the list.
+                    continue
 
-            # Add to list of sequences added to to the tree.
-            seqs_attempted_to_add2.append(seq_to_add.description)
+                assert seq_to_add is not None
+                print('\t\tAdding sequence ' + seq_to_add.id)
 
-            # Add sequence to alignment.
-            add_seq_to_alignment3(seq_to_add, alignment, alignment2)
+                # Add to list of sequences added to to the tree.
+                seqs_attempted_to_add2.append(seq_to_add.description)
 
-            # Use the previous constraint tree as a constraint tree.
-            constraint_tree_fp = get_constraint_tree_fp(alignment)
-            #constraint_tree_fp = tree
-            # Unless the path to such a file doesn't exist, then just use
-            # whatever tree was input.
-            if not os.path.isfile(constraint_tree_fp):
-                print('\n\n\nConstraint tree doesnt exist:')
-                print(constraint_tree_fp)
-                print('\n\n\n')
-                assert 2!=2
-                constraint_tree_fp = tree
+                # Add sequence to alignment.
+                add_seq_to_alignment3(seq_to_add, alignment, alignment2)
 
-            ## Temp.
-            #print('\n\nConstraint trees identified by modify_alignment_in_x_way') 
-            #print(tree)
-            #print(get_constraint_tree_fp(alignment))
-            #print('\n\n')
+                # Check that the added sequence is not identical (after trimming)
+                # to a sequence already present in the trimmed alignment. 
+                ali_with_new_seq = AlignIO.read(alignment2, 'nexus')
+                last_seq = ali_with_new_seq[-1]
+                identical_to_existing_seq = False
+                for xseq in ali_with_new_seq[:-1]:
+                    #print(str(xseq.seq))
+                    #print(str(last_seq.seq))
+                    if str(xseq.seq) == str(last_seq.seq):
+                        identical_to_existing_seq = True
+                        print('\t\t\tThe sequence is identical to a previous one')
+                        break
 
+                # Only run a tree if the added sequence is not identical to any
+                # existing sequences.
+                ts_that_additional_seq_was_placed_in = None
+                if not identical_to_existing_seq: 
+                    # Use the previous constraint tree as a constraint tree.
+                    constraint_tree_fp = get_constraint_tree_fp(alignment)
+                    #constraint_tree_fp = tree
+                    # Unless the path to such a file doesn't exist, then just use
+                    # whatever tree was input.
+                    if not os.path.isfile(constraint_tree_fp):
+                        print('\n\n\nConstraint tree doesnt exist:')
+                        print(constraint_tree_fp)
+                        print('\n\n\n')
+                        assert 2!=2
+                        constraint_tree_fp = tree
 
-            #with open(constraint_tree_fp) as infh:
-            #    for i in infh:
-            #        print(i)
+                    # Call function to run IQtree (specifying option to input a
+                    # constraint tree and run ML search with the -g option instead of
+                    # using the -te, --alrt, and --abayes options.
+                    place_seq = True
+                    ml_placement_tree_path =\
+                    run_tree_for_branch_lengths_and_supports_for_topology(
+                                                                  constraint_tree_fp,
+                                                                  alignment2,
+                                                                  subs_model,
+                                                                  outputdir,
+                                                                  place_seq)
 
-            # Call function to run IQtree (specifying option to input a
-            # constraint tree and run ML search with the -g option instead of
-            # using the -te, --alrt, and --abayes options.
-            place_seq = True
-            ml_placement_tree_path =\
-            run_tree_for_branch_lengths_and_supports_for_topology(
-                                                          constraint_tree_fp,
-                                                          alignment2,
-                                                          subs_model,
-                                                          outputdir,
-                                                          place_seq)
+                    # Indicate that a new tree was produced.
+                    added_a_sequence = True
 
-            # Indicate that a new tree was produced.
-            added_a_sequence = True
+                    # Confirm that the sequence went into one of the clades of
+                    # interest, and which clade it was placed in.
+                    #first_type_seq_node_name = None
+                    ts_that_additional_seq_was_placed_in =\
+                    get_seq_placement_in_tree(ml_placement_tree_path,
+                                              seq_to_add,
+                                              type_seqs_dict,
+                                              essential_taxa)
 
-            # Confirm that the sequence went into one of the clades of
-            # interest.
+                    # If the sequence could not be placed in any of the clades of interest,
+                    # then set the name of the type sequence to a string 'None'.
+                    if ts_that_additional_seq_was_placed_in is None:
+                        ts_that_additional_seq_was_placed_in = 'None'
 
-            # Parse tree using ete3.
-            # Note: parentheses and commas get replaced with underscores.
-            t1 = Tree(ml_placement_tree_path, quoted_node_names=True)
+                    # If the sequence was placed in a clade of interest, then the tree
+                    # is usable.
+                    if ts_that_additional_seq_was_placed_in is not None\
+                    and ts_that_additional_seq_was_placed_in != 'None':
+                        ali_and_tree_usable = True 
+                    else:
+                        print('\t\t\tThe sequence was not placed in any of the clades of interest')
 
-            ## Convert names in tree back to original names.
-            #uncode_tree_obj(t1, outtablefp)
+                    # Temp:
+                    # Check that the clade that the additional sequence was placed in was
+                    # identified.
+                    assert ts_that_additional_seq_was_placed_in is not None, """Sequence was
+                    not placed in any of the clades of interest: %s""" % record.description
 
-            ## Define name for tree without branch lengths.
-            #simple_tree = tree_file_path.rsplit('_', 1)[0] + '_TEMP2' 
+                    # Parse tree using ete3.
+                    # Note: parentheses and commas get replaced with underscores.
+                    t1 = Tree(ml_placement_tree_path, quoted_node_names=True)
 
-            ## Write simple tree to a new file 
-            #t1.write(format=9, outfile=simple_tree)
-
-            ## Parse simple tree.
-            #t2 = Tree(simple_tree)
-
-            # Print simple tree.
-            #print('ML tree:')
-            #print(t1)
-
-
-            # Make a copy of the tree object.
-            t2 = t1.copy()
-
-            # Get list of "type" sequences from input.
-            type_seq_list = type_seqs_dict.values()
-
-            # For each "type" sequence, traverse all nodes and find the node with
-            # the largest number of child nodes that are leaf (terminal) nodes,
-            # containing the "type" sequence of interest, but not containing any of
-            # the other "type" sequences.
-            ts_num = 0
-            first_type_seq_node_name = None
-            ts_that_additional_seq_was_placed_in = None
-            for ts in type_seq_list:
-                ts_num += 1
-
-                if ts_num == 1:
-                    first_type_seq_node_name = ts
-                    # Root on another "type" sequence for the first type sequence in
-                    # the list to get whole clade, then root the tree on the ancestor
-                    # node of that first clade.
-
-                    # Get a node name for a node corresponding to a different
-                    # "type" sequence.
-                    other_type_seq_node_name = None
-                    for i in type_seq_list:
-                        if i != ts:
-                            other_type_seq_node_name = i
-                            break
-
-                    # Get node corresponding to a different "type" sequence.
-                    other_type_seq_node = None
-                    for node in t2.traverse():
-                        if node.name == other_type_seq_node_name:
-                            other_type_seq_node = node
-                            break
-
-                    # Root on the other "type" sequence node.
-                    t2.set_outgroup(other_type_seq_node)
-
-                    #print('\n\n\nTree rooted on a type sequence other than the first type sequence.')
-                    #print(t2)
-
-                elif ts_num == 2:
-                    # Root on the first "type" sequence node for all subsequent
-                    # clades.
-                    first_type_seq_node = None
-                    for node in t2.traverse():
-                        leaf_list = []
-                        for leaf in node.get_leaves():
-                            if leaf.name == first_type_seq_node_name:
-                                first_type_seq_node = node
-                                break
-                    t2.set_outgroup(first_type_seq_node)
-                    #print('\n\n\nTree re-rooted on first type sequence:')
-                    #print(t2)
+                    # Write modified tree to a file.
+                    print('\t\t\tWriting annotated tree to ' +\
+                            os.path.basename(tree2))
+                    #t1.write(outfile=tree2, format=9)
+                    write_constraint_tree_without_extra_parentheses(t1, tree2)
 
 
-                # Make a copy of the tree topology to work with for each run
-                # through this loop.
-                t3 = t2.copy()
+                # *** This check may be redundant.
+                # Check that a sequence was added, if not then stop iterating.
+                if added_a_sequence and ali_and_tree_usable and not identical_to_existing_seq:
+                    # Check that the output alignment has one more sequence than the
+                    # input alignment.
+                    num_seqs_in_new_alignment = len(AlignIO.read(alignment2, 'nexus'))
+                    assert num_seqs_in_new_alignment == num_seqs_in_alignment + 1
+                    # Check that the output tree has one less sequence than the input
+                    # tree.
+                    num_seqs_in_new_tree = len(list(Tree(tree2).get_leaves()))
+                    assert num_seqs_in_new_tree == num_seqs_in_tree + 1
 
-                # Make a list of nodes that contain type seq, but not any others. #
-                # SEPARATE
-                nodes_of_interest = []
-                for node in t3.traverse():
-                    # Search in nodes that contain the type sequence.
-                    if node.search_nodes(name=ts):
-                        # Search in nodes that don't contain other type sequences.
-                        contains_other_type_seqs = False
-                        for ts2 in type_seq_list:
-                            if not ts2 == ts:
-                                if node.search_nodes(name=ts2):
-                                    contains_other_type_seqs = True
-                        if not contains_other_type_seqs:
-                            # Add nodes of interest to list.
-                            nodes_of_interest.append(node)
-
-                # find the node with the most child leaf nodes.
-                #node_num = 0
-                #for node in nodes_of_interest:
-                #    node_num += 1 
-                #    print('Node ' + str(node_num) + ' Number of leaves:  ' + str(len(node.get_leaves())))
-                #    print(node)
-                node_w_most_leaves = sorted(nodes_of_interest, key=lambda x:\
-                        len(x.get_leaves()), reverse=True)[0]
-                node_w_most_leaves.name = 'X'
-                #print('\n\nClade defined by sequence ' + ts + ':')
-                #print(node_w_most_leaves)
-
-                #name_of_additional_seq = record.description
-                name_of_additional_seq = seq_to_add.id #record.id # + ' ' + record.description
-
-                #print('\n\n\n')
-                #print(name_of_additional_seq)
-                #print('\n\n\n')
-                #for i in [x.name for x in node_w_most_leaves.get_leaves()]:
-                #    print(i)
-                #print('\n\n\n')
-
-                if name_of_additional_seq.strip() in [x.name for x in node_w_most_leaves.get_leaves()]:
-                    ts_that_additional_seq_was_placed_in = ts
-                    #print('%s is in this clade.' % name_of_additional_seq)
-
-                    ## Make a list of taxonomic terms currently represented in the clade.
-                    #taxa_represented = get_taxa_represented_in_clade(node_w_most_leaves,
-                    #                                                 ml_tree_info_dict)
-
-                    ## Get clade name for type seq name from type seqs dict.
-                    #clade_name = None
-                    #for c in type_seqs_dict.keys():
-                    #    if type_seqs_dict[c] ==\
-                    #    ts_that_additional_seq_was_placed_in:
-                    #        clade_name = c
-                    #        break
-                    #assert clade_name is not None
-
-                    # Determine which seqs in the clade are dispensable, considering their
-                    # taxonomic placement.
-                    #names_of_dispensable_seqs_in_clade =\
-                    #get_names_of_dispensable_seqs_in_clade(clade_name,
-                    #                                       ml_tree_info_dict,
-                    #                                       essential_taxa,
-                    #                                       taxa_represented) 
-                    additional_seq_dispensable =\
-                    new_seq_in_clade_dispensable(essential_taxa,
-                                                 node_w_most_leaves,
-                                                 seq_to_add.id)
-
-                    # Determine whether the additional sequence is dispensable
-                    # or not in the new clade.
-                    if not additional_seq_dispensable:
-                        added_seq_adds_essential_taxon = True
-                        new_seq_essential = True
+                    # Change variable value to indicate that a usable sequence
+                    # was found.
+                    any_ali_and_tree_usable = True
                     
-                    # Break the loop, because no other clades need to be
-                    # considered after the relevant clade has been identified.
+                    # Break the loop over the sequences to add.
                     break
 
-            # If the sequence could not be placed in any of the clades of interest,
-            # then set the name of the type sequence to a string 'None'.
-            if ts_that_additional_seq_was_placed_in is None:
-                ts_that_additional_seq_was_placed_in = 'None'
+                else:
+                    # Do not use the alignment and tree if the above conditions are not
+                    # met (try another sequence).
+                    pass
 
-            # If the sequence was placed in a clade of interest, then the tree
-            # is usable.
-            if ts_that_additional_seq_was_placed_in is not None\
-            and ts_that_additional_seq_was_placed_in != 'None':
-                ali_and_tree_usable = True 
-            else:
-                print('\t\t\tThe sequence was not placed in any of the clades of interest')
-
-            # Temp:
-            # Check that the clade that the additional sequence was placed in was
-            # identified.
-            assert ts_that_additional_seq_was_placed_in is not None, """Sequence was
-            not placed in any of the clades of interest: %s""" % record.description
-
-            # Define path to constraint tree for further analysis (to find
-            # abayes and alrt support with the -te option in IQ-tree).
-
-            # 
-
-            # Write modified tree to a file.
-            print('\t\t\tWriting annotated tree to ' +\
-                    os.path.basename(tree2))
-            #t1.write(outfile=tree2, format=9)
-            write_constraint_tree_without_extra_parentheses(t1, tree2)
-
-
-        # *** This check may be redundant.
-        # Check that a sequence was added, if not then stop iterating.
-        if added_a_sequence and ali_and_tree_usable:
-            # Check that the output alignment has one more sequence than the
-            # input alignment.
-            num_seqs_in_new_alignment = len(AlignIO.read(alignment2, 'nexus'))
-            assert num_seqs_in_new_alignment == num_seqs_in_alignment + 1
-            # Check that the output tree has one less sequence than the input
-            # tree.
-            num_seqs_in_new_tree = len(list(Tree(tree2).get_leaves()))
-            assert num_seqs_in_new_tree == num_seqs_in_tree + 1
-
-        else:
-            # Do not use the alignment and tree if the above conditions are not
-            # met.
+        # Stop this type of modification if no sequences could be found that
+        # actually work.
+        if not any_ali_and_tree_usable:
             stop = True
 
 
@@ -1000,7 +1040,7 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
     #############################################
     #############################################
 
-    # Only run a tree if a new alignent and topology were produced.
+    # Only run a tree if a new alignment and topology were produced.
     ml_tree_path2 = None
     ml_tree_info_dict2 = None
     if not stop:
@@ -2577,7 +2617,7 @@ def search_alignment_space(model_name,
         # True).
         if new_ali_tree_tuple[11]:
             # Stop iterations.
-            #print('Stopping iterations because no further modification could be made.')
+            print('\nStopping iterations because no further modification could be made.')
             #break
 
             # Or, reset the list of items to be modified and continue instead of
@@ -2609,6 +2649,7 @@ def search_alignment_space(model_name,
             if intensive_mod_type:
                 # Change the mod_type to the next stage.
                 mod_type = next(mod_type_intensive_iterable)
+                print("""\nSwitching to modification type: %s""" % mod_type)
 
                 # If the mod_type is 'remove_seqs' then it should just keep
                 # going until there are no more sequences to try removing.
