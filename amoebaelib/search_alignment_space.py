@@ -2365,8 +2365,16 @@ def new_tree_better(prev_tree_measure,
     #    previous_ali_tree_tuple = new_ali_tree_tuple
 
     if mod_type == 'add_seqs':
-        # Just say the new tree is better if a sequence has been added.
-        return True
+        ## Just say the new tree is better if a sequence has been added.
+        #return True
+
+        # Apply inclusive criteria.
+        if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+            # Return True to indicate that the new tree is better.
+            return True
+        else:
+            # Return False to indicate that the old tree is better.
+            return False
 
     else:
         if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:

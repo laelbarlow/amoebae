@@ -288,7 +288,7 @@ file_with_model = prefix + '.iqtree'
 with open(file_with_model) as fh:
     for i in fh:
         if i.startswith('Best-fit model'):
-            subs_model = i.split(' ')[2]
+            subs_model = i.rsplit(':', 1)[1].strip()
             break
 
 # Check that a model was found.
@@ -366,7 +366,7 @@ constrain_mb_with_tree(mb_coded,
 mrbayes_script_unconstrained = os.path.join(main_out_path, '0_run_unconstrained_mb.sh')
 mrbayes_script_constrained = os.path.join(main_out_path, '0_run_constrained_mb.sh')
 mrbayes_scripts = [mrbayes_script_unconstrained, mrbayes_script_constrained]
-mrbayes_alignment_paths = [mb_coded_constrained, mb_coded]
+mrbayes_alignment_paths = [mb_coded, mb_coded_constrained]
 
 # Write scripts for performing unconstrained and constrained tree searches with MrBayes.
 for script_path, alignment_path in zip(mrbayes_scripts, mrbayes_alignment_paths):
