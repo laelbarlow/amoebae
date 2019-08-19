@@ -173,6 +173,11 @@ def code_tree(intreefp, outtreefp, table):
     with open(intreefp) as infh:
         if '\"' in infh.read(): 
             quoted_node_names_var = True
+    #print('\n')
+    #print('intreefp')
+    #print(intreefp)
+    #print('quoted_node_names_var')
+    #print(quoted_node_names_var)
     intree = Tree(intreefp, quoted_node_names=quoted_node_names_var)
     assert intree is not None
 

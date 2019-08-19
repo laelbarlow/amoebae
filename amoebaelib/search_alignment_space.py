@@ -33,6 +33,7 @@ import statistics
 import pandas as pd
 import random
 import copy
+import platform
 
 from module_amoebae_trim_nex import trim_nex
 from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
@@ -43,8 +44,9 @@ uncode_tree, uncode_tree_obj
 from module_paralogue_counter import add_seq_to_alignment3
 from module_amoebae_select_seqs import get_ml_tree_branch_lengths
 
-# Set Qt to offscreen mode so that it works on clusters.
-os.environ['QT_QPA_PLATFORM']='offscreen'
+# If running on computecanada, set Qt to offscreen mode so that it works on clusters.
+if 'computecanada' in str(platform.uname()):
+    os.environ['QT_QPA_PLATFORM']='offscreen'
 
 #from module_amoebae_select_seqs import get_clade_name_from_model2,\
 #get_nodes_of_interest, get_list_of_leaf_names_for_node, TaxonomicInfo,\
@@ -590,6 +592,7 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
     essential_taxa = previous_ali_tree_tuple[10]
     stop = previous_ali_tree_tuple[11]
     new_seq_essential = previous_ali_tree_tuple[12]
+    modified_clade_name = previous_ali_tree_tuple[13]
 
     # Check that the stop variable was not set to True in the last iteration.
     assert not stop
@@ -629,6 +632,9 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
 
     # Initiate variable for new type sequence dictionary.
     type_seqs_dict2 = None
+
+    # Initiate variable to store name of the clade that is modified here.
+    modified_clade_name2 = None
 
     #############################################
     #############################################
@@ -735,6 +741,9 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                 # Add sequence name to list of sequences that have been removed. 
                 seqs_attempted_to_remove2.append(seqname)
 
+                # Record name of clade that was modified.
+                modified_clade_name2 = clade
+
                 # Break the loop so that only one sequence gets removed per
                 # iteration.
                 removed_a_sequence = True
@@ -780,10 +789,11 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
         # not.
         added_a_sequence = False
 
-        # Initiate variable to indicate whether the new tree and alignment are
+        # Initiate variables to indicate whether the new tree and alignment are
         # usable (if the added sequence was placed into a clade of interest or
         # not).
         ali_and_tree_usable = False
+        any_ali_and_tree_usable = False
 
         # Initiate a variable to indicate whether the added sequence adds an
         # essential taxon that was missing in the clade before (if it does,
@@ -792,11 +802,12 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
         added_seq_adds_essential_taxon = False
 
         # Determine which sequences, if any, could be added to the tree.
-        seqnames_in_tree = [x.name for x in Tree(tree).get_leaves()]
+        seqnames_in_tree = [x.name.strip('\"') for x in Tree(tree).get_leaves()]
         all_seqnames = [x.id for x in seqs] 
         seqnames_to_be_added = []
         for seqname in all_seqnames:
             if seqname not in seqs_attempted_to_add2 + seqnames_in_tree:
+                # Add sequence name to list.
                 seqnames_to_be_added.append(seqname)
 
         # Make a list of taxonomic terms currently represented in the clade.
@@ -821,7 +832,6 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
             
             # Loop over candidate sequences and try adding them to the tree.
             seq_to_add = None
-            any_ali_and_tree_usable = False
             for seq in seqs:
                 if seq.id in seqnames_to_be_added:
                     seq_to_add = seq
@@ -900,15 +910,26 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                     # is usable.
                     if ts_that_additional_seq_was_placed_in is not None\
                     and ts_that_additional_seq_was_placed_in != 'None':
+                        # Change variable to indicate that the alignment and
+                        # tree are usable.
                         ali_and_tree_usable = True 
+
+                        # Get name of clade that the type sequence is in.
+                        clade_name =\
+                        get_clade_name_from_model2(ts_that_additional_seq_was_placed_in,
+                                                   type_seqs_dict2)
+
+                        # Record name of clade that was modified.
+                        modified_clade_name2 = clade_name
+
                     else:
                         print('\t\t\tThe sequence was not placed in any of the clades of interest')
 
-                    # Temp:
-                    # Check that the clade that the additional sequence was placed in was
-                    # identified.
-                    assert ts_that_additional_seq_was_placed_in is not None, """Sequence was
-                    not placed in any of the clades of interest: %s""" % record.description
+                    ## Temp:
+                    ## Check that the clade that the additional sequence was placed in was
+                    ## identified.
+                    #assert ts_that_additional_seq_was_placed_in is not None, """Sequence was
+                    #not placed in any of the clades of interest: %s""" % record.description
 
                     # Parse tree using ete3.
                     # Note: parentheses and commas get replaced with underscores.
@@ -919,6 +940,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                             os.path.basename(tree2))
                     #t1.write(outfile=tree2, format=9)
                     write_constraint_tree_without_extra_parentheses(t1, tree2)
+
+
 
 
                 # *** This check may be redundant.
@@ -1003,7 +1026,7 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
 
                     # Add column to list of columns that have been removed.
                     positions_attempted_to_remove2.append(column)
-                    
+
                     # Break this loop if a column was removed.
                     if removed_a_column:
                         break
@@ -1073,7 +1096,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                           seqs_attempted_to_add2,
                           essential_taxa,
                           stop,
-                          new_seq_essential)
+                          new_seq_essential,
+                          modified_clade_name2)
 
     # Return the new tuple.
     return new_ali_tree_tuple
@@ -2179,7 +2203,8 @@ def get_essential_taxa_list(essential_taxa_file):
 
 
 def get_y_measure_of_support(previous_ali_tree_tuple,
-                             include_internal_branches=False):
+                             include_internal_branches=False,
+                             input_modified_clade_name=None):
     """Take a tuple with objects containing info about an alignment and tree,
     and extract specific info to use as a measure of support for nodes of
     interest.
@@ -2190,6 +2215,9 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
     """
     # Get info dict from input tuple.
     ml_tree_info_dict = previous_ali_tree_tuple[6]
+    modified_clade_name = previous_ali_tree_tuple[13]
+    if modified_clade_name is None:
+        modified_clade_name = input_modified_clade_name
 
     # For reference:
     #ml_tree_info_dict[clade_name] =\
@@ -2219,6 +2247,12 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
 
     # Get minimum stem/branch ratio for clades of interest. 
     minimum_stem_branch_ratio = min(all_stem_branch_ratios)
+
+    # Get stem/branch ratio for the clade that was modified (if applicable). 
+    modified_clade_stem_branch_ratio = None
+    if modified_clade_name is not None: 
+        modified_clade_stem_branch_ratio =\
+        ml_tree_info_dict[modified_clade_name]['stem/branch ratio']
 
     # Get average stem/branch ratio for clades of interest.
     average_stem_branch_ratio = sum(all_stem_branch_ratios) / len(all_stem_branch_ratios)
@@ -2317,7 +2351,8 @@ def get_y_measure_of_support(previous_ali_tree_tuple,
     #return average_support_value
     return (lowest_support_value, average_support_value,
             minimum_stem_branch_ratio, average_stem_branch_ratio,
-            min_dbranch_avgleaf_ratio, avg_dbranch_avgleaf_ratio)
+            min_dbranch_avgleaf_ratio, avg_dbranch_avgleaf_ratio,
+            modified_clade_stem_branch_ratio)
 
 
 def get_ali_length(alignment):
@@ -2348,7 +2383,8 @@ def new_tree_better(prev_tree_measure,
     # 3. minimum_stem_branch_ratio,
     # 4. average_stem_branch_ratio,
     # 5. min_dbranch_avgleaf_ratio,
-    # 6. avg_dbranch_avgleaf_ratio
+    # 6. avg_dbranch_avgleaf_ratio,
+    # 7. modified_clade_stem_branch_ratio
 
     # Apply criteria based on comparing values between trees.
     #if new_tree_measure[0] >= prev_tree_measure[0] and new_tree_measure[1] >= prev_tree_measure[1]:
@@ -2368,8 +2404,11 @@ def new_tree_better(prev_tree_measure,
         ## Just say the new tree is better if a sequence has been added.
         #return True
 
-        # Apply inclusive criteria.
-        if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+        ## Apply inclusive criteria.
+        #if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+        # Only require that the clade that was modified has a branch length
+        # ratio that is at least as good as in the previous tree.
+        if new_tree_measure[6] >= prev_tree_measure[6]:
             # Return True to indicate that the new tree is better.
             return True
         else:
@@ -2377,7 +2416,11 @@ def new_tree_better(prev_tree_measure,
             return False
 
     else:
-        if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+        ## Apply inclusive criteria.
+        #if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
+        # Only require that the clade that was modified has a branch length
+        # ratio that is at least as good as in the previous tree.
+        if new_tree_measure[6] >= prev_tree_measure[6]:
             # Return True to indicate that the new tree is better.
             return True
         else:
@@ -2519,7 +2562,8 @@ def search_alignment_space(model_name,
                                seqs_attempted_to_add,
                                essential_taxa,
                                stop,
-                               False)
+                               False,
+                               None)
 
 
     # Handle number of iterations.
@@ -2607,7 +2651,12 @@ def search_alignment_space(model_name,
         mod_type = next(mod_type_intensive_iterable)
 
     # Initiate variable for storing the number of the best alignment.
-    best_alignment_num = 'the original input alignment'
+    #best_alignment_num = 'the original input alignment'
+    best_alignment_num = '0'
+
+    # Initiate a list of alignment/iteration numbers corresponding to output
+    # files to keep for future reference.
+    alignment_nums_to_keep = []
 
     # Iteratively modify the alignment and assess support in the tree.
     print('\nIteratively modifying and assessing alignments/trees...')
@@ -2621,6 +2670,11 @@ def search_alignment_space(model_name,
         print('\t\tModifying alignment (and tree) in X way, and assessing measures of branch support in new tree...') 
         new_ali_tree_tuple =\
         modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type)
+
+        # Report name of modified clade.
+        modified_clade_name = new_ali_tree_tuple[13]
+        if modified_clade_name is not None:
+            print('\t\t\tModified clade with name: %s' % modified_clade_name)
 
         # Stop if no modification could be made (the stop variable is set to
         # True).
@@ -2651,11 +2705,17 @@ def search_alignment_space(model_name,
                                        previous_ali_tree_tuple[10],
                                        False,
                                        previous_ali_tree_tuple[12],
+                                       previous_ali_tree_tuple[13]
                                        )
 
             # If in the 'intensive' mode, then switch to the next stage of
             # analysis.
             if intensive_mod_type:
+                # Add iteration number for current best iteration to the list
+                # of those whos corresponding output files should be kept for
+                # future reference.
+                alignment_nums_to_keep.append(best_alignment_num)
+
                 # Change the mod_type to the next stage.
                 mod_type = next(mod_type_intensive_iterable)
                 print("""\nSwitching to modification type: %s""" % mod_type)
@@ -2684,8 +2744,10 @@ def search_alignment_space(model_name,
         # 3. minimum_stem_branch_ratio,
         # 4. average_stem_branch_ratio,
         # 5. min_dbranch_avgleaf_ratio,
-        # 6. avg_dbranch_avgleaf_ratio
-        prev_tree_measure = get_y_measure_of_support(previous_ali_tree_tuple, True)
+        # 6. avg_dbranch_avgleaf_ratio,
+        # 7. modified_clade_stem_branch_ratio
+        prev_tree_measure = get_y_measure_of_support(previous_ali_tree_tuple,
+                True, modified_clade_name)
         new_tree_measure = get_y_measure_of_support(new_ali_tree_tuple, True)
 
         # Decide whether to use new alignment/tree based on various criteria.
@@ -2706,7 +2768,7 @@ def search_alignment_space(model_name,
             # Set best tree to this tree.
             print('\t\t\tNew tree is better.')
             previous_ali_tree_tuple = new_ali_tree_tuple
-            best_alignment_num = 'alignment number ' + str(iteration + 1)
+            best_alignment_num = str(iteration + 1)
 
         else:
             # If a sequence was added, then make sure that it is not essential
@@ -2722,7 +2784,7 @@ def search_alignment_space(model_name,
                 new_ali_tree_tuple[12] = False
 
                 # Set best tree to this tree.
-                best_alignment_num = 'alignment number ' + str(iteration + 1)
+                best_alignment_num = str(iteration + 1)
 
 
             else:
@@ -2742,16 +2804,20 @@ def search_alignment_space(model_name,
                                            new_ali_tree_tuple[9],
                                            previous_ali_tree_tuple[10],
                                            new_ali_tree_tuple[11],
-                                           previous_ali_tree_tuple[12]
+                                           previous_ali_tree_tuple[12],
+                                           previous_ali_tree_tuple[13]
                                            )
 
 
         # Break the loop if the max number of failed iterations have occured.
         max_failed_iterations = max_failed_iterations_dict[mod_type]
         if failed_iterations_tally >= max_failed_iterations:
+            # Don't stop if the intensive option was selected. 
+            if intensive_mod_type:
+                continue
             # Switch to a different modification type if the mod_type was
             # mixed.
-            if mixed_mod_type:
+            elif mixed_mod_type:
                 # Define the new modification type.
                 mod_type = next(mod_type_mix_iterable)
                 # Reset tally of failed iterations.
@@ -2764,14 +2830,27 @@ def search_alignment_space(model_name,
                 break
 
     # Report which alignment is the best.
-    print('\nBest alignment is ' + best_alignment_num)
+    if best_alignment_num == '0':
+        print('\nBest alignment is the original input alignment')
+    else:
+        print('\nBest alignment is alignment ' + best_alignment_num)
 
     # Remove all output files, except those for the best alignment.
     if not keep_all_output:
-        best_tree_name = os.path.basename(new_ali_path).rsplit('_', 1)[0] +\
-        '_' + best_alignment_num.rsplit(' ', 1)[1]
+        # Get list of "names" that should be in files to keep.
+        alignment_to_keep_names = []
+        for i in ['0'] + alignment_nums_to_keep + [best_alignment_num]:
+            alignment_to_keep_names.append(\
+                os.path.basename(new_ali_path).rsplit('_', 1)[0] + '_' + i)
+        # Remove all output files and directories that do not have one of the
+        # listed names.
         for output in glob.glob(new_ali_path.rsplit('_', 1)[0] + '*'):
-            if not best_tree_name in output:
+            output_matches_an_alignment_to_keep = False
+            for i in alignment_to_keep_names:
+                if i in output:
+                    output_matches_an_alignment_to_keep = True
+                    break
+            if not output_matches_an_alignment_to_keep:
                 if os.path.isdir(output):
                     shutil.rmtree(output)
                 else:
