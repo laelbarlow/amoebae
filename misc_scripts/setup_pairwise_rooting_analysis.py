@@ -279,7 +279,7 @@ os.mkdir(model_finder_dir)
 prefix = os.path.join(model_finder_dir, 'output')
 iqtree_command_list = ['iqtree',
                        '-s', phylip_coded,
-                       '-m', 'MFP',
+                       '-m', 'MF',
                        '-mset', 'LG,WAG,JTT,Dayhoff,VT',
                        '-pre', prefix 
                        ]
