@@ -45,7 +45,7 @@ from module_paralogue_counter import add_seq_to_alignment3
 from module_amoebae_select_seqs import get_ml_tree_branch_lengths
 
 # If running on computecanada, set Qt to offscreen mode so that it works on clusters.
-if 'computecanada' in str(platform.uname()):
+if 'computecanada' in str(platform.uname()) or 'gra-login' in str(platform.uname()):
     os.environ['QT_QPA_PLATFORM']='offscreen'
 
 #from module_amoebae_select_seqs import get_clade_name_from_model2,\
