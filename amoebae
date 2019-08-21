@@ -2273,6 +2273,10 @@ Miscellaneous commands:
         parser.add_argument('--highlight_paralogues', help='''Highlight clades
                 that contain paralogues found in at least one other clade in
                 the tree.''', action='store_true')
+        parser.add_argument('--add_clade_names_from_file', help='''Use a file
+        in the parent directory with clade names corresponding to
+        representative sequences to add clade names to all the taxon names in
+        the output trees.''', action='store_true')
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -2291,7 +2295,8 @@ Miscellaneous commands:
         # Call function from module to make pdfs.
         output_files = visualize_tree_in_dir(args.input_directory, args.method,
                                              timestamp, taxa_to_root_on,
-                                             args.highlight_paralogues)
+                                             args.highlight_paralogues,
+                                             args.add_clade_names_from_file)
 
         # Define main output file path.
         main_out_path = output_files[0]

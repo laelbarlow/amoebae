@@ -681,6 +681,55 @@ def translate_int_node_support_to_prob(t):
             node.support = float(format(node.support * 0.01, '3.2f'))
 
 
+def add_clade_names_to_conversion_table(tablefilename, typeseqsfilename):
+    """Take paths to a taxon name conversion file and a file defining clade
+    names corresponding to type seqs (sequences defining clades of interest).
+    And, append corresponding clade names to each taxon name in the conversion
+    table file.
+    """
+    # Parse tree file.
+    t1 = Tree(...XXX...)
+
+    # Get list of nodes of interest.
+    orthogroup_nodes = get_nodes_of_interest(t1, type_seq_list)
+
+    # Construct a dictionary storing the clade name corresponding to each
+    # sequence name in the input tree.
+    seq_clade_name_dict = {}
+    for nl in orthogroup_nodes:
+        clade_name = get_clade_name_from_model2(nl[0], type_seqs_dict)
+        for ln in [x.name for x in nl[1].get_leaves()]:
+            seq_clade_name_dict[ln] = clade_name
+
+    # Define path to original table file.
+    original_table_file =\
+    find_input_file_in_parent_directory(os.path.dirname(ml_tree_path), 'table', [])
+
+    # Make a copy of the original table file.
+    original_table_file_copy =\
+    original_table_file + '_original'
+    shutil.copyfile(original_table_file, original_table_file_copy)
+
+    # Define path to temporary modified file.
+    original_table_file_temp =\
+    original_table_file + '_TEMP'
+
+    # Loop over lines in original table.
+    with open(original_table_file) as tablefh,\
+        open(original_table_file_temp,'w') as o:
+        for i in tablefh:
+            if i.startswith('ZZ') and '_' not in i:
+                o.write(i)
+            elif i.strip() == '':
+                o.write(i)
+            else:
+                o.write(i.strip() + '__' + seq_clade_name_dict[i.strip()].strip() + '\n')
+
+    # Copy over the original table file path with the temporary file contents.
+    os.remove(original_table_file)
+    os.rename(original_table_file_temp, original_table_file)
+
+
 def visualize_tree(method,
                    timestamp,
                    taxa_to_root_on,
@@ -688,6 +737,8 @@ def visualize_tree(method,
                    highlight_for_removal,
                    tree_file,
                    tablefilename,
+                   typeseqsfilename,
+                   add_clade_names,
                    file_with_subs_model_name
                    ):
     """Take relevant files and write PDF files with tree figures, and return
@@ -698,6 +749,11 @@ def visualize_tree(method,
     #if len(highlight_for_removal) == 0:
     #    assert file_with_subs_model_name is not None, """No file with
     #    substitution model name was input."""
+
+    # If indicated, append clade names to taxon names in the conversion table.
+    add_clade_names_to_conversion_table(tablefilename)
+    ...XXX...
+    assert 2!=2
 
     # If method is mb, then generate a .tre file.
     if method == 'mb':
@@ -941,7 +997,7 @@ def visualize_tree(method,
 
 
 def visualize_tree_in_dir(indp, method, timestamp, taxa_to_root_on,
-                          highlight_paralogues):
+                          highlight_paralogues, add_clade_names_from_file):
     """Given a path to a directory with output files from a phylogenetic
     analysis, write PDF files with images of the results, and return the paths
     to those files.
@@ -978,11 +1034,13 @@ def visualize_tree_in_dir(indp, method, timestamp, taxa_to_root_on,
     #assert len(tablefilenames) < 2, 'Error: More than one potential conversion\
     # table files identified in directory '+ indp + ' \nFiles: ' +\
     #str(tablefilenames)
-    #
-    ## Get tablefilename
+    
+    # Get tablefilename.
     #tablefilename = tablefilenames[0]
-
     tablefilename = find_input_file_in_parent_directory(indp, 'table', [])
+
+    # Get type seqs filename.
+    typeseqsfilename = find_input_file_in_parent_directory(indp, 'type_seqs', [])
 
     # Do not highlight leaves for removal.
     highlight_for_removal = []
@@ -995,6 +1053,8 @@ def visualize_tree_in_dir(indp, method, timestamp, taxa_to_root_on,
                                                    highlight_for_removal,
                                                    tree_file,
                                                    tablefilename,
+                                                   typeseqsfilename,
+                                                   add_clade_names_from_file,
                                                    file_with_subs_model_name
                                                    )
 
