@@ -20,6 +20,7 @@ import os
 from ete3 import Tree, faces, AttrFace, TreeStyle, NodeStyle, TextFace
 
 # If running on computecanada, set Qt to offscreen mode so that it works on clusters.
+import platform
 if 'computecanada' in str(platform.uname()) or 'gra-login' in str(platform.uname()):
     os.environ['QT_QPA_PLATFORM']='offscreen'
 
