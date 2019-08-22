@@ -20,20 +20,19 @@ import os
 from ete3 import Tree, faces, AttrFace, TreeStyle, NodeStyle, TextFace
 
 # If running on computecanada, set Qt to offscreen mode so that it works on clusters.
-print('This is check_qt.py executing code')
 import platform
-if 'computecanada' in str(platform.uname()) or 'gra-login' in str(platform.uname()):
+import re
+graham_node = re.compile(r"node='gra\d+")
+if 'computecanada' in str(platform.uname()) or\
+    graham_node.search(str(platform.uname())) is not None:
     os.environ['QT_QPA_PLATFORM']='offscreen'
-    print('XXXX')
 print('\nplatform.uname():')
 print(platform.uname())
+
 
 def run_qt():
     """Runs python code that is dependent on qt.
     """
-    print('\nplatform.uname():')
-    print(platform.uname())
-
     # Define temporary output file path.
     temp_image_path = 'temporary_amoebae_test_image.pdf'
 
