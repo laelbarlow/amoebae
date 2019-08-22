@@ -113,7 +113,7 @@ subprocess.call(['muscle',
 
 # Write combined type_seqs files for this combined alignment.
 combined_type_seqs_filepath = alignment_combined_fasta.rsplit('.', 1)[0] +\
-'_type_seqs.csv'
+'.type_seqs'
 with open(combined_type_seqs_filepath, 'w') as o:
     with open(model_info1.type_seqs_file, 'r') as ts1,\
          open(model_info2.type_seqs_file, 'r') as ts2:

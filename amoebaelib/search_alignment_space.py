@@ -1085,7 +1085,7 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
                                                   annotated_tree_outpath2)
 
         # Write a type_seqs file.
-        type_seqs_filepath = alignment2.rsplit('.', 1)[0] + '_type_seqs.csv'
+        type_seqs_filepath = alignment2.rsplit('.', 1)[0] + '.type_seqs'
         assert not os.path.isfile(type_seqs_filepath)
         with open(type_seqs_filepath, 'w') as o:
             o.write('\n'.join([type_seqs_dict2[key].strip() + ', ' +\
@@ -1399,6 +1399,10 @@ def get_nodes_of_interest(tree, type_seq_list):
     for ts in type_seq_list:
         ts_num += 1
 
+        # Check that the sequence is in the tree.
+        assert ts in [n.name for n in t2.get_leaves()], """There are no taxa in
+        the tree with the name %s""" % ts
+
         if ts_num == 1:
             first_type_seq_node_name = ts
             # Root on another "type" sequence for the first type sequence in
@@ -1465,7 +1469,11 @@ def get_nodes_of_interest(tree, type_seq_list):
                     nodes_of_interest.append(node)
 
         # Check that a node of interest was found.
-        assert len(nodes_of_interest) >= 2
+        # This assumes that there is more than one sequence in the clade, which
+        # is true if the clades were constrained, but not necessarily
+        # otherwise.
+        #assert len(nodes_of_interest) >= 2 
+        assert len(nodes_of_interest) >= 1 
 
         # find the node with the most child leaf nodes.
         node_w_most_leaves = sorted(nodes_of_interest, key=lambda x:\

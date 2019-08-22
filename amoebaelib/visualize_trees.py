@@ -810,6 +810,13 @@ def visualize_tree(method,
         # Get list of nodes of interest.
         type_seq_dict = get_type_seqs_dict(typeseqsfilename)
         type_seq_list = type_seq_dict.values()
+        #print('\n\n')
+        #print(typeseqsfilename)
+        #print('\n\n')
+        #print(type_seq_dict)
+        #print('\n\n')
+        #print(type_seq_list)
+        #print('\n\n')
         orthogroup_nodes = get_nodes_of_interest(t1, type_seq_list)
 
         # Construct a dictionary storing the clade name corresponding to each
@@ -822,7 +829,10 @@ def visualize_tree(method,
 
         # Loop over leaf names in tree and append clade names.
         for l in t1.get_leaves():
-            l.name = l.name + '__' + seq_clade_name_dict[l.name]
+            if l.name in seq_clade_name_dict.keys():
+                l.name = l.name + '__' + seq_clade_name_dict[l.name]
+            else:
+                l.name = l.name + '__' + 'Unknown'
 
         # Define path to modified file with clade names appended to taxon
         # names.
@@ -838,7 +848,11 @@ def visualize_tree(method,
                 elif i.strip() == '':
                     o.write(i)
                 else:
-                    o.write(i.strip() + '__' + seq_clade_name_dict[i.strip()].strip() + '\n')
+                    if i.strip() in seq_clade_name_dict.keys():
+                        o.write(i.strip() + '__' + seq_clade_name_dict[i.strip()].strip() + '\n')
+                    else:
+                        o.write(i)
+
 
 
     ## Find a K. nitens sequence if present.
