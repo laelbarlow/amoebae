@@ -33,7 +33,6 @@ import statistics
 import pandas as pd
 import random
 import copy
-import platform
 
 from module_amoebae_trim_nex import trim_nex
 from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
@@ -46,7 +45,10 @@ from module_amoebae_select_seqs import get_ml_tree_branch_lengths
 from module_amoebae import find_input_file_in_parent_directory
 
 # If running on computecanada, set Qt to offscreen mode so that it works on clusters.
-if 'computecanada' in str(platform.uname()) or 'gra-login' in str(platform.uname()):
+import platform
+graham_node = re.compile(r"node='gra\d+")
+if 'computecanada' in str(platform.uname()) or\
+    graham_node.search(str(platform.uname())) is not None:
     os.environ['QT_QPA_PLATFORM']='offscreen'
 
 #from module_amoebae_select_seqs import get_clade_name_from_model2,\
