@@ -111,6 +111,19 @@ subprocess.call(['muscle',
                  '-out', alignment_combined_fasta
                  ])
 
+# Write combined type_seqs files for this combined alignment.
+combined_type_seqs_filepath = alignment_combined_fasta.rsplit('.', 1)[0] +\
+'_type_seqs.csv'
+with open(combined_type_seqs_filepath, 'w') as o:
+    with open(model_info1.type_seqs_file, 'r') as ts1,\
+         open(model_info2.type_seqs_file, 'r') as ts2:
+        for i in ts1:
+            if not i.startswith('\n'):
+                o.write(i)
+        for j in ts2:
+            if not j.startswith('\n'):
+                o.write(j)
+
 # Convert afaa file to nexus format.
 alignment_combined_nex = alignment_combined_fasta.rsplit('.', 1)[0] + '.nex'
 afa_to_nex(alignment_combined_fasta, alignment_combined_nex)
