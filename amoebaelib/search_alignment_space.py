@@ -1088,8 +1088,8 @@ def modify_alignment_in_x_way(previous_ali_tree_tuple, mod_type):
         type_seqs_filepath = alignment2.rsplit('.', 1)[0] + '_type_seqs.csv'
         assert not os.path.isfile(type_seqs_filepath)
         with open(type_seqs_filepath, 'w') as o:
-            o.write('\n'.join([key + ',' + type_seqs_dict2[key] for key in\
-                type_seqs_dict2.keys()]))
+            o.write('\n'.join([type_seqs_dict2[key].strip() + ', ' +\
+                key.strip() for key in type_seqs_dict2.keys()]))
 
     # Construct a tuple with new info for new alignment and tree.
     new_ali_tree_tuple = (iteration2,
