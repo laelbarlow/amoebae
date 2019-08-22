@@ -50,7 +50,8 @@ from Bio import AlignIO
 from Bio.Alphabet import IUPAC, Gapped
 from Bio.Align import MultipleSeqAlignment
 
-from visualize_trees import translate_int_node_names_to_support, visualize_tree, find_input_file_in_parent_directory
+from visualize_trees import translate_int_node_names_to_support, visualize_tree
+from module_amoebae import find_input_file_in_parent_directory
 
 # Define functions to be used in amoebae.
 

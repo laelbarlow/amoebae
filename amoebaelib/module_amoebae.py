@@ -24,7 +24,7 @@ import subprocess
 import re
 import settings
 #import shutil
-#import glob
+import glob
 import time
 import datetime
 import pandas as pd
@@ -828,4 +828,75 @@ def apply_mask_criteria2(column):
         # it should be included.
 
         return mask_char
+
+
+def disqualifying_string_in_file_basename(f, disqualifying_strings):
+    """Returns True if one or more of the strings in the input list is in the
+    basename of the input file path.
+    """
+    in_basename = False
+    for s in disqualifying_strings:
+        # Only look in the last 15 characters for the disqualifying strings.
+        if s in os.path.basename(f)[-15:]:
+            in_basename = True
+            break
+    return in_basename
+
+
+def find_input_file_in_parent_directory(indp, extension, disqualifying_strings):
+    """Given a directory path (e.g., path to a directory that was downloaded
+    after running a phylogenetic analysis on CIPRES) and the filename extension
+    that your target file will have (e.g., 'table' or 'nex'), return the path
+    to a file in the parent directory of the input directory path that is the
+    most similar to the input directory basename and has the specified
+    extension.
+    """
+    # Identify parent directory.
+    parent_dir = os.path.dirname(indp)
+
+    # Identify all files in parent directory that have the given extension.
+    all_rel_files_in_parent_dir = []
+    for f in glob.glob(os.path.join(parent_dir, '*.' + extension)):
+        if os.path.isfile(f):
+            # Only look at files that don't have disqualifying strings (e.g.,
+            # masked and trimmed alignments instead of original alignment).
+            if not disqualifying_string_in_file_basename(f, disqualifying_strings):
+                all_rel_files_in_parent_dir.append(f)
+
+    # Check that there are any relevant files.
+    assert len(all_rel_files_in_parent_dir) > 0, """No files in parent
+    directory %s with filename extension %s.""" % (parent_dir, extension)
+
+    # If there is only one file in the list, then it's the only option so you
+    # could just return that...
+    
+    # Find the file with the longest identical prefix to the input directory
+    # basename.
+    indp_bn = os.path.basename(indp)
+    # Loop over prefixes from longest to shortest.
+    file_found = False
+    for i in range(0, len(indp_bn) + 1)[::-1]:
+        prefix = indp_bn[:i] 
+        files_with_prefix = []
+        for f in all_rel_files_in_parent_dir:
+            if os.path.basename(f).startswith(prefix):
+                files_with_prefix.append(f)
+        if len(files_with_prefix) > 0:
+            file_found = True
+        # Return path if there is only one.
+        if len(files_with_prefix) == 1:
+            #print(files_with_prefix[0])
+            return files_with_prefix[0]
+        elif len(files_with_prefix) > 1:
+            # Return the path to the file with the shortest basename.
+            file_with_shortest_basename = sorted(files_with_prefix, key=lambda x: len(x))[0]
+            return file_with_shortest_basename
+        ## Report an error if there is more than one.
+        #assert len(files_with_prefix) > 1, """More than one relevant file
+        #found with extension %s in directory %s.""" % (extension, parent_dir)
+
+    # Check that a file was found.
+    assert file_found, """Could not identify an appropriate file with extension
+    %s in directory %s.""" % (extension, parent_dir)
+
 

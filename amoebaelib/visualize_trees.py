@@ -43,6 +43,8 @@ from module_boots_on_mb import mbcontre_to_newick_w_probs
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from search_alignment_space import get_type_seqs_dict, get_nodes_of_interest, get_clade_name_from_model2
+from module_amoebae import find_input_file_in_parent_directory
 
 ## Get directory path from input.
 #command_line_list = sys.argv
@@ -52,75 +54,6 @@ import numpy as np
 ## Set time for timestamp.
 #timestamp = time.strftime("%Y%m%d%H%M")
 
-
-def disqualifying_string_in_file_basename(f, disqualifying_strings):
-    """Returns True if one or more of the strings in the input list is in the
-    basename of the input file path.
-    """
-    in_basename = False
-    for s in disqualifying_strings:
-        # Only look in the last 15 characters for the disqualifying strings.
-        if s in os.path.basename(f)[-15:]:
-            in_basename = True
-            break
-    return in_basename
-
-
-def find_input_file_in_parent_directory(indp, extension, disqualifying_strings):
-    """Given a directory path (e.g., path to a directory that was downloaded
-    after running a phylogenetic analysis on CIPRES) and the filename extension
-    that your target file will have (e.g., 'table' or 'nex'), return the path
-    to a file in the parent directory of the input directory path that is the
-    most similar to the input directory basename and has the specified
-    extension.
-    """
-    # Identify parent directory.
-    parent_dir = os.path.dirname(indp)
-
-    # Identify all files in parent directory that have the given extension.
-    all_rel_files_in_parent_dir = []
-    for f in glob.glob(os.path.join(parent_dir, '*.' + extension)):
-        if os.path.isfile(f):
-            # Only look at files that don't have disqualifying strings (e.g.,
-            # masked and trimmed alignments instead of original alignment).
-            if not disqualifying_string_in_file_basename(f, disqualifying_strings):
-                all_rel_files_in_parent_dir.append(f)
-
-    # Check that there are any relevant files.
-    assert len(all_rel_files_in_parent_dir) > 0, """No files in parent
-    directory %s with filename extension %s.""" % (parent_dir, extension)
-
-    # If there is only one file in the list, then it's the only option so you
-    # could just return that...
-    
-    # Find the file with the longest identical prefix to the input directory
-    # basename.
-    indp_bn = os.path.basename(indp)
-    # Loop over prefixes from longest to shortest.
-    file_found = False
-    for i in range(0, len(indp_bn) + 1)[::-1]:
-        prefix = indp_bn[:i] 
-        files_with_prefix = []
-        for f in all_rel_files_in_parent_dir:
-            if os.path.basename(f).startswith(prefix):
-                files_with_prefix.append(f)
-        if len(files_with_prefix) > 0:
-            file_found = True
-        # Return path if there is only one.
-        if len(files_with_prefix) == 1:
-            #print(files_with_prefix[0])
-            return files_with_prefix[0]
-        elif len(files_with_prefix) > 1:
-            # Return the path to the file with the shortest basename.
-            file_with_shortest_basename = sorted(files_with_prefix, key=lambda x: len(x))[0]
-            return file_with_shortest_basename
-        ## Report an error if there is more than one.
-        #assert len(files_with_prefix) > 1, """More than one relevant file
-        #found with extension %s in directory %s.""" % (extension, parent_dir)
-
-    # Check that a file was found.
-    assert file_found, """Could not identify an appropriate file with extension
-    %s in directory %s.""" % (extension, parent_dir)
 
 
 def plotImage(image_file):
@@ -681,53 +614,53 @@ def translate_int_node_support_to_prob(t):
             node.support = float(format(node.support * 0.01, '3.2f'))
 
 
-def add_clade_names_to_conversion_table(tablefilename, typeseqsfilename):
-    """Take paths to a taxon name conversion file and a file defining clade
-    names corresponding to type seqs (sequences defining clades of interest).
-    And, append corresponding clade names to each taxon name in the conversion
-    table file.
-    """
-    # Parse tree file.
-    t1 = Tree(...XXX...)
-
-    # Get list of nodes of interest.
-    orthogroup_nodes = get_nodes_of_interest(t1, type_seq_list)
-
-    # Construct a dictionary storing the clade name corresponding to each
-    # sequence name in the input tree.
-    seq_clade_name_dict = {}
-    for nl in orthogroup_nodes:
-        clade_name = get_clade_name_from_model2(nl[0], type_seqs_dict)
-        for ln in [x.name for x in nl[1].get_leaves()]:
-            seq_clade_name_dict[ln] = clade_name
-
-    # Define path to original table file.
-    original_table_file =\
-    find_input_file_in_parent_directory(os.path.dirname(ml_tree_path), 'table', [])
-
-    # Make a copy of the original table file.
-    original_table_file_copy =\
-    original_table_file + '_original'
-    shutil.copyfile(original_table_file, original_table_file_copy)
-
-    # Define path to temporary modified file.
-    original_table_file_temp =\
-    original_table_file + '_TEMP'
-
-    # Loop over lines in original table.
-    with open(original_table_file) as tablefh,\
-        open(original_table_file_temp,'w') as o:
-        for i in tablefh:
-            if i.startswith('ZZ') and '_' not in i:
-                o.write(i)
-            elif i.strip() == '':
-                o.write(i)
-            else:
-                o.write(i.strip() + '__' + seq_clade_name_dict[i.strip()].strip() + '\n')
-
-    # Copy over the original table file path with the temporary file contents.
-    os.remove(original_table_file)
-    os.rename(original_table_file_temp, original_table_file)
+#def add_clade_names_to_conversion_table(tablefilename, typeseqsfilename):
+#    """Take paths to a taxon name conversion file and a file defining clade
+#    names corresponding to type seqs (sequences defining clades of interest).
+#    And, append corresponding clade names to each taxon name in the conversion
+#    table file.
+#    """
+#    # Parse tree file.
+#    t1 = Tree(...XXX...)
+#
+#    # Get list of nodes of interest.
+#    orthogroup_nodes = get_nodes_of_interest(t1, type_seq_list)
+#
+#    # Construct a dictionary storing the clade name corresponding to each
+#    # sequence name in the input tree.
+#    seq_clade_name_dict = {}
+#    for nl in orthogroup_nodes:
+#        clade_name = get_clade_name_from_model2(nl[0], type_seqs_dict)
+#        for ln in [x.name for x in nl[1].get_leaves()]:
+#            seq_clade_name_dict[ln] = clade_name
+#
+#    # Define path to original table file.
+#    original_table_file =\
+#    find_input_file_in_parent_directory(os.path.dirname(ml_tree_path), 'table', [])
+#
+#    # Make a copy of the original table file.
+#    original_table_file_copy =\
+#    original_table_file + '_original'
+#    shutil.copyfile(original_table_file, original_table_file_copy)
+#
+#    # Define path to temporary modified file.
+#    original_table_file_temp =\
+#    original_table_file + '_TEMP'
+#
+#    # Loop over lines in original table.
+#    with open(original_table_file) as tablefh,\
+#        open(original_table_file_temp,'w') as o:
+#        for i in tablefh:
+#            if i.startswith('ZZ') and '_' not in i:
+#                o.write(i)
+#            elif i.strip() == '':
+#                o.write(i)
+#            else:
+#                o.write(i.strip() + '__' + seq_clade_name_dict[i.strip()].strip() + '\n')
+#
+#    # Copy over the original table file path with the temporary file contents.
+#    os.remove(original_table_file)
+#    os.rename(original_table_file_temp, original_table_file)
 
 
 def visualize_tree(method,
@@ -749,11 +682,6 @@ def visualize_tree(method,
     #if len(highlight_for_removal) == 0:
     #    assert file_with_subs_model_name is not None, """No file with
     #    substitution model name was input."""
-
-    # If indicated, append clade names to taxon names in the conversion table.
-    add_clade_names_to_conversion_table(tablefilename)
-    ...XXX...
-    assert 2!=2
 
     # If method is mb, then generate a .tre file.
     if method == 'mb':
@@ -874,6 +802,43 @@ def visualize_tree(method,
 
     # Write topology to file path (this is not for use by this script).
     t1.write(format=9, outfile=tree_file2_topo)
+
+    
+    # If indicated, append clade names to taxon names in the output trees and
+    # conversion table.
+    if add_clade_names:
+        # Get list of nodes of interest.
+        type_seq_dict = get_type_seqs_dict(typeseqsfilename)
+        type_seq_list = type_seq_dict.values()
+        orthogroup_nodes = get_nodes_of_interest(t1, type_seq_list)
+
+        # Construct a dictionary storing the clade name corresponding to each
+        # sequence name in the input tree.
+        seq_clade_name_dict = {}
+        for nl in orthogroup_nodes:
+            clade_name = get_clade_name_from_model2(nl[0], type_seq_dict)
+            for ln in [x.name for x in nl[1].get_leaves()]:
+                seq_clade_name_dict[ln] = clade_name
+
+        # Loop over leaf names in tree and append clade names.
+        for l in t1.get_leaves():
+            l.name = l.name + '__' + seq_clade_name_dict[l.name]
+
+        # Define path to modified file with clade names appended to taxon
+        # names.
+        table_file_with_clade_names =\
+        tablefilename + '_with_clade_names'
+
+        # Loop over lines in original table.
+        with open(tablefilename) as tablefh,\
+            open(table_file_with_clade_names,'w') as o:
+            for i in tablefh:
+                if i.startswith('ZZ') and '_' not in i:
+                    o.write(i)
+                elif i.strip() == '':
+                    o.write(i)
+                else:
+                    o.write(i.strip() + '__' + seq_clade_name_dict[i.strip()].strip() + '\n')
 
 
     ## Find a K. nitens sequence if present.
