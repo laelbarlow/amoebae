@@ -186,15 +186,24 @@ class TestConstInterp(unittest.TestCase):
                                       'X  FFFFFVLLLL'
                                       ])
 
+        # Given this alignment, the actual topology of the tree should be:
+        # "(A,B,((C,X),D));"
+
         constraint_tree_string = "(A, B, (C, D));"
         constraint_tree_obj = Tree(constraint_tree_string)
 
         # Call function.
         output_topo = run_simple_constrained_iqtree_analysis(alignment_string,
                                                              constraint_tree_obj)
+        #print('\n')
+        #print(output_topo)
+        #print('\n')
 
         # Check that output topology is the same as the constraint topology.
         self.assertTrue('(C,X)' in output_topo.replace(' ', ''))
+
+        # Note: This may be the only way to ensure that at least one subtree
+        # can be rooted on any clade of interest.
 
 
     def test_constrained_subtrees_are_constrained(self):
@@ -265,6 +274,67 @@ class TestConstInterp(unittest.TestCase):
         # "(unrootedfamilytree1, (unrootedfamilytree2));"
         # Where "unrootedfamilytree1" and "unrootedfamilytree2" do not have the
         # outer set of parentheses that would make this constraint tree rooted.
+
+
+    def test_unrooted_subtrees_can_be_rooted_on_any_branch(self):
+        # Define a string constituting an alignment in phylip format.
+        alignment_string = '\n'.join([' 8 10',
+                                      'A  LLLLLLLLLL',
+                                      'B  LLLLLLLLAA',
+                                      'C  LLLLLLAAAA',
+                                      'D  LLLLLLAAAA',
+                                      'E  VVVVVVVVVV',
+                                      'F  FFVVVVVVVV',
+                                      'G  FFFVVVVVVV',
+                                      'H  FFFVVVVVVV',
+                                      ])
+
+        # Without constraint produces:  (A,(B,(C,D)),(E,(F,(G,H))));
+        #constraint_tree_string = "(A, B, C, D, E, F, G, H);"
+        constraint_tree_string = "((C, D, (A, B)), E, F, (G, H));"
+        constraint_tree_obj = Tree(constraint_tree_string)
+
+        # Call function.
+        output_topo = run_simple_constrained_iqtree_analysis(alignment_string,
+                                                             constraint_tree_obj)
+        print('\n\n')
+        print(output_topo)
+        print('\n\n')
+
+        # Check that output topology is the same as the constraint topology.
+        self.assertEqual('(A,(B,(C,D)),(E,(F,(G,H))));', output_topo.replace(' ', ''))
+
+
+    def test_unrooted_subtrees_can_be_rooted_on_any_branch(self):
+        # Define a string constituting an alignment in phylip format.
+        alignment_string = '\n'.join([' 8 10',
+                                      'A  LLLLLLLLLL',
+                                      'B  LLLLLLLLAA',
+                                      'C  LLLLLLAAAA',
+                                      'D  LLLLLLAAAA',
+                                      'E  VVVVVVVVVV',
+                                      'F  FFVVVVVVVV',
+                                      'G  FFFVVVVVVV',
+                                      'H  FFFVVVVVVV',
+                                      ])
+
+        # Without constraint produces:  (A,(B,(C,D)),(E,(F,(G,H))));
+        #constraint_tree_string = "(A, B, C, D, E, F, G, H);"
+        constraint_tree_string = "((C, D, (A, B)), E, F, (G, H));"
+        constraint_tree_obj = Tree(constraint_tree_string)
+
+        # Call function.
+        output_topo = run_simple_constrained_iqtree_analysis(alignment_string,
+                                                             constraint_tree_obj)
+        print('\n\n')
+        print(output_topo)
+        print('\n\n')
+
+        # Check that output topology is the same as the constraint topology.
+        self.assertEqual('(A,(B,(C,D)),(E,(F,(G,H))));', output_topo.replace(' ', ''))
+
+        # The failure of this test indicates that unrooted subtrees cannot be
+        # rooted on any clade of interest!
 
 
     def test_constrained_analysis_with_starting_tree(self):
