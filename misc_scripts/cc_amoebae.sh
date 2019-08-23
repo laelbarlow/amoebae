@@ -2,9 +2,6 @@
 # This script writes a script with which to run AMOEBAE commands with. The
 # output script must then be submitted via the sbatch command.
 
-# Define path to current script.
-SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-
 # Define input amoebae command to be written to output script file.
 AMOEBAECOMMAND="$@"
 
@@ -20,6 +17,9 @@ TEXT=$"#!/bin/bash
 #SBATCH --account=def-dacks
 #SBATCH --mail-user=lael@ualberta.ca
 #SBATCH --mail-type=END
+
+# Define path to current script.
+SCRIPTPATH=\"\$( cd \"\$(dirname \"\$0\")\" ; pwd -P )\"
 
 # Load python.
 module load python/3.7.0
@@ -68,7 +68,7 @@ amoebae check_imports
 printf \"\n\n\nRunning amoebae command:\n\"
 #*** AMOEBAE command here:
 
-amoebae $AMOEBAECOMMAND > $SCRIPTPATH'_log.txt'
+amoebae $AMOEBAECOMMAND > \$SCRIPTPATH'_log.txt'
 
 #***
 
