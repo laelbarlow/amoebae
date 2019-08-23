@@ -18,8 +18,10 @@ TEXT=$"#!/bin/bash
 #SBATCH --mail-user=lael@ualberta.ca
 #SBATCH --mail-type=END
 
-# Define path to current script.
-SCRIPTPATH=\"\$( cd \"\$(dirname \"\$0\")\" ; pwd -P )\"
+## Define path to current script (this doesn't work on computecanada, because
+## the current script will not be the cc_amoebae_... script, but something like
+## job1234).
+#SCRIPTPATH=\"\$( cd \"\$(dirname \"\$0\")\" ; pwd -P )\"
 
 # Load python.
 module load python/3.7.0
@@ -68,7 +70,7 @@ amoebae check_imports
 printf \"\n\n\nRunning amoebae command:\n\"
 #*** AMOEBAE command here:
 
-amoebae $AMOEBAECOMMAND > \$SCRIPTPATH'_log.txt'
+amoebae $AMOEBAECOMMAND
 
 #***
 
