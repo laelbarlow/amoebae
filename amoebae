@@ -2041,9 +2041,14 @@ Miscellaneous commands:
                 connecting the clades of interest intead of making alternative
                 bifurcating trees.''',
                 action='store_true')
-        parser.add_argument('--polytomy_clades', help='''Make subtrees/clades of
-                interest polytomies in output topologies.''',
+        parser.add_argument('--iqtree_au_test', help='''Test all the relevant
+                alternative topologies against each other using Approximately
+                Unbiased (AU) test with IQ-tree.''',
                 action='store_true')
+        # This option removed because should always do this anyway:
+        #parser.add_argument('--polytomy_clades', help='''Make subtrees/clades of
+        #        interest polytomies in output topologies.''',
+        #        action='store_true')
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -2058,9 +2063,11 @@ Miscellaneous commands:
         main_out_path = os.path.join(args.out_dir_path, 'get_alt_topos_output_' + timestamp)
 
         # Call function from the module.
+        #get_all_alt_model_backbones(args.model_name, args.out_dir_path,
+        #        main_out_path, args.polytomy,
+        #        args.polytomy_clades)
         get_all_alt_model_backbones(args.model_name, args.out_dir_path,
-                main_out_path, args.polytomy,
-                args.polytomy_clades)
+                main_out_path, args.polytomy, args.iqtree_au_test)
 
         # Record end time.
         end_time = time.time()

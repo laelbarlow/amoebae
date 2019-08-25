@@ -2379,7 +2379,7 @@ def get_all_alt_model_backbones(model_name,
                                 out_dir_path,
                                 main_out_path,
                                 polytomy=False,
-                                polytomy_clades=False
+                                iqtree_au_test=False
                                 ):
     """Take a tree and make all alternative topologies for internal branches
     outside specific clades of interest. Or, take a tree and make internal
@@ -2590,15 +2590,15 @@ def get_all_alt_model_backbones(model_name,
         nodes_of_interest_for_polytomy.append(node_w_most_leaves)
 
 
-    if polytomy_clades:
-        # Turn each of the nodes/clades/subtrees of interest into polytomies of
-        # all the sequences they contain.
-        nodes_of_interest_for_polytomy_as_polytomies = []
-        for node_of_interest in nodes_of_interest_for_polytomy:
-            node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
-            nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
-        # Switch to new list.
-        nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
+    #if polytomy_clades:
+    # Turn each of the nodes/clades/subtrees of interest into polytomies of
+    # all the sequences they contain.
+    nodes_of_interest_for_polytomy_as_polytomies = []
+    for node_of_interest in nodes_of_interest_for_polytomy:
+        node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
+        nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
+    # Switch to new list.
+    nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
 
     # Initiate list of alternative tree topologies (newick strings).
     alt_topos = []
@@ -2665,6 +2665,12 @@ def get_all_alt_model_backbones(model_name,
     # phylogenetic analysis programs.
     codenames_nex(ali, subs_model)
 
+    # Define path to coded phylip alignment file.
+    phylip_filepaths = glob.glob(os.path.join(main_out_path, '*C.phy'))
+    assert len(phylip_filepaths) == 1, """Not the right number of potential
+    phylip files in directory. Relevant files:\n%s""" % str(phylip_filepaths)
+    phylip_filepath = phylip_filepaths[0]
+
     # Define path to conversion table file.
     conversion_table_filepaths = glob.glob(os.path.join(main_out_path, '*C.table'))
     assert len(conversion_table_filepaths) == 1, """Not the right number of potential
@@ -2711,6 +2717,173 @@ def get_all_alt_model_backbones(model_name,
                                mrbayes_input_constrained
                                )
 
+
+    if iqtree_au_test and not polytomy:
+        # Run constrained ML search using the original alignment using each
+        # alternative output tree as a constraint.
+        # ********Also, test against an unconstrained search and/or the exact
+        # topology of the tree from the original model.
+        # *****Consider using starting trees to speed things up.
+
+        # Get list of constraint tree files.
+
+        # Do phylogenetic analysis.
+        outtree_files_list = []
+        for ctf in coded_topo_filepaths:
+            # Make subdir for output.
+            subdirp = ctf.rsplit('.', 1)[0] + '_IQ-tree_ml_search'
+            os.mkdir(subdirp)
+
+            # Use IQtree to do an ML search
+            output_file_prefix = os.path.join(subdirp, 'iqtree')
+            iqtree_command_list = ['iqtree', '-s', phylip_filepath, '-m', subs_model, '-g',
+                ctf, '-pre', output_file_prefix, '-nt', '4']
+            tree_search_start_time = time.time()
+            subprocess.call(iqtree_command_list)
+
+            # Add output tree file path to list.
+            tree_file_path = output_file_prefix + '.treefile'
+            outtree_files_list.append(tree_file_path)
+
+            # Check that the output file was actually produced.
+            assert os.path.isfile(tree_file_path)
+
+        # Do topology tests using yielded trees.
+
+        # Make output directory for topology test analysis.
+        topo_test_subdirp = phylip_filepath.rsplit('.', 1)[0] + '_topology_tests'
+        os.mkdir(topo_test_subdirp)
+        concat_tree_file = os.path.join(topo_test_subdirp, 'concat_trees.tre')
+        concat_tree_name_file = os.path.join(topo_test_subdirp, 'concat_tree_names.txt')
+        f_num = 0
+        alt_tree_files = []
+        for f in outtree_files_list:
+            f_num += 1
+            alt_tree_files.append(f)
+            with open(f) as infh, open(concat_tree_file, 'a') as o1,\
+            open(concat_tree_name_file, 'a') as o2:
+                for i in infh:
+                    o1.write(i)
+                    o2.write(str(f_num) + ': ' + f)
+
+        # Use IQ-tree to perform topology tests.
+        topo_test_output_prefix = concat_tree_file.rsplit('.', 1)[0] + '_topo_test' 
+        topo_test_output_fp = concat_tree_file.rsplit('.', 1)[0] + '_topo_test.iqtree' 
+        subprocess.call(['iqtree', '-s', phylip_filepath, '-m', subs_model, '-n', '0',
+            '-z', concat_tree_file, '-zb', '10000', '-au', '-pre',
+            topo_test_output_prefix])
+
+        # Parse IQ-tree output to get results of topology test.
+        data_line = re.compile(r'\d+ +-\d+\.\d+ +\d+\.\d+ +')
+        space_char = re.compile(r' +')
+        topo_test_res_dict = {}
+        with open(topo_test_output_fp) as infh:
+            for i in infh:
+                if data_line.search(i.strip()):
+                    # Parse info from line in IQ-tree output file.
+                    parsed_tree_info_list = space_char.split(i.strip())
+                    print(parsed_tree_info_list)
+                    tree_num = int(parsed_tree_info_list[0])
+                    original_tree_fp = alt_tree_files[tree_num -1]
+                    logL = float(parsed_tree_info_list[1])
+                    deltaL = float(parsed_tree_info_list[2])
+        #            bp_RELL = float(parsed_tree_info_list[3])
+        #            p_KH = float(parsed_tree_info_list[5])
+        #            p_SH = float(parsed_tree_info_list[7])
+        #            c_ELW = float(parsed_tree_info_list[9])
+                    p_AU = float(parsed_tree_info_list[11])
+                    accept_reject = parsed_tree_info_list[12]
+        #            # Add info to dict.
+                    topo_test_res_dict[tree_num] = {
+                            'original_tree_fp': original_tree_fp,
+                            'logL': logL,
+                            'deltaL': deltaL,
+                            'p_AU': p_AU,
+                            'accept_reject': accept_reject
+                            }
+
+        ## Write info to summary spreadsheet file.
+        #with open(summary_csv_fp, 'a') as o:
+        #    num_keys = str(len(topo_test_res_dict.keys()))
+        #    key_num = 0
+        #    for key in sorted(topo_test_res_dict.keys(), key=lambda x:\
+        #            topo_test_res_dict[x][1], reverse=True):
+        #        key_num += 1
+        #        info_tuple = topo_test_res_dict[key]
+        #        # Assemble info to write to spreadsheet.
+        #        relative_tree_path = info_tuple[0].replace(os.path.dirname(os.path.dirname(info_tuple[0])), '')
+        #        orig_align_file = os.path.basename(alignment)
+        #        orig_tree_file = os.path.basename(tree)
+        #        logL = str(info_tuple[1])
+        #        bp_RELL = str(info_tuple[2])
+        #        p_KH = str(info_tuple[3])
+        #        p_SH = str(info_tuple[4])
+        #        c_ELW = str(info_tuple[5])
+        #        p_AU = str(info_tuple[6])
+
+        #        # Apply a consensus approach to determine whether to accept or
+        #        # reject topologies.
+        #        accept_reject = '+'
+        #        consensus_num = 0
+        #        if float(bp_RELL) <= 0.05:
+        #            consensus_num += 1
+        #        if float(p_KH) <= 0.05:
+        #            consensus_num += 1
+        #        if float(p_SH) <= 0.05:
+        #            consensus_num += 1
+        #        if float(c_ELW) <= 0.05:
+        #            consensus_num += 1
+        #        if float(p_AU) <= 0.05:
+        #            consensus_num += 1
+        #        if consensus_num >= 4:
+        #            accept_reject = '-'
+
+        #        hypothesis_num = str(key_num) + ' of ' + num_keys
+        #        relative_table_path = tablefp.replace(os.path.dirname(os.path.dirname(tablefp)), '')
+        #        type_seq_name =\
+        #        os.path.dirname(info_tuple[0]).split('_def_seq_')[1].split('.C_')[0]
+
+        #        # Get clade name.
+        #        clade_name = get_clade_name_from_model(type_seq_name, type_seqs)
+
+        #        masked_ali_file = os.path.join(outdirpath1,'*mask.C.nex').replace(os.path.dirname(outdirpath1), '')
+
+        #        # Write info line to spreadsheet.
+        #        info_line = ','.join([model,
+        #                              orig_align_file, #0
+        #                              orig_tree_file, #1
+        #                              subs_model, #2
+        #                              additional_seq_orig_name, #3
+        #                              hypothesis_num, #4
+        #                              type_seq_name, #5
+        #                              clade_name, #6
+        #                              logL,  #7
+        #                              bp_RELL, #8
+        #                              p_KH, #8A
+        #                              p_SH, #8B
+        #                              c_ELW, #8C
+        #                              p_AU, #8D
+        #                              accept_reject,
+        #                              masked_ali_file, #10
+        #                              relative_table_path, #11
+        #                              'Trimmed input alignment file', #12
+        #                              'Constraint tree file', #13
+        #                              'Starting tree file', #14
+        #                              relative_tree_path, #15
+        #                              '\n'
+        #                              ])
+        #        o.write(info_line)
+
+
+        # ************* Get topology string with clade names representing
+        # clades. eg, (Syb, VAMP7, (YKT6, Sec22)).
+        
+        # Summarize results in a .csv file with the following information for
+        # each alternative: topology (in newick format), logL, deltaL, p-AU,
+        # accept (+) or reject (-).
+
+
+    # Print prompt to run scripts to do tree searches using constraints.
     print("""\n\nNow use cc_constrained_mb.sh and
     cc_constrained_iqtree_ufboot_and_alrt.sh scripts to set up constrained tree
     searches to run on computecanada.""")
