@@ -2464,7 +2464,7 @@ def new_tree_better(prev_tree_measure,
         #if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
         # Only require that the clade that was modified has a branch length
         # ratio that is at least as good as in the previous tree.
-        if new_tree_measure[6] >= prev_tree_measure[6]:
+        if new_tree_measure[6] >= (prev_tree_measure[6] * 0.95):
             # Return True to indicate that the new tree is better.
             return True
         else:
@@ -2476,7 +2476,7 @@ def new_tree_better(prev_tree_measure,
         #if new_tree_measure[4] >= prev_tree_measure[4] and new_tree_measure[5] >= prev_tree_measure[5]:
         # Only require that the clade that was modified has a branch length
         # ratio that is at least as good as in the previous tree.
-        if new_tree_measure[6] >= prev_tree_measure[6]:
+        if new_tree_measure[6] > prev_tree_measure[6]:
             # Return True to indicate that the new tree is better.
             return True
         else:
