@@ -1285,7 +1285,7 @@ def get_evaldiff(evalue1, evalue2):
 
 
 def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
-        csv_file, redun_hit_csv, min_evaldiff, timestamp, aasubseq):
+        csv_file, redun_hit_csv, min_evaldiff, timestamp, aasubseq, max_num_reverse_searches_per_database):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -1356,7 +1356,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
 
         # Prevent analyzing reverse searches when the forward hit rank is over
         # a certain number.
-        elif row['Forward hit rank'] > settings.max_num_reverse_searches_per_database:
+        elif max_num_reverse_searches_per_database != 0 and row['Forward hit rank'] > max_num_reverse_searches_per_database:
             pass
 
         else:

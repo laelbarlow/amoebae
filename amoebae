@@ -1092,6 +1092,10 @@ Miscellaneous commands:
                 forward hit sequence. This is default for amino acid hits. Must
                 be selected if selected when the setup_rev_srch command was
                 run.''', action='store_true')
+        parser.add_argument('--max_rev_srchs', help='''Maximum number of
+        forward search hits to perform reverse searches for per query database.
+        If zero, then reverse searches will be performed for all hits.''',
+        default=0)
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -1151,7 +1155,8 @@ Miscellaneous commands:
                     ')')
             final_outfp = module_amoebae_search.write_rev_srch_res_to_csv(rev_srch_timestamp + '-' + str(db_num), args.rev_srch_out,
                     query_file_list, db_file, args.csv_file, args.redun_hit_csv,
-                    args.min_evaldiff, timestamp, args.aasubseq)
+                    args.min_evaldiff, timestamp, args.aasubseq,
+                    args.max_rev_srchs)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nForward search results written/appended to
