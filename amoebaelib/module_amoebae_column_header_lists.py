@@ -63,7 +63,10 @@ phylo_class_column_label_list = [#'Model/backbone tree name',
                                  'Classification',
                                  'Second most likely classification',
                                  'AU topology test p-value for comparison with next most likely classification/topology',
-                                 'All but top classification rejected?'
+                                 'All but top classification rejected by AU test?',
+                                 'ELW for most likely topology',
+                                 'ELW confidence for second most likely topology',
+                                 'ELW for most likely topology above threshold?'
                                  ]
 
 phylo_class_place_column_label_list = ['Model/backbone tree name',

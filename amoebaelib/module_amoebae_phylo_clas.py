@@ -2232,6 +2232,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
                 # Get info needed to extract relevant info from the full summary
                 # csv.
                 acc = row['Forward hit accession']
+                print('Summarizing results for sequence with accession ' + acc)
                 
                 # Parse summary file.
                 dff = pd.read_csv(full_summary_csv_path, index_col=False)
@@ -2244,19 +2245,30 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
                 consensus_list = []
                 top_clade = None
                 second_clade = None
+                top_clade_ELW_confidence = None
+                second_clade_ELW_confidence = None
                 for indexf, rowf in dff.iterrows():
-                    if rowf['Sequence added to tree'].split(' ')[0] == acc:
+                    # Parse the accession out of the sequence header listed in
+                    # the phylo_class summary spreadsheet.
+                    # ***This may be different depending on the formatting of
+                    # the headers in the fasta file input to phylo_class.
+                    #if rowf['Sequence added to tree'].split(' ')[0] == acc:
+                    if rowf['Sequence added to tree'].split('__')[1].replace('.copy', '') == acc:
                         info_found = True
+                        print('\tFound info in phylo_class output sheet')
                         consensus_list.append(rowf['Accept (+) or reject (-) hypothesis based on consensus of topology tests'])
                         if rowf['Hypothesis (tree/clade) number'].startswith('1 of '):
                             top_index = indexf
                             model_name = rowf['Model/backbone tree name']
                             top_clade = rowf['Clade name']
+                            print('\tTop clade.')
+                            top_clade_ELW_confidence = rowf['c-ELW: Expected Likelihood Weight (Strimmer & Rambaut 2002)']
 
                     if top_index is not None and indexf == top_index + 1:
                         # Get info for second best classification clade.
                         au_pvalue = rowf['p-AU: p-value of approximately unbiased (AU) test (Shimodaira, 2002)']
                         second_clade = rowf['Clade name']
+                        second_clade_ELW_confidence = rowf['c-ELW: Expected Likelihood Weight (Strimmer & Rambaut 2002)']
 
                 # If a row with the information for the sequence with the currrent
                 # Forward hit accession was found in the summary spreadsheet, then
@@ -2268,19 +2280,40 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
                     assert au_pvalue is not None
                     assert top_clade is not None
                     assert second_clade is not None
+                    assert top_clade_ELW_confidence is not None
+                    assert second_clade_ELW_confidence is not None
 
-                    # Determine whether all but the top classification/clade was
-                    # rejected by consensus of hypothesis tests.
+                    ## Determine whether all but the top classification/clade was
+                    ## rejected by consensus of hypothesis tests.
+                    #all_but_top_rejected = 'No'
+                    #if consensus_list.count('+') == 1:
+                    #    all_but_top_rejected = 'Yes'
+
+                    # Use AU test only for rejecting hypotheses.
                     all_but_top_rejected = 'No'
-                    if consensus_list.count('+') == 1:
+                    if float(au_pvalue) <= 0.05:
                         all_but_top_rejected = 'Yes'
+
+                    # Determine if ELW above threshold.
+                    top_ELW_above_threshold = 'No'
+                    if float(top_clade_ELW_confidence) >= 0.60:
+                        top_ELW_above_threshold = 'Yes'
+
+                    print('\n\n\n')
+                    print(top_clade_ELW_confidence)
+                    print('\n\n\n')
 
                     # Add info to output df.
                     #row['Model/backbone tree name'] = model_name
                     row['Classification'] = top_clade
                     row['Second most likely classification'] = second_clade
                     row['AU topology test p-value for comparison with next most likely classification/topology'] = au_pvalue
-                    row['All but top classification rejected?'] = all_but_top_rejected
+                    row['All but top classification rejected by AU test?'] = all_but_top_rejected
+                    row['ELW for most likely topology'] =\
+                        top_clade_ELW_confidence
+                    row['ELW confidence for second most likely topology'] =\
+                        second_clade_ELW_confidence
+                    row['ELW for most likely topology above threshold?'] = top_ELW_above_threshold
                 
                     # Update row in dataframe with new information.
                     df.loc[index] = row

@@ -991,9 +991,22 @@ def visualize_tree_in_dir(indp, method, timestamp, taxa_to_root_on,
     file_with_subs_model_name = None
     if method == 'iqtree':
         # Names for input files.
+        tree_file = None
+        #if os.path.isfile(os.path.join(indp, 'output.treefile')):
+        #    tree_file = os.path.join(indp, 'output.treefile')
+        #else:
+        #    print("""\nWarning: Could not find .treefile file, using .contree
+        #    instead.\n""")
+        #    tree_file = os.path.join(indp, 'output.contree')
         tree_file = os.path.join(indp, 'output.treefile')
+
         # Identify file listing which substitution model was used.
-        file_with_subs_model_name = glob.glob(os.path.join(indp, '*.iqtree'))[0]
+        file_with_subs_model_name = '?'
+        try:
+            file_with_subs_model_name = glob.glob(os.path.join(indp, '*.iqtree'))[0]
+        except:
+            pass
+
     elif method == 'mb':
         # Names for input files.
         tree_file = glob.glob(os.path.join(indp, '*.nex'))[0]
