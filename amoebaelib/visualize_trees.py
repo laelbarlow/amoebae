@@ -1031,8 +1031,10 @@ def visualize_tree_in_dir(indp, method, timestamp, taxa_to_root_on,
     #tablefilename = tablefilenames[0]
     tablefilename = find_input_file_in_parent_directory(indp, 'table', [])
 
-    # Get type seqs filename.
-    typeseqsfilename = find_input_file_in_parent_directory(indp, 'type_seqs', [])
+    typeseqsfilename = None
+    if add_clade_names_from_file:
+        # Get type seqs filename.
+        typeseqsfilename = find_input_file_in_parent_directory(indp, 'type_seqs', [])
 
     # Do not highlight leaves for removal.
     highlight_for_removal = []
