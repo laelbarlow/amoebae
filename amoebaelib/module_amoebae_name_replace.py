@@ -155,6 +155,9 @@ def write_newick_tree_with_uncoded_names(infile, outfile, tablefile,
     #        tree_string = tree_string.replace(code, conv_dict[code])
 
     #t1 = Tree(infile)
+    print('\n\n\n')
+    print(open(infile, 'r').read())
+    print('\n\n\n')
     t1 = Tree(infile, format=1)
     t2 = t1.copy()
     for node in t2.traverse():

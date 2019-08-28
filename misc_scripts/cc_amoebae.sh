@@ -18,11 +18,6 @@ TEXT=$"#!/bin/bash
 #SBATCH --mail-user=lael@ualberta.ca
 #SBATCH --mail-type=END
 
-## Define path to current script (this doesn't work on computecanada, because
-## the current script will not be the cc_amoebae_... script, but something like
-## job1234).
-#SCRIPTPATH=\"\$( cd \"\$(dirname \"\$0\")\" ; pwd -P )\"
-
 # Load python.
 module load python/3.7.0
 ## Load older version so that it will work with PyQt
@@ -36,7 +31,8 @@ module load nixpkgs/16.09
 module load gcc/7.3.0
 module load blast+/2.7.1
 module load hmmer/3.1b2
-module load iq-tree/1.5.5
+#module load iq-tree/1.5.5
+module load intel/2018.3 iq-tree/1.6.12
 #module load mrbayes/3.2.6
 module load muscle/3.8.31
 
@@ -87,7 +83,10 @@ OUTPATH=cc_amoebae_$TIMESTAMP.sh
 printf "$TEXT" > $OUTPATH 
 
 printf "
-Now submit the job with the sbatch command.
+Note: If you are running something that uses iqtree for tree searching, then
+you may need to specify 2 threads in the output .sh script before submitting.
+
+Submit the job with the sbatch command.
 
 For example:
     sbatch $OUTPATH

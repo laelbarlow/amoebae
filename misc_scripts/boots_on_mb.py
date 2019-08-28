@@ -70,14 +70,16 @@ mbcontre_to_newick_w_probs(inbesttreecontre, outbesttreenewick2)
 
 
 # Names for input files.
-inboots = 'RAxML_bootstrap.result'
+inboots = os.path.join(indp, 'RAxML_bootstrap.result')
 if not os.path.isfile(inboots):
-    inboots = 'output.ufboot'
+    inboots = os.path.join(indp, 'output.ufboot')
+if not os.path.isfile(inboots):
+    inboots = os.path.join(indp, 'output.boottrees')
 #inbesttree = glob.glob(os.path.join(indp, '*.newick'))[0] # Assumes only one .newick file.
 inbesttree = outbesttreenewick 
 
 # Check that the files are present in the input directory.
-assert os.path.isfile(os.path.join(indp, inboots)), 'Error: Bootstrap file with filename\
+assert os.path.isfile(os.path.join(indp, inboots)), 'Error: Bootstrap file with filename \
 RAxML_bootstrap.result missing from input directory.'
 assert inbesttree != ['/'], 'Error'
 assert os.path.isfile(os.path.join(indp, inbesttree)), 'Error: Newick tree missing from input directory.'
@@ -120,6 +122,7 @@ outfilename2 = outfilename + '_DC.tre'
 
 # Use module to uncode names.
 write_newick_tree_with_uncoded_names(outfilename, outfilename2, tablefilename)
+assert os.path.isfile(outfilename2)
 
 
 
@@ -139,8 +142,11 @@ outcontrefile = inbesttreecontre + '.DC.tre'
 #tablefilename2], cwd=indp)
 
 # Use module to uncode names.
-write_newick_tree_with_uncoded_names(inbesttreecontre, outcontrefile,
+#write_newick_tree_with_uncoded_names(inbesttreecontre, outcontrefile,
+#        tablefilename2)
+write_newick_tree_with_uncoded_names(outbesttreenewick, outcontrefile,
         tablefilename2)
+assert os.path.isfile(outcontrefile)
 
 
 
@@ -161,7 +167,7 @@ combined_figtree_newick_dc = combined_figtree_newick.rsplit('.', 1)[0] + '_DC.tr
 
 # Use module to uncode names.
 write_newick_tree_with_uncoded_names(combined_figtree_newick,
-        combined_figree_newick_dc,
+        combined_figtree_newick_dc,
         tablefilename)
 
 
