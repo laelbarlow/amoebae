@@ -600,7 +600,7 @@ def classify_seq_with_constrained_tree(alignment, tree, subs_model, type_seqs, f
             # Use IQtree to do an ML search
             output_file_prefix = os.path.join(subdirp, 'iqtree')
             subprocess.call(['iqtree', '-s', phy_out, '-m', subs_model, '-g',
-                ctf, '-t', stf, '-pre', output_file_prefix, '-nt', '2'])
+                ctf, '-t', stf, '-pre', output_file_prefix, '-nt', 'AUTO'])
             # Add output tree file path to list.
             tree_file_path = output_file_prefix + '.treefile'
             outtree_files_list.append(tree_file_path)
@@ -629,7 +629,7 @@ def classify_seq_with_constrained_tree(alignment, tree, subs_model, type_seqs, f
         topo_test_output_prefix = concat_tree_file.rsplit('.', 1)[0] + '_topo_test' 
         topo_test_output_fp = concat_tree_file.rsplit('.', 1)[0] + '_topo_test.iqtree' 
         subprocess.call(['iqtree', '-s', phy_out, '-m', subs_model, '-n', '0',
-            '-z', concat_tree_file, '-zb', '10000', '-au', '-nt', '2', '-pre',
+            '-z', concat_tree_file, '-zb', '10000', '-au', '-nt', 'AUTO', '-pre',
             topo_test_output_prefix])
     
         # Parse IQ-tree output to get results of topology test. # SEPARATE
@@ -1331,7 +1331,7 @@ def classify_one_seq_record(ali_num, record, model,
         # Use IQtree to do an ML search
         output_file_prefix = os.path.join(subdirp, 'iqtree')
         iqtree_command_list = ['iqtree', '-s', phy_out, '-m', subs_model, '-g',
-            ctf, '-t', stf, '-pre', output_file_prefix, '-nt', '2']
+            ctf, '-t', stf, '-pre', output_file_prefix, '-nt', 'AUTO']
         tree_search_start_time = time.time()
         subprocess.call(iqtree_command_list)
         tree_search_end_time = time.time()
@@ -1367,7 +1367,7 @@ def classify_one_seq_record(ali_num, record, model,
     topo_test_output_prefix = concat_tree_file.rsplit('.', 1)[0] + '_topo_test' 
     topo_test_output_fp = concat_tree_file.rsplit('.', 1)[0] + '_topo_test.iqtree' 
     subprocess.call(['iqtree', '-s', phy_out, '-m', subs_model, '-n', '0',
-        '-z', concat_tree_file, '-zb', '10000', '-au', '-nt', '2', '-pre',
+        '-z', concat_tree_file, '-zb', '10000', '-au', '-nt', 'AUTO', '-pre',
         topo_test_output_prefix])
     assert os.path.isfile(topo_test_output_fp), """Topology test .iqtree output
     file not found."""
@@ -1560,7 +1560,7 @@ def place_one_seq_record(ali_num, record, model,
     # Use IQtree to do an ML search
     output_file_prefix = os.path.join(subdirp, 'iqtree')
     iqtree_command_list = ['iqtree', '-s', phy_out, '-m', subs_model, '-g',
-        constraint_tree_fp_coded, '-pre', output_file_prefix, '-nt', '2']
+        constraint_tree_fp_coded, '-pre', output_file_prefix, '-nt', 'AUTO']
     tree_search_start_time = time.time()
     subprocess.call(iqtree_command_list)
     tree_search_end_time = time.time()
@@ -2772,7 +2772,7 @@ def get_all_alt_model_backbones(model_name,
             # Use IQtree to do an ML search
             output_file_prefix = os.path.join(subdirp, 'iqtree')
             iqtree_command_list = ['iqtree', '-s', phylip_filepath, '-m', subs_model, '-g',
-                ctf, '-pre', output_file_prefix, '-nt', '2']
+                ctf, '-pre', output_file_prefix, '-nt', 'AUTO']
             tree_search_start_time = time.time()
             subprocess.call(iqtree_command_list)
 
@@ -2805,7 +2805,7 @@ def get_all_alt_model_backbones(model_name,
         topo_test_output_prefix = concat_tree_file.rsplit('.', 1)[0] + '_topo_test' 
         topo_test_output_fp = concat_tree_file.rsplit('.', 1)[0] + '_topo_test.iqtree' 
         subprocess.call(['iqtree', '-s', phylip_filepath, '-m', subs_model, '-n', '0',
-            '-z', concat_tree_file, '-zb', '10000', '-au', '-nt', '2', '-pre',
+            '-z', concat_tree_file, '-zb', '10000', '-au', '-nt', 'AUTO', '-pre',
             topo_test_output_prefix])
 
         # Parse IQ-tree output to get results of topology test.
