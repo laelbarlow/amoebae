@@ -13,7 +13,7 @@ for FILE in *.phy
 do 
 TEXT=$"#!/bin/bash
 #SBATCH --ntasks=1
-#SBATCH --mem-per-cpu=100000M
+#SBATCH --mem-per-cpu=125000M   # maximum on cedar?
 #SBATCH --time=01:00:00
 #SBATCH --account=def-dacks
 #SBATCH --mail-user=lael@ualberta.ca
@@ -30,7 +30,7 @@ Now make sure that the IQ-tree module is loaded, and submit each output script
 via sbatch.
 
 For example:
-    module load iq-tree/1.5.5
+    module load iq-tree/1.6.12
     for VAR in *_iqtree_ufboot_and_alrt.sh; do sbatch \$VAR; done
     
 "

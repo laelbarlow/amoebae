@@ -24,15 +24,15 @@ do
 #!/bin/bash
 #SBATCH --ntasks=2
 #SBATCH --mem-per-cpu=125000M   # maximum on cedar?
-#SBATCH --time=01:00:00
+#SBATCH --time=06:00:00
 #SBATCH --account=def-dacks
 #SBATCH --mail-user=lael@ualberta.ca
 #SBATCH --mail-type=END
 
 mkdir $PREFIX
-iqtree -s $FILE -bb 1000 -wbt -alrt 1000 -m $SUBSMODEL -nt AUTO -pre $PREFIX/output -g $CONSTRAINT
+iqtree -s $FILE -b 100 -alrt 1000 -m $SUBSMODEL -nt AUTO -pre $PREFIX/output -g $CONSTRAINT
     "
-    printf "$TEXT" > $FILE"_constraint_"$CONSTRAINTNUM"_iqtree_ufboot_and_alrt.sh" 
+    printf "$TEXT" > $FILE"_constraint_"$CONSTRAINTNUM"_iqtree_nonparametric_boot_and_alrt.sh" 
     done
 done
 
@@ -42,7 +42,7 @@ via sbatch.
 
 For example:
     module load iq-tree/1.6.12
-    for VAR in *_iqtree_ufboot_and_alrt.sh; do sbatch \$VAR; done
+    for VAR in *_iqtree_nonparametric_boot_and_alrt.sh; do sbatch \$VAR; done
     
 "
 

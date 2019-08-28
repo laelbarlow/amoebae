@@ -9,31 +9,20 @@
 # Load IQ-tree (for some reason it doesn't load properly if you load it for each output script).
 #module load iq-tree/1.5.5
 
-echo 'Please enter a substitution model to use for all the constrained analyses:'
-read SUBSMODEL
-
-CONSTRAINTNUM=0
-
-for CONSTRAINT in *_alt_topo_constraint_*_C.tre
-do
-    let "CONSTRAINTNUM++"
-    for FILE in *.phy
-    do 
-    PREFIX=$FILE"_constraint_"$CONSTRAINTNUM"_cedar"
-    TEXT=$"\
-#!/bin/bash
+for FILE in *.phy
+do 
+TEXT=$"#!/bin/bash
 #SBATCH --ntasks=2
 #SBATCH --mem-per-cpu=125000M   # maximum on cedar?
-#SBATCH --time=01:00:00
+#SBATCH --time=06:00:00
 #SBATCH --account=def-dacks
 #SBATCH --mail-user=lael@ualberta.ca
 #SBATCH --mail-type=END
 
-mkdir $PREFIX
-iqtree -s $FILE -bb 1000 -wbt -alrt 1000 -m $SUBSMODEL -nt AUTO -pre $PREFIX/output -g $CONSTRAINT
-    "
-    printf "$TEXT" > $FILE"_constraint_"$CONSTRAINTNUM"_iqtree_ufboot_and_alrt.sh" 
-    done
+mkdir $FILE'_cedar'
+iqtree -s $FILE -b 100 -alrt 1000 -m MFP -nt AUTO -pre $FILE'_cedar/output'
+"
+printf "$TEXT" > $FILE'_iqtree_nonparametric_boot_and_alrt.sh' 
 done
 
 printf "
@@ -42,7 +31,7 @@ via sbatch.
 
 For example:
     module load iq-tree/1.6.12
-    for VAR in *_iqtree_ufboot_and_alrt.sh; do sbatch \$VAR; done
+    for VAR in *_iqtree_nonparametric_boot_and_alrt.sh; do sbatch \$VAR; done
     
 "
 
