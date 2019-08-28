@@ -32,7 +32,7 @@ module load gcc/7.3.0
 module load blast+/2.7.1
 module load hmmer/3.1b2
 #module load iq-tree/1.5.5
-module load intel/2018.3 iq-tree/1.6.12
+module load iq-tree/1.6.12
 #module load mrbayes/3.2.6
 module load muscle/3.8.31
 
