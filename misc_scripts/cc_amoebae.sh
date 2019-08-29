@@ -43,7 +43,8 @@ module load qt/5.11.3
 #module load qt/5.10.1
 
 # Make a virtual environment for python and install python modules.
-virtualenv --no-download \$SLURM_TMPDIR/env
+#virtualenv --no-download \$SLURM_TMPDIR/env
+virtualenv \$SLURM_TMPDIR/env
 source \$SLURM_TMPDIR/env/bin/activate
 pip install --upgrade pip
 pip install biopython --no-index
