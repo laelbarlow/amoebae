@@ -2414,6 +2414,7 @@ def get_all_alt_model_backbones(model_name,
                                 out_dir_path,
                                 main_out_path,
                                 polytomy=False,
+                                not_polytomy_clades=False,
                                 iqtree_au_test=False
                                 ):
     """Take a tree and make all alternative topologies for internal branches
@@ -2625,15 +2626,25 @@ def get_all_alt_model_backbones(model_name,
         nodes_of_interest_for_polytomy.append(node_w_most_leaves)
 
 
-    #if polytomy_clades:
-    # Turn each of the nodes/clades/subtrees of interest into polytomies of
-    # all the sequences they contain.
-    nodes_of_interest_for_polytomy_as_polytomies = []
-    for node_of_interest in nodes_of_interest_for_polytomy:
-        node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
-        nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
-    # Switch to new list.
-    nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
+    ##if polytomy_clades:
+    ## Turn each of the nodes/clades/subtrees of interest into polytomies of
+    ## all the sequences they contain.
+    #nodes_of_interest_for_polytomy_as_polytomies = []
+    #for node_of_interest in nodes_of_interest_for_polytomy:
+    #    node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
+    #    nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
+    ## Switch to new list.
+    #nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
+
+    if not not_polytomy_clades:
+        # Turn each of the nodes/clades/subtrees of interest into polytomies of
+        # all the sequences they contain.
+        nodes_of_interest_for_polytomy_as_polytomies = []
+        for node_of_interest in nodes_of_interest_for_polytomy:
+            node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
+            nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
+        # Switch to new list.
+        nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
 
     # Initiate list of alternative tree topologies (newick strings).
     alt_topos = []
@@ -2652,7 +2663,9 @@ def get_all_alt_model_backbones(model_name,
             #subtrees.append(n.write(format=9, quoted_node_names=True).rstrip(';'))
             subtrees.append(n.write(format=9).rstrip(';'))
 
-        newick_backbone = '(' + ','.join(subtrees) + ')'
+        #newick_backbone = '(' + ','.join(subtrees) + ')'
+        #newick_backbone = '(' + ','.join(subtrees) + ');'
+        newick_backbone = '(' + ',\n'.join(subtrees) + ');'
 
         #print('Topology as polytomy:')
         #print(newick_backbone)
