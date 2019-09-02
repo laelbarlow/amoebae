@@ -1023,6 +1023,11 @@ def classify_one_seq_record(ali_num, record, model,
     os.remove(temp_fa_1)
     os.remove(outalifp)
 
+    # Get list of "type" sequences from input.
+    type_seq_list = []
+    for i in open(type_seqs):
+        type_seq_list.append(i.strip().split(',')[0])
+
 
     # Only do the following steps once for all the alignments, because all the
     # constrained topology analyses will use the same constraint trees.
@@ -1079,11 +1084,6 @@ def classify_one_seq_record(ali_num, record, model,
 
         # Get constraint topologies for each clade of interest to test
         # alternative topology hypotheses.
-
-        # Get list of "type" sequences from input.
-        type_seq_list = []
-        for i in open(type_seqs):
-            type_seq_list.append(i.strip().split(',')[0])
 
         # For each "type" sequence, traverse all nodes and find the node with
         # the largest number of child nodes that are leaf (terminal) nodes,
@@ -1374,11 +1374,14 @@ def classify_one_seq_record(ali_num, record, model,
 
     # Parse IQ-tree output to get results of topology test. # SEPARATE
     data_line = re.compile(r'\d+ +-\d+\.\d+ +\d+\.\d+ +')
+    #data_line = re.compile(r'^ +\d+ +-\d+\.\d+')
     space_char = re.compile(r' +')
     topo_test_res_dict = {}
     with open(topo_test_output_fp) as infh:
         for i in infh:
             if data_line.search(i.strip()):
+                print('\n')
+                print(i)
                 # Parse info from line in IQ-tree output file.
                 parsed_tree_info_list = space_char.split(i.strip())
                 tree_num = int(parsed_tree_info_list[0])
@@ -1393,6 +1396,13 @@ def classify_one_seq_record(ali_num, record, model,
                 # Add info to dict.
                 topo_test_res_dict[tree_num] = (original_tree_fp, logL,\
                         bp_RELL, p_KH, p_SH, c_ELW, p_AU)
+
+    # Check that the number of test results is the same as the number of clades
+    # of interest in the input tree.
+    assert len(topo_test_res_dict.keys()) >= 2, """Too few lines found with
+    topology search results."""
+    assert len(topo_test_res_dict.keys()) == len(type_seq_list), """Incorrect
+    number of topology test results found."""
 
     # Write info to summary spreadsheet file. # SEPARATE
     with open(summary_csv_fp, 'a') as o:
