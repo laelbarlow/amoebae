@@ -1290,7 +1290,6 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
     """
-    assert min_evaldiff == 0 # Temp.
     redun_hit_dict = None
     if redun_hit_csv is not None:
         # Get redundant hit dict from from input redundant hit csv file.

@@ -437,9 +437,14 @@ def make_coulson_plot(column_labels_simple,
                         modify_lines(wedges)
                         
                         if jnum == 0:
-                            # Add a title for the complex.
-                            title = axs[i,j].set_title(species,\
-                                    fontsize=species_font_size)
+                            if len(complex_info_list) == 1:
+                                # Add a title for the complex.
+                                title = axs[i].set_title(species,\
+                                        fontsize=species_font_size)
+                            else:
+                                # Add a title for the complex.
+                                title = axs[i,j].set_title(species,\
+                                        fontsize=species_font_size)
                             #offset = np.array([-0.75, -0.6])
                             #title.set_position(title.get_position() + offset)
                             title.set_position(np.array([0.0, 0.0]) + offset)
@@ -687,6 +692,53 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         seen_add = seen.add
         new_row_index_list_simple = [x[0] for x in new_row_index_list if not (x[0] in seen or seen_add(x[0]))]
 
+        # ***Determine column header for column that contains final paralogue count
+        # information.
+        unique_positive_hit_decis_header = None
+        decision_type = None
+        for header in indf.columns:
+            if header.startswith('Represents an identifiably unique paralogue'):
+                unique_positive_hit_decis_header = header
+                decision_type = 'nonredundant_positive_hit'
+                break
+        for header in indf.columns:
+            # ***This may need to change if sum_phylo_class is modified.
+            if header.startswith('ELW for most likely topology above threshold? '):
+                unique_positive_hit_decis_header = header
+                decision_type = 'topology_test_result'
+                break
+        if unique_positive_hit_decis_header is None:
+            print('\nWarning: reporting all hits that meet the reverse search criteria.')
+            for header in indf.columns:
+                if header.startswith('Collective interpretation of reverse search results'):
+                    unique_positive_hit_decis_header = header
+                    decision_type = 'positive_hit'
+                    break
+        # Check that the header was found.
+        assert unique_positive_hit_decis_header is not None, """Could not identify
+        which column contains information regarding unique paralogue counts."""
+        assert decision_type is not None
+
+
+        ## Define a list of column header values for new dataframe.
+        #clade_names_new_column_header_list = []
+        #if decision_type == 'topology_test_result':
+        #    # Get column with classification (clade names).
+        #    classification_header = None
+        #    for header in indf.columns:
+        #        if header.startswith('Classification '):
+        #            classification_header = header
+        #            break
+        #    assert classification_header is not None
+
+        #    for index, row in indf.iterrows():
+        #        # Use clade names instead of query titles.
+        #        query_title = row[classification_header]
+        #        if query_title != '-':
+        #            if query_title not in clade_names_new_column_header_list:
+        #                clade_names_new_column_header_list.append(query_title)
+        #print(clade_names_new_column_header_list)
+
         # Define a list of column header values for new dataframe.
         new_column_header_list = []
         for index, row in indf.iterrows():
@@ -702,24 +754,14 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         # Define a simplified list of header values for another new dataframe.
         seen = set()
         seen_add = seen.add
+        new_column_header_list_simple = None
+        #if decision_type == 'topology_test_result':
+        #    # Make the column headers clade names from the input spreadsheet.
+        #    new_column_header_list_simple = clade_names_new_column_header_list
+        #else:
+        #    new_column_header_list_simple = [x[0] for x in new_column_header_list if not (x[0] in seen or seen_add(x[0]))]
         new_column_header_list_simple = [x[0] for x in new_column_header_list if not (x[0] in seen or seen_add(x[0]))]
 
-        # Determine column header for column that contains final paralogue count
-        # information.
-        unique_positive_hit_decis_header = None
-        for header in indf.columns:
-            if header.startswith('Represents an identifiably unique paralogue'):
-                unique_positive_hit_decis_header = header
-                break
-        if unique_positive_hit_decis_header is None:
-            print('\nWarning: reporting all hits that meet the reverse search criteria.')
-            for header in indf.columns:
-                if header.startswith('Collective interpretation of reverse search results'):
-                    unique_positive_hit_decis_header = header
-                    break
-        # Check that the header was found.
-        assert unique_positive_hit_decis_header is not None, """Could not identify
-        which column contains information regarding unique paralogue counts."""
 
         # Initiate new dataframes.
         odf = pd.DataFrame(columns=new_column_header_list, index=new_row_index_list)
