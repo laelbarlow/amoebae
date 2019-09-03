@@ -1555,9 +1555,12 @@ Miscellaneous commands:
                 (CSV) file, which may already contain phylo_class summaries.''')
         parser.add_argument('phylo_class_out', help='''Path to directory where
                 phylo_class results were written.''')
-        parser.add_argument('--max_pvalue', help='''Maximum p-value for
-                classifying a given sequence into one of several clades in the
-                model backbone tree.''', default=0.05)
+        #parser.add_argument('--max_pvalue', help='''Maximum p-value for
+        #        classifying a given sequence into one of several clades in the
+        #        model backbone tree.''', default=0.05)
+        parser.add_argument('--minimum_confidence', help='''Minimum percent
+                confidence that a classification needs to be for counting.''',
+                default=95)
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -1584,8 +1587,10 @@ Miscellaneous commands:
         #    # By default use the one in the settings file.
         #    min_evaldiff = settings.min_evaldiff
 
+        #final_outfp = write_phylo_class_to_csv(phylo_class_timestamp,
+        #        args.phylo_class_out, args.csv_file, args.max_pvalue, timestamp)
         final_outfp = write_phylo_class_to_csv(phylo_class_timestamp,
-                args.phylo_class_out, args.csv_file, args.max_pvalue, timestamp)
+                args.phylo_class_out, args.csv_file, args.minimum_confidence, timestamp)
 
 
         ## Prompt manual inspection of spreadsheet.

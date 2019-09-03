@@ -2165,7 +2165,7 @@ def place_one_seq_record(ali_num, record, model,
 
 
 def write_phylo_class_to_csv(phylo_class_id, outdir,
-        csv_file, max_pvalue, timestamp, output_csv_path=None):
+        csv_file, minimum_confidence, timestamp, output_csv_path=None):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -2298,7 +2298,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
 
                     # Determine if ELW above threshold.
                     top_ELW_above_threshold = 'No'
-                    if float(top_clade_ELW_confidence) >= 0.60:
+                    if float(top_clade_ELW_confidence) >= minimum_confidence:
                         top_ELW_above_threshold = 'Yes'
 
                     print('\n\n\n')
