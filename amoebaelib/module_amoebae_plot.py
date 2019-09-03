@@ -720,33 +720,34 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         assert decision_type is not None
 
 
-        ## Define a list of column header values for new dataframe.
-        #clade_names_new_column_header_list = []
-        #if decision_type == 'topology_test_result':
-        #    # Get column with classification (clade names).
-        #    classification_header = None
-        #    for header in indf.columns:
-        #        if header.startswith('Classification '):
-        #            classification_header = header
-        #            break
-        #    assert classification_header is not None
-
-        #    for index, row in indf.iterrows():
-        #        # Use clade names instead of query titles.
-        #        query_title = row[classification_header]
-        #        if query_title != '-':
-        #            if query_title not in clade_names_new_column_header_list:
-        #                clade_names_new_column_header_list.append(query_title)
-        #print(clade_names_new_column_header_list)
-
         # Define a list of column header values for new dataframe.
         new_column_header_list = []
-        for index, row in indf.iterrows():
-            query_title = row[column_header_dict['query title']]
-            query_file = row[column_header_dict['query file']]
-            header_tuple = (query_title, query_file)
-            if header_tuple not in new_column_header_list:
-                new_column_header_list.append(header_tuple)
+        classification_header = None
+        if decision_type == 'topology_test_result':
+            # Get column with classification (clade names).
+            for header in indf.columns:
+                if header.startswith('Classification '):
+                    classification_header = header
+                    break
+            assert classification_header is not None
+
+            for index, row in indf.iterrows():
+                # Use clade names instead of query titles.
+                query_title = row[classification_header]
+                query_file = row[column_header_dict['query file']]
+                header_tuple = (query_title, query_file)
+                if query_title != '-':
+                    if header_tuple not in new_column_header_list:
+                        new_column_header_list.append(header_tuple)
+
+        # Define a list of column header values for new dataframe.
+        else:
+            for index, row in indf.iterrows():
+                query_title = row[column_header_dict['query title']]
+                query_file = row[column_header_dict['query file']]
+                header_tuple = (query_title, query_file)
+                if header_tuple not in new_column_header_list:
+                    new_column_header_list.append(header_tuple)
 
         # Sort new column headers.
         new_column_header_list.sort()
@@ -776,12 +777,22 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
             for j in new_column_header_list_simple:
                 odf_simple.at[i, j] = '-'
 
+        # Temp.
+        print(odf)
+        print(odf_simple)
+
         # Iterate over rows in input dataframe and add relevant information to
         # additional dataframes.
         for index, row in indf.iterrows():
             # Determine where in the new dataframes the info should be put.
             index_tuple = (row[column_header_dict['taxon name']], row[column_header_dict['database filename']])
-            header_tuple = (row[column_header_dict['query title']], row[column_header_dict['query file']])
+            if decision_type is 'topology_test_result':
+                # Skip rows that don't have relevant information.
+                if row[classification_header] == '-':
+                    continue
+                header_tuple = (row[classification_header], row[column_header_dict['query file']])
+            else:
+                header_tuple = (row[column_header_dict['query title']], row[column_header_dict['query file']])
 
             #if index_tuple[0] == 'Capsella grandiflora':
             #    print(str(index_tuple) + ' ' + str(header_tuple))
