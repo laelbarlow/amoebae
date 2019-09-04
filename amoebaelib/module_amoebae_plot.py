@@ -462,6 +462,7 @@ def make_coulson_plot(column_labels_simple,
 
                         if jnum == 0:
                             # Define string to make species name italicized.
+                            print(species)
                             italic_species = '$\it{' + species.split(' ')[0] + '}$' + ' ' + '$\it{' + species.split(' ')[1] + '}$'
                             # Add a title for the complex.
                             title = axs[i,j].set_title(italic_species,
@@ -936,6 +937,14 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         # Check that the two input coulson plots are comparable.
         assert len(csv_paths) == 2, """Can only handle up to two input csv files."""
         assert column_labels_simple_list[0] == column_labels_simple_list[1]
+        
+        species_set_x =  set(row_labels_simple_list[0])
+        species_set_y =  set(row_labels_simple_list[1])
+        for missing_species in species_set_y - species_set_x:
+            print('Species missing from first spreadsheet: %s' % missing_species)
+        for missing_species in species_set_x - species_set_y:
+            print('Species missing from second spreadsheet: %s' % missing_species)
+
         assert row_labels_simple_list[0] == row_labels_simple_list[1]
         assert len(data_count_simple_list[0]) == len(data_count_simple_list[1])
 

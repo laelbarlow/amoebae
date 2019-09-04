@@ -839,6 +839,8 @@ def automatically_select_nodes_and_remove_seqs(input_tree_one,
     highlight_paralogues = False
     highlight_for_removal = uncoded_leaf_names_to_remove
     file_with_subs_model_name = None
+    add_clade_names = False
+    typeseqsfilename = None
     pdf_files = visualize_tree(method,
                                timestamp,
                                taxa_to_root_on,
@@ -846,6 +848,8 @@ def automatically_select_nodes_and_remove_seqs(input_tree_one,
                                highlight_for_removal,
                                input_tree_one,
                                name_replace_table,
+                               typeseqsfilename,
+                               add_clade_names,
                                file_with_subs_model_name
                                )
 
