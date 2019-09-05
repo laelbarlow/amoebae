@@ -1829,6 +1829,9 @@ Miscellaneous commands:
                 either trimmed or untrimmed).''')
         parser.add_argument('name_replace_table', help='''File for decoding
                 names in input tree file.''')
+        parser.add_argument('--include_seqs', help='''Include only listed
+                sequences/nodes instead of removing them.''',
+                action='store_true')
         parser.add_argument('--output_file', help='''Path to output file.''')
         #parser.add_argument('--optional_argument_name', help='''optional
         #argument help.''')
@@ -1845,7 +1848,7 @@ Miscellaneous commands:
 
         # Call function from module.
         main_out_path = manually_select_nodes_and_remove_seqs(args.tree_file, args.alignment,
-                args.output_file, args.name_replace_table)
+                args.output_file, args.name_replace_table, args.include_seqs)
 
         # Record end time.
         end_time = time.time()

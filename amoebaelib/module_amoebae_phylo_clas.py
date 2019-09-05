@@ -2539,7 +2539,8 @@ def get_all_alt_model_backbones(model_name,
     # Get list of "type" sequences from input.
     type_seq_list = []
     for i in open(type_seqs):
-        type_seq_list.append(i.strip().split(',')[0])
+        if not i.startswith('\n'):
+            type_seq_list.append(i.strip().split(',')[0])
 
     # For each "type" sequence, traverse all nodes and find the node with
     # the largest number of child nodes that are leaf (terminal) nodes,
@@ -2553,6 +2554,10 @@ def get_all_alt_model_backbones(model_name,
     first_type_seq_node_name = None
     for ts in type_seq_list:
         ts_num += 1
+
+        # Check that the type sequence is a reasonable string.
+        assert ts != '', """Type sequence name is an empty string."""
+        assert ts is not None, """Type sequence name is None."""
 
         if ts_num == 1:
             first_type_seq_node_name = ts
@@ -2646,15 +2651,15 @@ def get_all_alt_model_backbones(model_name,
     ## Switch to new list.
     #nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
 
-    if not not_polytomy_clades:
-        # Turn each of the nodes/clades/subtrees of interest into polytomies of
-        # all the sequences they contain.
-        nodes_of_interest_for_polytomy_as_polytomies = []
-        for node_of_interest in nodes_of_interest_for_polytomy:
-            node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
-            nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
-        # Switch to new list.
-        nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
+    #if not not_polytomy_clades:
+    #    # Turn each of the nodes/clades/subtrees of interest into polytomies of
+    #    # all the sequences they contain.
+    #    nodes_of_interest_for_polytomy_as_polytomies = []
+    #    for node_of_interest in nodes_of_interest_for_polytomy:
+    #        node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
+    #        nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
+    #    # Switch to new list.
+    #    nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
 
     # Initiate list of alternative tree topologies (newick strings).
     alt_topos = []
@@ -2692,25 +2697,39 @@ def get_all_alt_model_backbones(model_name,
         #    print(i)
         #    print('\n')
 
-    # Write each alternative topology to a separate newick file.
+    # Write each alternative topology (with subtrees as polytomies) to a
+    # separate newick file, for use as constraint trees. Also, write trees with
+    # subtrees not as polytomies as starting trees for iqtree analyses.
     topo_num = 0
     topo_filepaths = []
+    topo_filepaths_starting = []
     for topo in alt_topos:
         topo_num += 1
 
         # Define path to output text file.
         topo_filepath = outfilepath.rsplit('.', 2)[0] + '_' + str(topo_num) + '.newick.tre'
+        topo_filepath_starting = outfilepath.rsplit('.', 2)[0] + '_' +\
+        str(topo_num) + '.starting.newick.tre'
 
         # Add filepath to list.
         topo_filepaths.append(topo_filepath)
+        topo_filepaths_starting.append(topo_filepath_starting)
 
         # Write topology string to text file.
         with open(topo_filepath, 'w') as o:
-            o.write(topo)
+            o.write(topo[0])
 
-        # Check that the file was written.
+        # Write starting topology string to text file.
+        with open(topo_filepath_starting, 'w') as o:
+            o.write(topo[1])
+
+        # Check that the files were written.
         assert os.path.isfile(topo_filepath)
         with open(topo_filepath, 'r') as topo_filehandle:
+            assert len(topo_filehandle.read()) > 0
+
+        assert os.path.isfile(topo_filepath_starting)
+        with open(topo_filepath_starting, 'r') as topo_filehandle:
             assert len(topo_filehandle.read()) > 0
 
     # Delete temporary files.
@@ -2735,14 +2754,21 @@ def get_all_alt_model_backbones(model_name,
     conversion table files in directory. Relevant files:\n%s""" % str(conversion_table_filepaths)
     conversion_table_filepath = conversion_table_filepaths[0]
 
-    # Write new constraint tree files with names coded using the same table.
+    # Write new constraint tree and starting tree files with names coded using
+    # the same table.
     coded_topo_filepaths = []
-    for topo_file in topo_filepaths:
+    coded_topo_filepaths_starting = []
+    for topo_file, topo_file_starting in zip(topo_filepaths,
+            topo_filepaths_starting):
         # Define path to coded file.
         coded_topo_file = topo_file.rsplit('.', 1)[0] + '_C.tre'
+        coded_topo_file_starting = topo_file_starting.rsplit('.', 1)[0] + '_C.tre'
 
         # Write coded file.
         write_newick_tree_with_coded_names(topo_file, coded_topo_file,
+                conversion_table_filepath)
+        write_newick_tree_with_coded_names(topo_file_starting,
+                coded_topo_file_starting,
                 conversion_table_filepath)
 
         # Check that the file was written.
@@ -2752,6 +2778,7 @@ def get_all_alt_model_backbones(model_name,
 
         # Add coded file path to list.
         coded_topo_filepaths.append(coded_topo_file)
+        coded_topo_filepaths_starting.append(coded_topo_file_starting)
 
     # Define path to MrBayes input file.
     mrbayes_inputs = glob.glob(os.path.join(main_out_path, '*C.mb.nex'))
@@ -2787,7 +2814,7 @@ def get_all_alt_model_backbones(model_name,
 
         # Do phylogenetic analysis.
         outtree_files_list = []
-        for ctf in coded_topo_filepaths:
+        for ctf, stf in zip(coded_topo_filepaths, coded_topo_filepaths):
             # Make subdir for output.
             subdirp = ctf.rsplit('.', 1)[0] + '_IQ-tree_ml_search'
             os.mkdir(subdirp)
@@ -2795,7 +2822,7 @@ def get_all_alt_model_backbones(model_name,
             # Use IQtree to do an ML search
             output_file_prefix = os.path.join(subdirp, 'iqtree')
             iqtree_command_list = ['iqtree', '-s', phylip_filepath, '-m', subs_model, '-g',
-                ctf, '-pre', output_file_prefix, '-nt', '2']
+                ctf, '-pre', output_file_prefix, '-nt', '2', '-t', stf]
             tree_search_start_time = time.time()
             subprocess.call(iqtree_command_list)
 

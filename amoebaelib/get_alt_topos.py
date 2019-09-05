@@ -215,6 +215,13 @@ def get_all_alt_topologies(subtrees):
     # Get list of input subtrees as newick trees (without trailing semicolons).
     subtree_newick_strings = [subtree.write(format=9) for subtree in subtrees]
 
+    # Get list of input subtrees as newick trees (without trailing semicolons)
+    # as polytomies.
+    subtree_newick_strings_as_polytomies = []
+    for subtree in subtrees:
+        subtree_as_polytomy = get_polytomy_for_treenode(subtree)
+        subtree_newick_strings_as_polytomies.append(subtree_as_polytomy.write(format=9))
+
     ## Print subtrees.
     #print('First three subtrees:')
     #for i in subtree_newick_strings[:3]:
@@ -224,13 +231,26 @@ def get_all_alt_topologies(subtrees):
     # Get list of alternative topologies by replacing strings in unrooted trees
     # with strings representing the input subtrees.
     all_unrooted_trees_with_subtrees = all_unrooted_newick_trees
-    for place_holder_name, subtree_string in\
-            zip(leaf_names_in_all_trees, subtree_newick_strings):
+    all_unrooted_trees_with_subtrees_polytomy = all_unrooted_newick_trees
+    for place_holder_name, subtree_string, subtree_string_polytomy in\
+            zip(leaf_names_in_all_trees, subtree_newick_strings,
+                    subtree_newick_strings_as_polytomies):
         #print('Replacing %s with %s in all alternative topologies.' %\
         #        (place_holder_name, subtree_string[:-1]))
-        all_unrooted_trees_with_subtrees =\
+        all_unrooted_trees_with_subtrees = \
                 [t.replace(place_holder_name, subtree_string[:-1]) for t in\
                         all_unrooted_trees_with_subtrees] 
+        all_unrooted_trees_with_subtrees_polytomy = \
+                [t.replace(place_holder_name, subtree_string_polytomy[:-1]) for t in\
+                        all_unrooted_trees_with_subtrees] 
+    # Combine trees into tuples: (polytomies, no polytomies).
+    all_alternative_unrooted_trees_with_and_without_polytomies = []
+    for with_polytomies, without_polytomies in\
+    zip(all_unrooted_trees_with_subtrees,
+            all_unrooted_trees_with_subtrees_polytomy):
+        all_alternative_unrooted_trees_with_and_without_polytomies.append(
+                (with_polytomies, without_polytomies))
+
 
     ## Print trees with subtrees.
     #print('\nFirst three unrooted trees with subtrees:')
@@ -239,6 +259,6 @@ def get_all_alt_topologies(subtrees):
     #print('')
 
     # Return list of alternative topologies as newick strings.
-    return all_unrooted_trees_with_subtrees
+    return all_alternative_unrooted_trees_with_and_without_polytomies
 
 

@@ -516,7 +516,7 @@ def write_reduced_alignment(alignment_file,
 
 
 def manually_select_nodes_and_remove_seqs(input_tree_one, alignment_file,
-        output_file=None, name_replace_table=None):
+        output_file=None, name_replace_table=None, include_seqs=False):
     """Take a tree file (newick) and the corresponding alignment file (nexus)
     and write a new alignment without the selected nodes/sequences.
 
@@ -613,8 +613,20 @@ def manually_select_nodes_and_remove_seqs(input_tree_one, alignment_file,
     key_nodes_list = get_key_nodes_list(to_remove_list_file)
 
     # Compile a list of sequences to remove from dataset.
-    seqs_to_remove_from_dataset =\
-    get_seqs_to_remove_from_dataset(key_nodes_list, t1)
+    seqs_to_remove_from_dataset = None
+    if include_seqs:
+        # Get list of sequences to include.
+        seqs_to_include_in_dataset = \
+        get_seqs_to_remove_from_dataset(key_nodes_list, t1)
+        # Get list of all sequences in the alignment.
+        all_seqs_in_dataset = conversion_table_dict.values()
+        # Get list of sequences to remove.
+        seqs_to_remove_from_dataset = list(set(all_seqs_in_dataset) - set(seqs_to_include_in_dataset))
+    else:
+        seqs_to_remove_from_dataset =\
+        get_seqs_to_remove_from_dataset(key_nodes_list, t1)
+    assert seqs_to_remove_from_dataset is not None
+    assert len(seqs_to_remove_from_dataset) >= 1
 
     # Record list of sequences to remove.
     with open(to_remove_list_file, 'w') as o:
