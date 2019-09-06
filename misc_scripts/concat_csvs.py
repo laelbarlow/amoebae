@@ -34,6 +34,7 @@ with open('0_concat_csvs_out.csv', 'w') as o:
                     if fnum == 1 and inum == 1:
                         o.write(i)
                     if not i.startswith('Protein name') and not\
-                        i.startswith('\n') and not i.startswith('Forward'):
+                        i.startswith('\n') and not i.startswith('Forward')\
+                        and not i.startswith('Model'):
                         o.write(i) # + '\n')
     
