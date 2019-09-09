@@ -27,6 +27,7 @@ Usage:
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
+sys.path.append(os.path.dirname(sys.path[0]))
 from Bio import AlignIO
 from Bio.Alphabet import IUPAC, Gapped
 from module_afa_to_nex import delete_extra_mesquite_lines
@@ -42,7 +43,7 @@ infp = str(command_line_list[1])
 position_num = str(command_line_list[2])
 
 
-def get_residue_numbers_for_position(infp, position_num, tablefilepath):
+def get_residue_numbers_for_position(infp, position_num):
     """Takes a filepath and number for position of interest, and writes a file
     with residues numbers for all the taxa at that position.
     """
@@ -105,5 +106,4 @@ def get_residue_numbers_for_position(infp, position_num, tablefilepath):
 
 
 if __name__ == '__main__':
-    tablefilepath = settings.dacksify_name_key
-    get_residue_numbers_for_position(infp, position_num, tablefilepath)
+    get_residue_numbers_for_position(infp, position_num)

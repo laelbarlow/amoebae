@@ -28,7 +28,7 @@ several species will have both duplicates, as determined via phylogenetic
 analysis, so there wouldn't be a question as to whether they were duplicated or
 not.
 
-This is now redundant with the amoebae file.
+******This script is now redundant with the amoebae file.
 """
 import sys
 import os
@@ -79,34 +79,3 @@ count_paralogues2(args.csv_file, args.alignmentdir, args.fastadir,\
         args.fwdeval, args.metric_name, args.metric_value_minimum)
 
 
-
-
-# Need a way to control for issues with erroneous insertions (inclusion of
-# introns, etc) that might artefactually decrease identity. For example, only
-# comparing residues that align at positions that are aligned with a trimmed
-# input alignment (containing only informative positions).
-
-# A sliding window-based approach could be used to identify regions of true
-# similarity between homologues... (basically removing residues that don't make
-# sense).
-
-# Need to set length cutoff for sequences. If they are too short, then no
-# matter their similarity to other sequences (if lower than 100%), we cannot
-# infer much about them with confidence. Perhaps 25% of the length of
-# full-length orthologues would be a good cutoff.
-
-# Need to account for the possibility of pseudogenes. If a very short sequence
-# is identified in a scaffold, then it is quite possible that it is a
-# pseudogene.
-
-# ***Ideally this would be able to add columns with additional information to
-# an existing spreadsheet of search results. It has to be conveniently
-# integrated into the whole workflow for classifying sequences. Could take rank
-# from a spreadsheet instead of ranking against an HMM.
-
-# classify_seq_with_constrained_tree.py
-
-# Need a better way of quantifying "significant overlap" of sequences with
-# paralogue_counter.py so that higher similarity is required if there is lower
-# overlap length, and test whether the two sequencea align N-term with C-term
-# or not.

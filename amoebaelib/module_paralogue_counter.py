@@ -1993,7 +1993,7 @@ def add_alignment_column(incsv, outcsv):
         #            if not query_file in query_title_alignment_dict[query_title]:
         #                query_title_alignment_dict[query_title] = query_title_alignment_dict[query_title] + [query_file]
 
-        #    # TEMPORARY!!:
+        #    # TEMPORARY WORK-AROUND:
         #    #elif query_title in ['AP5_mu', 'TTRAY1', 'AP3_sigma', 'COPI_beta','ClathrinHC']:
         #    #        query_title_alignment_dict[query_title] = [query_file]
         #    #if query_title == 'COPI_alpha':

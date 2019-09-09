@@ -4,29 +4,23 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>visualize_trees module &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="visualize_trees_test module" href="visualize_trees_test.html" />
     <link rel="prev" title="test_search_scaffolds module" href="test_search_scaffolds.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -88,24 +82,6 @@ visualization.</p>
 <code class="descclassname">visualize_trees.</code><code class="descname">determine_whether_first_subtrees_same_sp_overlap</code><span class="sig-paren">(</span><em>i</em>, <em>j</em>, <em>overlapping_species</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#determine_whether_first_subtrees_same_sp_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.determine_whether_first_subtrees_same_sp_overlap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take two TreeNode objects and determine whether the first object (i) has
 a top-level subtree that has the same overlap as the two nodes do.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="visualize_trees.disqualifying_string_in_file_basename">
-<code class="descclassname">visualize_trees.</code><code class="descname">disqualifying_string_in_file_basename</code><span class="sig-paren">(</span><em>f</em>, <em>disqualifying_strings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#disqualifying_string_in_file_basename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.disqualifying_string_in_file_basename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if one or more of the strings in the input list is in the
-basename of the input file path.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="visualize_trees.find_input_file_in_parent_directory">
-<code class="descclassname">visualize_trees.</code><code class="descname">find_input_file_in_parent_directory</code><span class="sig-paren">(</span><em>indp</em>, <em>extension</em>, <em>disqualifying_strings</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#find_input_file_in_parent_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.find_input_file_in_parent_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a directory path (e.g., path to a directory that was downloaded
-after running a phylogenetic analysis on CIPRES) and the filename extension
-that your target file will have (e.g., ‘table’ or ‘nex’), return the path
-to a file in the parent directory of the input directory path that is the
-most similar to the input directory basename and has the specified
-extension.</p>
 </dd></dl>
 
 <dl class="function">
@@ -200,14 +176,14 @@ perentages.</p>
 
 <dl class="function">
 <dt id="visualize_trees.visualize_tree">
-<code class="descclassname">visualize_trees.</code><code class="descname">visualize_tree</code><span class="sig-paren">(</span><em>method</em>, <em>timestamp</em>, <em>taxa_to_root_on</em>, <em>highlight_paralogues</em>, <em>highlight_for_removal</em>, <em>tree_file</em>, <em>tablefilename</em>, <em>file_with_subs_model_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#visualize_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.visualize_tree" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">visualize_trees.</code><code class="descname">visualize_tree</code><span class="sig-paren">(</span><em>method</em>, <em>timestamp</em>, <em>taxa_to_root_on</em>, <em>highlight_paralogues</em>, <em>highlight_for_removal</em>, <em>tree_file</em>, <em>tablefilename</em>, <em>typeseqsfilename</em>, <em>add_clade_names</em>, <em>file_with_subs_model_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#visualize_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.visualize_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take relevant files and write PDF files with tree figures, and return
 output file paths.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="visualize_trees.visualize_tree_in_dir">
-<code class="descclassname">visualize_trees.</code><code class="descname">visualize_tree_in_dir</code><span class="sig-paren">(</span><em>indp</em>, <em>method</em>, <em>timestamp</em>, <em>taxa_to_root_on</em>, <em>highlight_paralogues</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#visualize_tree_in_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.visualize_tree_in_dir" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">visualize_trees.</code><code class="descname">visualize_tree_in_dir</code><span class="sig-paren">(</span><em>indp</em>, <em>method</em>, <em>timestamp</em>, <em>taxa_to_root_on</em>, <em>highlight_paralogues</em>, <em>add_clade_names_from_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/visualize_trees.html#visualize_tree_in_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#visualize_trees.visualize_tree_in_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a path to a directory with output files from a phylogenetic
 analysis, write PDF files with images of the results, and return the paths
 to those files.</p>
@@ -233,12 +209,14 @@ taxa_to_root_on is a list of names such as ‘Klebsormidium’ or
                         title="next chapter">visualize_trees_test module</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -265,7 +243,7 @@ taxa_to_root_on is a list of names such as ‘Klebsormidium’ or
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

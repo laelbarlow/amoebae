@@ -32,3 +32,5 @@ The following steps are required to update the documentation
     sphinx-build -b html ./rst ./html/
     open html/index.html
 
+    If it doesn't work, check that the amoebae_path variable in the conf.py
+    script is the actual path to the root directory of the repository.

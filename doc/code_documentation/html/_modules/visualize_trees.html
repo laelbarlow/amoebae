@@ -4,27 +4,21 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>visualize_trees &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -90,6 +84,8 @@
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">search_alignment_space</span> <span class="k">import</span> <span class="n">get_type_seqs_dict</span><span class="p">,</span> <span class="n">get_nodes_of_interest</span><span class="p">,</span> <span class="n">get_clade_name_from_model2</span>
+<span class="kn">from</span> <span class="nn">module_amoebae</span> <span class="k">import</span> <span class="n">find_input_file_in_parent_directory</span>
 
 <span class="c1">## Get directory path from input.</span>
 <span class="c1">#command_line_list = sys.argv</span>
@@ -99,63 +95,6 @@
 <span class="c1">## Set time for timestamp.</span>
 <span class="c1">#timestamp = time.strftime(&quot;%Y%m%d%H%M&quot;)</span>
 
-
-<div class="viewcode-block" id="disqualifying_string_in_file_basename"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.disqualifying_string_in_file_basename">[docs]</a><span class="k">def</span> <span class="nf">disqualifying_string_in_file_basename</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns True if one or more of the strings in the input list is in the</span>
-<span class="sd">    basename of the input file path.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">in_basename</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">disqualifying_strings</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-            <span class="n">in_basename</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">break</span>
-    <span class="k">return</span> <span class="n">in_basename</span></div>
-
-
-<div class="viewcode-block" id="find_input_file_in_parent_directory"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.find_input_file_in_parent_directory">[docs]</a><span class="k">def</span> <span class="nf">find_input_file_in_parent_directory</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Given a directory path (e.g., path to a directory that was downloaded</span>
-<span class="sd">    after running a phylogenetic analysis on CIPRES) and the filename extension</span>
-<span class="sd">    that your target file will have (e.g., &#39;table&#39; or &#39;nex&#39;), return the path</span>
-<span class="sd">    to a file in the parent directory of the input directory path that is the</span>
-<span class="sd">    most similar to the input directory basename and has the specified</span>
-<span class="sd">    extension.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Identify parent directory.</span>
-    <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">indp</span><span class="p">)</span>
-
-    <span class="c1"># Identify all files in parent directory that have the given extension.</span>
-    <span class="n">all_rel_files_in_parent_dir</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="s1">&#39;*.&#39;</span> <span class="o">+</span> <span class="n">extension</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-            <span class="c1"># Only look at files that don&#39;t have disqualifying strings (e.g.,</span>
-            <span class="c1"># masked and trimmed alignments instead of original alignment).</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">disqualifying_string_in_file_basename</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
-                <span class="n">all_rel_files_in_parent_dir</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-    <span class="c1"># Check that there are any relevant files.</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_rel_files_in_parent_dir</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No files in parent</span>
-<span class="s2">    directory </span><span class="si">%s</span><span class="s2"> with filename extension </span><span class="si">%s</span><span class="s2">.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span>
-
-    <span class="c1"># If there is only one file in the list, then it&#39;s the only option so you</span>
-    <span class="c1"># could just return that...</span>
-    
-    <span class="c1"># Find the file with the longest identical prefix to the input directory</span>
-    <span class="c1"># basename.</span>
-    <span class="n">indp_bn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">indp</span><span class="p">)</span>
-    <span class="c1"># Loop over prefixes from longest to shortest.</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">indp_bn</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="n">indp_bn</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> 
-        <span class="n">files_with_prefix</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_rel_files_in_parent_dir</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
-                <span class="n">files_with_prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="c1"># Return path if there is only one.</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_with_prefix</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1">#print(files_with_prefix[0])</span>
-            <span class="k">return</span> <span class="n">files_with_prefix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># Report an error if there is more than one.</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_with_prefix</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;More than one relevant file</span>
-<span class="s2">        found with extension </span><span class="si">%s</span><span class="s2"> in directory </span><span class="si">%s</span><span class="s2">.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">extension</span><span class="p">,</span> <span class="n">parent_dir</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="plotImage"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.plotImage">[docs]</a><span class="k">def</span> <span class="nf">plotImage</span><span class="p">(</span><span class="n">image_file</span><span class="p">):</span>
@@ -687,7 +626,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Get bootstrap proportion from tree generated by IQ-tree with bootstrap</span>
     <span class="c1"># and aLRT options specified (first value is aLRT).</span>
-    <span class="n">bootstrap_proportion</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">node_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="n">bootstrap_proportion</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">node_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span>
     <span class="c1"># Return bootstrap proportion as a float.</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">bootstrap_proportion</span><span class="p">)</span></div>
 
@@ -723,6 +662,8 @@
                    <span class="n">highlight_for_removal</span><span class="p">,</span>
                    <span class="n">tree_file</span><span class="p">,</span>
                    <span class="n">tablefilename</span><span class="p">,</span>
+                   <span class="n">typeseqsfilename</span><span class="p">,</span>
+                   <span class="n">add_clade_names</span><span class="p">,</span>
                    <span class="n">file_with_subs_model_name</span>
                    <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Take relevant files and write PDF files with tree figures, and return</span>
@@ -848,6 +789,63 @@
         <span class="c1"># probabilities instead of percentages.</span>
         <span class="n">translate_int_node_support_to_prob</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
 
+    <span class="c1"># Define name for tree with no branch lengths or supports.</span>
+    <span class="n">tree_file2_topo</span> <span class="o">=</span> <span class="n">tree_file2</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.topology.tre&#39;</span>
+
+    <span class="c1"># Write topology to file path (this is not for use by this script).</span>
+    <span class="n">t1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="n">tree_file2_topo</span><span class="p">)</span>
+
+    
+    <span class="c1"># If indicated, append clade names to taxon names in the output trees and</span>
+    <span class="c1"># conversion table.</span>
+    <span class="k">if</span> <span class="n">add_clade_names</span><span class="p">:</span>
+        <span class="c1"># Get list of nodes of interest.</span>
+        <span class="n">type_seq_dict</span> <span class="o">=</span> <span class="n">get_type_seqs_dict</span><span class="p">(</span><span class="n">typeseqsfilename</span><span class="p">)</span>
+        <span class="n">type_seq_list</span> <span class="o">=</span> <span class="n">type_seq_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="c1">#print(&#39;\n\n&#39;)</span>
+        <span class="c1">#print(typeseqsfilename)</span>
+        <span class="c1">#print(&#39;\n\n&#39;)</span>
+        <span class="c1">#print(type_seq_dict)</span>
+        <span class="c1">#print(&#39;\n\n&#39;)</span>
+        <span class="c1">#print(type_seq_list)</span>
+        <span class="c1">#print(&#39;\n\n&#39;)</span>
+        <span class="n">orthogroup_nodes</span> <span class="o">=</span> <span class="n">get_nodes_of_interest</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">type_seq_list</span><span class="p">)</span>
+
+        <span class="c1"># Construct a dictionary storing the clade name corresponding to each</span>
+        <span class="c1"># sequence name in the input tree.</span>
+        <span class="n">seq_clade_name_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">nl</span> <span class="ow">in</span> <span class="n">orthogroup_nodes</span><span class="p">:</span>
+            <span class="n">clade_name</span> <span class="o">=</span> <span class="n">get_clade_name_from_model2</span><span class="p">(</span><span class="n">nl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">type_seq_dict</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()]:</span>
+                <span class="n">seq_clade_name_dict</span><span class="p">[</span><span class="n">ln</span><span class="p">]</span> <span class="o">=</span> <span class="n">clade_name</span>
+
+        <span class="c1"># Loop over leaf names in tree and append clade names.</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">t1</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">seq_clade_name_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">l</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span> <span class="n">seq_clade_name_dict</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">l</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span> <span class="s1">&#39;Unknown&#39;</span>
+
+        <span class="c1"># Define path to modified file with clade names appended to taxon</span>
+        <span class="c1"># names.</span>
+        <span class="n">table_file_with_clade_names</span> <span class="o">=</span>\
+        <span class="n">tablefilename</span> <span class="o">+</span> <span class="s1">&#39;_with_clade_names&#39;</span>
+
+        <span class="c1"># Loop over lines in original table.</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tablefilename</span><span class="p">)</span> <span class="k">as</span> <span class="n">tablefh</span><span class="p">,</span>\
+            <span class="nb">open</span><span class="p">(</span><span class="n">table_file_with_clade_names</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tablefh</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;ZZ&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;_&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="n">seq_clade_name_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;__&#39;</span> <span class="o">+</span> <span class="n">seq_clade_name_dict</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+
 
     <span class="c1">## Find a K. nitens sequence if present.</span>
     <span class="c1">#first_leaf_from_species = get_first_leaf_from_species(t1, &#39;Klebsormidium&#39;)</span>
@@ -970,7 +968,7 @@
 
 
 <div class="viewcode-block" id="visualize_tree_in_dir"><a class="viewcode-back" href="../visualize_trees.html#visualize_trees.visualize_tree_in_dir">[docs]</a><span class="k">def</span> <span class="nf">visualize_tree_in_dir</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">taxa_to_root_on</span><span class="p">,</span>
-                          <span class="n">highlight_paralogues</span><span class="p">):</span>
+                          <span class="n">highlight_paralogues</span><span class="p">,</span> <span class="n">add_clade_names_from_file</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Given a path to a directory with output files from a phylogenetic</span>
 <span class="sd">    analysis, write PDF files with images of the results, and return the paths</span>
 <span class="sd">    to those files.</span>
@@ -985,9 +983,22 @@
     <span class="n">file_with_subs_model_name</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;iqtree&#39;</span><span class="p">:</span>
         <span class="c1"># Names for input files.</span>
+        <span class="n">tree_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#if os.path.isfile(os.path.join(indp, &#39;output.treefile&#39;)):</span>
+        <span class="c1">#    tree_file = os.path.join(indp, &#39;output.treefile&#39;)</span>
+        <span class="c1">#else:</span>
+        <span class="c1">#    print(&quot;&quot;&quot;\nWarning: Could not find .treefile file, using .contree</span>
+        <span class="c1">#    instead.\n&quot;&quot;&quot;)</span>
+        <span class="c1">#    tree_file = os.path.join(indp, &#39;output.contree&#39;)</span>
         <span class="n">tree_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;output.treefile&#39;</span><span class="p">)</span>
+
         <span class="c1"># Identify file listing which substitution model was used.</span>
-        <span class="n">file_with_subs_model_name</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;*.iqtree&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">file_with_subs_model_name</span> <span class="o">=</span> <span class="s1">&#39;?&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file_with_subs_model_name</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;*.iqtree&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;mb&#39;</span><span class="p">:</span>
         <span class="c1"># Names for input files.</span>
         <span class="n">tree_file</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;*.nex&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
@@ -1007,11 +1018,15 @@
     <span class="c1">#assert len(tablefilenames) &lt; 2, &#39;Error: More than one potential conversion\</span>
     <span class="c1"># table files identified in directory &#39;+ indp + &#39; \nFiles: &#39; +\</span>
     <span class="c1">#str(tablefilenames)</span>
-    <span class="c1">#</span>
-    <span class="c1">## Get tablefilename</span>
+    
+    <span class="c1"># Get tablefilename.</span>
     <span class="c1">#tablefilename = tablefilenames[0]</span>
-
     <span class="n">tablefilename</span> <span class="o">=</span> <span class="n">find_input_file_in_parent_directory</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="n">typeseqsfilename</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">add_clade_names_from_file</span><span class="p">:</span>
+        <span class="c1"># Get type seqs filename.</span>
+        <span class="n">typeseqsfilename</span> <span class="o">=</span> <span class="n">find_input_file_in_parent_directory</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="s1">&#39;type_seqs&#39;</span><span class="p">,</span> <span class="p">[])</span>
 
     <span class="c1"># Do not highlight leaves for removal.</span>
     <span class="n">highlight_for_removal</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1024,6 +1039,8 @@
                                                    <span class="n">highlight_for_removal</span><span class="p">,</span>
                                                    <span class="n">tree_file</span><span class="p">,</span>
                                                    <span class="n">tablefilename</span><span class="p">,</span>
+                                                   <span class="n">typeseqsfilename</span><span class="p">,</span>
+                                                   <span class="n">add_clade_names_from_file</span><span class="p">,</span>
                                                    <span class="n">file_with_subs_model_name</span>
                                                    <span class="p">)</span>
 
@@ -1039,12 +1056,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1066,7 +1085,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

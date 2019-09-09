@@ -4,27 +4,21 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>module_nhmmer_scaffolds &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -654,109 +648,6 @@
     <span class="k">return</span> <span class="n">outstring</span></div>
 
 
-<span class="c1"># Older version of function:</span>
-<span class="c1">#def get_nhmmer_hit_gene_region_seqs(nhmmer_hit_objs, seq_filepath, prothmmpath):</span>
-<span class="c1">#    &quot;&quot;&quot;Take a list of nhmmer hit alignment objects and return one or more</span>
-<span class="c1">#    nucleotide subsequences that may correspond to the coding sequence for a</span>
-<span class="c1">#    single gene.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    # Cluster the objects into groups that may be from the same gene.</span>
-<span class="c1">#    # (on same strand, within a certain number of nucleotides of each other)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Split the list of objects into separate sub-lists for each fasta record</span>
-<span class="c1">#    # for which there are hits in the subject database.</span>
-<span class="c1">#    nhmmer_hit_objs_ids = []</span>
-<span class="c1">#    nhmmer_hit_objs_dict = {}</span>
-<span class="c1">#    for i in nhmmer_hit_objs:</span>
-<span class="c1">#        if i.subj_seq_id in nhmmer_hit_objs_ids:</span>
-<span class="c1">#            nhmmer_hit_objs_dict[i.subj_seq_id] = nhmmer_hit_objs_dict[i.subj_seq_id] + [i]</span>
-<span class="c1">#        else:</span>
-<span class="c1">#            nhmmer_hit_objs_dict[i.subj_seq_id] = [i]</span>
-<span class="c1">#            nhmmer_hit_objs_ids.append(i.subj_seq_id)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Split the list of object into those that are on the positive strand, and</span>
-<span class="c1">#    # those that are on the negative strand.    </span>
-<span class="c1">#    nhmmer_hit_objs_dict2 = {}</span>
-<span class="c1">#    for key in nhmmer_hit_objs_dict:</span>
-<span class="c1">#        # Identify objects with alignments on either positive or negative strand.</span>
-<span class="c1">#        obj_list = nhmmer_hit_objs_dict[key]</span>
-<span class="c1">#        pos = []</span>
-<span class="c1">#        neg = []</span>
-<span class="c1">#        for i in obj_list:</span>
-<span class="c1">#            assert i.strand == &#39;+&#39; or i.strand == &#39;-&#39;, &quot;Error: Strand not specified.&quot;</span>
-<span class="c1">#            if i.strand == &#39;+&#39;:</span>
-<span class="c1">#                pos.append(i)</span>
-<span class="c1">#            elif i.strand == &#39;-&#39;:</span>
-<span class="c1">#                neg.append(i)</span>
-<span class="c1">#</span>
-<span class="c1">#        # Make a dict with sub-lists.</span>
-<span class="c1">#        obj_dict = {}</span>
-<span class="c1">#        obj_dict[&#39;positive strand&#39;] = pos</span>
-<span class="c1">#        obj_dict[&#39;negative strand&#39;] = neg</span>
-<span class="c1">#</span>
-<span class="c1">#        # Replace original list with dict.</span>
-<span class="c1">#        nhmmer_hit_objs_dict2[key] = obj_dict</span>
-<span class="c1">#</span>
-<span class="c1">#    # Further divide the objects based on which are likely to belong to the</span>
-<span class="c1">#    # same gene.</span>
-<span class="c1">#    for key1 in nhmmer_hit_objs_dict2.keys():</span>
-<span class="c1">#        for key2 in nhmmer_hit_objs_dict2[key1].keys():</span>
-<span class="c1">#            obj_list = nhmmer_hit_objs_dict2[key1][key2]</span>
-<span class="c1">#            obj_sublists = cluster_ali_recur([], obj_list)</span>
-<span class="c1">#            nhmmer_hit_objs_dict2[key1][key2] = obj_sublists</span>
-<span class="c1">#</span>
-<span class="c1">#    ## Display contents of dictionary structure.</span>
-<span class="c1">#    display_dict(nhmmer_hit_objs_dict2)   </span>
-<span class="c1">#</span>
-<span class="c1">#    # Iterate over all the lists of objects corresponding to potential</span>
-<span class="c1">#    # individual genes, and write consensus sequences to an output fasta file.</span>
-<span class="c1">#    # This step seems to take a really long time for some reason, longer than</span>
-<span class="c1">#    # running the HMMer search in the first place...</span>
-<span class="c1">#    gene_num = 0</span>
-<span class="c1">#    with open(seq_filepath, &#39;w&#39;) as o:</span>
-<span class="c1">#        for key1 in nhmmer_hit_objs_dict2.keys():</span>
-<span class="c1">#            for key2 in nhmmer_hit_objs_dict2[key1].keys():</span>
-<span class="c1">#                obj_lists = nhmmer_hit_objs_dict2[key1][key2]</span>
-<span class="c1">#                if len(obj_lists) &gt; 0:</span>
-<span class="c1">#                    # Loop over lists of objects corresponding to exons for</span>
-<span class="c1">#                    # single genes.</span>
-<span class="c1">#                    for l in obj_lists:</span>
-<span class="c1">#                        gene_num += 1</span>
-<span class="c1">#</span>
-<span class="c1">#                        # Get gene region.</span>
-<span class="c1">#                        s = get_gene_region(l)</span>
-<span class="c1">#</span>
-<span class="c1">#                        # Generate temporary 3-frame translation of gene</span>
-<span class="c1">#                        # region.</span>
-<span class="c1">#                        temp_filepath = seq_filepath + &#39;_temp_transl&#39; + str(gene_num) + &#39;.fa&#39;</span>
-<span class="c1">#                        with open(temp_filepath, &#39;w&#39;) as tempoutfh:</span>
-<span class="c1">#                            tempoutfh.write(get_three_frame_transl_string(s))</span>
-<span class="c1">#</span>
-<span class="c1">#                        # Run hmmer search on 3-frame translations.</span>
-<span class="c1">#                        tab_hmmsearch_outpath = temp_filepath + &#39;_hmmsearchout&#39; + str(gene_num) + &#39;.txt&#39;</span>
-<span class="c1">#                        run_hmmsearch(prothmmpath, temp_filepath, tab_hmmsearch_outpath)                           </span>
-<span class="c1">#</span>
-<span class="c1">#                        # Parse the hmmsearch output, and extract the relevant</span>
-<span class="c1">#                        # gene models.</span>
-<span class="c1">#                        # ...</span>
-<span class="c1">#                        hmmer_objs = parse_hmmer_out(tab_hmmsearch_outpath)</span>
-<span class="c1">#</span>
-<span class="c1">#                        # Sort objects in hmmer alignment list by start</span>
-<span class="c1">#                        # alignment.</span>
-<span class="c1">#</span>
-<span class="c1">#                        # Remove temporary file with 3-frame translations.</span>
-<span class="c1">#                        #os.remove(temp_filepath)</span>
-<span class="c1">#</span>
-<span class="c1">#                        # Remove temporary hmmsearch output file.</span>
-<span class="c1">#                        #os.remove(tab_hmmsearch_outpath)</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#                        # get three-frame translations of gene region.</span>
-<span class="c1">#                        #o.write(get_three_frame_transl_string(s))</span>
-
-
-
-
 <span class="c1"># Obsolete?</span>
 <div class="viewcode-block" id="get_three_frame_transl"><a class="viewcode-back" href="../module_nhmmer_scaffolds.html#module_nhmmer_scaffolds.get_three_frame_transl">[docs]</a><span class="k">def</span> <span class="nf">get_three_frame_transl</span><span class="p">(</span><span class="n">seq_filepath</span><span class="p">,</span> <span class="n">three_frame_translation_dirpath</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Produce three-frame translations of forward strand DNA sequences in a</span>
@@ -882,12 +773,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -909,7 +802,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

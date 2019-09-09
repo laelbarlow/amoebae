@@ -4,27 +4,21 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>module_amoebae_search &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -115,96 +109,6 @@
 <span class="c1"># Define functions to be used in amoebae.</span>
 
 
-<span class="c1"># ********</span>
-<span class="c1"># Try to avoid running redundant reverse searches if fwd hits are retrieved by</span>
-<span class="c1"># multiple queries.</span>
-
-<span class="c1"># Hits in forward searches will always be single sequences, not profiles, so</span>
-<span class="c1"># can assume that all reverse searches will have single fasta sequences as</span>
-<span class="c1"># queries. This is important, because when setting up to do reverse searches,</span>
-<span class="c1"># a non-redundant list of queries should be used. Also, is if faster to search</span>
-<span class="c1"># with a multiple-sequence fasta query?</span>
-
-<span class="c1"># What if I want to add stuff like HHpred? Would be best to add that so I can</span>
-<span class="c1"># run in parallel with other methods. I think it would be fairly straight</span>
-<span class="c1"># forward to add in the option to use hhsuite.</span>
-
-<span class="c1">#def get_out_hmm_path(new_afa_path):</span>
-<span class="c1">#    &quot;&quot;&quot;Define an hmm file path for a given aligned fasta file path.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    new_exten = None</span>
-<span class="c1">#    old_exten = new_afa_path.rsplit(&#39;.&#39;, 1)[1]</span>
-<span class="c1">#    if old_exten == &#39;afaa&#39;:</span>
-<span class="c1">#        new_exten = &#39;hmm&#39;</span>
-<span class="c1">#    elif old_exten == &#39;afna&#39;:</span>
-<span class="c1">#        new_exten = &#39;nhmm&#39;</span>
-<span class="c1">#</span>
-<span class="c1">#    # Check that it worked.</span>
-<span class="c1">#    assert new_exten is not None, &quot;&quot;&quot;Error: HMM extension could not be</span>
-<span class="c1">#    determined for input file: %s&quot;&quot;&quot; % query_file</span>
-<span class="c1">#</span>
-<span class="c1">#    # Get new path.</span>
-<span class="c1">#    hmm_file_path = new_afa_path.rsplit(&#39;.&#39;, 1)[0] + &#39;.&#39; + new_exten</span>
-<span class="c1">#</span>
-<span class="c1">#    # Return the new path.</span>
-<span class="c1">#    return hmm_file_path</span>
-
-
-<span class="c1">#def determine_search_method(query_exten, db_exten):</span>
-<span class="c1">#    &quot;&quot;&quot;Determine which similarity search method to use based on the filename</span>
-<span class="c1">#    extensions of the query and database files.</span>
-<span class="c1">#</span>
-<span class="c1">#    Eventually integrate hhsuite for HMM-HMM comparison.</span>
-<span class="c1">#</span>
-<span class="c1">#    Assuming blastp rather than phmmer for now.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    # Import default methods, for cases where several could be used, from the</span>
-<span class="c1">#    # settings module.</span>
-<span class="c1">#    #faa_in_faa = settings.faa_in_faa # phmmer, blastp.</span>
-<span class="c1">#</span>
-<span class="c1">#    # Decide on method.</span>
-<span class="c1">#    method = None</span>
-<span class="c1">#</span>
-<span class="c1">#    if query_exten == &#39;faa&#39;: </span>
-<span class="c1">#        if db_exten == &#39;faa&#39;:</span>
-<span class="c1">#            method = &#39;blastp&#39;</span>
-<span class="c1">#        elif db_exten == &#39;fna&#39;:</span>
-<span class="c1">#            method = &#39;tblastn&#39;</span>
-<span class="c1">#        elif db_exten == &#39;hmms&#39;:</span>
-<span class="c1">#            pass</span>
-<span class="c1">#</span>
-<span class="c1">#    elif query_exten == &#39;fna&#39;: </span>
-<span class="c1">#        if db_exten == &#39;faa&#39;:</span>
-<span class="c1">#            method = &#39;blastx&#39;</span>
-<span class="c1">#        elif db_exten == &#39;fna&#39;:</span>
-<span class="c1">#            method = &#39;blastn&#39;</span>
-<span class="c1">#        elif db_exten == &#39;hmms&#39;:</span>
-<span class="c1">#            pass</span>
-<span class="c1">#</span>
-<span class="c1">#    elif query_exten == &#39;afaa&#39;: </span>
-<span class="c1">#        if db_exten == &#39;faa&#39;:</span>
-<span class="c1">#            method = &#39;hmmsearch&#39;</span>
-<span class="c1">#        elif db_exten == &#39;fna&#39;:</span>
-<span class="c1">#            pass</span>
-<span class="c1">#        elif db_exten == &#39;hmms&#39;:</span>
-<span class="c1">#            method = &#39;hmmscan&#39;</span>
-<span class="c1">#</span>
-<span class="c1">#    elif query_exten == &#39;afna&#39;: </span>
-<span class="c1">#        if db_exten == &#39;faa&#39;:</span>
-<span class="c1">#            pass</span>
-<span class="c1">#        elif db_exten == &#39;fna&#39;:</span>
-<span class="c1">#            method = &#39;nhmmer&#39;</span>
-<span class="c1">#        elif db_exten == &#39;hmms&#39;:</span>
-<span class="c1">#            pass</span>
-<span class="c1">#</span>
-<span class="c1">#    assert method is not None, &quot;&quot;&quot;Error: Could not determine which similarity</span>
-<span class="c1">#    searching method to apply for query with extension &#39;%s&#39; and database with</span>
-<span class="c1">#    extension &#39;%s&#39;&quot;&quot;&quot; % (query_exten, db_exten)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Return chosen method.</span>
-<span class="c1">#    return method</span>
-
-
 <div class="viewcode-block" id="get_search_software_version"><a class="viewcode-back" href="../module_amoebae_search.html#module_amoebae_search.get_search_software_version">[docs]</a><span class="k">def</span> <span class="nf">get_search_software_version</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parses output from running the -h option to find what version a given</span>
 <span class="sd">    program is.</span>
@@ -226,184 +130,6 @@
 
     <span class="c1"># Return string specifying software version.</span>
     <span class="k">return</span> <span class="n">version</span></div>
-
-
-<span class="c1">#def run_any_search(queryfile, dbfile, outfile):</span>
-<span class="c1">#    &quot;&quot;&quot;Run similarity search.</span>
-<span class="c1">#</span>
-<span class="c1">#    Import info from settings.py to specify options for running external</span>
-<span class="c1">#    software? For example, number of threads.</span>
-<span class="c1">#</span>
-<span class="c1">#    ***Need to refactor functions in the module_nhmmer_search module?</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    # Determine method to use based on the input file types.</span>
-<span class="c1">#    query_exten = queryfile.rsplit(&#39;.&#39;, 1)[1]</span>
-<span class="c1">#    dbfile_exten = dbfile.rsplit(&#39;.&#39;, 1)[1]</span>
-<span class="c1">#    method = determine_search_method(query_exten, dbfile_exten)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Get version number for software.</span>
-<span class="c1">#    #version = &#39;version&#39;</span>
-<span class="c1">#    #version = get_search_software_version(method)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Get relevant settings.</span>
-<span class="c1">#    # Get cutoffs for recording hits.</span>
-<span class="c1">#    blast_evalcut = str(settings.blast_report_evalue_cutoff)</span>
-<span class="c1">#    hmmer_evalcut = str(settings.hmmer_report_evalue_cutoff)</span>
-<span class="c1">#    hmmer_scorecut = str(settings.hmmer_report_score_cutoff)</span>
-<span class="c1">#    # Get number of threads to use.</span>
-<span class="c1">#    num_threads = str(settings.num_threads_similarity_searching)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Construct search command.</span>
-<span class="c1">#    run_command = []</span>
-<span class="c1">#    if method == &#39;blastp&#39;:</span>
-<span class="c1">#        run_command = [method, &#39;-query&#39;, queryfile, &#39;-db&#39;, dbfile, &#39;-out&#39;,</span>
-<span class="c1">#                outfile, &#39;-num_threads&#39;, num_threads, &#39;-outfmt&#39;, &#39;5&#39;, &#39;-evalue&#39;,</span>
-<span class="c1">#                blast_evalcut]</span>
-<span class="c1">#    elif method == &#39;tblastn&#39;:</span>
-<span class="c1">#        run_command = [method, &#39;-query&#39;, queryfile, &#39;-db&#39;, dbfile, &#39;-out&#39;,</span>
-<span class="c1">#                outfile, &#39;-num_threads&#39;, num_threads, &#39;-outfmt&#39;, &#39;5&#39;, &#39;-evalue&#39;,</span>
-<span class="c1">#                blast_evalcut]</span>
-<span class="c1">#    elif method == &#39;blastx&#39;:</span>
-<span class="c1">#        run_command = [method, &#39;-query&#39;, queryfile, &#39;-db&#39;, dbfile, &#39;-out&#39;,</span>
-<span class="c1">#                outfile, &#39;-num_threads&#39;, num_threads, &#39;-outfmt&#39;, &#39;5&#39;, &#39;-evalue&#39;,</span>
-<span class="c1">#                blast_evalcut]</span>
-<span class="c1">#    elif method == &#39;blastn&#39;:</span>
-<span class="c1">#        run_command = [method, &#39;-query&#39;, queryfile, &#39;-db&#39;, dbfile, &#39;-out&#39;,</span>
-<span class="c1">#                outfile, &#39;-num_threads&#39;, num_threads, &#39;-outfmt&#39;, &#39;5&#39;, &#39;-evalue&#39;,</span>
-<span class="c1">#                blast_evalcut]</span>
-<span class="c1">#    elif method == &#39;hmmsearch&#39;:</span>
-<span class="c1">#        # Use HMM file rather than &#39;.afaa&#39; file.</span>
-<span class="c1">#        actual_queryfile = get_out_hmm_path(queryfile)</span>
-<span class="c1">#        #run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
-<span class="c1">#        #        &#39;--tblout&#39;, outfile, actual_queryfile, dbfile]</span>
-<span class="c1">#        run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
-<span class="c1">#                &#39;-o&#39;, outfile, actual_queryfile, dbfile]</span>
-<span class="c1">#    elif method == &#39;hmmscan&#39;:</span>
-<span class="c1">#        #run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
-<span class="c1">#        #        &#39;--tblout&#39;, outfile, queryfile, dbfile]</span>
-<span class="c1">#        run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
-<span class="c1">#                &#39;-o&#39;, outfile, queryfile, dbfile]</span>
-<span class="c1">#    elif method == &#39;nhmmer&#39;:</span>
-<span class="c1">#        # Use HMM file rather than &#39;.afna&#39; file.</span>
-<span class="c1">#        actual_queryfile = get_out_hmm_path(queryfile)</span>
-<span class="c1">#        #run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
-<span class="c1">#        #        &#39;--tblout&#39;, outfile, actual_queryfile, dbfile]</span>
-<span class="c1">#        run_command = [method, &quot;-T&quot;, hmmer_scorecut, &quot;--cpu&quot;, num_threads,</span>
-<span class="c1">#                &#39;-o&#39;, outfile, actual_queryfile, dbfile]</span>
-<span class="c1">#</span>
-<span class="c1">#    # Run command.</span>
-<span class="c1">#    subprocess.call(run_command)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Return string with command used to run search.</span>
-<span class="c1">#    #search_descr =  method + &#39; (&#39; + version + &#39;)&#39; + &#39; run with command:\n\t&#39; +\</span>
-<span class="c1">#    #        &#39; &#39;.join(run_command) + &#39;\n&#39;</span>
-<span class="c1">#    search_descr = &#39; &#39;.join(run_command)</span>
-<span class="c1">#    return search_descr</span>
-
-
-<span class="c1">#def get_query_list_from_file(infp):</span>
-<span class="c1">#    &quot;&quot;&quot;Get query list from file.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    query_list = []</span>
-<span class="c1">#    with open(infp) as infh:</span>
-<span class="c1">#        for i in infh:</span>
-<span class="c1">#            if not i.startswith(&#39;#&#39;) and not i.startswith(&#39;\n&#39;):</span>
-<span class="c1">#                query_list.append(i.strip())</span>
-<span class="c1">#    return query_list</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#def get_db_list_from_file(infp):</span>
-<span class="c1">#    &quot;&quot;&quot;Get database list from file.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    db_list = []</span>
-<span class="c1">#    with open(infp) as infh:</span>
-<span class="c1">#        for i in infh:</span>
-<span class="c1">#            if not i.startswith(&#39;#&#39;) and not i.startswith(&#39;\n&#39;):</span>
-<span class="c1">#                db_list.append(i.strip())</span>
-<span class="c1">#    return db_list</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#def get_out_query_list_path(outdir):</span>
-<span class="c1">#    &quot;&quot;&quot;Takes an output directory that search results are written to, and</span>
-<span class="c1">#    returns a path for a file to write query file list to.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    return os.path.join(outdir, &#39;0_queries.txt&#39;)</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#def get_out_db_list_path(outdir):</span>
-<span class="c1">#    &quot;&quot;&quot;Takes an output directory that search results are written to, and</span>
-<span class="c1">#    returns a path for a file to write database file list to.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    return os.path.join(outdir, &#39;0_databases.txt&#39;)</span>
-
-
-<span class="c1">#def run_all_searches(query_file_list, db_file_list, outdir):</span>
-<span class="c1">#    &quot;&quot;&quot;Search with every query file in a given list into every database file in</span>
-<span class="c1">#    another given list using appropriate methods.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    # Get query and database directories from settings.</span>
-<span class="c1">#    query_dir = settings.querydirpath</span>
-<span class="c1">#    db_dir = settings.dbdirpath</span>
-<span class="c1">#</span>
-<span class="c1">#    # Write a query file list file to output directory.</span>
-<span class="c1">#    out_query_file = get_out_query_list_path(outdir)</span>
-<span class="c1">#    with open(out_query_file, &#39;w&#39;) as o:</span>
-<span class="c1">#        for q in query_file_list:</span>
-<span class="c1">#            o.write(q + &#39;\n&#39;)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Write a database file list file to output directory.</span>
-<span class="c1">#    out_db_file = get_out_db_list_path(outdir)</span>
-<span class="c1">#    with open(out_db_file, &#39;w&#39;) as o:</span>
-<span class="c1">#        for d in db_file_list:</span>
-<span class="c1">#            o.write(d + &#39;\n&#39;)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Create a log file.</span>
-<span class="c1">#    logfile = os.path.join(outdir, &#39;0_search_log.txt&#39;)</span>
-<span class="c1">#</span>
-<span class="c1">#    # Loop over each query-database pair.</span>
-<span class="c1">#    with open(logfile, &#39;w&#39;) as o:</span>
-<span class="c1">#        srch_num = 0</span>
-<span class="c1">#        # Loop over query files.</span>
-<span class="c1">#        for q in query_file_list:</span>
-<span class="c1">#            # Loop over database files.</span>
-<span class="c1">#            for d in db_file_list:</span>
-<span class="c1">#                # Temporary &#39;if&#39; statement???</span>
-<span class="c1">#                if q.rsplit(&#39;.&#39;, 1)[1] == &#39;afaa&#39; and d.rsplit(&#39;.&#39;, 1)[1] == &#39;fna&#39;:</span>
-<span class="c1">#                    warning_text = &quot;&quot;&quot;\nWARNING: Not searching with profile query %s</span>
-<span class="c1">#                    in nucleotide data %s\n\n&quot;&quot;&quot; % (q, d)</span>
-<span class="c1">#                    print(warning_text)</span>
-<span class="c1">#                    o.write(warning_text)</span>
-<span class="c1">#                else:</span>
-<span class="c1">#                    srch_num += 1</span>
-<span class="c1">#</span>
-<span class="c1">#                    # Get name of output file.</span>
-<span class="c1">#                    #print(outdir)</span>
-<span class="c1">#                    outfile = search_result_filepath(q, d, outdir)</span>
-<span class="c1">#                    #print(outfile)</span>
-<span class="c1">#</span>
-<span class="c1">#                    # Get full filepaths, and verify existence.</span>
-<span class="c1">#                    qfull = None</span>
-<span class="c1">#                    if os.path.isfile(q):</span>
-<span class="c1">#                        qfull = q</span>
-<span class="c1">#                    else:</span>
-<span class="c1">#                        qfull = os.path.join(query_dir, q)</span>
-<span class="c1">#                    assert os.path.isfile(qfull), &quot;&quot;&quot;Specified query file path is</span>
-<span class="c1">#                    not a file: %s&quot;&quot;&quot; % qfull</span>
-<span class="c1">#</span>
-<span class="c1">#                    dfull = None</span>
-<span class="c1">#                    if os.path.isfile(d):</span>
-<span class="c1">#                        dfull = d</span>
-<span class="c1">#                    else:</span>
-<span class="c1">#                        dfull = os.path.join(db_dir, d)</span>
-<span class="c1">#                    assert os.path.isfile(dfull), &quot;&quot;&quot;Specified database file path</span>
-<span class="c1">#                    is not a file: %s&quot;&quot;&quot; % dfull</span>
-<span class="c1">#</span>
-<span class="c1">#                    # Run the similarity search and get a description of the search</span>
-<span class="c1">#                    # command (write to a log file?).</span>
-<span class="c1">#                    command_descr = run_any_search(qfull, dfull, outfile)</span>
-<span class="c1">#</span>
-<span class="c1">#                    # Write description of search to log file.</span>
-<span class="c1">#                    o.write(command_descr + &#39;\n&#39;)</span>
 
 
 <div class="viewcode-block" id="get_search_output_file_type"><a class="viewcode-back" href="../module_amoebae_search.html#module_amoebae_search.get_search_output_file_type">[docs]</a><span class="k">def</span> <span class="nf">get_search_output_file_type</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
@@ -439,138 +165,6 @@
             <span class="c1"># Only blast and hmmer working for now... (later hhpred).</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">pass</span></div>
-
-
-<span class="c1">#def search_result_filepath(query_filename, db_filename, dirpath):</span>
-<span class="c1">#    &quot;&quot;&quot;Returns a filepath for a search result file given a directory path, query</span>
-<span class="c1">#    filename, and database filename. This is for both naming and identifying</span>
-<span class="c1">#    filepaths after searches have been performed. </span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    outfile = os.path.join(dirpath, os.path.basename(query_filename).rsplit(&#39;.&#39;, 1)[0] + &#39;__&#39; +\</span>
-<span class="c1">#            db_filename.rsplit(&#39;.&#39;, 1)[0] + &#39;_srch_out.txt&#39;)</span>
-<span class="c1">#    return outfile</span>
-
-
-<span class="c1">#def get_srch_file_info(search_result_path):</span>
-<span class="c1">#    &quot;&quot;&quot;Returns the format string necessary for the SearchIO module to parse a</span>
-<span class="c1">#    given file.</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    # Define regular expressions that will only match any line in a file if it</span>
-<span class="c1">#    # is of a certain format. See the SearchIO documentation here:</span>
-<span class="c1">#    # http://biopython.org/DIST/docs/api/Bio.SearchIO-module.html</span>
-<span class="c1">#    fmt_expr_dict = {&#39;blast-xml&#39;: [re.compile(r&#39;^&lt;!DOCTYPE BlastOutput&#39;)],</span>
-<span class="c1">#                     &#39;hmmer3-tab&#39;: [re.compile(r&#39;^# Option settings: hmmsearch --tblout&#39;)],</span>
-<span class="c1">#                     &#39;hmmer3-text&#39;: [re.compile(r&#39;^# HMMER &#39;)]</span>
-<span class="c1">#                     }</span>
-<span class="c1">#    </span>
-<span class="c1">#    # See if any of the regular expressions match the file.</span>
-<span class="c1">#    ident_fmt = None</span>
-<span class="c1">#    with open(search_result_path) as srh:</span>
-<span class="c1">#        for line in srh:</span>
-<span class="c1">#            for fmt in fmt_expr_dict.keys():</span>
-<span class="c1">#                for r in fmt_expr_dict[fmt]:</span>
-<span class="c1">#                    if r.search(line) is not None:</span>
-<span class="c1">#                        ident_fmt = fmt</span>
-<span class="c1">#                        break</span>
-<span class="c1">#                if ident_fmt is not None:</span>
-<span class="c1">#                    break</span>
-<span class="c1">#</span>
-<span class="c1">#    # Check that a format was found.</span>
-<span class="c1">#    assert ident_fmt is not None, &quot;&quot;&quot;Error: Could not identify format for</span>
-<span class="c1">#    search result file: %s&quot;&quot;&quot; % search_result_path</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#    # Get program name (without version).</span>
-<span class="c1">#    #possible_progs = [&#39;blastp&#39;,</span>
-<span class="c1">#    #                  &#39;tblastn&#39;,</span>
-<span class="c1">#    #                  &#39;blastx&#39;,</span>
-<span class="c1">#    #                  &#39;blastn&#39;,</span>
-<span class="c1">#    #                  &#39;phmmer&#39;,</span>
-<span class="c1">#    #                  &#39;hmmsearch&#39;,</span>
-<span class="c1">#    #                  &#39;nhmmer&#39;,</span>
-<span class="c1">#    #                  &#39;hmmscan&#39;</span>
-<span class="c1">#    #                  ]</span>
-<span class="c1">#    #ident_prog = None</span>
-<span class="c1">#    #for p in possible_progs:</span>
-<span class="c1">#    #    if p in ident_fmt:</span>
-<span class="c1">#    #        ident_prog = p</span>
-<span class="c1">#    ident_prog = None</span>
-<span class="c1">#    with open(search_result_path) as srh:</span>
-<span class="c1">#        ident_prog = SearchIO.read(srh, ident_fmt).program</span>
-<span class="c1">#    assert ident_prog is not None, &quot;&quot;&quot;Could not identify program name from file</span>
-<span class="c1">#    format type.&quot;&quot;&quot;</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#    ## Define regular expressions that will only match any line in a file if it</span>
-<span class="c1">#    ## was generated using a certain program.</span>
-<span class="c1">#    #prog_expr_dict = {&#39;blastp&#39;: [re.compile(r&#39;^&lt;!DOCTYPE BlastOutput&#39;)],</span>
-<span class="c1">#    #                 &#39;hmmsearch&#39;: [re.compile(r&#39;^# Option settings: hmmsearch --tblout&#39;)]</span>
-<span class="c1">#    #                 }</span>
-<span class="c1">#</span>
-<span class="c1">#    ## See if any of the regular expressions match the file.</span>
-<span class="c1">#    #ident_prog = None</span>
-<span class="c1">#    #with open(search_result_path) as srh:</span>
-<span class="c1">#    #    for line in srh:</span>
-<span class="c1">#    #        for prog in prog_expr_dict.keys():</span>
-<span class="c1">#    #            for r in prog_expr_dict[prog]:</span>
-<span class="c1">#    #                if r.search(line) is not None:</span>
-<span class="c1">#    #                    ident_prog = prog</span>
-<span class="c1">#    #                    break</span>
-<span class="c1">#    #            if ident_prog is not None:</span>
-<span class="c1">#    #                break</span>
-<span class="c1">#</span>
-<span class="c1">#    ## Check that the program name was found.</span>
-<span class="c1">#    #assert ident_prog is not None, &quot;&quot;&quot;Error: Could not identify name of program</span>
-<span class="c1">#    #used to generate search result file: %s&quot;&quot;&quot; % search_result_path</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#    # Define regular expressions that will only match any line in a file if it</span>
-<span class="c1">#    # was generated using a certain program.</span>
-<span class="c1">#    #prog_vers_expr_dict = {&#39;blast_vers&#39;: [re.compile(r&#39;  &lt;BlastOutput_version&gt;.+&lt;/BlastOutput_version&gt;&#39;)],</span>
-<span class="c1">#    #                       &#39;hmmer_vers&#39;: [re.compile(r&#39;# Version:.+&#39;)]</span>
-<span class="c1">#    #                      }</span>
-<span class="c1">#</span>
-<span class="c1">#    # Decide which dict key to use based on identified program version, and</span>
-<span class="c1">#    # then identify version in file.</span>
-<span class="c1">#    ident_vers = None</span>
-<span class="c1">#    #vers_key = None</span>
-<span class="c1">#    with open(search_result_path) as srh:</span>
-<span class="c1">#        ident_vers = SearchIO.read(srh, ident_fmt).version</span>
-<span class="c1">#</span>
-<span class="c1">#    #        vers_key = &#39;blast-vers&#39;</span>
-<span class="c1">#    #        for line in srh:</span>
-<span class="c1">#    #            if prog_vers_expr_dict[vers_key].match(line):</span>
-<span class="c1">#    #                ident_vers =\</span>
-<span class="c1">#    #                str(prog_vers_expr_dict[vers_key].match(line)).split(&#39;&lt;&#39;)[0].split(&#39;&gt;&#39;)[1]</span>
-<span class="c1">#    #                if r.search(line) is not None:</span>
-<span class="c1">#    #                    ident_vers = prog_vers_</span>
-<span class="c1">#    #                    break</span>
-<span class="c1">#    #            if ident_vers is not None:</span>
-<span class="c1">#    #                break</span>
-<span class="c1">#           </span>
-<span class="c1">#    #    elif &#39;hmm&#39; in ident_prog:</span>
-<span class="c1">#    #        vers_key = &#39;hmmer-vers&#39;</span>
-<span class="c1">#    #        for line in srh:</span>
-<span class="c1">#    #            for r in prog_vers_expr_dict[vers_key]:</span>
-<span class="c1">#    #                if r.search(line) is not None:</span>
-<span class="c1">#    #                    ident_vers = ...</span>
-<span class="c1">#    #                    break</span>
-<span class="c1">#    #            if ident_vers is not None:</span>
-<span class="c1">#    #                break</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#    # Check that it worked.</span>
-<span class="c1">#    #assert vers_key is not None, &quot;&quot;&quot;Could not determine which key to use for</span>
-<span class="c1">#    #the prog_vers_expr_dict.&quot;&quot;&quot;</span>
-<span class="c1">#</span>
-<span class="c1">#    # Check that the program version was found.</span>
-<span class="c1">#    assert ident_vers is not None, &quot;&quot;&quot;Error: Could not identify name of program</span>
-<span class="c1">#    used to generate search result file: %s&quot;&quot;&quot; % search_result_path</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1">#    # Return a list defining the input file format.</span>
-<span class="c1">#    return [ident_prog, ident_vers, ident_fmt]</span>
 
 
 <div class="viewcode-block" id="get_corr_evalue"><a class="viewcode-back" href="../module_amoebae_search.html#module_amoebae_search.get_corr_evalue">[docs]</a><span class="k">def</span> <span class="nf">get_corr_evalue</span><span class="p">(</span><span class="n">evalue</span><span class="p">):</span>
@@ -1332,7 +926,7 @@
 
 
 <div class="viewcode-block" id="write_rev_srch_res_to_csv"><a class="viewcode-back" href="../module_amoebae_search.html#module_amoebae_search.write_rev_srch_res_to_csv">[docs]</a><span class="k">def</span> <span class="nf">write_rev_srch_res_to_csv</span><span class="p">(</span><span class="n">rev_srch_id</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">query_file_list</span><span class="p">,</span> <span class="n">db_file</span><span class="p">,</span>
-        <span class="n">csv_file</span><span class="p">,</span> <span class="n">redun_hit_csv</span><span class="p">,</span> <span class="n">min_evaldiff</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">aasubseq</span><span class="p">):</span>
+        <span class="n">csv_file</span><span class="p">,</span> <span class="n">redun_hit_csv</span><span class="p">,</span> <span class="n">min_evaldiff</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">aasubseq</span><span class="p">,</span> <span class="n">max_num_reverse_searches_per_database</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parse output of a forward search (from running the fwd_srch command of</span>
 <span class="sd">    amoebae) and append rows to input csv with information for interpreting</span>
 <span class="sd">    the forward results. </span>
@@ -1402,7 +996,7 @@
 
         <span class="c1"># Prevent analyzing reverse searches when the forward hit rank is over</span>
         <span class="c1"># a certain number.</span>
-        <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit rank&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">max_num_reverse_searches_per_database</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">max_num_reverse_searches_per_database</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Forward hit rank&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_num_reverse_searches_per_database</span><span class="p">:</span>
             <span class="k">pass</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -1537,7 +1131,7 @@
                         <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">evaldiff</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">min_evaldiff</span><span class="p">):</span>
                             <span class="c1"># Result is positive.</span>
                             <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Note&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;The order of magnitude difference is greater than or equal to </span><span class="si">%s</span><span class="s1">&#39;</span>\
-                                    <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">min_evaldiff</span><span class="p">)</span>
+                                    <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">min_evaldiff</span><span class="p">)</span>
                             <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Positive (+) or negative (-) hit based on reverse search criteria&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
 
                     <span class="k">else</span><span class="p">:</span>
@@ -1856,12 +1450,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1883,7 +1479,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

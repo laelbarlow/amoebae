@@ -4,6 +4,8 @@ amoebaelib
 .. toctree::
    :maxdepth: 4
 
+   check_qt
+   get_alt_topos
    get_nonredun_import_statements_for_amoebae
    misc_functions
    module_add_to_db
@@ -36,18 +38,21 @@ amoebaelib
    module_eml
    module_find_pos_hmmer_hits
    module_get_fas_from_db_dir
-   module_get_redun_hits
    module_mask_nex
    module_nhmmer_scaffolds
    module_paralogue_counter
    module_search_scaffolds
    module_search_scaffolds_test
    module_similarity_score
+   replace_nodes_in_tree
    replace_seqs
    search_alignment_space
+   test_get_alt_topos
+   test_iqtree_constraint_interpretation
    test_module_amoebae_get_datatype
    test_module_amoebae_get_datatype_testseqs
    test_module_nhmmer_scaffolds
+   test_replace_nodes_in_tree
    test_search_scaffolds
    visualize_trees
    visualize_trees_test

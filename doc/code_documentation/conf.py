@@ -23,10 +23,14 @@ import sys
 #amoebae_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(sys.path[0]))))
 # sys.path[0] should be the directory ~/amoebae/doc/code_documentation/rst
 # So, four os.path.dirname are required.
-amoebae_path = '/Users/Lael/Documents/Scripts/hmmer_tools'
+#amoebae_path = '/Users/Lael/Documents/Scripts/hmmer_tools'
+amoebae_path = '/Users/laelbarlow/Documents/Scripts/amoebae'
+#amoebae_path = os.path.dirname(os.path.dirname(os.path.dirname(sys.path[0])))
 sys.path.append(amoebae_path)
 amoebaelib_path = os.path.join(amoebae_path, 'amoebaelib')
 sys.path.append(amoebaelib_path)
+misc_scripts_path = os.path.join(amoebae_path, 'misc_scripts')
+sys.path.append(misc_scripts_path)
 
 # -- General configuration ------------------------------------------------
 

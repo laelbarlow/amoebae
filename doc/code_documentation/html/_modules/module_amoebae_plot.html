@@ -4,27 +4,21 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>module_amoebae_plot &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -70,20 +64,6 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 
-<span class="c1">## Set up argument parsing.</span>
-<span class="c1">#parser = argparse.ArgumentParser(</span>
-<span class="c1">#    description = &quot;&quot;&quot;Plots results of HMMer searches.&quot;&quot;&quot;,</span>
-<span class="c1">#    epilog = r&quot;&quot;&quot;epilog&quot;&quot;&quot;)</span>
-<span class="c1">#</span>
-<span class="c1">## Positional arguments.</span>
-<span class="c1">#parser.add_argument(&#39;input&#39;, help=&#39;Path to input file (.csv).&#39;)</span>
-<span class="c1">#parser.add_argument(&#39;output&#39;, help=&#39;Path to output file (.pdf).&#39;)</span>
-<span class="c1">#</span>
-<span class="c1">## Optional argument for different modes.</span>
-<span class="c1">#parser.add_argument(&#39;-c&#39;, &#39;--confidence_heat_map&#39;, help=&#39;Plots percentages\</span>
-<span class="c1"># listed in csv input file.&#39;, action=&#39;store_true&#39;)</span>
-<span class="c1">#</span>
-<span class="c1">#args = parser.parse_args()</span>
 
 <div class="viewcode-block" id="get_text_label_matrix"><a class="viewcode-back" href="../module_amoebae_plot.html#module_amoebae_plot.get_text_label_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_text_label_matrix</span><span class="p">(</span><span class="n">odf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Takes a dataframe with information to be plotted, and returns a matrix</span>
@@ -484,9 +464,14 @@
                         <span class="n">modify_lines</span><span class="p">(</span><span class="n">wedges</span><span class="p">)</span>
                         
                         <span class="k">if</span> <span class="n">jnum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                            <span class="c1"># Add a title for the complex.</span>
-                            <span class="n">title</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">species</span><span class="p">,</span>\
-                                    <span class="n">fontsize</span><span class="o">=</span><span class="n">species_font_size</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">complex_info_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="c1"># Add a title for the complex.</span>
+                                <span class="n">title</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">species</span><span class="p">,</span>\
+                                        <span class="n">fontsize</span><span class="o">=</span><span class="n">species_font_size</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="c1"># Add a title for the complex.</span>
+                                <span class="n">title</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">species</span><span class="p">,</span>\
+                                        <span class="n">fontsize</span><span class="o">=</span><span class="n">species_font_size</span><span class="p">)</span>
                             <span class="c1">#offset = np.array([-0.75, -0.6])</span>
                             <span class="c1">#title.set_position(title.get_position() + offset)</span>
                             <span class="n">title</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
@@ -504,6 +489,7 @@
 
                         <span class="k">if</span> <span class="n">jnum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="c1"># Define string to make species name italicized.</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
                             <span class="n">italic_species</span> <span class="o">=</span> <span class="s1">&#39;$\it{&#39;</span> <span class="o">+</span> <span class="n">species</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;}$&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;$\it{&#39;</span> <span class="o">+</span> <span class="n">species</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;}$&#39;</span>
                             <span class="c1"># Add a title for the complex.</span>
                             <span class="n">title</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">italic_species</span><span class="p">,</span>
@@ -734,14 +720,62 @@
         <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
         <span class="n">new_row_index_list_simple</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_row_index_list</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">seen</span> <span class="ow">or</span> <span class="n">seen_add</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span>
 
+        <span class="c1"># ***Determine column header for column that contains final paralogue count</span>
+        <span class="c1"># information.</span>
+        <span class="n">unique_positive_hit_decis_header</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">decision_type</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Represents an identifiably unique paralogue&#39;</span><span class="p">):</span>
+                <span class="n">unique_positive_hit_decis_header</span> <span class="o">=</span> <span class="n">header</span>
+                <span class="n">decision_type</span> <span class="o">=</span> <span class="s1">&#39;nonredundant_positive_hit&#39;</span>
+                <span class="k">break</span>
+        <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="c1"># ***This may need to change if sum_phylo_class is modified.</span>
+            <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;ELW for most likely topology above threshold? &#39;</span><span class="p">):</span>
+                <span class="n">unique_positive_hit_decis_header</span> <span class="o">=</span> <span class="n">header</span>
+                <span class="n">decision_type</span> <span class="o">=</span> <span class="s1">&#39;topology_test_result&#39;</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">unique_positive_hit_decis_header</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Warning: reporting all hits that meet the reverse search criteria.&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Collective interpretation of reverse search results&#39;</span><span class="p">):</span>
+                    <span class="n">unique_positive_hit_decis_header</span> <span class="o">=</span> <span class="n">header</span>
+                    <span class="n">decision_type</span> <span class="o">=</span> <span class="s1">&#39;positive_hit&#39;</span>
+                    <span class="k">break</span>
+        <span class="c1"># Check that the header was found.</span>
+        <span class="k">assert</span> <span class="n">unique_positive_hit_decis_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify</span>
+<span class="s2">        which column contains information regarding unique paralogue counts.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">decision_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+
         <span class="c1"># Define a list of column header values for new dataframe.</span>
         <span class="n">new_column_header_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">query_title</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]]</span>
-            <span class="n">query_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]]</span>
-            <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">query_title</span><span class="p">,</span> <span class="n">query_file</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">header_tuple</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_column_header_list</span><span class="p">:</span>
-                <span class="n">new_column_header_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header_tuple</span><span class="p">)</span>
+        <span class="n">classification_header</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">decision_type</span> <span class="o">==</span> <span class="s1">&#39;topology_test_result&#39;</span><span class="p">:</span>
+            <span class="c1"># Get column with classification (clade names).</span>
+            <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Classification &#39;</span><span class="p">):</span>
+                    <span class="n">classification_header</span> <span class="o">=</span> <span class="n">header</span>
+                    <span class="k">break</span>
+            <span class="k">assert</span> <span class="n">classification_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="c1"># Use clade names instead of query titles.</span>
+                <span class="n">query_title</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">classification_header</span><span class="p">]</span>
+                <span class="n">query_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]]</span>
+                <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">query_title</span><span class="p">,</span> <span class="n">query_file</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">query_title</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">header_tuple</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_column_header_list</span><span class="p">:</span>
+                        <span class="n">new_column_header_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header_tuple</span><span class="p">)</span>
+
+        <span class="c1"># Define a list of column header values for new dataframe.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="n">query_title</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]]</span>
+                <span class="n">query_file</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]]</span>
+                <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">query_title</span><span class="p">,</span> <span class="n">query_file</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">header_tuple</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_column_header_list</span><span class="p">:</span>
+                    <span class="n">new_column_header_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header_tuple</span><span class="p">)</span>
 
         <span class="c1"># Sort new column headers.</span>
         <span class="n">new_column_header_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -749,18 +783,14 @@
         <span class="c1"># Define a simplified list of header values for another new dataframe.</span>
         <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
+        <span class="n">new_column_header_list_simple</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#if decision_type == &#39;topology_test_result&#39;:</span>
+        <span class="c1">#    # Make the column headers clade names from the input spreadsheet.</span>
+        <span class="c1">#    new_column_header_list_simple = clade_names_new_column_header_list</span>
+        <span class="c1">#else:</span>
+        <span class="c1">#    new_column_header_list_simple = [x[0] for x in new_column_header_list if not (x[0] in seen or seen_add(x[0]))]</span>
         <span class="n">new_column_header_list_simple</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_column_header_list</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">seen</span> <span class="ow">or</span> <span class="n">seen_add</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span>
 
-        <span class="c1"># Determine column header for column that contains final paralogue count</span>
-        <span class="c1"># information.</span>
-        <span class="n">unique_positive_hit_decis_header</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Represents an identifiably unique paralogue&#39;</span><span class="p">):</span>
-                <span class="n">unique_positive_hit_decis_header</span> <span class="o">=</span> <span class="n">header</span>
-                <span class="k">break</span>
-        <span class="c1"># Check that the header was found.</span>
-        <span class="k">assert</span> <span class="n">unique_positive_hit_decis_header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify</span>
-<span class="s2">        which column contains information regarding unique paralogue counts.&quot;&quot;&quot;</span>
 
         <span class="c1"># Initiate new dataframes.</span>
         <span class="n">odf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">new_column_header_list</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">new_row_index_list</span><span class="p">)</span>
@@ -775,12 +805,22 @@
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">new_column_header_list_simple</span><span class="p">:</span>
                 <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
 
+        <span class="c1"># Temp.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">odf</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">odf_simple</span><span class="p">)</span>
+
         <span class="c1"># Iterate over rows in input dataframe and add relevant information to</span>
         <span class="c1"># additional dataframes.</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">indf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
             <span class="c1"># Determine where in the new dataframes the info should be put.</span>
             <span class="n">index_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;taxon name&#39;</span><span class="p">]],</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;database filename&#39;</span><span class="p">]])</span>
-            <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]],</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="n">decision_type</span> <span class="ow">is</span> <span class="s1">&#39;topology_test_result&#39;</span><span class="p">:</span>
+                <span class="c1"># Skip rows that don&#39;t have relevant information.</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">classification_header</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">classification_header</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">header_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query title&#39;</span><span class="p">]],</span> <span class="n">row</span><span class="p">[</span><span class="n">column_header_dict</span><span class="p">[</span><span class="s1">&#39;query file&#39;</span><span class="p">]])</span>
 
             <span class="c1">#if index_tuple[0] == &#39;Capsella grandiflora&#39;:</span>
             <span class="c1">#    print(str(index_tuple) + &#39; &#39; + str(header_tuple))</span>
@@ -827,7 +867,7 @@
             <span class="k">if</span> <span class="n">positive_or_not</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">unique_positive_hit_decis</span> <span class="o">==</span> <span class="s1">&#39;No&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
                     <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;negative&#39;</span>
-            <span class="k">elif</span> <span class="n">unique_positive_hit_decis</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">unique_positive_hit_decis</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span> <span class="ow">or</span> <span class="n">unique_positive_hit_decis</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">odf_simple</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">index_simple</span><span class="p">,</span> <span class="n">header_simple</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">:</span>
                     <span class="c1"># First hit to add info for.</span>
                     <span class="c1"># Format: [[positive hit acc list], top fwd hit E-value, top fwd hit</span>
@@ -924,6 +964,14 @@
         <span class="c1"># Check that the two input coulson plots are comparable.</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">csv_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Can only handle up to two input csv files.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">column_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">column_labels_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="n">species_set_x</span> <span class="o">=</span>  <span class="nb">set</span><span class="p">(</span><span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">species_set_y</span> <span class="o">=</span>  <span class="nb">set</span><span class="p">(</span><span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">missing_species</span> <span class="ow">in</span> <span class="n">species_set_y</span> <span class="o">-</span> <span class="n">species_set_x</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Species missing from first spreadsheet: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">missing_species</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">missing_species</span> <span class="ow">in</span> <span class="n">species_set_x</span> <span class="o">-</span> <span class="n">species_set_y</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Species missing from second spreadsheet: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">missing_species</span><span class="p">)</span>
+
         <span class="k">assert</span> <span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">row_labels_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_count_simple_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_count_simple_list</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
@@ -954,12 +1002,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -981,7 +1031,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

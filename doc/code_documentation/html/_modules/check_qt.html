@@ -1,0 +1,157 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>check_qt &#8212; amoebae 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for check_qt</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Copyright 2018 Lael D. Barlow</span>
+<span class="c1"># </span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1"># </span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1"># </span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1"># </span>
+
+<span class="sd">&quot;&quot;&quot;Contains functions for running qt.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">ete3</span> <span class="k">import</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">AttrFace</span><span class="p">,</span> <span class="n">TreeStyle</span><span class="p">,</span> <span class="n">NodeStyle</span><span class="p">,</span> <span class="n">TextFace</span>
+
+<span class="c1"># If running on computecanada, set Qt to offscreen mode so that it works on clusters.</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="n">graham_node</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;node=&#39;gra\d+&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="s1">&#39;computecanada&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">())</span> <span class="ow">or</span>\
+    <span class="n">graham_node</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;QT_QPA_PLATFORM&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;offscreen&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">platform.uname():&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="run_qt"><a class="viewcode-back" href="../check_qt.html#check_qt.run_qt">[docs]</a><span class="k">def</span> <span class="nf">run_qt</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Runs python code that is dependent on qt.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define temporary output file path.</span>
+    <span class="n">temp_image_path</span> <span class="o">=</span> <span class="s1">&#39;temporary_amoebae_test_image.pdf&#39;</span>
+
+    <span class="c1"># Define node styles for tree.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">X1&#39;</span><span class="p">)</span>
+    <span class="n">style</span> <span class="o">=</span> <span class="n">NodeStyle</span><span class="p">()</span>
+    <span class="n">style</span><span class="p">[</span><span class="s2">&quot;fgcolor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#0f0f0f&quot;</span>
+    <span class="n">style</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">style</span><span class="p">[</span><span class="s2">&quot;vt_line_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#ff0000&quot;</span>
+    <span class="n">style</span><span class="p">[</span><span class="s2">&quot;hz_line_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;#ff0000&quot;</span>
+    <span class="n">style</span><span class="p">[</span><span class="s2">&quot;vt_line_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">style</span><span class="p">[</span><span class="s2">&quot;hz_line_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">style</span><span class="p">[</span><span class="s2">&quot;vt_line_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 0 solid, 1 dashed, 2 dotted</span>
+    <span class="n">style</span><span class="p">[</span><span class="s2">&quot;hz_line_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">X2&#39;</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">()</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_branches</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">TreeStyle</span><span class="p">()</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">show_leaf_name</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span>  <span class="mi">120</span> <span class="c1"># 120 pixels per branch length unit</span>
+
+    <span class="c1"># Apply node style.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">X3&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+
+    <span class="c1"># Add title to tree.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">X4&#39;</span><span class="p">)</span>
+    <span class="n">tree_title</span> <span class="o">=</span> <span class="s2">&quot;[Tree title here]&quot;</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">add_face</span><span class="p">(</span><span class="n">TextFace</span><span class="p">(</span><span class="n">tree_title</span><span class="p">,</span> <span class="n">fsize</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Write tree to file.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">X5&#39;</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">temp_image_path</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">183</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;mm&quot;</span><span class="p">,</span> <span class="n">tree_style</span><span class="o">=</span><span class="n">ts</span><span class="p">)</span>
+
+    <span class="c1"># Remove temporary file.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_image_path</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">amoebae 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Lael D. Barlow.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

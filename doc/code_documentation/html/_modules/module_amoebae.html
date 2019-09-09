@@ -4,27 +4,21 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>module_amoebae &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -71,7 +65,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">settings</span>
 <span class="c1">#import shutil</span>
-<span class="c1">#import glob</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -126,7 +120,7 @@
     <span class="k">return</span> <span class="n">dbtype</span></div>
 
 
-<div class="viewcode-block" id="get_seqs_from_fasta_db"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_seqs_from_fasta_db">[docs]</a><span class="k">def</span> <span class="nf">get_seqs_from_fasta_db</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">accs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_seqs_from_fasta_db"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.get_seqs_from_fasta_db">[docs]</a><span class="k">def</span> <span class="nf">get_seqs_from_fasta_db</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">accs</span><span class="p">,</span> <span class="n">slow</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a list of SeqRecord objects corresponding to the given accessions</span>
 <span class="sd">    in the given database file. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -148,14 +142,56 @@
     <span class="c1">#        if len(seq_objs) == len(accs):</span>
     <span class="c1">#            break</span>
 
-    <span class="c1"># Use esl-sfetch to retrieve the sequences and write to a temporary file.</span>
+
+    <span class="c1"># Retrieve sequences from fasta file and write to a temporary file.</span>
     <span class="n">temp_fa_path</span> <span class="o">=</span> <span class="n">db_path</span> <span class="o">+</span> <span class="s1">&#39;_TEMP_FASTA.fa&#39;</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">accs</span><span class="p">:</span>
-            <span class="c1"># Get sequence as text.</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;esl-sfetch&#39;</span><span class="p">,</span> <span class="n">db_path</span><span class="p">,</span> <span class="n">acc</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">slow</span><span class="p">:</span>
+        <span class="c1"># Use esl-sfetch to retrieve the sequences and write to a temporary file.</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">accs</span><span class="p">:</span>
+                <span class="c1"># Get sequence as text.</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="s1">&#39;esl-sfetch&#39;</span><span class="p">,</span> <span class="n">db_path</span><span class="p">,</span> <span class="n">acc</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">slow</span><span class="p">:</span>
+        <span class="c1"># Parse sequence using a slower method that does not make use of</span>
+        <span class="c1"># esl-sfetch.</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_fa_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">db_handle</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">accs</span><span class="p">:</span>
+                <span class="c1"># Get sequence as text.</span>
+                <span class="n">all_seq_ids</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">db_handle</span><span class="p">:</span>
+                    <span class="n">all_seq_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">db_handle</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)]</span>  
+                <span class="k">if</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">all_seq_ids</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">db_handle</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">db_handle</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">acc</span><span class="p">:</span>
+                                <span class="c1"># Write to temp fasta file.</span>
+                                <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
+                                <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">accs_that_start_with_acc</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">db_handle</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">db_handle</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">acc</span><span class="p">):</span>
+                                <span class="n">accs_that_start_with_acc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                    <span class="c1"># Check that only one accession starts with.</span>
+                    <span class="c1">#assert len(accs_that_start_with_acc) == 1, &quot;&quot;&quot;More than one</span>
+                    <span class="c1">#accession in file starts with %s&quot;&quot;&quot; % acc</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">accs_that_start_with_acc</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No accessions start with </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">acc</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">accs_that_start_with_acc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;More than one accession starts with </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">acc</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">accs_that_start_with_acc</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">db_handle</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">db_handle</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">acc</span><span class="p">):</span>
+                                    <span class="c1"># Write to temp fasta file.</span>
+                                    <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="n">o</span><span class="p">,</span> <span class="s1">&#39;fasta&#39;</span><span class="p">)</span>
+                                    <span class="k">break</span>
 
     <span class="c1"># Parse the fasta file to get Seq objects.</span>
     <span class="n">seq_objs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -834,6 +870,77 @@
 
         <span class="k">return</span> <span class="n">mask_char</span></div>
 
+
+<div class="viewcode-block" id="disqualifying_string_in_file_basename"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.disqualifying_string_in_file_basename">[docs]</a><span class="k">def</span> <span class="nf">disqualifying_string_in_file_basename</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns True if one or more of the strings in the input list is in the</span>
+<span class="sd">    basename of the input file path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">in_basename</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">disqualifying_strings</span><span class="p">:</span>
+        <span class="c1"># Only look in the last 15 characters for the disqualifying strings.</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="o">-</span><span class="mi">15</span><span class="p">:]:</span>
+            <span class="n">in_basename</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">in_basename</span></div>
+
+
+<div class="viewcode-block" id="find_input_file_in_parent_directory"><a class="viewcode-back" href="../module_amoebae.html#module_amoebae.find_input_file_in_parent_directory">[docs]</a><span class="k">def</span> <span class="nf">find_input_file_in_parent_directory</span><span class="p">(</span><span class="n">indp</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given a directory path (e.g., path to a directory that was downloaded</span>
+<span class="sd">    after running a phylogenetic analysis on CIPRES) and the filename extension</span>
+<span class="sd">    that your target file will have (e.g., &#39;table&#39; or &#39;nex&#39;), return the path</span>
+<span class="sd">    to a file in the parent directory of the input directory path that is the</span>
+<span class="sd">    most similar to the input directory basename and has the specified</span>
+<span class="sd">    extension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Identify parent directory.</span>
+    <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">indp</span><span class="p">)</span>
+
+    <span class="c1"># Identify all files in parent directory that have the given extension.</span>
+    <span class="n">all_rel_files_in_parent_dir</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="s1">&#39;*.&#39;</span> <span class="o">+</span> <span class="n">extension</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="c1"># Only look at files that don&#39;t have disqualifying strings (e.g.,</span>
+            <span class="c1"># masked and trimmed alignments instead of original alignment).</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">disqualifying_string_in_file_basename</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">disqualifying_strings</span><span class="p">):</span>
+                <span class="n">all_rel_files_in_parent_dir</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="c1"># Check that there are any relevant files.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_rel_files_in_parent_dir</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;No files in parent</span>
+<span class="s2">    directory </span><span class="si">%s</span><span class="s2"> with filename extension </span><span class="si">%s</span><span class="s2">.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span>
+
+    <span class="c1"># If there is only one file in the list, then it&#39;s the only option so you</span>
+    <span class="c1"># could just return that...</span>
+    
+    <span class="c1"># Find the file with the longest identical prefix to the input directory</span>
+    <span class="c1"># basename.</span>
+    <span class="n">indp_bn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">indp</span><span class="p">)</span>
+    <span class="c1"># Loop over prefixes from longest to shortest.</span>
+    <span class="n">file_found</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">indp_bn</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">indp_bn</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> 
+        <span class="n">files_with_prefix</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">all_rel_files_in_parent_dir</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+                <span class="n">files_with_prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_with_prefix</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">file_found</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># Return path if there is only one.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_with_prefix</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1">#print(files_with_prefix[0])</span>
+            <span class="k">return</span> <span class="n">files_with_prefix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">files_with_prefix</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Return the path to the file with the shortest basename.</span>
+            <span class="n">file_with_shortest_basename</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">files_with_prefix</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">file_with_shortest_basename</span>
+        <span class="c1">## Report an error if there is more than one.</span>
+        <span class="c1">#assert len(files_with_prefix) &gt; 1, &quot;&quot;&quot;More than one relevant file</span>
+        <span class="c1">#found with extension %s in directory %s.&quot;&quot;&quot; % (extension, parent_dir)</span>
+
+    <span class="c1"># Check that a file was found.</span>
+    <span class="k">assert</span> <span class="n">file_found</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Could not identify an appropriate file with extension</span>
+<span class="s2">    </span><span class="si">%s</span><span class="s2"> in directory </span><span class="si">%s</span><span class="s2">.&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">extension</span><span class="p">,</span> <span class="n">parent_dir</span><span class="p">)</span></div>
+
+
 </pre></div>
 
           </div>
@@ -843,12 +950,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -870,7 +979,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

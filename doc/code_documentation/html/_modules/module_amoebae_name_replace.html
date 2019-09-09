@@ -4,27 +4,21 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>module_amoebae_name_replace &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -66,9 +60,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">ete3</span> <span class="k">import</span> <span class="n">Tree</span>
-<span class="kn">from</span> <span class="nn">module_afa_to_nex</span> <span class="k">import</span> <span class="n">nex_to_afa</span><span class="p">,</span> <span class="n">afa_to_nex</span>
-
+<span class="kn">from</span> <span class="nn">module_afa_to_nex</span> <span class="k">import</span> <span class="n">nex_to_afa</span><span class="p">,</span> <span class="n">afa_to_nex</span><span class="p">,</span> <span class="n">delete_extra_mesquite_lines</span><span class="p">,</span> <span class="n">nex_to_phylip</span><span class="p">,</span> <span class="n">nex_to_mbnex</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">Template</span>
 
 <div class="viewcode-block" id="generate_code_name"><a class="viewcode-back" href="../module_amoebae_name_replace.html#module_amoebae_name_replace.generate_code_name">[docs]</a><span class="k">def</span> <span class="nf">generate_code_name</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Take the number of the sequence in the input file, and output an</span>
@@ -199,6 +196,9 @@
     <span class="c1">#        tree_string = tree_string.replace(code, conv_dict[code])</span>
 
     <span class="c1">#t1 = Tree(infile)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">t1</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">t2</span> <span class="o">=</span> <span class="n">t1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t2</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
@@ -226,7 +226,8 @@
     <span class="c1"># name for the output tree.</span>
     <span class="n">tree_string</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">:</span>
-        <span class="n">tree_string</span> <span class="o">=</span> <span class="n">infh</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="c1">#tree_string = infh.readline()</span>
+        <span class="n">tree_string</span> <span class="o">=</span> <span class="n">infh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">conv_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">tree_string</span> <span class="o">=</span> <span class="n">tree_string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">conv_dict</span><span class="p">[</span><span class="n">code</span><span class="p">],</span> <span class="n">code</span><span class="p">)</span>
@@ -234,6 +235,121 @@
     <span class="c1"># Write uncoded tree to output file.</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
         <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tree_string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="codenames_nex"><a class="viewcode-back" href="../module_amoebae_name_replace.html#module_amoebae_name_replace.codenames_nex">[docs]</a><span class="k">def</span> <span class="nf">codenames_nex</span><span class="p">(</span><span class="n">infp</span><span class="p">,</span> <span class="n">aamodelpr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a path to a multiple sequence alignment file in nexus format and</span>
+<span class="sd">    writes a new file with coded names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set default amino acid substitution model to list in MrBayes code block.</span>
+    <span class="k">if</span> <span class="n">aamodelpr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">aamodelpr</span> <span class="o">=</span> <span class="s1">&#39;LG4X&#39;</span>
+
+    <span class="c1"># Find the number of taxa in the original file.</span>
+    <span class="n">ntaxre</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(NTAX|ntax)=\d+&quot;</span><span class="p">)</span>
+    <span class="n">ntaxa</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infp</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ntaxre</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">ntaxre</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+                <span class="n">ntaxa</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">group</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">break</span>
+    <span class="k">assert</span> <span class="n">ntaxa</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Error: Could not identify number of taxa in input alignment.&#39;</span>
+    
+    <span class="c1"># Make a name for afa file.</span>
+    <span class="n">tempafa1</span> <span class="o">=</span> <span class="n">infp</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nex&#39;</span><span class="p">,</span> <span class="s1">&#39;.afa_temp&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Write an afa file from the nex file.</span>
+    <span class="n">nex_to_afa</span><span class="p">(</span><span class="n">infp</span><span class="p">,</span> <span class="n">tempafa1</span><span class="p">)</span>
+    
+    <span class="c1"># Make name for temporary afa file with new taxon names.</span>
+    <span class="n">tempafa2</span> <span class="o">=</span> <span class="n">tempafa1</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.afa_temp&#39;</span><span class="p">,</span> <span class="s1">&#39;_C.afa_temp&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Make a table output file name.</span>
+    <span class="n">tablefilename</span> <span class="o">=</span> <span class="n">tempafa2</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.afa_temp&#39;</span><span class="p">,</span> <span class="s1">&#39;.table&#39;</span><span class="p">)</span>
+     
+    <span class="c1"># Call name_replace.pl (needs to be in $PATH).</span>
+    <span class="c1">#subprocess.call([&#39;name_replace.pl&#39;, &#39;-f&#39;, tempafa1, tempafa2, tablefilename]) </span>
+    
+    <span class="c1"># Code names with module.</span>
+    <span class="n">write_afa_with_code_names</span><span class="p">(</span><span class="n">tempafa1</span><span class="p">,</span> <span class="n">tempafa2</span><span class="p">,</span> <span class="n">tablefilename</span><span class="p">)</span>
+    
+    <span class="c1"># Check that the number of taxa in the input alignment is the same as the</span>
+    <span class="c1"># number listed in the output conversion table file.</span>
+    <span class="n">num_lines</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">tablefilename</span><span class="p">))</span>
+    <span class="n">ntaxa_out</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_lines</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ntaxa_out</span> <span class="o">==</span> <span class="n">ntaxa</span><span class="p">,</span> <span class="s1">&#39;Error: Different number of taxa in input alignment</span><span class="se">\</span>
+<span class="s1">     compared to output conversion table.&#39;</span>
+    
+    <span class="c1"># Check for redundant sequence names in output table file.</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">tablefilename</span><span class="p">)]</span>
+    <span class="n">old_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]]</span>
+    <span class="n">old_name_nonredun</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">old_names</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_names</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_name_nonredun</span><span class="p">),</span> <span class="s1">&#39;Error: Redundant sequences</span><span class="se">\</span>
+<span class="s1">     identified in input alignment.&#39;</span>
+    
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">old_names</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.copy&#39;</span><span class="p">),</span> <span class="s1">&#39;Error: duplicate sequences detected.&#39;</span>
+    
+    <span class="c1"># Check that number of sequences is the same in input and in table.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_names</span><span class="p">)</span> <span class="o">==</span> <span class="n">ntaxa</span><span class="p">,</span> <span class="s1">&#39;Error: Number of taxa in table is different</span><span class="se">\</span>
+<span class="s1">     from number of taxa in input alignment.&#39;</span>
+    
+    <span class="c1"># Make name for new nex file with new taxon names.</span>
+    <span class="n">newnex</span> <span class="o">=</span> <span class="n">tempafa2</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.afa_temp&#39;</span><span class="p">,</span> <span class="s1">&#39;.nex&#39;</span><span class="p">)</span>
+     
+    <span class="c1"># Convert afa file to nex.</span>
+    <span class="n">afa_to_nex</span><span class="p">(</span><span class="n">tempafa2</span><span class="p">,</span> <span class="n">newnex</span><span class="p">)</span>
+    
+    <span class="c1"># Convert nex output file to phylip.</span>
+    <span class="n">newphylip</span> <span class="o">=</span> <span class="n">newnex</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.phy&#39;</span>
+    <span class="n">nex_to_phylip</span><span class="p">(</span><span class="n">newnex</span><span class="p">,</span> <span class="n">newphylip</span><span class="p">)</span> 
+    
+    
+    <span class="c1"># Convert nex output file to nexus for MrBayes:</span>
+    
+    <span class="c1"># Define name for output file.</span>
+    <span class="n">mbnex</span> <span class="o">=</span> <span class="n">newnex</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.mb.nex&#39;</span>
+    
+    <span class="c1"># Define code blocks for mrbayes input nexus alignment files, using output name.</span>
+    <span class="c1"># Note: There is probably a better way to handle the variables for MrBayes, but</span>
+    <span class="c1"># the code blocks can be manually edited after this file is produced.</span>
+    <span class="n">mrbayescodeblocks_template</span> <span class="o">=</span><span class="n">Template</span><span class="p">(</span>\
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    BEGIN mrbayes;</span>
+<span class="sd">    </span>
+<span class="sd">       set autoclose=yes;</span>
+<span class="sd">       log start filename = mbLogFile.log.txt;</span>
+<span class="sd">       prset aamodelpr=fixed($aamodelpr_var);   lset rates=gamma Ngammacat=4;</span>
+<span class="sd">       mcmc ngen=10000000 stoprule=Yes stopval=0.01 printfreq=10000 samplefreq=1000 nchains=4 savebrlens=yes filename=$filename_var1;</span>
+<span class="sd">       log stop;</span>
+<span class="sd">        quit;</span>
+<span class="sd">    </span>
+<span class="sd">    END;</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    [</span>
+<span class="sd">    Begin mrbayes;</span>
+<span class="sd">    log start filename=$filename_var2.con.log replace;</span>
+<span class="sd">    sumt filename=$filename_var1 relburnin=yes burninfrac=0.25 contype=allcompat;</span>
+<span class="sd">    end;</span>
+<span class="sd">    ]</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">)</span>
+    
+    <span class="n">mrbayescodeblocks</span> <span class="o">=</span> <span class="n">mrbayescodeblocks_template</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
+                                                    <span class="n">aamodelpr_var</span> <span class="o">=</span> <span class="n">aamodelpr</span><span class="p">,</span>
+                                                    <span class="n">filename_var1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mbnex</span><span class="p">),</span>
+                                                    <span class="n">filename_var2</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">mbnex</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                                                    <span class="p">)</span>
+    
+    <span class="c1"># Use code blocks and output name to write mrbayes nexus file.</span>
+    <span class="n">nex_to_mbnex</span><span class="p">(</span><span class="n">newnex</span><span class="p">,</span> <span class="n">mbnex</span><span class="p">,</span> <span class="n">mrbayescodeblocks</span><span class="p">)</span>
+    
+     
+    <span class="c1"># # Delete unnecessary files.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tempafa1</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tempafa2</span><span class="p">)</span></div>
 
 
 </pre></div>
@@ -245,12 +361,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -272,7 +390,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

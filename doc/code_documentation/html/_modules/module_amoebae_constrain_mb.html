@@ -4,27 +4,21 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>module_amoebae_constrain_mb &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -115,11 +109,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Set output file path.</span>
     <span class="k">if</span> <span class="n">out_alignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">out_alignment</span> <span class="o">=</span> <span class="n">alignment</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_constrained.nex&#39;</span>
+        <span class="n">out_alignment</span> <span class="o">=</span> <span class="n">alignment</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_constrained_mb.nex&#39;</span>
 
     <span class="c1"># Check that output file does not exist already.</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">out_alignment</span><span class="p">),</span> <span class="s2">&quot;&quot;&quot;Specified output file already</span>
 <span class="s2">    exists: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">out_alignment</span>
+
+    <span class="c1"># Check that output alignment path is not over 99 characters long.</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_alignment</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">99</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Alignment file name too long.&quot;&quot;&quot;</span>
     
     <span class="c1"># Get taxon number dict for converting names to numbers.</span>
     <span class="n">taxon_number_dict</span> <span class="o">=</span> <span class="n">get_taxon_number_dict</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
@@ -139,9 +136,9 @@
     <span class="n">total_leaf_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">total_leafs</span><span class="p">)</span>
 
     <span class="c1"># Check that the number of keys in the taxon number dict is the same as the</span>
-    <span class="c1"># number of leaves in the tree.</span>
-    <span class="k">assert</span> <span class="n">total_leaf_count</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">taxon_number_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="s2">&quot;&quot;&quot;Apparently</span>
-<span class="s2">    different numbers of sequence names in tree compared to alignment.&quot;&quot;&quot;</span>
+    <span class="c1"># number of leaves in the tree (not always necessary).</span>
+    <span class="c1">#assert total_leaf_count == len(taxon_number_dict.keys()), &quot;&quot;&quot;Apparently</span>
+    <span class="c1">#different numbers of sequence names in tree compared to alignment.&quot;&quot;&quot; </span>
 
     <span class="c1"># Check that every leaf name can be coded using the dictionary.</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">t1</span><span class="o">.</span><span class="n">traverse</span><span class="p">():</span>
@@ -183,19 +180,29 @@
     <span class="c1"># Write output file with constraint commands inserted into the appropriate</span>
     <span class="c1"># MrBayes code block.</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span> <span class="k">as</span> <span class="n">infh</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_alignment</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+        <span class="n">prset_line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^ +prset&#39;</span><span class="p">)</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">insert</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">insertnum</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infh</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;   prset&#39;</span><span class="p">):</span>
+            <span class="c1">#if i.startswith(&#39;   prset&#39;):</span>
+            <span class="k">if</span> <span class="n">prset_line</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
                 <span class="n">insert</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;filename=&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.mb.&#39;</span><span class="p">,</span> <span class="s1">&#39;.mb_constrained_mb.&#39;</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">insert</span> <span class="ow">and</span> <span class="n">insertnum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">o</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">constraint_commands</span><span class="p">)</span>
+                <span class="n">inserted</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">insert</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">insertnum</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># Check that the constraint commands were inserted.</span>
+        <span class="k">assert</span> <span class="n">inserted</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;Constraint commands were not inserted.&quot;&quot;&quot;</span>
 
     <span class="c1"># Return main output path.</span>
     <span class="k">return</span> <span class="n">out_alignment</span></div>
@@ -211,12 +218,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -238,7 +247,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

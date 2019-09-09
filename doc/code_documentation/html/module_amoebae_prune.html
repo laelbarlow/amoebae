@@ -4,29 +4,23 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>module_amoebae_prune module &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="module_amoebae_run_searches module" href="module_amoebae_run_searches.html" />
     <link rel="prev" title="module_amoebae_plot module" href="module_amoebae_plot.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -132,7 +126,7 @@ with quotation marks around the long names.</p>
 
 <dl class="function">
 <dt id="module_amoebae_prune.manually_select_nodes_and_remove_seqs">
-<code class="descclassname">module_amoebae_prune.</code><code class="descname">manually_select_nodes_and_remove_seqs</code><span class="sig-paren">(</span><em>input_tree_one</em>, <em>alignment_file</em>, <em>output_file=None</em>, <em>name_replace_table=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#manually_select_nodes_and_remove_seqs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.manually_select_nodes_and_remove_seqs" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">module_amoebae_prune.</code><code class="descname">manually_select_nodes_and_remove_seqs</code><span class="sig-paren">(</span><em>input_tree_one</em>, <em>alignment_file</em>, <em>output_file=None</em>, <em>name_replace_table=None</em>, <em>include_seqs=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/module_amoebae_prune.html#manually_select_nodes_and_remove_seqs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#module_amoebae_prune.manually_select_nodes_and_remove_seqs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take a tree file (newick) and the corresponding alignment file (nexus)
 and write a new alignment without the selected nodes/sequences.</p>
 <p>ToDo: Automate selection of long branches for removal. Allow manual
@@ -195,12 +189,14 @@ alignment file with those sequences removed.</p>
                         title="next chapter">module_amoebae_run_searches module</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -227,7 +223,7 @@ alignment file with those sequences removed.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

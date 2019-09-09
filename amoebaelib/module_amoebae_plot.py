@@ -23,20 +23,6 @@ import numpy as np
 import sys
 import argparse
 
-## Set up argument parsing.
-#parser = argparse.ArgumentParser(
-#    description = """Plots results of HMMer searches.""",
-#    epilog = r"""epilog""")
-#
-## Positional arguments.
-#parser.add_argument('input', help='Path to input file (.csv).')
-#parser.add_argument('output', help='Path to output file (.pdf).')
-#
-## Optional argument for different modes.
-#parser.add_argument('-c', '--confidence_heat_map', help='Plots percentages\
-# listed in csv input file.', action='store_true')
-#
-#args = parser.parse_args()
 
 def get_text_label_matrix(odf):
     """Takes a dataframe with information to be plotted, and returns a matrix

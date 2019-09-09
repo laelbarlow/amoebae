@@ -206,6 +206,7 @@ Miscellaneous commands:
         find_and_test_all_import_statements_in_amoebae()
 
 
+    # Incomplete function:
     def mkdatadir(self):
         parser = argparse.ArgumentParser(
             description="""Make a directory with subdirectories and CSV files for
@@ -229,7 +230,6 @@ Miscellaneous commands:
         # directory to their settings.py file.
 
 
-    # Works.
     def add_to_dbs(self):
         parser = argparse.ArgumentParser(
             description='Format and add a file to a formatted directory.',
@@ -378,7 +378,6 @@ Miscellaneous commands:
             print(os.path.basename(i))
         
 
-    # Works.
     def add_to_queries(self):
         parser = argparse.ArgumentParser(
             description='Add a query file to a formatted directory.',
@@ -465,7 +464,6 @@ Miscellaneous commands:
             module_add_to_queries.update_query_csv(csv_file, mod_query_path,
                     datatype)
 
-    # Works.
     def list_queries(self):
         parser = argparse.ArgumentParser(
             description='''Print a list of all usable query files in the query
@@ -514,7 +512,6 @@ Miscellaneous commands:
             print(os.path.basename(i))
 
 
-    # Works.
     def get_redun_hits(self):
         parser = argparse.ArgumentParser(
             description='''Run searches with queries to find redundant hits in
@@ -640,7 +637,6 @@ Miscellaneous commands:
                 start_time, end_time, timestamp, main_outfp)
         
 
-    # Works.
     def setup_fwd_srch(self):
         parser = argparse.ArgumentParser(
             description='''Make a directory in which to write output files from
@@ -791,7 +787,6 @@ Miscellaneous commands:
                 args.fwd_srch_dir)
 
 
-    # Works.
     def sum_fwd_srch(self):
         parser = argparse.ArgumentParser(
             description='''Append information about forward searches to csv
@@ -1610,75 +1605,6 @@ Miscellaneous commands:
                 start_time, end_time, timestamp, final_outfp)
 
 
-    ## *******Needs to be written (currently the same as phylo_class)!
-    #def phylo_place(self):
-    #    parser = argparse.ArgumentParser(
-    #        description='''Perform an ML search with IQtree to find the most
-    #        likely position of each sequence in a previously established
-    #        constrained backbone tree.''',
-    #        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    #    parser.add_argument('file_with_seqs', help='''Path to a csv file
-    #    listing sequences to classify, or a fasta file with sequences to
-    #    classify.''')
-    #    parser.add_argument('--model_name', help='''The name for the model listed
-    #    in the csv file (which will refers collectively to the alignment, tree,
-    #    substitution model, etc. that you want to use). Only specify if input
-    #    file with sequences is a fasta file.''')
-    #    parser.add_argument('--add_model_name_col', help='''Just add a column
-    #    to contain names of the model backbone tree to use for each relevant
-    #    sequence/row.''', action='store_true')
-    #    #parser.add_argument('csv_file', help='''Path to csv spreadsheet with
-    #    #similarity search hits to be classified using phylogenetic
-    #    #analysis.''')
-    #    args = parser.parse_args(sys.argv[2:])
-
-    #    # Record start time.
-    #    start_time = time.time()
-    #    # Get current time for timestamp.
-    #    timestamp = time.strftime("%Y%m%d%H%M%S")
-
-
-    #    outfp = None
-    #    if args.add_model_name_col:
-    #        # Add column to input file.
-
-    #        # ********Need to make this automatically figure out which model to
-    #        # use?
-    #        #add_model_column(args.file_with_seqs)
-
-    #        # Temporary code:
-    #        tempfile = args.file_with_seqs + '_TEMP.csv'
-    #        newfile = args.file_with_seqs.rsplit('.', 1)[0] + '_with_model_col.csv'
-    #        with open(args.file_with_seqs) as infh, open(tempfile, 'w') as o:
-    #            inum = 0
-    #            for i in infh:
-    #                inum += 1
-    #                if inum == 1:
-    #                    o.write(i.strip() + ',' + 'Model/backbone tree name' +\
-    #                            '\n')
-    #                else:
-    #                    o.write(i.strip() + ',\n')
-    #        with open(tempfile) as infh, open(newfile, 'w') as o:
-    #            for i in infh:
-    #                o.write(i)
-    #        os.remove(tempfile)
-    #        outfp = newfile
-
-    #    else:
-    #        # Call module to run trees, etc.
-    #        outfp = place_seq_with_constrained_tree2(args.file_with_seqs, args.model_name)
-
-    #    # Record end time.
-    #    end_time = time.time()
-    #    # Define command line input.
-    #    commandline = ' '.join(sys.argv)
-    #    # Define output directory.
-    #    outdir = os.path.dirname(args.file_with_seqs)
-    #    # Record info to log file.
-    #    module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
-    #            start_time, end_time, timestamp, outfp)
-
-
     def interp_phylo(self): 
         parser = argparse.ArgumentParser(
             description='''Interpret phylogenetic classification results.''',
@@ -1936,6 +1862,7 @@ Miscellaneous commands:
         module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
+
     def reduce_tree(self):
         parser = argparse.ArgumentParser(
             description='''Remove terminal nodes from a given tree if there are
@@ -2095,6 +2022,7 @@ Miscellaneous commands:
         # Record info to log file.
         module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
+
 
     def constrain_mb(self):
         parser = argparse.ArgumentParser(
@@ -2375,6 +2303,7 @@ Miscellaneous commands:
                 start_time, end_time, timestamp, main_out_path)
 
 
+    # TEMPLATE FUNCTION:
     def commandx(self):
         parser = argparse.ArgumentParser(
             description='Do commandx.')

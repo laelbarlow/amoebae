@@ -14,6 +14,9 @@
 # limitations under the License.
 # 
 """Make a histogram.
+
+This will need to be updated to work with formatting of current output files.
+
 """
 import sys
 import os

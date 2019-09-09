@@ -1,7 +1,7 @@
-module\_get\_redun\_hits module
+replace\_nodes\_in\_tree module
 ===============================
 
-.. automodule:: module_get_redun_hits
+.. automodule:: replace_nodes_in_tree
     :members:
     :undoc-members:
     :show-inheritance:
