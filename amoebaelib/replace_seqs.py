@@ -209,7 +209,7 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
         file: %s""" % str(len(queries_retrieving_no_hits)))
         print("""\nPercent of queries that did not retrieve any hits in the input
         fasta file: %s""" % str(percent_of_queries_without_hits))
-        assert percent_of_queries_without_hits <= 10, """More than 10% of queries
+        assert percent_of_queries_without_hits <= 20, """More than 20% of queries
         retrieved no hits in the input fasta file.""" 
 
         ## Check that the number of top hits is the same as the number of query
