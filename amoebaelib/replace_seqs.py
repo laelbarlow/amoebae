@@ -283,8 +283,12 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
                     try:
                         # Try fast retrieval, and if that doesn't work then try
                         # the slow method.
+                        #full_length_seq_obj =\
+                        #get_seqs_from_fasta_db(db_name, [seq_id], False)[0]
+                        # This is a work-around, because somehow extra
+                        # underscores were added for some sequence headers.
                         full_length_seq_obj =\
-                        get_seqs_from_fasta_db(db_name, [seq_id], False)[0]
+                        get_seqs_from_fasta_db(db_name, [seq_id.lstrip('_')], False)[0]
 
                     except:
                         print('Looking in another file.')
