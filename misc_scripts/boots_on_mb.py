@@ -66,12 +66,13 @@ contre_to_newick(inbesttreecontre, outbesttreenewick)
 outbesttreenewick2 = inbesttreecontre + '_probs.newick'
 mbcontre_to_newick_w_probs(inbesttreecontre, outbesttreenewick2)
 
-
-
+# Define program name for output file path.
+program_name = 'raxml'
 
 # Names for input files.
 inboots = os.path.join(indp, 'RAxML_bootstrap.result')
 if not os.path.isfile(inboots):
+    program_name = 'iqtree'
     inboots = os.path.join(indp, 'output.ufboot')
 if not os.path.isfile(inboots):
     inboots = os.path.join(indp, 'output.boottrees')
@@ -156,7 +157,7 @@ assert os.path.isfile(outcontrefile)
 # node labels.
 # newick with bootstrap values: outfilename
 # newick with posterior probabilities (as a percentage): outbesttreenewick2
-combined_figtree_newick = inbesttreecontre + '_mb+raxml.tre'
+combined_figtree_newick = inbesttreecontre + '_mb+' + program_name + '.tre'
 combine_supports(outfilename, outbesttreenewick2, combined_figtree_newick)
 
 # Call name_replace.pl (have to put the conversion table in the input

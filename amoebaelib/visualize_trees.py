@@ -643,6 +643,9 @@ def visualize_tree(method,
     if method == 'mb':
         # Modify nexus file to use second code block. 
         temp_nexus = tree_file + '_temp'
+        print('\n')
+        print(tree_file)
+        print('\n')
         with open(tree_file, 'r') as infh, open(temp_nexus, 'w') as o:
             # Get text from file.
             text = infh.read()
