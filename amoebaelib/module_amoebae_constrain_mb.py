@@ -85,6 +85,10 @@ def constrain_mb_with_tree(alignment, tree, out_alignment=None):
     constraint_commands = ''
 
     # Parse input tree using ete3.
+    print('\n\n\n')
+    print('Topology constraint for mb:')
+    print(tree)
+    print('\n\n\n')
     t1 = Tree(tree)
 
     # Count number of leaf nodes in tree and get list of all the leaf names.

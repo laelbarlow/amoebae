@@ -2267,8 +2267,8 @@ def get_all_alt_model_backbones(model_name,
         #newick_backbone = '(' + ','.join(subtrees) + ');'
         newick_backbone = '(' + ',\n'.join(subtrees) + ');'
 
-        #print('Topology as polytomy:')
-        #print(newick_backbone)
+        print('Topology as polytomy:')
+        print(newick_backbone)
 
         # Add polytomy to list of alternative topologies.
         alt_topos.append(newick_backbone)
@@ -2281,6 +2281,8 @@ def get_all_alt_model_backbones(model_name,
         #for i in alt_topos:
         #    print(i)
         #    print('\n')
+
+        # Check that the topologies are reasonable...
 
     # Write each alternative topology (with subtrees as polytomies) to a
     # separate newick file, for use as constraint trees. Also, write trees with
@@ -2301,12 +2303,20 @@ def get_all_alt_model_backbones(model_name,
         topo_filepaths_starting.append(topo_filepath_starting)
 
         # Write topology string to text file.
-        with open(topo_filepath, 'w') as o:
-            o.write(topo[0])
+        if polytomy:
+            with open(topo_filepath, 'w') as o:
+                o.write(topo)
+        else:
+            with open(topo_filepath, 'w') as o:
+                o.write(topo[0])
 
         # Write starting topology string to text file.
-        with open(topo_filepath_starting, 'w') as o:
-            o.write(topo[1])
+        if polytomy:
+            with open(topo_filepath_starting, 'w') as o:
+                o.write(topo)
+        else:
+            with open(topo_filepath_starting, 'w') as o:
+                o.write(topo[1])
 
         # Check that the files were written.
         assert os.path.isfile(topo_filepath)
