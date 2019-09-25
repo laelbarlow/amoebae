@@ -27,6 +27,7 @@ indp = str(command_line_list[1])
 
 
 relevant_newick_file_paths = glob.glob(os.path.join(indp, '*_cat.tre'))
+#relevant_newick_file_paths = glob.glob(os.path.join(indp, '*_root.tre'))
 for newick in relevant_newick_file_paths:
     t = Tree(newick)
     for i in t.get_leaves():
