@@ -28,6 +28,9 @@ phylip = cmdln[1]
 model = cmdln[2]
 constraint_indir = cmdln[3]
 
+assert os.path.isfile(phylip)
+assert os.path.isdir(constraint_indir)
+
 # Make an output directory with a unique name.
 now = datetime.now()
 timestamp = datetime.timestamp(now)
@@ -57,9 +60,15 @@ for i in constraint_tree_files:
 # Concatenate treefiles.
 output_treefiles = glob.glob(os.path.join(outputdir, '*.treefile'))
 concat_path = os.path.join(outputdir, 'concatenated.treefile')
-with open(concat_path, 'w') as o:
+tree_order_file = concat_path + '_tree_order.txt'
+with open(concat_path, 'w') as o1, open(tree_order_file, 'w') as o2:
+    treenum = 0
     for i in output_treefiles:
-        o.write(open(i, 'r').read().strip() + '\n')
+        treenum += 1
+        # Append tree to concatenated tree file.
+        o1.write(open(i, 'r').read().strip() + '\n')
+        # Record in tree order file.
+        o2.write('Tree ' + str(treenum) + ': ' + os.path.basename(i) + '\n')
 
 # Run topology test.
 topo_test_out = concat_path + '_topo_test_output'
