@@ -2236,15 +2236,15 @@ def get_all_alt_model_backbones(model_name,
     ## Switch to new list.
     #nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
 
-    #if not not_polytomy_clades:
-    #    # Turn each of the nodes/clades/subtrees of interest into polytomies of
-    #    # all the sequences they contain.
-    #    nodes_of_interest_for_polytomy_as_polytomies = []
-    #    for node_of_interest in nodes_of_interest_for_polytomy:
-    #        node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
-    #        nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
-    #    # Switch to new list.
-    #    nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
+    if not not_polytomy_clades:
+        # Turn each of the nodes/clades/subtrees of interest into polytomies of
+        # all the sequences they contain.
+        nodes_of_interest_for_polytomy_as_polytomies = []
+        for node_of_interest in nodes_of_interest_for_polytomy:
+            node_of_interest_as_polytomy = get_polytomy_for_treenode(node_of_interest)
+            nodes_of_interest_for_polytomy_as_polytomies.append(node_of_interest_as_polytomy)
+        # Switch to new list.
+        nodes_of_interest_for_polytomy = nodes_of_interest_for_polytomy_as_polytomies
 
     # Initiate list of alternative tree topologies (newick strings).
     alt_topos = []

@@ -54,7 +54,7 @@ for i in constraint_tree_files:
                     '-t', i.rsplit('.', 1)[0] + '_starting.tre',
                     '-pre', os.path.join(outputdir, os.path.basename(i)),
                     '-allnni',
-                    '--runs', '1'
+                    '--runs', '5'
                     ])
 
 # Concatenate treefiles.
