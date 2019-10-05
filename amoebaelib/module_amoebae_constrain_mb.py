@@ -48,15 +48,18 @@ def get_taxon_number_dict(alignment):
         started = False
         taxon_num = 0
         for i in infh:
-            if i.startswith('matrix'):
+            if i.startswith('matrix') or i.startswith('\tMATRIX'):
                 started = True
             if i.startswith(';'):
                 break
             
-            if started and not i.startswith('matrix'):
+            if started and not i.startswith('matrix') and not i.startswith('\tMATRIX'):
                 taxon_num += 1
-                taxon_name = i.rsplit(' ', 1)[0]
+                taxon_name = i.rsplit(' ', 1)[0].strip()
                 taxon_number_dict[taxon_name] = taxon_num
+
+    assert taxon_number_dict != {}, """Could not generate a dictionary of taxon
+    numbers from nexus alignment file."""
 
     return taxon_number_dict
 
