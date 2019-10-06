@@ -650,8 +650,18 @@ def visualize_tree(method,
             # Get text from file.
             text = infh.read()
             # Parse text.
-            delimiters = re.compile(r'(BEGIN \w+;\n|END;\n)', re.IGNORECASE)
+            #delimiters = re.compile(r'(BEGIN \w+;\n|END;\n)', re.IGNORECASE)
+            delimiters = re.compile(r'(BEGIN \w+;\s+|END;\s+)', re.IGNORECASE)
             split_on_delimiters = delimiters.split(text)
+            x = 0
+
+            # For trouble-shooting:
+            #for i in split_on_delimiters:
+            #    x += 1
+            #    print('\n')
+            #    print(x)
+            #    print(i)
+
             inum = -1
             #for i in split_on_delimiters:
             #    inum += 1
