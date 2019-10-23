@@ -1117,6 +1117,9 @@ Miscellaneous commands:
         module_amoebae_search.get_out_query_list_path(args.rev_srch_out)
         assert os.path.isfile(out_query_file), """Could not find file with
         query list with path: %s""" % out_query_file
+
+        assert os.path.isdir(args.rev_srch_out)
+
         out_db_file =\
         module_amoebae_search.get_out_db_list_path(args.rev_srch_out)
         assert os.path.isfile(out_db_file), """Could not find file with
