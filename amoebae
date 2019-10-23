@@ -1125,6 +1125,12 @@ Miscellaneous commands:
         assert os.path.isfile(out_db_file), """Could not find file with
         database list with path: %s""" % out_db_file
 
+        print('\n\n')
+        print('Contents of out_db_file:')
+        with open(out_db_file) as infh:
+            for i in infh:
+                print(i)
+
         # Get query (will be full paths) and database lists.
         query_file_list = module_amoebae_search.get_query_list_from_file(out_query_file)
         db_file_list = module_amoebae_search.get_db_list_from_file(out_db_file)
@@ -1150,7 +1156,8 @@ Miscellaneous commands:
             db_num += 1
 
             # Check that the file actually exists.
-            assert os.path.isfile(db_file), """The file %s does not exist.""" % db_file
+            #assert os.path.isfile(db_file), """The file %s does not exist.""" % db_file
+            assert os.path.isfile(db_file), """The db_file does not exist.""" % db_file
 
             print('\nSummarizing results from reverse searches into ' +\
                     os.path.basename(db_file) + ' (database #' + str(db_num) +\
