@@ -1145,6 +1145,10 @@ Miscellaneous commands:
         db_num = 0
         for db_file in db_file_list:
             db_num += 1
+
+            # Check that the file actually exists.
+            assert os.path.isfile(db_file), """The file %s does not exist.""" % db_file
+
             print('\nSummarizing results from reverse searches into ' +\
                     os.path.basename(db_file) + ' (database #' + str(db_num) +\
                     ')')
