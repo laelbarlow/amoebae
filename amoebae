@@ -853,7 +853,8 @@ Miscellaneous commands:
         parser.add_argument('csv_file', help='''Path to summary spreadsheet
                 (CSV) file, which contains a summary of forward search(es).''')
         parser.add_argument('databases', help='''Database filename (in database
-                directory) or path to file with list of database filenames.''')
+                directory) or path to file with list of database filenames.
+                Note that filenames are needed, not file paths.''')
         # Optional arguments.
         parser.add_argument('--outdir', help='''Path to directory to put search
                 results into (so that this step can be piped together with
@@ -911,13 +912,18 @@ Miscellaneous commands:
         # Get database(s) to search in.
         db_file_list = None
         if os.path.isfile(args.databases):
+            # Check that the input file path is not a fasta file.
+            assert not open(args.databases, 'r').read().startswith('>'),
+            """Don't input fasta file paths."""
             # Get list from file.
             db_file_list = module_amoebae_search.get_db_list_from_file(args.databases)
         else:
-            # then argument is a filename.
-            assert os.path.isfile(os.path.join(db_dir, args.databases)),\
-            """File doesn't exist: %s""" % args.databases
+            # then argument is a filename (not a path).
+            expected_path_to_file_in_genomes_folder = os.path.join(db_dir, args.databases)
+            assert expected_path_to_file_in_genomes_folder,\
+            """File with the name %s does not exist in the directory %s""" % (args.databases, db_dir) 
 
+            # Get list from file.
             db_file_list = [args.databases]
 
 
