@@ -932,7 +932,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
 
     # Define a list of new column headers to be appended.
     new_column_label_list = module_amoebae_column_header_lists.rev_column_label_list
-    assert len(new_column_labels_list) > 0
+    #assert len(new_column_labels_list) > 0
 
     # Initiate new dataframe with columns to be appended/joined to spreadsheet.
     #num_rows = len(list(df.index))
