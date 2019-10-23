@@ -898,7 +898,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
     assert rev_srch_id is not None
     assert os.path.isdir(outdir)
     assert len(query_file_list) > 0
-    assert os.path.isfile(db_file)
+    #assert os.path.isfile(db_file)
     assert os.path.isfile(csv_file)
     assert os.path.isfile(redun_hit_csv)
 
