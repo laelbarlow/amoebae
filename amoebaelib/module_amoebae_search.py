@@ -895,8 +895,16 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
         # Get redundant hit dict from from input redundant hit csv file.
         redun_hit_dict = get_redun_hit_dict(redun_hit_csv)
 
+    assert rev_srch_id is not None
+    assert os.path.isdir(outdir)
+    assert len(query_file_list) > 0
+    assert os.path.isfile(db_file)
+    assert os.path.isfile(csv_file)
+    assert os.path.isfile(redun_hit_csv)
+
     # Get database info spreadsheet path from settings module.
     db_info_csv = settings.db_info_csv
+    assert os.path.isfile(db_info_csv)
 
     # Get same list of header titles that the sum_fwd_srch command makes (for
     # parsing).
@@ -924,6 +932,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
 
     # Define a list of new column headers to be appended.
     new_column_label_list = module_amoebae_column_header_lists.rev_column_label_list
+    assert len(new_column_labels_list) > 0
 
     # Initiate new dataframe with columns to be appended/joined to spreadsheet.
     #num_rows = len(list(df.index))
@@ -941,6 +950,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
     df = df.join(df_new_cols)
 
     num_rev_srchs = df['Query title'].count()
+    assert num_rev_srchs > 0
 
     # Iterate over rows in input spreadsheet with forward search results, and
     # determine which reverse search data needs to be found, and update the row
@@ -1118,6 +1128,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
 
     # ...
     # For end of function:
+    assert row_num > 0
 
     # Give the newly added columns unique names so that they do not get
     # confused with other similar sets of columns for other reverse search
