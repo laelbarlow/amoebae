@@ -380,16 +380,26 @@ Miscellaneous commands:
 
     def add_to_queries(self):
         parser = argparse.ArgumentParser(
-            description='Add a query file to a formatted directory.',
+            description="""Add a query file to a formatted directory. This
+            command adds a given sequence file to the directory with the path
+            that you have specified in the settings.py file, and appends a
+            corresponding line to the CSV file that you specified (e.g.,
+            '0_query_info.csv') to indicate the query title, etc.""",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         #parser.add_argument('query_dir', help='''Path to a directory that will
         #        contain queries to be used for similarity searching.''')
         #parser.add_argument('csv_file', help='''Path to spreadsheet to add
         #        information about added file to (CSV format).''')
         parser.add_argument('query_file', help='''Path to a sequence file in
-        fasta format that can be used as a similarity search query file. Or
+        FASTA format that can be used as a similarity search query file. Or
         path to a directory containing only files for addition to the
-        queries.''')
+        queries. Note: By default, the portion of the input filename preceding
+        the first underscore character will be recorded as the "query title",
+        the remaining substring preceding the second underscore character will
+        be recorded as the taxon (e.g., "Hsapiens"), and the rest of the
+        filename preceding the filename extension will be recorded as the
+        sequence ID. However, this can be revised in the "Queries/0_query_info.csv"
+        file afterward.''')
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -399,6 +409,8 @@ Miscellaneous commands:
         from module_amoebae_nex_to_hmm import afa_to_hmm
 
         assert not args.query_file.startswith('.nex'), """Input file must be in
+        fasta format."""
+        assert not args.query_file.startswith('.phy'), """Input file must be in
         fasta format."""
 
         # Define path to csv file.

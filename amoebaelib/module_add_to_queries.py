@@ -180,16 +180,33 @@ def update_query_csv(csv_file, mod_query_path, datatype):
     # Get query basename.
     query_basename = os.path.basename(mod_query_path)
 
-    # Get query title name.
-    query_title = query_basename.split('_')[0]
+    # Extract info from query filename.
+    query_title = '?'
+    taxon = '?'
+    species = '?'
+    if len(query_basename.split('_')) > 2:
+        # Get query title name.
+        query_title = query_basename.split('_')[0]
 
-    # Get query taxon name.
-    # Assumes that there is an accession or something else after the "taxon" in
-    # the query file name.
-    taxon = module_amoebae.get_query_taxon_from_filename(query_basename)
+        # Get query taxon name.
+        # Assumes that there is an accession or something else after the "taxon" in
+        # the query file name.
+        taxon = module_amoebae.get_query_taxon_from_filename(query_basename)
+
+        # Get species based on taxon.
+        species = module_amoebae.get_species_from_db_csv(taxon)
+    else:
+        # Print warning.
+        print("""Warning: Could not identify query title or database/taxon name
+        in input filename.""")
+        # Just use the whole filename minus the filename extension.
+        query_title = query_basename.rsplit('.')[0]
 
     # Initiate dataframe for line to append.
     new_row = pd.DataFrame(columns=headers)
+
+    # Get database filename.
+    db_filename = module_amoebae.get_db_filename_for_query_from_db_csv(taxon)
 
     # Add info to new row.
     new_row.loc[0] = ['???'] * len(headers)
@@ -197,13 +214,13 @@ def update_query_csv(csv_file, mod_query_path, datatype):
     new_row.loc[0]['Filename'] = query_basename
     new_row.loc[0]['Query title'] = query_title
     new_row.loc[0]['Query source description'] = taxon
-    new_row.loc[0]['Query taxon (species if applicable)'] = module_amoebae.get_species_from_db_csv(taxon)
+    new_row.loc[0]['Query taxon (species if applicable)'] = species
     new_row.loc[0]['Data type'] = datatype
     new_row.loc[0]['File type'] = exten
     new_row.loc[0]['Date added'] = cur_date
     new_row.loc[0]['Citation'] = '?'
     new_row.loc[0]['Query database filename (if applicable)'] =\
-    module_amoebae.get_db_filename_for_query_from_db_csv(taxon)
+    db_filename
     # Check that it worked.
     assert not '???' in new_row.loc[0], """Could not add all the necessary info
     to the query info spreadsheet for query file:\n\t%s""" % mod_query_path
@@ -218,5 +235,16 @@ def update_query_csv(csv_file, mod_query_path, datatype):
     #df[1:].to_csv(csv_file) 
     df.to_csv(csv_file, index=False) 
 
+    # Report activity:
+    print('Information added to spreadsheet %s:' % os.path.basename(csv_file))
+    print('\tFilename: ' +  query_basename)
+    print('\tQuery title: ' + query_title)
+    print('\tQuery source description: ' + taxon)
+    print('\tQuery taxon (species if applicable): ' + species)
+    print('\tData type: ' + datatype)
+    print('\tFile type: ' + exten)
+    print('\tDate added: ' + cur_date)
+    print('\tCitation: ' + '?')
+    print('\tQuery database filename (if applicable): ' + db_filename)
 
 
