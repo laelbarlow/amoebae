@@ -913,8 +913,7 @@ Miscellaneous commands:
         db_file_list = None
         if os.path.isfile(args.databases):
             # Check that the input file path is not a fasta file.
-            assert not open(args.databases, 'r').read().startswith('>'),
-            """Don't input fasta file paths."""
+            assert not open(args.databases, 'r').read().startswith('>'), """Don't input fasta file paths."""
             # Get list from file.
             db_file_list = module_amoebae_search.get_db_list_from_file(args.databases)
         else:
