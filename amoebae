@@ -1675,11 +1675,14 @@ Miscellaneous commands:
     def plot(self):
         parser = argparse.ArgumentParser(
             description='''Plot results of similarity search and sequence
-            classification analyses. The output is a heatmap-style plot
-            constructed using the matplotlib library for python3.''',
+            classification analyses. The outputs are PDF files.''',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('csv_file', help='''Path to a spreadsheet with the
-                relevant results to be plotted.''')
+                relevant results to be plotted. This can be either a CSV file output
+                of the sum_rev_srch command or from the find_redun_seqs
+                command. If the output of the sum_rev_srch command is used,
+                however, redundant hits will be counted (e.g., BLASTP and
+                TBLASTN hits corresponding to the same or highly identical genomic loci).''')
         parser.add_argument('--csv_file2', help='''Path to a second spreadsheet
                 with relevant results to be compared to the first and plotted.''',
                 default=None)
