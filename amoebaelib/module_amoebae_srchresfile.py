@@ -202,9 +202,14 @@ class SrchResFile:
         else:
             pass # ...?
 
-        # Check that it worked.
+        # Check that a value for the E-value was found.
         assert hit_evalue is not None, """Could not retrieve E-value for hit
         with rank %s in search result file: %s""" % (str(hit_rank), self.filepath)
+
+        # Check that the E-value looks like an E-value
+        assert hit_evalue is 0 or isinstance(hit_evalue, float), """The E-value
+        %s identified in the file %s does not look like an E-value.""" %\
+        (hit_evalue, self.filepath)
 
         # Return the hit E-value.
         return hit_evalue
