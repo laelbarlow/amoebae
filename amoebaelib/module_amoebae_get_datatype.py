@@ -42,7 +42,8 @@ def get_datatype_for_sequence_string(concat_seq):
         dbtype = 'prot'
 
     # Check that the data type was determined.
-    assert not dbtype == 'Undetermined', "Error: could not identify data type"
+    assert not dbtype == 'Undetermined', """"Could not identify data type.
+    Check that there are no unusual characters in your FASTA sequences."""
 
     # Return the datatype.
     return dbtype
