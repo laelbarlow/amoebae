@@ -49,7 +49,7 @@ class DispatchAmoebae(object):
             usage='''amoebae <command> [<args>]
 
 Commands for setting up data structure:
-    mkdatadir*       Make a directory with subdirectories and CSV files for
+    mkdatadir        Make a directory with subdirectories and CSV files for
                      storing sequence data, etc.
 
 Commands for similarity searching:
