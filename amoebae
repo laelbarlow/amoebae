@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # 
-"""Includes several commands for performing biological sequence data analysis
-steps commonly performed in the Dacks laboratory.
+"""Includes several commands for performing specific steps of biological
+sequence data analysis.
 """
 # Import built-in modules.
 import argparse
@@ -73,23 +73,13 @@ Commands for similarity searching:
    interp_srchs      Interpret search results based on summary.
    find_redun_seqs   Identify sequences likely encoded on redundant loci
                      predicted for the same species.
-   plot              Plot search results (works after phylogenetic
-                     classification as well).
+   plot              Plot search results.
 
 Commands for phylogenetic analysis using a reference tree:
    add_to_models     Add an alignment, tree, substitution model, names of
                      clade-defining sequences to a directory with other models.
    list_models       Print a list of all usable model/reference tree names in
                      the models directory as defined in the settings file.
-   phylo_class       Determine whether sequences can be classified into one of
-                     several pre-defined orthogroups using an
-                     established backbone phylogeny by either topology testing with
-                     IQtree or simply placing it in the tree with an ML search.
-   sum_phylo_class   Add phylo_class results to summary spreadsheet.
-   interp_phylo*     Interpret results of phylogenetic analyses.
-   srch_ali_space    Iteratively modify an alignment/tree and assess measures
-                     of support for branches of interest to find alignments
-                     that support a given topology.
    get_alt_topos     Take a tree and make copies with every alternative
                      topology for the branches connecting the clades of
                      interest.
@@ -120,13 +110,25 @@ Miscellaneous commands:
    check_imports     Check that all the import statements used in the AMOEBAE
                      repository run without error.
 
-* Not yet functional.
 ''')
         parser.add_argument('command', help='''Specify one of the functionalities
         of amoebae.''')
         # parse_args defaults to [1:] for args, but you need to
         # exclude the rest of the args too, or validation will fail
         args = parser.parse_args(sys.argv[1:2])
+
+        help_for_commands_under_development = """
+   phylo_class       Determine whether sequences can be classified into one of
+                     several pre-defined orthogroups using an
+                     established backbone phylogeny by either topology testing with
+                     IQtree or simply placing it in the tree with an ML search.
+   sum_phylo_class   Add phylo_class results to summary spreadsheet.
+   interp_phylo      Interpret results of phylogenetic analyses.
+   srch_ali_space    Iteratively modify an alignment/tree and assess measures
+                     of support for branches of interest to find alignments
+                     that support a given topology.
+"""
+
         if not hasattr(self, args.command):
             print('Unrecognized command')
             parser.print_help()
@@ -212,7 +214,8 @@ Miscellaneous commands:
             description="""Make a directory with subdirectories and CSV files for
             storing sequence data, etc.""",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
+        parser.add_argument('new_dir_path', help='''Specify the full file path
+                that you want the new directory to have.''')
         # now that we're inside a subcommand, ignore the first
         # two argvs, ie the command (add_to_db) and the subcommand(s)
         # (new_file).
@@ -220,14 +223,25 @@ Miscellaneous commands:
 
         # Define timestamp for directory.
 
-        # Make main directory.
+        # Check that the input path does not exist.
+        assert not os.path.exists(args.new_dir_path), """The path you specified
+        already exists, try a different path."""
 
-        # Make subdirectories.
-
-        # Write blank csv files to subdirectories.
+        # Make main directory by copying template folder to new path.
+        path_to_template_dir = os.path.join(sys.path[0],
+        os.path.join('templates', 'template_data_storage_directory')) 
+        shutil.copytree(path_to_template_dir, args.new_dir_path)
 
         # Print message to prompt user to add the path to the main data
         # directory to their settings.py file.
+        print("""
+        
+        To allow AMOEBAE scripts to locate your new data directory, change the
+        value of the root_amoebae_data_dir variable in the settings.py file to
+        the full path to the directory:
+
+        %s
+        """ % args.new_dir_path)
 
 
     def add_to_dbs(self):
@@ -557,6 +571,21 @@ Miscellaneous commands:
                 settings.py file ('query_info_csv').''', default=None)
         parser.add_argument('--outdir', help='''Path to directory to write
                 search results to.''', default=None)
+        parser.add_argument('--outdir', help='''Path to directory to write
+                search results to.''', default=None)
+
+        parser.add_argument('--blast_report_evalue_cutoff', help='''Maximum
+        E-value for reporting BLAST hits.''', default=0.05)
+        parser.add_argument('--blast_max_target_seqs', help='''Maximum BLAST
+                target sequences to consider.''', default=500)
+        parser.add_argument('--hmmer_report_evalue_cutoff', help='''Maximum
+        E-value for reporting HMMer hits.''', default=0.05)
+        parser.add_argument('--hmmer_report_score_cutoff', help='''Minimum
+        sequence score for reporting HMMer hits.''', default=5)
+        parser.add_argument('--num_threads_similarity_searching',
+                help='''Number of threads to use for running searches.''',
+                default=4)
+
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -632,7 +661,12 @@ Miscellaneous commands:
         # delete intermediate files (search method is determined downstream
         # based on input filename extensions and settings).
         main_outfp = module_amoebae_search.get_redun_hits_in_dbs(args.query_title,
-                query_file_list, db_file_list, csv_file, outdir, timestamp)
+                query_file_list, db_file_list, csv_file, outdir, timestamp,
+                          args.blast_report_evalue_cutoff,
+                          args.blast_max_target_seqs,
+                          args.hmmer_report_evalue_cutoff,
+                          args.hmmer_report_score_cutoff,
+                          args.num_threads_similarity_searching)
 
         # Prompt manual annotation of spreadsheet to define positive
         # (redundant) hits.
@@ -756,6 +790,17 @@ Miscellaneous commands:
         #        (CSV) file, which may already contain search summaries.''')
         parser.add_argument('fwd_srch_dir', help='''Path to directory that will
                 contain forward search output files.''')
+        parser.add_argument('--blast_report_evalue_cutoff', help='''Maximum
+        E-value for reporting BLAST hits.''', default=0.05)
+        parser.add_argument('--blast_max_target_seqs', help='''Maximum BLAST
+                target sequences to consider.''', default=500)
+        parser.add_argument('--hmmer_report_evalue_cutoff', help='''Maximum
+        E-value for reporting HMMer hits.''', default=0.05)
+        parser.add_argument('--hmmer_report_score_cutoff', help='''Minimum
+        sequence score for reporting HMMer hits.''', default=5)
+        parser.add_argument('--num_threads_similarity_searching',
+                help='''Number of threads to use for running searches.''',
+                default=4)
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -798,7 +843,12 @@ Miscellaneous commands:
 
         # Run searches.
         module_amoebae_search.run_all_searches(query_file_list, db_file_list,
-                args.fwd_srch_dir)
+                args.fwd_srch_dir,
+                     args.blast_report_evalue_cutoff,
+                     args.blast_max_target_seqs,
+                     args.hmmer_report_evalue_cutoff,
+                     args.hmmer_report_score_cutoff,
+                     args.num_threads_similarity_searching)
 
 
     def sum_fwd_srch(self):
@@ -811,6 +861,14 @@ Miscellaneous commands:
         parser.add_argument('csv_file', help='''Path to summary spreadsheet
                 (CSV) file, which may already contain search summaries, or may
                 not exist yet.''')
+        # Optional arguments.
+        parser.add_argument('--max_evalue', help='''Maximum E-value threshold
+                for reporting forward search hits.''', default=0.05)
+        parser.add_argument('--max_gap_between_tblastn_hsps', help='''Maximum
+        number of nucleotide bases between TBLASTN HSPs to be considered part
+        of the same gene locus. This is important, because it will be assumed
+        that HSP separated by more than this number of nucleotide bases are not
+        part of the same gene or TBLASTN "hit".''', default=10000)
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -840,7 +898,8 @@ Miscellaneous commands:
         # Loop over files in the correct order, extract information, and write
         # to csv spreadsheet.
         final_outfp = module_amoebae_search.write_fwd_srch_res_to_csv(args.fwd_srch_out,
-                query_file_list, db_file_list, args.csv_file, timestamp)
+                query_file_list, db_file_list, args.csv_file, timestamp,
+                args.max_evalue, args.max_gap_between_tblastn_hsps)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nForward search results written/appended to
@@ -981,6 +1040,17 @@ Miscellaneous commands:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('rev_srch_dir', help='''Path to directory that will
                 contain output of searches.''')
+        parser.add_argument('--blast_report_evalue_cutoff', help='''Maximum
+        E-value for reporting BLAST hits.''', default=0.05)
+        parser.add_argument('--blast_max_target_seqs', help='''Maximum BLAST
+                target sequences to consider.''', default=500)
+        parser.add_argument('--hmmer_report_evalue_cutoff', help='''Maximum
+        E-value for reporting HMMer hits.''', default=0.05)
+        parser.add_argument('--hmmer_report_score_cutoff', help='''Minimum
+        sequence score for reporting HMMer hits.''', default=5)
+        parser.add_argument('--num_threads_similarity_searching',
+                help='''Number of threads to use for running searches.''',
+                default=4)
         #parser.add_argument('csv_file', help='''Path to summary spreadsheet
         #        (CSV) file, which contains a summary of forward search(es).''')
         #parser.add_argument('databases', help='''Database filename (in database
@@ -1070,7 +1140,12 @@ Miscellaneous commands:
         # Run searches (query_file_list contains full filepaths, so can use
         # query_subdir contents).
         module_amoebae_search.run_all_searches(query_file_list, db_file_list,
-                args.rev_srch_dir, query_dir)
+                args.rev_srch_dir, query_dir,
+                     args.blast_report_evalue_cutoff,
+                     args.blast_max_target_seqs,
+                     args.hmmer_report_evalue_cutoff,
+                     args.hmmer_report_score_cutoff,
+                     args.num_threads_similarity_searching)
 
         # Report output.
         print('\n\nReverse search results written to directory:\n\t' +

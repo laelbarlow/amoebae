@@ -13,77 +13,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # 
+"""This file contains definitions of variables used by scripts in the AMOEBAE
+toolkit. You will need to modify all paths to work on your machine.
+"""
 
-# This file contains definitions of variables used by scripts in the AMOEBAE
-# toolkit. You will need to modify all paths to work on your machine.
-
-
+#############################################################################
 # The following settings are required for AMOEBAE to find the data files that
 # you have curated.
+
+# Root directory of your root AMOEBAE data storage directory (this organization
+# is optional, but matches that of the template data directory and allows you
+# to avoid modifying the variables for paths to specific sub-directories and
+# files).
+root_amoebae_data_dir = "/Full/Path/To/Your/Main/Data/Storage/Directory"
+
 
 # Set path to directory containing genome data (predicted peptide sequences,
 # nucleotide scaffolds, etc.).
 dbdirpath =\
-'/Path/To/Genomes'
+os.path.join(root_amoebae_data_dir, 'Genomes')
 
 # Set path to csv file with information about the relevant genome data.
 db_info_csv =\
-'/Path/To/Genomes/0_genome_info.csv'
+os.path.join(root_amoebae_data_dir, os.path.join(dbdirpath,
+    '0_genome_info.csv'))
 
 # Set path to directory containing query files (.faa, .afaa, etc.).
 querydirpath =\
-'/Path/To/Queries'
+os.path.join(root_amoebae_data_dir, 'Queries')
 
 # Set path to csv file with information about the relevant query files.
 query_info_csv =\
-'/Path/To/Queries/0_query_info.csv'
+os.path.join(root_amoebae_data_dir, os.path.join(querydirpath,
+    '0_query_info.csv'))
 
 # Set path to directory containing reference tree (and alignment) files.
 model_dir_path =\
-'/Path/To/Models'
+os.path.join(root_amoebae_data_dir, 'Models')
 
 # Set path to csv file with information about reference tree (and alignment)
 # files.
 model_info_csv =\
-'/Path/To/Models/0_models_info.csv'
+os.path.join(root_amoebae_data_dir, os.path.join(model_dir_path,
+    '0_models_info.csv'))
 
 
-# The following settings are required for AMOEBAE to setup similarity
-# searches.
-
-# Set maximum E-value cutoff to be used for similarity searches.
-evalue_cutoff = 0.05
-
-# Set maximum E-value cutoff for BLAST+ to report hits.
-blast_report_evalue_cutoff = 0.05
-
-# Set maximum E-vale for hmmsearch to report hits.
-hmmer_report_evalue_cutoff = 0.05
-
-# Set minimum sequence score for hmmsearch to report hits.
-hmmer_report_score_cutoff = 5
-
-# "Maximum number of aligned sequences to keep". Default is 500 for BLAST.
-# Note: Top hit is not necessarily the best match if a low max_target_seqs is
-# specified!
-blast_max_target_seqs = 500
-
-# Set the maximum number of forward search hits for which to perform reverse
-# searches into the query database.
-max_num_reverse_searches_per_database = 50
-
-# Set the number of threads to be use for similarity searching (blastp,
-# hmmsearch, etc.).
-num_threads_similarity_searching = 4
-
-# Set the maximum number of nucleotides between HSPs to be concatenated by
-# functions in the search_scaffolds. This is very important, because it will be
-# assumed that HSPs separated by more than this many base pairs from the top
-# scoring HSP in a cluster (in the tblastn results) are not part of the same
-# gene.
-max_gap = 10000
-
-
+#############################################################################
 # The following settings are required for AMOEBAE to write scripts to be run on
 # remote servers (which may not have all the dependencies of AMOEBAE
 # installed).
@@ -105,7 +80,7 @@ bash_script_content =\
 #PBS -N search
 #PBS -l nodes=1,walltime=100:00:00
 #PBS -q default
-#PBS -M lael@ualberta.ca
+##PBS -M your email here
 #PBS -m abe
 ##Print the Host name of Node
 echo "Hostname is " $HOSTNAME
@@ -118,6 +93,7 @@ date
 """
 
 
+#############################################################################
 # The following are miscelaneous settings.
 
 # Set variables to be used for the align_fa.py script.

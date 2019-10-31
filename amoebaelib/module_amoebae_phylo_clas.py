@@ -1822,7 +1822,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
 
             # Prevent analyzing reverse searches when the forward hit rank is over
             # a certain number.
-            elif row['Forward hit rank'] > settings.max_num_reverse_searches_per_database:
+            elif row['Forward hit rank'] > 1000: #settings.max_num_reverse_searches_per_database:
                 pass
 
             else:
@@ -1950,7 +1950,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
 
             # Prevent analyzing reverse searches when the forward hit rank is over
             # a certain number.
-            elif row['Forward hit rank'] > settings.max_num_reverse_searches_per_database:
+            elif row['Forward hit rank'] > 1000: #settings.max_num_reverse_searches_per_database:
                 pass
 
             else:

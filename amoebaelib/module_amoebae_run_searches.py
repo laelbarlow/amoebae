@@ -15,8 +15,6 @@
 # 
 """Module for functions for amoebae script that are for performing
 similarity searches, but do not require installation of pandas library.
-
-NO PANDAS.
 """
 import settings
 import os
@@ -161,7 +159,15 @@ def get_out_hmm_path(new_afa_path):
     return hmm_file_path
 
 
-def run_any_search(queryfile, dbfile, outfile):
+def run_any_search(queryfile,
+                   dbfile,
+                   outfile,
+                   blast_report_evalue_cutoff,
+                   blast_max_target_seqs,
+                   hmmer_report_evalue_cutoff,
+                   hmmer_report_score_cutoff,
+                   num_threads_similarity_searching
+                   ):
     """Run similarity search.
 
     Import info from settings.py to specify options for running external
@@ -180,12 +186,12 @@ def run_any_search(queryfile, dbfile, outfile):
 
     # Get relevant settings.
     # Get cutoffs for recording hits.
-    blast_evalcut = str(settings.blast_report_evalue_cutoff)
-    blast_max_target_seqs = str(settings.blast_max_target_seqs)
-    hmmer_evalcut = str(settings.hmmer_report_evalue_cutoff)
-    hmmer_scorecut = str(settings.hmmer_report_score_cutoff)
+    blast_evalcut = str(blast_report_evalue_cutoff)
+    blast_max_target_seqs = str(blast_max_target_seqs)
+    hmmer_evalcut = str(hmmer_report_evalue_cutoff)
+    hmmer_scorecut = str(hmmer_report_score_cutoff)
     # Get number of threads to use.
-    num_threads = str(settings.num_threads_similarity_searching)
+    num_threads = str(num_threads_similarity_searching)
 
     # Construct search command.
     run_command = []
@@ -246,7 +252,16 @@ def run_any_search(queryfile, dbfile, outfile):
     return search_descr
 
 
-def run_all_searches(query_file_list, db_file_list, outdir, query_dir=None):
+def run_all_searches(query_file_list,
+                     db_file_list,
+                     outdir,
+                     blast_report_evalue_cutoff,
+                     blast_max_target_seqs,
+                     hmmer_report_evalue_cutoff,
+                     hmmer_report_score_cutoff,
+                     num_threads_similarity_searching,
+                     query_dir=None
+                     ):
     """Search with every query file in a given list into every database file in
     another given list using appropriate methods.
     """
@@ -316,7 +331,12 @@ def run_all_searches(query_file_list, db_file_list, outdir, query_dir=None):
 
                     # Run the similarity search and get a description of the search
                     # command (write to a log file?).
-                    command_descr = run_any_search(qfull, dfull, outfile)
+                    command_descr = run_any_search(qfull, dfull, outfile,
+                                                   blast_report_evalue_cutoff,
+                                                   blast_max_target_seqs,
+                                                   hmmer_report_evalue_cutoff,
+                                                   hmmer_report_score_cutoff,
+                                                   num_threads_similarity_searching)
 
                     # Write description of search to log file.
                     o.write(command_descr + '\n')

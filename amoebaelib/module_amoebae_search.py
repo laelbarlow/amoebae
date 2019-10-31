@@ -132,8 +132,18 @@ def get_corr_evalue(evalue):
     return evalue
 
 
-def get_redun_hits_in_dbs(query_title, query_file_list, db_file_list, csv_file,
-        outdir, timestamp):
+def get_redun_hits_in_dbs(query_title,
+                          query_file_list,
+                          db_file_list,
+                          csv_file,
+                          outdir,
+                          timestamp,
+                          blast_report_evalue_cutoff,
+                          blast_max_target_seqs,
+                          hmmer_report_evalue_cutoff,
+                          hmmer_report_score_cutoff,
+                          num_threads_similarity_searching
+                          ):
     """Finds all items (sequences or profiles) in each given database file
     (fasta or hmm databases) that may be positive hits for query title (e.g.,
     'VAMP7' or 'R-SNAREs') for each given query file (sequence or profile) and
@@ -163,7 +173,14 @@ def get_redun_hits_in_dbs(query_title, query_file_list, db_file_list, csv_file,
             csvh.write(header_line)
 
     # Use another function to run searches and write results to outputdir.
-    run_all_searches(query_file_list, db_file_list, outdir)
+    run_all_searches(query_file_list,
+                     db_file_list,
+                     outdir,
+                     blast_report_evalue_cutoff,
+                     blast_max_target_seqs,
+                     hmmer_report_evalue_cutoff,
+                     hmmer_report_score_cutoff,
+                     num_threads_similarity_searching)
 
     # Manage assignment of query title(s).
     find_query_titles = True
@@ -303,7 +320,8 @@ def get_hit_obj_for_hsp_cluster(query_res_obj, cluster):
     return hit_obj
 
 
-def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list):
+def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list,
+        max_evalue, max_gap_setting):
     """Parses search result file and adds a corresponding row to an output
     pandas dataframe.
     """
@@ -376,7 +394,7 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list):
         if parsed_file_obj.program == 'tblastn':
             # Get list of lists of HSPs corresponding to each potential gene in
             # the subject sequences.
-            max_gap = settings.max_gap
+            max_gap = max_gap_setting
             hsp_clusters = split_tblastn_hits_into_separate_genes(query_res_obj, max_gap)
 
             hit_num = -1
@@ -463,7 +481,7 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list):
                 # Decide whether the E-value is low enough to meet the
                 # cutoff.
                 decis = '-'
-                if e_cur <= settings.evalue_cutoff:
+                if e_cur <= max_evalue:
                     decis = '+'
                 new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
@@ -539,7 +557,7 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list):
                 # Decide whether the E-value is low enough to meet the
                 # cutoff.
                 decis = '-'
-                if e_cur <= settings.evalue_cutoff:
+                if e_cur <= max_evalue:
                     decis = '+'
                 new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
@@ -557,7 +575,7 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list):
 
 
 def write_fwd_srch_res_to_csv(outdir, query_file_list, db_file_list,
-        csv_file, timestamp):
+        csv_file, timestamp, max_evalue, max_gap_setting):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -637,7 +655,7 @@ def write_fwd_srch_res_to_csv(outdir, query_file_list, db_file_list,
                     #        srch_file_prog_vers, srch_file_format,
                     #        column_label_list)
                     subdf = get_rows_for_fwd_srch_df(df, q, d, search_result_path,
-                            column_label_list)
+                            column_label_list, max_evalue, max_gap_setting)
 
                     # Append sub-dataframe to full dataframe.
                     df = df.append(subdf, ignore_index=True)
