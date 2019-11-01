@@ -395,7 +395,7 @@ def make_coulson_plot(column_labels_simple,
                     for x in paralogue_counts_list:
                         if x > 0:
                             # Gray if at least one paralogue found.
-                            cols.append('xkcd:green')
+                            cols.append('xkcd:cobalt')
                         else:
                             # White if no paralogues found.
                             cols.append('white')

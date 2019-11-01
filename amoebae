@@ -861,7 +861,7 @@ Miscellaneous commands:
                 not exist yet.''')
         # Optional arguments.
         parser.add_argument('--max_evalue', help='''Maximum E-value threshold
-                for reporting forward search hits.''', default=0.05)
+                for reporting forward search hits.''', default=0.0005)
         parser.add_argument('--max_gap_between_tblastn_hsps', help='''Maximum
         number of nucleotide bases between TBLASTN HSPs to be considered part
         of the same gene locus. This is important, because it will be assumed
@@ -1170,7 +1170,7 @@ Miscellaneous commands:
         parser.add_argument('--min_evaldiff', help='''Minimum difference in
                 E-value order of magnitude between top reverse search hit and first
                 reverse search hit that is not redundant with the original
-                query.''', default=2)
+                query.''', default=5)
         parser.add_argument('--aasubseq', help='''Use only the portion of each
                 (amino acid) forward hit sequence that aligns to the original query
                 used (top HSP subject sequence). This is default for nucleotide
