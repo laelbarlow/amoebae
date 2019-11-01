@@ -363,7 +363,8 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list,
     new_row_df.loc[0]['Query species (if applicable)'] = module_amoebae.get_query_taxon_from_csv(q)
 
     # Get "taxon" from query filename.
-    taxon = module_amoebae.get_query_taxon_from_filename(q)
+    #taxon = module_amoebae.get_query_taxon_from_filename(q)
+    taxon = module_amoebae.get_query_taxon_from_csv(q)
 
     # Use query "taxon" to look up the database, if any, that
     # the query came from (in the query info csv file).
@@ -917,7 +918,7 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
     assert os.path.isdir(outdir)
     assert len(query_file_list) > 0
     assert os.path.isfile(csv_file)
-    assert os.path.isfile(redun_hit_csv)
+    assert redun_hit_csv is None or os.path.isfile(redun_hit_csv)
 
     # Get database info spreadsheet path from settings module.
     db_info_csv = settings.db_info_csv

@@ -232,7 +232,10 @@ def get_query_taxon_from_filename(query_filename):
 
         where neither query_title nor dbname have underscores in them.
     """
-    return query_filename.split('_')[1]
+    try:
+        return query_filename.split('_')[1]
+    except:
+        return query_filename.rsplit('.', 1)[0]
 
 
 def get_query_title_from_filename(query_filename):

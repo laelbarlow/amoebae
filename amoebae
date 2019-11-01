@@ -571,8 +571,6 @@ Miscellaneous commands:
                 settings.py file ('query_info_csv').''', default=None)
         parser.add_argument('--outdir', help='''Path to directory to write
                 search results to.''', default=None)
-        parser.add_argument('--outdir', help='''Path to directory to write
-                search results to.''', default=None)
 
         parser.add_argument('--blast_report_evalue_cutoff', help='''Maximum
         E-value for reporting BLAST hits.''', default=0.05)
@@ -1140,12 +1138,13 @@ Miscellaneous commands:
         # Run searches (query_file_list contains full filepaths, so can use
         # query_subdir contents).
         module_amoebae_search.run_all_searches(query_file_list, db_file_list,
-                args.rev_srch_dir, query_dir,
+                args.rev_srch_dir,
                      args.blast_report_evalue_cutoff,
                      args.blast_max_target_seqs,
                      args.hmmer_report_evalue_cutoff,
                      args.hmmer_report_score_cutoff,
-                     args.num_threads_similarity_searching)
+                     args.num_threads_similarity_searching,
+                     query_dir)
 
         # Report output.
         print('\n\nReverse search results written to directory:\n\t' +
@@ -1171,7 +1170,7 @@ Miscellaneous commands:
         parser.add_argument('--min_evaldiff', help='''Minimum difference in
                 E-value order of magnitude between top reverse search hit and first
                 reverse search hit that is not redundant with the original
-                query.''', default=0)
+                query.''', default=2)
         parser.add_argument('--aasubseq', help='''Use only the portion of each
                 (amino acid) forward hit sequence that aligns to the original query
                 used (top HSP subject sequence). This is default for nucleotide
