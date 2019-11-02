@@ -133,8 +133,10 @@ def search_result_filepath(query_filename, db_filename, dirpath):
     filename, and database filename. This is for both naming and identifying
     filepaths after searches have been performed. 
     """
+    #outfile = os.path.join(dirpath, os.path.basename(query_filename).rsplit('.', 1)[0] + '__' +\
+    #        db_filename.rsplit('.', 1)[0] + '_srch_out.txt')
     outfile = os.path.join(dirpath, os.path.basename(query_filename).rsplit('.', 1)[0] + '__' +\
-            db_filename.rsplit('.', 1)[0] + '_srch_out.txt')
+            db_filename.rsplit('.', 1)[0] + '_' + db_filename.rsplit('.', 1)[1] + '_srch_out.txt')
     return outfile
 
 
@@ -295,7 +297,6 @@ def run_all_searches(query_file_list,
         for q in query_file_list:
             # Loop over database files.
             for d in db_file_list:
-                # Temporary 'if' statement???
                 if q.rsplit('.', 1)[1] == 'afaa' and d.rsplit('.', 1)[1] == 'fna':
                     warning_text = """\nWARNING: Not searching with profile query %s
                     in nucleotide data %s\n\n""" % (q, d)
@@ -311,18 +312,20 @@ def run_all_searches(query_file_list,
 
                     # Get full filepaths, and verify existence.
                     qfull = None
-                    if os.path.isfile(q):
-                        qfull = q
-                    else:
-                        qfull = os.path.join(query_dir, q)
+                    #if os.path.isfile(q):
+                    #    qfull = q
+                    #else:
+                    #    qfull = os.path.join(query_dir, q)
+                    qfull = os.path.join(query_dir, q)
                     assert os.path.isfile(qfull), """Specified query file path is
                     not a file: %s""" % qfull
 
                     dfull = None
-                    if os.path.isfile(d):
-                        dfull = d
-                    else:
-                        dfull = os.path.join(db_dir, d)
+                    #if os.path.isfile(d):
+                    #    dfull = d
+                    #else:
+                    #    dfull = os.path.join(db_dir, d)
+                    dfull = os.path.join(db_dir, d)
                     assert os.path.isfile(dfull), """Specified database file path
                     is not a file: %s""" % dfull
 

@@ -16,6 +16,7 @@
 """This file contains definitions of variables used by scripts in the AMOEBAE
 toolkit. You will need to modify all paths to work on your machine.
 """
+import os
 
 #############################################################################
 # The following settings are required for AMOEBAE to find the data files that
