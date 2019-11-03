@@ -35,7 +35,7 @@ system:
 
 - HMMer3 ([Eddy, 1998](https://doi.org/10.1093/bioinformatics/14.9.755))
 
-- IQtree ([Nguyen *et  al*., 2009](https://academic.oup.com/mbe/article/32/1/268/2925592))
+- IQtree ([Nguyen *et  al*., 2015](https://academic.oup.com/mbe/article/32/1/268/2925592))
 
 - MUSCLE ([Edgar, 2004](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-5-113))
 
