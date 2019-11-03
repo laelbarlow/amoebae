@@ -19,7 +19,8 @@
 # Import necessary modules.
 import unittest
 from ete3 import Tree
-from replace_nodes_in_tree import replace_nodes_of_interest_in_tree
+# Temporarily commented out:
+#from replace_nodes_in_tree import replace_nodes_of_interest_in_tree
 
 # Define a class with functions for performing tests.
 class TestReplaceNodesInTree(unittest.TestCase):

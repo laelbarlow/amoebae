@@ -15,6 +15,9 @@
 # 
 """Module for visualizing phylogenetic trees (parsing newick trees and writing
 as formatted pdf files with images).
+
+***You will need to have LaTeX installed on your system for the PDF
+files to be generated properly.
 """
 
 import sys

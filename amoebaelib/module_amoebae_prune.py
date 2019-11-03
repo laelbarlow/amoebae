@@ -39,9 +39,10 @@ import glob
 #from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
 
 from module_afa_to_nex import delete_extra_mesquite_lines
+from module_amoebae_name_replace import get_conversion_dict_from_table
 from module_amoebae_name_replace import write_afa_with_code_names,\
-    write_newick_tree_with_uncoded_names, get_conversion_dict_from_table,\
-    write_newick_tree_with_coded_names
+write_newick_tree_with_uncoded_names,\
+write_newick_tree_with_coded_names
 
 # Import functions for working with sequences, alignments, and trees.
 from ete3 import Tree, TreeStyle, Tree, TextFace, add_face_to_node

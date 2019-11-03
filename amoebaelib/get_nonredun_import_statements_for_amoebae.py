@@ -110,13 +110,15 @@ sys.path.append(os.path.join(sys.path[0],'misc_scripts'))
             print(str(num) + '. ' + i[0] + '  # ' + i[1])
             #o.write('print(\"' + i.rstrip('\\') + '\")' + '\n')
             o.write(i[0] + '\n')
+
+        # Write line to print success message.
+        o.write('\nprint("All import statements ran successfully.")')
     
     
     # Run the output file to see whether all the modules could be imported.
     print('\nRunning output script to test import statements...')
     subprocess.call(['chmod', 'a+x', output_path])
     subprocess.call(['./' + os.path.basename(output_path)], cwd=sys.path[0])
-    print('\nAll import statements ran without error.')
 
     # Remove output file.
     os.remove(output_path)
