@@ -345,7 +345,7 @@ def get_species_for_db_filename(db_filename):
     return sp
 
 
-def write_seqs_to_fasta(csv_file, output_fasta, abbrev=False,
+def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
         paralogue_names=False, only_descr=False, subseq=False,
         all_hits=False, split_by_top_rev_srch_hit=None,
         split_by_query_title=None):
@@ -354,7 +354,7 @@ def write_seqs_to_fasta(csv_file, output_fasta, abbrev=False,
     """
     # Define output subdirectories.
     #subdirpath = output_fasta.rsplit('.', 1)[0] + '_fasta_files'
-    subdirpath = output_fasta + '_fasta_files'
+    subdirpath = output_dir + '_fasta_files'
     assert not os.path.isdir(subdirpath), """Output directory already
     exists: %s""" % subdirpath
 

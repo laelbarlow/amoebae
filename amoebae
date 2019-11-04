@@ -1844,12 +1844,12 @@ Miscellaneous commands:
                 "rev_srch_20180924122402-1")''', default=None)
         args = parser.parse_args(sys.argv[2:])
 
-        output_fasta = None
-        if args.output_fasta is None:
+        output_dir = None
+        if args.output_dir is None:
            #output_fasta = args.csv_file.rsplit('.', 1)[0] + '.fa' 
-           output_fasta = args.csv_file.rsplit('.', 1)[0]
+           output_dir = args.csv_file.rsplit('.', 1)[0]
 
-        module_amoebae.write_seqs_to_fasta(args.csv_file, output_fasta,
+        module_amoebae.write_seqs_to_fasta(args.csv_file, output_dir,
                 args.abbrev, args.paralogue_names, args.only_descr, args.subseq, args.all_hits,
                 args.split_by_top_rev_srch_hit, args.split_by_query_title)
 
