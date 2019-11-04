@@ -352,265 +352,107 @@ def write_seqs_to_fasta(csv_file, output_fasta, abbrev=False,
     """Takes a csv file (output by amoebae) and writes listed sequences to a
     fasta file.
     """
+    # Define output subdirectories.
+    #subdirpath = output_fasta.rsplit('.', 1)[0] + '_fasta_files'
+    subdirpath = output_fasta + '_fasta_files'
+    assert not os.path.isdir(subdirpath), """Output directory already
+    exists: %s""" % subdirpath
+
     # Read csv file into a pandas dataframe.
     df = pd.read_csv(csv_file)
 
     # Do it differently depending on if all hits are to be included or not.
     seq_objs = []
-    if not all_hits:
-        # Get column header for column with Yes/No data.
-        yes_no_col = None
-
-        # Get column header for column listing top reverse search hit id or
-        # description.
-        top_rev_hit_id_col = None
-        if split_by_top_rev_srch_hit is not None:
-            for header in df.columns:
-                if header.startswith('Top reverse hit description'):
-                    if split_by_top_rev_srch_hit in header:
-                        top_rev_hit_id_col = header
-                        break
-
+    #if not all_hits: # ******
+    # Get column header for column with Yes/No data.
+    yes_no_col = None
+    if all_hits:
+        # Use all forward hits.
+        pass
+    else:
+        # Look a column to use to indicate whether a hit meets the criteria or
+        # not.
+        for header in df.columns:
+            if header.startswith('Represents an identifiably unique paralogue'):
+                yes_no_col = header
+                break
+        if yes_no_col is None:
             for header in df.columns:
                 if header == 'Collective interpretation of reverse search results':
                     yes_no_col = header
                     break
-        else:
-            for header in df.columns:
-                if header.startswith('Represents an identifiably unique paralogue'):
-                    yes_no_col = header
-                    break
-
-        # Check that the column was identified.
         assert yes_no_col is not None, """Could not determine which column to
-        use to decide whether each sequence should be written. Did you mean to
-        use the all_hits option?"""
+        use to decide whether each sequence should be written."""
 
-        if split_by_top_rev_srch_hit is not None:
-            # Iterate through rows and construct a list of relevant sequence objects.
-            rev_srch_top_hit_seq_obj_dict = {}
-            for index, row in df.iterrows():
-                result = row[yes_no_col]
-                if result == 'Yes' or result == '+': 
-                    acc = row['Forward hit accession']
-                    description = None
-                    seq = None
-                    if subseq or row['Forward search method'].startswith('tblastn'):
-                        description = row['Forward hit description of subsequence(s) that align(s) to query']
-                        seq = row['Forward hit subsequence(s) that align(s) to query'] 
-                    else:
-                        description = row['Forward hit description']
-                        seq = row['Forward hit sequence'] 
-                    db_file = row['Subject database species (if applicable)']
+    # Get column header for column listing top reverse search hit id or
+    # description if necessary.
+    top_rev_hit_id_col = None
+    if split_by_top_rev_srch_hit is not None:
+        for header in df.columns:
+            if header.startswith('Top reverse hit description'):
+                if split_by_top_rev_srch_hit in header:
+                    top_rev_hit_id_col = header
+                    break
+        assert top_rev_hit_id_col is not None, """Could not determine which column
+        contains top reverse search hit sequence IDs."""
 
-                    # Use the species name if writing the file for input to
-                    # phylogenetics software.
-                    if abbrev:
-                        description = db_file.rsplit('.', 1)[0]
-
-                        # The output sequences may be aligned and visualized using
-                        # Mesquite, and if an alignment is saved in Mesquite, then
-                        # space characters will be randomly (not in all cases) replaced
-                        # with underscores, because Mesquite does not like nexus
-                        # alignments to have space characters in taxon names. This
-                        # prevents downstream parsing of the sequence names. So, if the
-                        # abbrev option is used, and the sequences are destined for an
-                        # alignment for phylogenetic analysis, etc. then it is best to
-                        # avoid spaces, and use a double-underscore to separate the
-                        # accession number from the species name (and convert that back
-                        # to a space in the final output tree file).
-                        description = description.replace(' ', '_')
-
-
-                    # Using paralogue names only works if not using the
-                    # abbreviation option.
-                    elif paralogue_names:
-                        col_name = None
-                        for x in df.columns:
-                            if x.startswith('Paralogue name '):
-                                col_name = x
-                        assert col_name is not None, """Could not find column with
-                        paralogue names."""
-                        description = df.at[index, col_name]
-
-                    elif only_descr:
-                        description = ''
-                        orig_descr = row['Forward hit description'].strip('\"')
-                        if len(orig_descr.split(' ', 1)) < 2:
-                            acc = orig_descr.split('_', 1)[0] + '__' +\
-                            orig_descr.split('_', 1)[1].replace(' ', '_')
-                        else:
-                            acc = orig_descr.split(' ', 1)[0] + '__' +\
-                            orig_descr.split(' ', 1)[1].replace(' ', '_')
-                    
-                    # Instantiate a sequence object for the sequence of interest to
-                    # be written to output.
-                    seq_obj = get_seq_obj_from_srch_res_csv_info(acc, description,
-                            seq, abbrev, paralogue_names)
-
-                    # Determine if the top hit id is already a key in the dict,
-                    # and add the sequence object to the list that is the value
-                    # for the appropriate key.
-                    top_rev_hit_id = row[top_rev_hit_id_col]
-                    if top_rev_hit_id not in rev_srch_top_hit_seq_obj_dict.keys():
-                        rev_srch_top_hit_seq_obj_dict[top_rev_hit_id] = [seq_obj]
-                    else:
-                        rev_srch_top_hit_seq_obj_dict[top_rev_hit_id] =\
-                        rev_srch_top_hit_seq_obj_dict[top_rev_hit_id] + [seq_obj]
-
-                    #else:
-                    #    seq_objs.append(seq_obj)
-
-            # Write sequences to different output files according to the
-            # reverse search hit that they retrieved.
-            for seq_obj_list_key in rev_srch_top_hit_seq_obj_dict.keys():
-                specific_output_fasta_path = output_fasta.rsplit('.', 1)[0] + '_' +\
-                seq_obj_list_key.strip().replace(' ', '_').replace('\"', '').replace('[', '').replace(']', '') + '_matches.fa' 
-                print(specific_output_fasta_path)
-                with open(specific_output_fasta_path, 'w') as o:
-                    SeqIO.write(rev_srch_top_hit_seq_obj_dict[seq_obj_list_key], o, 'fasta')
-
-        # Split sequences into files based on query title if option selected.
-        elif split_by_query_title:
-            # Define output subdirectory.
-            subdirpath = output_fasta.rsplit('.', 1)[0] + '_fasta_split_by_query_title'
-            assert not os.path.isdir(subdirpath), """Output directory already
-            exists."""
-
-            # Iterate through rows and construct a list of relevant sequence
-            # objects for each query title.
-            query_title_seq_obj_dict = {}
-            for index, row in df.iterrows():
-                result = row[yes_no_col]
-                if result == 'Yes' or result == '+': 
-                    program = row['Forward search method']
-                    db_file = row['Subject database species (if applicable)']
-                    acc = row['Forward hit accession']
-                    description = None
-                    seq = None
-                    if not program.startswith('tblastn'):
-                        if subseq:
-                            description = row['Forward hit description of subsequence(s) that align(s) to query']
-                            seq = row['Forward hit subsequence(s) that align(s) to query'] 
-                        else:
-                            description = row['Forward hit description']
-                            seq = row['Forward hit sequence'] 
-                    else:
-                        # If the hit is a tblastn (nucleotide) hit, then always
-                        # use the subsequence.
-                        description = row['Forward hit description of subsequence(s) that align(s) to query']
-                        seq = row['Forward hit subsequence(s) that align(s) to query'] 
-
-
-                    # Use the species name if writing the file for input to
-                    # phylogenetics software.
-                    if abbrev:
-                        description = db_file.rsplit('.', 1)[0]
-                        if program.startswith('tblastn'):
-                            hit_range = get_hit_range_from_hsp_ranges(row['Forward hit coordinates of subsequence(s) that align(s) to query'])
-                            description = str(hit_range[0]) + '...' + str(hit_range[1]) + '__'\
-                                    + description
-
-                        # The output sequences may be aligned and visualized using
-                        # Mesquite, and if an alignment is saved in Mesquite, then
-                        # space characters will be randomly (not in all cases) replaced
-                        # with underscores, because Mesquite does not like nexus
-                        # alignments to have space characters in taxon names. This
-                        # prevents downstream parsing of the sequence names. So, if the
-                        # abbrev option is used, and the sequences are destined for an
-                        # alignment for phylogenetic analysis, etc. then it is best to
-                        # avoid spaces, and use a double-underscore to separate the
-                        # accession number from the species name (and convert that back
-                        # to a space in the final output tree file).
-                        description = description.replace(' ', '_')
-
-                    elif paralogue_names:
-                        col_name = None
-                        for x in df.columns:
-                            if x.startswith('Paralogue name '):
-                                col_name = x
-                        assert col_name is not None, """Could not find column with
-                        paralogue names."""
-                        description = df.at[index, col_name]
-
-                    elif only_descr:
-                        description = ''
-                        orig_descr = row['Forward hit description'].strip('\"')
-                        if len(orig_descr.split(' ', 1)) < 2:
-                            acc = orig_descr.split('_', 1)[0] + '__' +\
-                            orig_descr.split('_', 1)[1].replace(' ', '_')
-                        else:
-                            acc = orig_descr.split(' ', 1)[0] + '__' +\
-                            orig_descr.split(' ', 1)[1].replace(' ', '_')
-                    
-                    # Instantiate a sequence object for the sequence of interest to
-                    # be written to output.
-                    seq_obj = get_seq_obj_from_srch_res_csv_info(acc, description,
-                            seq, abbrev, paralogue_names)
-
-                    # Determine if the top hit id is already a key in the dict,
-                    # and add the sequence object to the list that is the value
-                    # for the appropriate key.
-                    query_title = row['Query title']
-                    if query_title not in query_title_seq_obj_dict.keys():
-                        query_title_seq_obj_dict[query_title] = [seq_obj]
-                    else:
-                        query_title_seq_obj_dict[query_title] =\
-                        query_title_seq_obj_dict[query_title] + [seq_obj]
-
-                    # ????
-                    #else:
-                    #    seq_objs.append(seq_obj)
-
-            # Write sequences to different output files according to the
-            # reverse search hit that they retrieved.
-            os.mkdir(subdirpath)
-            for seq_obj_list_key in query_title_seq_obj_dict.keys():
-                specific_output_fasta_path = os.path.join(subdirpath,\
-                        seq_obj_list_key.strip() + '_matches.fa')
-                print(specific_output_fasta_path)
-                with open(specific_output_fasta_path, 'w') as o:
-                    SeqIO.write(query_title_seq_obj_dict[seq_obj_list_key], o, 'fasta')
-
-        # ????
+    # Iterate through rows and construct a list of relevant sequence
+    # objects for each query title or for each top reverse search hit.
+    query_title_seq_obj_dict = {}
+    rev_srch_top_hit_seq_obj_dict = {}
+    for index, row in df.iterrows():
+        # Determine whether the forward hit sequence recorded in this row
+        # should be included in the output file(s).
+        use_this_fwd_hit = False
+        if yes_no_col is not None:
+            result = row[yes_no_col]
+            if result == 'Yes' or result == '+': 
+                use_this_fwd_hit = True
         else:
-            print('YYYYYYYYYYYY')
-            # Write sequences to output file.
-            with open(output_fasta, 'w') as o:
-                #for seq_obj in seq_objs:
-                SeqIO.write(seq_objs, o, 'fasta') # DOES NOT WORK.
+            use_this_fwd_hit = True
 
-    else:
-        # Iterate through rows and construct a list of relevant sequence objects.
-        for index, row in df.iterrows():
+        # Find the information for constructing a sequence object for this
+        # forward hit.
+        if use_this_fwd_hit:
+            program = row['Forward search method']
+            db_file = row['Subject database species (if applicable)']
             acc = row['Forward hit accession']
             description = None
             seq = None
-            if subseq:
+            if not program.startswith('tblastn'):
+                if subseq:
+                    description = row['Forward hit description of subsequence(s) that align(s) to query']
+                    seq = row['Forward hit subsequence(s) that align(s) to query'] 
+                else:
+                    description = row['Forward hit description']
+                    seq = row['Forward hit sequence'] 
+            else:
+                # If the hit is a tblastn (nucleotide) hit, then always
+                # use the subsequence.
                 description = row['Forward hit description of subsequence(s) that align(s) to query']
                 seq = row['Forward hit subsequence(s) that align(s) to query'] 
-            else:
-                description = row['Forward hit description']
-                seq = row['Forward hit sequence'] 
-            db_file = row['Subject database species (if applicable)']
-            #db_file = row['Forward hit description'] # (For specific circumstances)
+
 
             # Use the species name if writing the file for input to
             # phylogenetics software.
             if abbrev:
                 description = db_file.rsplit('.', 1)[0]
+                if program.startswith('tblastn'):
+                    hit_range = get_hit_range_from_hsp_ranges(row['Forward hit coordinates of subsequence(s) that align(s) to query'])
+                    description = str(hit_range[0]) + '...' + str(hit_range[1]) + '__'\
+                            + description
 
-            # The output sequences may be aligned and visualized using
-            # Mesquite, and if an alignment is saved in Mesquite, then
-            # space characters will be randomly (not in all cases) replaced
-            # with underscores, because Mesquite does not like nexus
-            # alignments to have space characters in taxon names. This
-            # prevents downstream parsing of the sequence names. So, if the
-            # abbrev option is used, and the sequences are destined for an
-            # alignment for phylogenetic analysis, etc. then it is best to
-            # avoid spaces, and use a double-underscore to separate the
-            # accession number from the species name (and convert that back
-            # to a space in the final output tree file).
+                # The output sequences may be aligned and visualized using
+                # Mesquite, and if an alignment is saved in Mesquite, then
+                # space characters will be randomly (not in all cases) replaced
+                # with underscores, because Mesquite does not like nexus
+                # alignments to have space characters in taxon names. This
+                # prevents downstream parsing of the sequence names. So, if the
+                # abbrev option is used, and the sequences are destined for an
+                # alignment for phylogenetic analysis, etc. then it is best to
+                # avoid spaces, and use a double-underscore to separate the
+                # accession number from the species name (and convert that back
+                # to a space in the final output tree file).
                 description = description.replace(' ', '_')
 
             elif paralogue_names:
@@ -631,15 +473,96 @@ def write_seqs_to_fasta(csv_file, output_fasta, abbrev=False,
                 else:
                     acc = orig_descr.split(' ', 1)[0] + '__' +\
                     orig_descr.split(' ', 1)[1].replace(' ', '_')
+            
+            # Instantiate a sequence object for the sequence of interest to
+            # be written to output.
+            seq_obj = get_seq_obj_from_srch_res_csv_info(acc, description,
+                    seq, abbrev, paralogue_names)
 
-            seq_obj = get_seq_obj_from_srch_res_csv_info(acc, description, seq,
-                    abbrev, paralogue_names)
-            seq_objs.append(seq_obj)
+            if split_by_query_title:
+                # Determine what the query title is for this hit.
+                query_title = row['Query title']
 
-        # Write sequences to output file.
-        with open(output_fasta, 'w') as o:
-            #for seq_obj in seq_objs:
-            SeqIO.write(seq_objs, o, 'fasta')
+                # Check that a sequence with the same description is not already present in
+                # the dictionary value (list).
+                found_seq_with_same_descr = False
+                if query_title in query_title_seq_obj_dict.keys():
+                    for seq_descr in [(x.id, x.description) for x in query_title_seq_obj_dict[query_title]]:
+                        if seq_obj.id == seq_descr[0] and seq_obj.description == seq_descr[1]:
+                            found_seq_with_same_descr = True 
+                            break
+
+                # Determine if the top hit id is already a key in the dict,
+                # and add the sequence object to the list that is the value
+                # for the appropriate key.
+                if not found_seq_with_same_descr:
+                    if query_title not in query_title_seq_obj_dict.keys():
+                        query_title_seq_obj_dict[query_title] = [seq_obj]
+                    else:
+                        query_title_seq_obj_dict[query_title] =\
+                        query_title_seq_obj_dict[query_title] + [seq_obj]
+
+            if split_by_top_rev_srch_hit:
+                # Define sequence ID for top reverse search hit.
+                top_rev_hit_id = row[top_rev_hit_id_col]
+
+                # Check that a sequence with the same description is not already present in
+                # the dictionary value (list).
+                found_seq_with_same_descr = False
+                if top_rev_hit_id in rev_srch_top_hit_seq_obj_dict.keys():
+                    for seq_descr in [(x.id, x.description) for x in
+                            rev_srch_top_hit_seq_obj_dict[top_rev_hit_id]]:
+                        if seq_obj.id == seq_descr[0] and seq_obj.description == seq_descr[1]:
+                            found_seq_with_same_descr = True 
+                            break
+
+                # Determine if the top hit id is already a key in the dict,
+                # and add the sequence object to the list that is the value
+                # for the appropriate key.
+                if not found_seq_with_same_descr:
+                    if top_rev_hit_id not in rev_srch_top_hit_seq_obj_dict.keys():
+                        rev_srch_top_hit_seq_obj_dict[top_rev_hit_id] = [seq_obj]
+                    else:
+                        rev_srch_top_hit_seq_obj_dict[top_rev_hit_id] =\
+                        rev_srch_top_hit_seq_obj_dict[top_rev_hit_id] + [seq_obj]
+
+    # Write sequences to different output files according to the
+    # reverse search hit that they retrieved.
+    os.mkdir(subdirpath)
+    print('\nOutput fasta files:')
+    if split_by_query_title:
+        for seq_obj_list_key in query_title_seq_obj_dict.keys():
+            specific_output_fasta_path = os.path.join(subdirpath,\
+                    seq_obj_list_key.strip() + '_matches.fa')
+            print(specific_output_fasta_path)
+            with open(specific_output_fasta_path, 'w') as o:
+                SeqIO.write(query_title_seq_obj_dict[seq_obj_list_key], o, 'fasta')
+
+    elif split_by_top_rev_srch_hit:
+        for seq_obj_list_key in rev_srch_top_hit_seq_obj_dict.keys():
+            # Only write sequences that retrieved a hit in the reverse search
+            # results.
+            if seq_obj_list_key != '-':
+                # Define output filename.
+                #specific_output_fasta_name = output_fasta.rsplit('.', 1)[0] + '_' +\
+                #seq_obj_list_key.strip().replace(' ', '_').replace('\"',\
+                #    '').replace('[', '').replace(']', '') + '_matches.fa' 
+                #specific_output_fasta_name =\
+                #seq_obj_list_key.strip().replace(' ', '_').replace('\"',\
+                #    '').replace('[', '').replace(']', '') + '_matches.fa' 
+                specific_output_fasta_name = re.sub('[^0-9a-zA-Z]+', '_',
+                        seq_obj_list_key.strip().strip('\"')) + '_matches.fa'
+                #print(seq_obj_list_key)
+                #print(seq_obj_list_key.strip().strip('\"'))
+                #print(specific_output_fasta_name)
+
+                # Define output filepath.
+                specific_output_fasta_path = os.path.join(subdirpath, specific_output_fasta_name)
+                print(specific_output_fasta_path)
+
+                # Write sequences to file.
+                with open(specific_output_fasta_path, 'w') as o:
+                    SeqIO.write(rev_srch_top_hit_seq_obj_dict[seq_obj_list_key], o, 'fasta')
 
 
 def record_amoebae_info_in_log_file(commandline, outdir, start_time, end_time,

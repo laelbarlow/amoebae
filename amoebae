@@ -1816,8 +1816,8 @@ Miscellaneous commands:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('csv_file', help='''Path to csv file listing
                 sequences.''')
-        parser.add_argument('--output_fasta', help='''Path for output fasta
-                file.''', default=None)
+        parser.add_argument('--output_dir', help='''Path for output directory
+        to contain FASTA files.''', default=None)
         parser.add_argument('--abbrev', help='''Add species name instead of
                 sequence description from fasta header. Applicable when the
                 output file is to be used for alignment and phylogenetic
@@ -1828,8 +1828,8 @@ Miscellaneous commands:
         alignment and phylogenetic analysis. Does not work if the abbrev option
         is specified.''', action='store_true')
         parser.add_argument('--only_descr', help='''Use the description but not
-                the ID as the new fasta sequence header. ***Incompatible with
-                the abbrev option.''', action='store_true')
+        the ID as the new fasta sequence header. Does not work if the abbrev
+        option is specified.''', action='store_true')
         parser.add_argument('--subseq', help='''Write subsequences that aligned
                 to forward search query, instead of the full sequences.''', action='store_true')
         parser.add_argument('--all_hits', help='''Write all forward hits
@@ -1846,7 +1846,8 @@ Miscellaneous commands:
 
         output_fasta = None
         if args.output_fasta is None:
-           output_fasta = args.csv_file.rsplit('.', 1)[0] + '.fa' 
+           #output_fasta = args.csv_file.rsplit('.', 1)[0] + '.fa' 
+           output_fasta = args.csv_file.rsplit('.', 1)[0]
 
         module_amoebae.write_seqs_to_fasta(args.csv_file, output_fasta,
                 args.abbrev, args.paralogue_names, args.only_descr, args.subseq, args.all_hits,
