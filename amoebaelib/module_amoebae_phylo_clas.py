@@ -2010,6 +2010,7 @@ def get_all_alt_model_backbones(model_name,
                                 main_out_path,
                                 polytomy=False,
                                 not_polytomy_clades=False,
+                                keep_original_backbone=False,
                                 iqtree_au_test=False
                                 ):
     """Take a tree and make all alternative topologies for internal branches
@@ -2096,6 +2097,9 @@ def get_all_alt_model_backbones(model_name,
     # Parse simple tree.
     t2 = Tree(simple_tree)
 
+    # Make a copy for later.
+    t5 = t2.copy()
+
     # Print simple tree.
     print('Input tree:')
     print(t2)
@@ -2126,6 +2130,9 @@ def get_all_alt_model_backbones(model_name,
     for i in open(type_seqs):
         if not i.startswith('\n'):
             type_seq_list.append(i.strip().split(',')[0])
+    # Check that there are at least 3.
+    assert len(type_seq_list) >= 3, """The number of clade-defining sequences
+    must be at least three."""
 
     # For each "type" sequence, traverse all nodes and find the node with
     # the largest number of child nodes that are leaf (terminal) nodes,
@@ -2250,7 +2257,44 @@ def get_all_alt_model_backbones(model_name,
     alt_topos = []
 
     # Generate relevant topologies.
-    if polytomy:
+    if keep_original_backbone:
+        # Make a copy of the input tree topology.
+        t4 = t5.copy()
+
+        # Replace nodes of interest with the same clades but as a polytomy. 
+        n_num = 0
+        for n in nodes_of_interest_for_polytomy:
+            n_num += 1
+            n_num_string = str(n_num) 
+            replaced_n_with_x = False
+            # Get list of leaves for node.
+            n_leaf_names = [x.name for x in n.get_leaves()]
+            # Find corresponding node in the original topology.
+            for x in t4.traverse():
+                if not x.is_leaf():
+                    # Get list of leaf names for node in this tree topology.
+                    x_leaf_names = [y.name for y in x.get_leaves()]
+                    # Check whether they are the same lists.
+                    if set(n_leaf_names) == set(x_leaf_names):
+                        # Remove child nodes.
+                        for z in x.get_children():
+                            z.detach()
+                        # Replace with the corresponding polytomy.
+                        x.add_child(n)
+                        # Delete the unnecessary node.
+                        x.delete()
+                        
+                        replaced_n_with_x = True
+                        break
+            assert replaced_n_with_x, """Could not find the node in the
+            original tree corresponding to a node of interest. The tree maybe
+            rooted on a branch inside a clade of interest."""
+
+        # Add to list of alternative topologies.
+        tree_with_original_backbone = t4.write(format=9)
+        alt_topos.append(tree_with_original_backbone)
+
+    elif polytomy:
         # Construct a polytomy of the nodes of interest.
 
         # Count number of nodes.
@@ -2303,7 +2347,7 @@ def get_all_alt_model_backbones(model_name,
         topo_filepaths_starting.append(topo_filepath_starting)
 
         # Write topology string to text file.
-        if polytomy:
+        if polytomy or keep_original_backbone:
             with open(topo_filepath, 'w') as o:
                 o.write(topo)
         else:
@@ -2311,7 +2355,7 @@ def get_all_alt_model_backbones(model_name,
                 o.write(topo[0])
 
         # Write starting topology string to text file.
-        if polytomy:
+        if polytomy or keep_original_backbone:
             with open(topo_filepath_starting, 'w') as o:
                 o.write(topo)
         else:

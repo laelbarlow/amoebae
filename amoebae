@@ -2097,6 +2097,10 @@ Miscellaneous commands:
         parser.add_argument('--not_polytomy_clades', help='''Do not make
         subtrees/clades of interest polytomies in output topologies.''',
         action='store_true')
+        parser.add_argument('--keep_original_backbone', help='''Keep the
+                original backbone topology instead of generating a polytomy or
+                alternative resolved topologies.''',
+        action='store_true')
         parser.add_argument('--iqtree_au_test', help='''Test all the relevant
                 alternative topologies against each other using Approximately
                 Unbiased (AU) test with IQ-tree.''',
@@ -2123,7 +2127,8 @@ Miscellaneous commands:
         #        main_out_path, args.polytomy,
         #        args.polytomy_clades)
         get_all_alt_model_backbones(args.model_name, args.out_dir_path,
-                main_out_path, args.polytomy, args.not_polytomy_clades, args.iqtree_au_test)
+                main_out_path, args.polytomy, args.not_polytomy_clades,
+                args.keep_original_backbone, args.iqtree_au_test)
 
         # Record end time.
         end_time = time.time()
