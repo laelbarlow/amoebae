@@ -10,7 +10,7 @@
 # Load MrBayes (for some reason it doesn't load properly if you load it for each output script).
 #module load iq-tree/1.5.5
 
-for FILE in *mb.nex
+for FILE in *mb*.nex
 do 
 NEWDIR=$FILE'_cedar'
 mkdir $NEWDIR
