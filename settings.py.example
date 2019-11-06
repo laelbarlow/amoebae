@@ -111,5 +111,5 @@ raxmlname = 'raxmlHPC-AVX2'
 # Ciliates).
 # WARNING: This will use the same genetic code for all genomes that you are
 # searching in, so make sure that they all have the same genetic code.
-tblastn_ncbi_gen_code = 1
+tblastn_ncbi_gen_code = '1'
 

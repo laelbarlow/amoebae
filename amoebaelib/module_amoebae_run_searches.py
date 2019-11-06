@@ -203,11 +203,18 @@ def run_any_search(queryfile,
                 blast_evalcut, '-max_target_seqs',
                 blast_max_target_seqs]
     elif method == 'tblastn':
+        # Set the genetic code.
+        tblastn_ncbi_gen_code = None
+        try:
+            tblastn_ncbi_gen_code = settings.tblastn_ncbi_gen_code
+        except:
+            tblastn_ncbi_gen_code = '1'
+
         run_command = [method, '-query', queryfile, '-db', dbfile, '-out',
                 outfile, '-num_threads', num_threads, '-outfmt', '5', '-evalue',
                 blast_evalcut, '-max_target_seqs',
                 blast_max_target_seqs, '-db_gencode',
-                settings.tblastn_ncbi_gen_code]
+                tblastn_ncbi_gen_code]
     elif method == 'blastx':
         run_command = [method, '-query', queryfile, '-db', dbfile, '-out',
                 outfile, '-num_threads', num_threads, '-outfmt', '5', '-evalue',
