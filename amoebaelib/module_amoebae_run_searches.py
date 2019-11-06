@@ -206,7 +206,8 @@ def run_any_search(queryfile,
         run_command = [method, '-query', queryfile, '-db', dbfile, '-out',
                 outfile, '-num_threads', num_threads, '-outfmt', '5', '-evalue',
                 blast_evalcut, '-max_target_seqs',
-                blast_max_target_seqs]
+                blast_max_target_seqs, '-db_gencode',
+                settings.tblastn_ncbi_gen_code]
     elif method == 'blastx':
         run_command = [method, '-query', queryfile, '-db', dbfile, '-out',
                 outfile, '-num_threads', num_threads, '-outfmt', '5', '-evalue',

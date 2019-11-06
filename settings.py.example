@@ -105,3 +105,11 @@ align_fa_program = 'muscle' # 'muscle' or 'mafft'
 
 # Set name of RAxML installation as called from the command line.
 raxmlname = 'raxmlHPC-AVX2'
+
+
+# Genetic code number for TBLASTN searches (change from 1 to 6 if searching in
+# Ciliates).
+# WARNING: This will use the same genetic code for all genomes that you are
+# searching in, so make sure that they all have the same genetic code.
+tblastn_ncbi_gen_code = 1
+
