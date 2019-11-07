@@ -24,21 +24,40 @@ def get_datatype_for_sequence_string(concat_seq):
     """Take a sequence string and return 'prot' or 'nucl' depending on the
     content of letters from the alphabet.
     """
+    #print(concat_seq)
+    #print(list(concat_seq))
+    #print(set(list(concat_seq)))
+
     # Define regular expressions to identify different data types from sequence
     # strings.
     #alphabets = {'dna': re.compile('^[acgtn]*$', re.I),
     #             'protein': re.compile('^[arndceqghoilkmfpustwyvx*]*$',
     #                          re.I)}
-    alphabets = {'dna': re.compile('^[acgtny]*$', re.I),
+    alphabets = {'dna1': re.compile('[acgt]', re.I),
+                 'dna2': re.compile('^[acgtny]*$', re.I),
                  'protein': re.compile('^[arndceqghoilkmfpustwyvx*]*$',
                               re.I)}
     
     # Determine whether the concatenated sequence represents protein or DNA
     # data.
-    dbtype = 'Undetermined'
-    if alphabets['dna'].search(concat_seq) is not None:
+    #dbtype = 'Undetermined'
+    #if alphabets['dna'].search(concat_seq) is not None:
+    #    dbtype = 'nucl'
+    #elif alphabets['protein'].search(concat_seq) is not None:
+    #    dbtype = 'prot'
+
+    # Count instances of A, T, G, or C in the input sequence.
+    num_atgc = len(alphabets['dna1'].findall(concat_seq))
+
+    # Calculate percentage of characters that are A, T, G, or C.
+    total_char = len(concat_seq)
+    percentage_of_atgc = ((num_atgc * 100) / total_char)
+
+    # Apply a threshold to determine whether there is a high enough proportion
+    # of A, T, G, or C to assume that the sequence is nucleotide.
+    if percentage_of_atgc > 90.0:
         dbtype = 'nucl'
-    elif alphabets['protein'].search(concat_seq) is not None:
+    else:
         dbtype = 'prot'
 
     # Check that the data type was determined.
