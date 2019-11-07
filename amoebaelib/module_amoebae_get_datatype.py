@@ -35,6 +35,7 @@ def get_datatype_for_sequence_string(concat_seq):
     #                          re.I)}
     alphabets = {'dna1': re.compile('[acgt]', re.I),
                  'dna2': re.compile('^[acgtny]*$', re.I),
+                 'dna3': re.compile('[acgtn]', re.I),
                  'protein': re.compile('^[arndceqghoilkmfpustwyvx*]*$',
                               re.I)}
     
@@ -46,8 +47,8 @@ def get_datatype_for_sequence_string(concat_seq):
     #elif alphabets['protein'].search(concat_seq) is not None:
     #    dbtype = 'prot'
 
-    # Count instances of A, T, G, or C in the input sequence.
-    num_atgc = len(alphabets['dna1'].findall(concat_seq))
+    # Count instances of A, T, G, C, or N in the input sequence.
+    num_atgc = len(alphabets['dna3'].findall(concat_seq))
 
     # Calculate percentage of characters that are A, T, G, or C.
     total_char = len(concat_seq)
