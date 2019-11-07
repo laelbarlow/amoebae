@@ -420,10 +420,8 @@ def write_reduced_alignment(alignment_file,
 
 
             # Determine key to use.
-            #print(i.id)
             key_to_use = None
             for key in conversion_table_dict.keys():
-                #print(key)
                 #if key.startswith('ConsensusfromContig11299'):
                 #    print('\tkey: ' + key)
                 if i.id.strip() == conversion_table_dict[key].strip():
@@ -441,6 +439,15 @@ def write_reduced_alignment(alignment_file,
                     # ***This is potentially problematic! ***
                     if i.id.startswith(conversion_table_dict[key].split('_')[0]):
                         key_to_use = key
+                        break
+                # If all else fails, then the identified input alignment may
+                # have coded sequence names.
+                if key_to_use is None and key == i.id:
+                        # Assume the sequence names in the alignment were coded
+                        # using the identified conversion table.
+                        # ***This is potentially problematic.
+                        key_to_use = key
+                        break
 
 
             assert key_to_use is not None, """Could not identify name in
@@ -498,8 +505,22 @@ def write_reduced_alignment(alignment_file,
         for i in alignment3:
             ids_in_alignment3.append(i.id)
 
+        # Make a list of coded sequence IDs.
+        coded_seqs_to_not_remove_from_dataset2 = []
+        for x in coded_seqs_to_not_remove_from_dataset:
+            for key in conversion_table_dict.keys():
+                value = conversion_table_dict[key]
+                if x == value:
+                    coded_seqs_to_not_remove_from_dataset2.append(key)
+        assert len(coded_seqs_to_not_remove_from_dataset2) ==\
+        len(coded_seqs_to_not_remove_from_dataset)
+        assert set(coded_seqs_to_not_remove_from_dataset2) !=\
+        set(coded_seqs_to_not_remove_from_dataset)
+
         assert set(ids_in_alignment3) ==\
-        set(coded_seqs_to_not_remove_from_dataset), """Sequences in alignment
+        set(coded_seqs_to_not_remove_from_dataset) or \
+        set(ids_in_alignment3) == \
+        set(coded_seqs_to_not_remove_from_dataset2), """Sequences in alignment
         do not have the expected set of IDs."""
 
         ## Decode names in alignment. (actually codes names)
@@ -884,6 +905,13 @@ def automatically_select_nodes_and_remove_seqs_in_dir(indp,
     # Identify input tree file (output from a phylogenetic analysis program,
     # such as IQ-tree).
     input_tree_one = os.path.join(indp, 'output.treefile') # Assumes IQtree. 
+
+    # Look for a MrBayes output tree file.
+    if not os.path.isfile(input_tree_one):
+        input_trees = glob.glob(os.path.join(indp, '*nex.con.newick')) 
+        assert len(input_trees) > 0, """No tree files found."""
+        assert len(input_trees) == 1, """More than one tree file found.""" 
+        input_tree_one = input_trees[0]
 
     # Check that the tree file was found.
     assert os.path.isfile(input_tree_one), """Could not find tree file at path
