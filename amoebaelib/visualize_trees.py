@@ -417,7 +417,11 @@ def get_subs_model_from_mb_file(file_with_subs_model_name):
         for i in infh:
             # Find the substitution mode.
             if 'aamodelpr' in i:
-                subs_model = i.split('aamodelpr=fixed(')[1].split(')')[0]
+                try:
+                    subs_model = i.split('aamodelpr=fixed(')[1].split(')')[0]
+                except:
+                    if 'aamodelpr=Mixed' in i:
+                        subs_model = 'Mixed'
                 break
     # Check that a substitution model was found.
     assert subs_model is not None, """Could not find substitution model."""
@@ -714,6 +718,24 @@ def visualize_tree(method,
 
             # Write the plot to a pdf file.
             fig.savefig(f + '_line_graph.pdf')
+
+
+            # Make another line graph excluding the initial 25% (burnin).
+
+            # Slice arrays to remove first 25% of data points.
+            x = x[int(len(x)*0.25):]
+            y = y[int(len(y)*0.25):]
+
+            # Use matplotlib to plot the data array.
+            fig, ax = plt.subplots()
+            ax.plot(x, y)
+            ax.set(xlabel='Generation', ylabel='Log likelihood',
+                   title='Plot of log likelihood change over ' + str(generations[-1]) + ' MCMC generations')
+            ax.grid()
+
+            # Write the plot to a pdf file.
+            fig.savefig(f + '_line_graph_without_first_25_percent.pdf')
+
 
         # Add end; to .t files if necessary.
         for f in glob.glob(os.path.join(os.path.dirname(tree_file), '*.t')):
