@@ -28,7 +28,7 @@ command_line_list = sys.argv
 indp = str(command_line_list[1])
 
 
-relevant_newick_file_paths = glob.glob(os.path.join(indp, '*.C.tre'))
+relevant_newick_file_paths = glob.glob(os.path.join(indp, '*_C.tre'))
 for newick in relevant_newick_file_paths:
     t = Tree(newick)
     t.resolve_polytomy(recursive=True)

@@ -66,6 +66,7 @@ def plotImage(image_file):
     a.get_xaxis().set_visible(False) # We don't need axis ticks
     a.get_yaxis().set_visible(False)
 
+
 def get_first_leaf_from_species(tree_obj, species_start_string):
     """Take an ete3 TreeNode object and return a node object with a name that
     starts with a given string.
@@ -78,6 +79,7 @@ def get_first_leaf_from_species(tree_obj, species_start_string):
     #print(species_start_string)
     #assert first_leaf is not None
     return first_leaf
+
 
 def get_largest_subtree(t):
     """Take an ete3 TreeNode object and return the largest subtree.

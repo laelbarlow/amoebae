@@ -44,7 +44,7 @@ os.mkdir(outputdir)
 
 # Run constrained tree searches
 constraint_tree_files = glob.glob(os.path.join(constraint_indir,
-    '*_clean.C.tre'))
+    '*_clean*.C.tre'))
 for i in constraint_tree_files:
     print('Running ML search with constraint tree ' + i)
     subprocess.call(['iqtree',

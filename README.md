@@ -73,7 +73,7 @@ the GitHub webpage to report any problems you find in using this toolkit.
 
 ## How to cite AMOEBAE
 
-Please cite the [GitHub webpage](https://github.com/laelbarlow) (or alternative
+Please cite the [GitHub webpage](https://github.com/laelbarlow/amoebae) (or alternative
 permanent repositories if relevant). Also, remember to cite other software
 packages which you may have also installed and used for your work via AMOEBAE
 scripts.
