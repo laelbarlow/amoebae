@@ -54,7 +54,7 @@ get_db_list_from_file, get_out_query_list_path, get_out_db_list_path,\
 determine_search_method, search_result_filepath, run_any_search,\
 run_all_searches, get_out_hmm_path, get_query_subdir
 from module_search_scaffolds import split_tblastn_hits_into_separate_genes,\
-get_hit_seq_record_and_coord, get_cluster_range
+get_hit_seq_record_and_coord, get_hit_seq_record_and_coord2, get_cluster_range
 
 
 def intersect(a, b):
@@ -321,7 +321,7 @@ def get_hit_obj_for_hsp_cluster(query_res_obj, cluster):
 
 
 def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list,
-        max_evalue, max_gap_setting):
+        max_evalue, max_gap_setting, do_not_use_exonerate):
     """Parses search result file and adds a corresponding row to an output
     pandas dataframe.
     """
@@ -430,7 +430,24 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list,
                 evaldiff = get_evaldiff(get_corr_evalue(e_top), get_corr_evalue(e_cur))
 
                 # Get a sequence record.
-                hit_seq_record_and_coord = get_hit_seq_record_and_coord(hit, cluster)
+                hit_seq_record_and_coord = None
+                if do_not_use_exonerate:
+                    # Get a sequence record, without exonerate (just based on
+                    # TBLASTN HSPs).
+                    hit_seq_record_and_coord = get_hit_seq_record_and_coord(hit, cluster)
+                else:
+                    # Get a sequence record using exonerate to define the
+                    # coding sequence and translation.
+                    genetic_code_number = '1'
+                    hit_seq_record_and_coord =\
+                    get_hit_seq_record_and_coord2(search_result_path,
+                                                  hit,
+                                                  cluster,
+                                                  d,
+                                                  q,
+                                                  genetic_code_number)
+
+                # Define hit sequence object.
                 hit_seq = hit_seq_record_and_coord[0] 
 
                 # Get hit length as a percentage of the top hit sequence
@@ -576,7 +593,7 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list,
 
 
 def write_fwd_srch_res_to_csv(outdir, query_file_list, db_file_list,
-        csv_file, timestamp, max_evalue, max_gap_setting):
+        csv_file, timestamp, max_evalue, max_gap_setting, do_not_use_exonerate):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -656,7 +673,8 @@ def write_fwd_srch_res_to_csv(outdir, query_file_list, db_file_list,
                     #        srch_file_prog_vers, srch_file_format,
                     #        column_label_list)
                     subdf = get_rows_for_fwd_srch_df(df, q, d, search_result_path,
-                            column_label_list, max_evalue, max_gap_setting)
+                            column_label_list, max_evalue, max_gap_setting,
+                            do_not_use_exonerate)
 
                     # Append sub-dataframe to full dataframe.
                     df = df.append(subdf, ignore_index=True)

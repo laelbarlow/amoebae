@@ -21,11 +21,11 @@ exonerate can be installed via Anaconda:
 
 This module can be run as a script:
 
-    run_exonerate.py QUERY.faa DATABASE.fna ACCESSION SUBSEQSTART SUBSEQEND
+    run_exonerate.py QUERY.faa DATABASE.fna ACCESSION SUBSEQSTART SUBSEQENCE GENETICCODE
 
     For example: 
 
-    run_exonerate.py Athaliana_COPIGamma.faa PabiesSc.fna MA_93046 37000 39000
+    run_exonerate.py Athaliana_COPIGamma.faa PabiesSc.fna MA_93046 37000 39000 1
 """
 # Import modules.
 import sys
@@ -60,7 +60,12 @@ class ExonerateLocusResult:
         temp_fastafp = exonerate_output_file_path.rsplit('.', 1) [0] + '_seq.fna'
         with open(exonerate_output_file_path) as exonerate_outputfh, open(temp_fastafp, 'w') as o:
             file_text_string = exonerate_outputfh.read()
-            fasta_string = file_text_string.split('------------')[4].strip()
+            fasta_string = None
+            try:
+                fasta_string = file_text_string.split('------------')[4].strip()
+            except:
+                print("Could not parse exonerate output file %s" % exonerate_output_file_path)
+            assert fasta_string is not None
             o.write(fasta_string)
 
         # Parse the nucleotide sequence file.
@@ -136,7 +141,8 @@ def get_subseq_from_nucl(subj_seq_id,
                          db_filepath,
                          target_subseq_start,
                          target_subseq_end,
-                         output_fasta_path
+                         output_fasta_path,
+                         additional_flanking_basepairs=0
                          ):
     """Take a sequence ID, FASTA filepath, start position, end position,
     and output filepath, and write a FASTA subsequence to the filepath.
@@ -145,6 +151,11 @@ def get_subseq_from_nucl(subj_seq_id,
     full_seq_obj = get_seqs_from_fasta_db(db_filepath, [subj_seq_id], False)[0]
     #full_seq_obj = get_seq_obj_from_db_fasta([subj_seq_id], db_filepath)[0]
     #full_seq_obj = get_seq_obj_from_db_fasta([subj_seq_id], db_filepath)[0]
+
+    # Redefine more inclusive subsequence of interest, including flanking
+    # regions.
+    target_subseq_start = max([target_subseq_start - additional_flanking_basepairs, 1])
+    target_subseq_end = min([target_subseq_end + additional_flanking_basepairs, len(full_seq_obj)])
 
     # Get appropriate subsequence.
     #subseq_seq = str(full_seq_obj.seq)[int(target_subseq_start) -1: int(target_subseq_end)]
@@ -166,11 +177,16 @@ def get_subseq_from_nucl(subj_seq_id,
     with open(output_fasta_path, 'w') as o:
         SeqIO.write(full_seq_obj, o, 'fasta')
 
+    # Return the start position of the identified subsequence as an integer, to
+    # keep track of where the exons start and end in the original sequence.
+    return target_subseq_start
+
 
 # Run exonerate as a subprocess.
 def run_exonerate_as_subprocess(query_prot_faa,
                                 subj_subseq_fna,
-                                exonerate_output_filepath
+                                exonerate_output_filepath,
+                                genetic_code=1
                                 ):
     """Take a query peptide FASTA sequence file (with a single sequence
     record), a subject sequence subsequence nucleotide FASTA file to search in,
@@ -183,14 +199,17 @@ def run_exonerate_as_subprocess(query_prot_faa,
                               subj_subseq_fna,
                               '-m',
                               'protein2genome',
+                              #'protein2dna',
                               #'--showcigar',
                               #'True',
                               '--ryo',
                               #'\"\n------------\n>%ti %tcb %tce\n%tcs\n------------\"'
                               #'\"\n------------\n>%ti %td\n%tcs\n------------\"'
-                              '\"\n------------\n>%ti\n%tcs\n------------\"'
+                              '\"\n------------\n>%ti\n%tcs\n------------\"',
                               #'--showalignment',
                               #'False'
+                              '--geneticcode',
+                              str(genetic_code)
                              ]
 
     # Call exonerate in a subprocess.
@@ -208,6 +227,13 @@ if __name__ == '__main__':
     target_seq_id = str(command_line_list[3])
     target_subseq_start = str(command_line_list[4])
     target_subseq_end = str(command_line_list[5])
+    genetic_code = str(command_line_list[6])
+
+    # Get filepath for specified query FASTA filename.
+    query_dir = settings.querydirpath
+    query_faa_path = os.path.join(query_dir, query_faa)
+    assert os.path.isfile(query_faa_path), """Specified query file path is
+    not a file: %s""" % query_faa_path
 
     # Get filepath for specified subject FASTA filename.  
     db_dir = settings.dbdirpath
@@ -223,8 +249,8 @@ if __name__ == '__main__':
     # a previous step using TBLASTN).
     get_subseq_from_nucl(target_seq_id, 
                          target_fna_path,
-                         target_subseq_start,
-                         target_subseq_end,
+                         int(target_subseq_start),
+                         int(target_subseq_end),
                          subseq_fasta_path
                          )
 
@@ -232,9 +258,10 @@ if __name__ == '__main__':
     exonerate_output_filepath = subseq_fasta_path.rsplit('.', 1)[0] + '_exonerate_out.txt'
     
     # Run exonerate as a subprocess.
-    run_exonerate_as_subprocess(query_faa,
+    run_exonerate_as_subprocess(query_faa_path,
                                 subseq_fasta_path,
-                                exonerate_output_filepath
+                                exonerate_output_filepath,
+                                genetic_code
                                 )
     
     # Parse output of exonerate.

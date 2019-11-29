@@ -17,6 +17,7 @@
 """
 
 import sys
+import os
 import copy
 import subprocess
 from Bio import SeqIO
@@ -33,6 +34,9 @@ from Bio.Blast import Record
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import itertools
+import settings
+from run_exonerate import ExonerateLocusResult, get_subseq_from_nucl,\
+run_exonerate_as_subprocess
 
 
 def check_if_two_hsp_ranges_overlap(lists):
@@ -937,6 +941,122 @@ def get_hit_seq_record_and_coord(hit, proximate_hsp_objs):
     strand + ' strand ' + seq_origin + '\"'
 
     return [hit_seq_record, seq_coord]
+
+
+def get_hit_seq_record_and_coord2(search_result_path,
+                                  hit,
+                                  proximate_hsp_objs,
+                                  db_filename,
+                                  query_filename,
+                                  genetic_code_number,
+                                  ):
+    """Given a list of SearchIO HSP objects (arguably representing a single
+    gene), retrieve the corresponding region of the subject sequence, use
+    exonerate to predict exon locations and extract translated sequences,
+    return a list with the first element being a Bio.Seq record from the
+    exonerate analysis and the second element being a string representing the
+    position of predicted exons.
+    """
+    ## Get strand that the HSPs are on.
+    #strand = get_strand_word(proximate_hsp_objs[0].hit_frame)
+
+    ## Concatenate the (translated peptide) hsp sequences in order from 5' to 3'
+    ## as they appear in the nucleotide subject sequence.
+    #hit_sequence = None
+    #if strand == 'plus': 
+    #    hit_sequence = Seq(''.join([str(x.hit.seq).replace('-', '') for x in proximate_hsp_objs]))
+    #elif strand == 'minus': 
+    #    # Reverse the order of the HSPs.
+    #    hit_sequence = Seq(''.join([str(x.hit.seq).replace('-', '') for x in proximate_hsp_objs][::-1]))
+
+    ## Make a description of where the hit sequence came from.
+    #seq_origin = ','.join(['[' + str(x.hit_range[0]) + '..' + str(x.hit_range[1])\
+    #    + ']' for x in proximate_hsp_objs])
+
+    ## Define sequence coordinates as a list.
+    #seq_coord = [[x.hit_range[0],x.hit_range[1]]\
+    #    for x in proximate_hsp_objs]
+
+    ## Generate a fasta sequence record.
+    #hit_seq_record = SeqRecord(hit_sequence)
+    #hit_seq_record.id = hit.id
+    #descr_without_quotation_marks = hit.description.replace('\"', '')
+    #hit_seq_record.description = '\"' + descr_without_quotation_marks + ' ' +\
+    #strand + ' strand ' + seq_origin + '\"'
+
+
+    # Get full path to query FASTA file.
+    query_dir = settings.querydirpath
+    query_faa = os.path.join(query_dir, query_filename)
+    assert os.path.isfile(query_faa), """Specified query file path is
+    not a file: %s""" % query_faa
+
+    # Get full path to database FASTA file.
+    db_dir = settings.dbdirpath
+    target_fna_path = os.path.join(db_dir, db_filename)
+    assert os.path.isfile(target_fna_path), """Specified database file path is
+    not a file: %s""" % target_fna_path
+
+    # Retrieve subject sequence of interest.
+
+    # Determine ID of subject sequence of interest from the Biopython hit
+    # object.
+    target_seq_id = hit.id
+
+    # Get start and end of the subsequence of interest within the subject
+    # sequence based on the range that the HSPs are found in.
+    start_of_5prime_hsp = min([x.hit_range[0] for x in proximate_hsp_objs])
+    end_of_3prime_hsp = max([x.hit_range[1] for x in proximate_hsp_objs])
+
+    # Define the number of additional basepairs to include on either side.
+    additional_flanking_basepairs = 100
+
+    # Define path to FASTA file with subsequence of interest from target
+    # nucleotide sequence.
+    subseq_fasta_path = search_result_path.rsplit('.', 1)[0] +\
+    '_subject_subseq_' + target_seq_id + '_' + str(start_of_5prime_hsp) + '-' +\
+    str(end_of_3prime_hsp) + '.fna'
+
+    # Extract relevant subsequence from input target sequence (region identified in
+    # a previous step using TBLASTN).
+    target_subseq_start = get_subseq_from_nucl(target_seq_id, 
+                                               target_fna_path,
+                                               start_of_5prime_hsp,
+                                               end_of_3prime_hsp,
+                                               subseq_fasta_path,
+                                               additional_flanking_basepairs
+                                               )
+
+    # Define path to exonerate output file.
+    exonerate_output_filepath = subseq_fasta_path.rsplit('.', 1)[0] + '_exonerate_out.txt'
+    
+    # Run exonerate as a subprocess.
+    run_exonerate_as_subprocess(query_faa,
+                                subseq_fasta_path,
+                                exonerate_output_filepath
+                                )
+    
+    # Parse output of exonerate.
+    #parse_exonerate_output(exonerate_output_filepath)
+    genetic_code_number = '1'
+    position_of_subject_seq_start_in_original = int(target_subseq_start)
+    exonerate_locus_result_obj = ExonerateLocusResult(exonerate_output_filepath,
+                                                      subseq_fasta_path,
+                                                      position_of_subject_seq_start_in_original,
+                                                      genetic_code_number
+                                                      )
+    
+    # Write output to file.
+    exonerate_output_seq_filepath = subseq_fasta_path.rsplit('.', 1)[0] +\
+    '_exonerate_out_seq.faa'
+    with open(exonerate_output_seq_filepath, 'w') as o:
+        SeqIO.write(exonerate_locus_result_obj.seq_record, o, 'fasta')
+
+    # Delete temporary intermediate files.
+    os.remove(subseq_fasta_path)
+
+    # Return the sequence record and location/coordinate string.
+    return [exonerate_locus_result_obj.seq_record, exonerate_locus_result_obj.location_string]
 
 
 def get_hit_seq_obj(hit, max_gap):
