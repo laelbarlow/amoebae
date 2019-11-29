@@ -872,6 +872,13 @@ Miscellaneous commands:
                 action='store_true')
         args = parser.parse_args(sys.argv[2:])
 
+        # Print a temporary warning.
+        if not args.do_not_use_exonerate:
+            print("""\n\nWarning: Using experimental code for running exonerate to
+            improve translation of sequences identified by TBLASTN. If you do not
+            want to do this, then use the --do_not_use_exonerate option.\n\n""") 
+            input("""Continue?""")
+
         # Import command-specific modules.
         import module_amoebae_search
 
