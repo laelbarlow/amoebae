@@ -156,14 +156,23 @@ def rank_seqs_by_hmm(inali, inseqs):
     return seq_objs
 
 
-def get_sig_overlap(inali, score_df):
+def get_sig_overlap(inali,
+                    score_df,
+                    minimum_aligning_residues,
+                    minimum_identical_residues,
+                    minimum_similar_residues,
+                    minimum_identical_span_len,
+                    minimum_similar_span_len,
+                    minimum_percent_identity,
+                    minimum_percent_similarity,
+                    minimum_percent_overlap
+                    ):
     """Return true if there is significant overlap between two sequences in an
     alignment.
     """
-    minimum_aligning_residues = 20
-    minimum_identical_residues = 10
-    minimum_similar_residues = 15
-    sig_overlap = False
+    #minimum_aligning_residues = 20
+    #minimum_identical_residues = 10
+    #minimum_similar_residues = 15
 
     # Delete extra lines in input nexus file, if present, because biopython cannot
     # read nexus alignments with these extra lines.
@@ -184,31 +193,86 @@ def get_sig_overlap(inali, score_df):
         columns = [alignment[:, col] for col in range(seq_len)] 
 
         # Count columns where the last two sequences have aligned residues, and
-        # where they have identical residues.
+        # where they have identical residues, etc.
         aligned_residues_count = 0
         identical_residues_count = 0
         similar_not_ident_residues_count = 0
+        identical_spans = []
+        similar_spans = []
+        cur_identical_span = ''
+        cur_similar_span = ''
         for col in columns:
             last_two = col[-2:]
+            identical = False
+            similar = False
             if not '-' in last_two:
                 aligned_residues_count += 1
                 if last_two[0] == last_two[1]:
                     identical_residues_count += 1
+                    identical = True
+                    similar = True
                 elif get_similarity_score(last_two[0], last_two[1], score_df) > 0:
                     similar_not_ident_residues_count += 1
+                    similar = True
 
-        # Calculate percent identity.
-        #percent_identity = (identical_residues_count/aligned_residues_count)*100
+            # For identifying continuous spans of identical and similar aligned
+            # residues, disregard positions where both sequences of interest
+            # are aligned. 
+            if not last_two == ['-', '-']:
+                # Add to continuous identical span and list as appropriate.
+                if identical:
+                    cur_identical_span = cur_identical_span + last_two[1]
+                else:
+                    if not cur_identical_span == '':
+                        identical_spans.append(cur_identical_span)
+                    cur_identical_span = ''
+
+                # Add to continuous similar span and list as appropriate.
+                if similar:
+                    cur_similar_span = cur_similar_span + last_two[1]
+                else:
+                    if not cur_similar_span == '':
+                        similar_spans.append(cur_similar_span)
+                    cur_similar_span = ''
+
+        # Calculate percent identity and similarity among aligned residues.
+        percent_identity = (identical_residues_count/aligned_residues_count)*100
+        percent_similarity = ((identical_residues_count + similar_not_ident_residues_count)/aligned_residues_count)*100
+
+        # Calculate the length of the aligning residues as a percentage of the
+        # total length of the second sequence in the alignment.
+        length_of_last_seq = len(str(alignment[-1].seq).replace('-', ''))
+        #print(str(alignment[-1].seq))
+        #print(str(alignment[-1].seq).replace('-', ''))
+        #print(length_of_last_seq)
+        percent_of_last_seq_aligning =\
+        (aligned_residues_count/length_of_last_seq)*100
+        #print(percent_of_last_seq_aligning)
 
         # Temporary print statements.
         #print('aligned_residues_count: ' + str(aligned_residues_count))
         #print('identical_residues_count: ' + str(identical_residues_count))
         #print('similar_not_ident_residues_count: ' + str(similar_not_ident_residues_count))
 
-        # Determine whether there is significant overlap.
-        if aligned_residues_count >= 20 and identical_residues_count >= 10 and\
-            (identical_residues_count + similar_not_ident_residues_count) >= 15:
-            sig_overlap = True
+        # Determine length of longest continuous span of aligned residues that
+        # are similar/identical.
+        longest_identical_span = sorted(identical_spans, key=lambda x: len(x))[-1]
+        longest_identical_span_len = len(longest_identical_span)
+        longest_similar_span = sorted(similar_spans, key=lambda x: len(x))[-1]
+        longest_similar_span_len = len(longest_similar_span)
+
+    # Initiate variable to indicate whether significant overlap was found.
+    sig_overlap = False
+
+    # Determine whether there is significant overlap.
+    if aligned_residues_count >= int(minimum_aligning_residues) \
+       and identical_residues_count >= int(minimum_identical_residues) \
+       and (identical_residues_count + similar_not_ident_residues_count) >= \
+           int(minimum_similar_residues) \
+       and longest_identical_span_len >= int(minimum_identical_span_len) \
+       and longest_similar_span_len >= int(minimum_similar_span_len) \
+            :
+        sig_overlap = True
 
     # Return percent identity.    
     return sig_overlap
@@ -611,9 +675,25 @@ def get_all_comparison_output_filepath(outdir):
     return os.path.join(outdir, '0_all_sequence_comparisons.csv')
 
 
-def find_redun_model_recursively(outdir, cur_ali_num, inali, ranked_seq_objs,
-        redundant_gene_model_dict, metric_name, metric_value_minimum,
-        minimum_percent_similarity, extra_info_dict, overlap_required):
+def find_redun_model_recursively(outdir,
+                                 cur_ali_num,
+                                 inali,
+                                 ranked_seq_objs,
+                                 redundant_gene_model_dict,
+                                 metric_name,
+                                 metric_value_minimum,
+                                 minimum_percent_similarity,
+                                 extra_info_dict, 
+                                 overlap_required,
+                                 overlap_minimum_aligning_residues,
+                                 overlap_minimum_identical_residues,
+                                 overlap_minimum_similar_residues,
+                                 overlap_minimum_identical_span_len,
+                                 overlap_minimum_similar_span_len,
+                                 overlap_minimum_percent_identity,
+                                 overlap_minimum_percent_similarity,
+                                 overlap_minimum_percent_overlap
+                                 ):
     """Recursively process sequence objects, classifying them into groups of
     redundant predictions for single loci/alleles.
 
@@ -665,7 +745,17 @@ def find_redun_model_recursively(outdir, cur_ali_num, inali, ranked_seq_objs,
                 os.path.join(os.path.dirname(os.path.realpath(__file__)), 'blosum62.csv'))
 
         # Determine whether sequences overlap significantly.
-        sig_overlap = get_sig_overlap(ali_plus_top_seq_plus_1, score_df)
+        sig_overlap = get_sig_overlap(ali_plus_top_seq_plus_1,
+                                      score_df,
+                                      overlap_minimum_aligning_residues,
+                                      overlap_minimum_identical_residues,
+                                      overlap_minimum_similar_residues,
+                                      overlap_minimum_identical_span_len,
+                                      overlap_minimum_similar_span_len,
+                                      overlap_minimum_percent_identity,
+                                      overlap_minimum_percent_similarity,
+                                      overlap_minimum_percent_overlap
+                                      )
 
         # If no significant overlap, then note as not necessarily represenative of a
         # different locus from the current "top hit".
@@ -849,9 +939,24 @@ def find_redun_model_recursively(outdir, cur_ali_num, inali, ranked_seq_objs,
     # treat each in turn as a top hit, and consider remaining sequences as either
     # redundant with it, or potential paralogues.
     if len(ranked_seq_objs) > 0:
-        return find_redun_model_recursively(outdir, cur_ali_num, inali, ranked_seq_objs,\
-                redundant_gene_model_dict, metric_name, metric_value_minimum,\
-                minimum_percent_similarity, extra_info_dict, overlap_required)
+        return find_redun_model_recursively(outdir,
+                                            cur_ali_num,
+                                            inali, ranked_seq_objs,
+                                            redundant_gene_model_dict,
+                                            metric_name,
+                                            metric_value_minimum,
+                                            minimum_percent_similarity,
+                                            extra_info_dict,
+                                            overlap_required,
+                                            overlap_minimum_aligning_residues,
+                                            overlap_minimum_identical_residues,
+                                            overlap_minimum_similar_residues,
+                                            overlap_minimum_identical_span_len,
+                                            overlap_minimum_similar_span_len,
+                                            overlap_minimum_percent_identity,
+                                            overlap_minimum_percent_similarity,
+                                            overlap_minimum_percent_overlap
+                                            )
     else:
         return redundant_gene_model_dict
 
@@ -1285,11 +1390,24 @@ def two_proteins_same_gene_in_gff3(sql_database, prot_id_1, prot_id_2):
         return False
 
 
-def count_paralogues3(csv_file, metric_name, metric_value_minimum,
-        minimum_percent_similarity, timestamp, overlap_required,
-        minimum_length_of_query_to_be_distinct_paralogue,
-        minimum_percent_length_of_query_to_be_distinct_paralogue,
-        remove_tblastn_hits_at_annotated_loci, outfp=None):
+def count_paralogues3(csv_file,
+                      metric_name,
+                      metric_value_minimum,
+                      minimum_percent_similarity,
+                      timestamp,
+                      overlap_required,
+                      minimum_length_of_query_to_be_distinct_paralogue,
+                      minimum_percent_length_of_query_to_be_distinct_paralogue,
+                      remove_tblastn_hits_at_annotated_loci,
+                      overlap_minimum_aligning_residues,
+                      overlap_minimum_identical_residues,
+                      overlap_minimum_similar_residues,
+                      overlap_minimum_identical_span_len,
+                      overlap_minimum_similar_span_len,
+                      overlap_minimum_percent_identity,
+                      overlap_minimum_percent_similarity,
+                      overlap_minimum_percent_overlap,
+                      outfp=None):
     """Manage input and output details.
     """
     # Define unique identifier string for this analysis.
@@ -1948,10 +2066,25 @@ def count_paralogues3(csv_file, metric_name, metric_value_minimum,
 
             # Add sequence comparison info to dict.
             full_redundant_gene_model_dict =\
-            find_redun_model_recursively(outdir, cur_ali_num, alignment_path,\
-                    ranked_seq_objs, redundant_gene_model_dict, metric_name,\
-                    metric_value_minimum, minimum_percent_similarity,
-                    extra_info_dict, overlap_required)
+            find_redun_model_recursively(outdir,
+                                         cur_ali_num,
+                                         alignment_path,
+                                         ranked_seq_objs,
+                                         redundant_gene_model_dict,
+                                         metric_name,
+                                         metric_value_minimum,
+                                         minimum_percent_similarity,
+                                         extra_info_dict,
+                                         overlap_required,
+                                         overlap_minimum_aligning_residues,
+                                         overlap_minimum_identical_residues,
+                                         overlap_minimum_similar_residues,
+                                         overlap_minimum_identical_span_len,
+                                         overlap_minimum_similar_span_len,
+                                         overlap_minimum_percent_identity,
+                                         overlap_minimum_percent_similarity,
+                                         overlap_minimum_percent_overlap
+                                         )
 
             # Extract info from full redundant gene model dict, and add to
             # corresponding cells in dataframe.
