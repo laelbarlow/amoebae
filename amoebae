@@ -1433,34 +1433,33 @@ Miscellaneous commands:
         continuous span for two sequences to be considered as potentially
         distinct hits (not counting positions where both sequences have gaps).
         This is only relevant if the overlap_required option is specified.""",
-        default=10)
+        default=0)
         parser.add_argument('--min_sim_span_len', help="""Minimum number of
         aligning residues which are similar (or identical) that must exist in
         at least one continuous span for two sequences to be considered as
         potentially distinct hits (not counting positions where both sequences
         have gaps).  This is only relevant if the overlap_required option is
-        specified.""", default=15)
+        specified.""", default=0)
         parser.add_argument('--min_percent_ident_in_overlap', help="""Minimum
         percent identity between the two sequences of interest in the
         alignment.This is only relevant if the overlap_required option is
-        specified.""", default=30)
+        specified.""", default=0)
         parser.add_argument('--min_percent_sim_in_overlap', help="""Minimum
         percent similarity (including identity) between the two sequences of
         interest in the alignment.This is only relevant if the overlap_required
-        option is specified.""", default=40)
+        option is specified.""", default=0)
         parser.add_argument('--min_percent_overlap', help="""Minimum number of
         aligning residues between the two sequences of interest as a percentage
         of the length of the second sequence (the last sequence in the
         alignment), not including gaps, for the two sequences to be considered
         as potentially distinct hits.  This is only relevant if the
-        overlap_required option is specified.""", default=15)
-        #parser.add_argument('--min_similarity', help="""Minimum percent
-        #        similarity (counting similar but not identical residues) for
-        #        evaluating whether two sequences are likely paralogous or
-        #        not.""", default=20.0)
+        overlap_required option is specified.""", default=0)
         parser.add_argument('--add_ali_col', help="""Add a column to the csv
         file listing which alignment file in the queries directory to use for
-        comparing sequences.""", action='store_true')
+        comparing sequences. Aligned FASTA queries are selected that match the
+        query titles of the original queries used to retrieve each of the
+        relevant hits listed in the csv file. No other options need to be
+        specified in this case.""", action='store_true')
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -1484,14 +1483,10 @@ Miscellaneous commands:
         alignmentdir = settings.querydirpath
 
         if not args.add_ali_col: 
-            # Temporary.
-            min_similarity = None
-
             # Write output file with interpetation column appended.
             final_outfp = count_paralogues3(args.csv_file,
                                             args.metric_name,
                                             args.metric_value_minimum,
-                                            min_similarity,
                                             timestamp,
                                             args.overlap_required,
                                             args.min_length,
