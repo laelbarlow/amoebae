@@ -186,6 +186,7 @@ def get_subseq_from_nucl(subj_seq_id,
 def run_exonerate_as_subprocess(query_prot_faa,
                                 subj_subseq_fna,
                                 exonerate_output_filepath,
+                                exonerate_score_threshold,
                                 genetic_code=1
                                 ):
     """Take a query peptide FASTA sequence file (with a single sequence
@@ -199,23 +200,25 @@ def run_exonerate_as_subprocess(query_prot_faa,
                               subj_subseq_fna,
                               '-m',
                               'protein2genome',
-                              #'protein2dna',
-                              #'--showcigar',
-                              #'True',
                               '--ryo',
-                              #'\"\n------------\n>%ti %tcb %tce\n%tcs\n------------\"'
-                              #'\"\n------------\n>%ti %td\n%tcs\n------------\"'
                               '\"\n------------\n>%ti\n%tcs\n------------\"',
                               #'--showalignment',
-                              #'False'
+                              #'False', # Could save space.
                               '--geneticcode',
-                              str(genetic_code)
+                              str(genetic_code),
+                              '--proteinhspthreshold', 
+                              '25', # Default setting is 30.
+                              '--score',
+                              exonerate_score_threshold,
+                              '--splice3',
+                              'primate', # Default setting.
+                              '--splice5',
+                              'primate' # Default setting.
                              ]
 
     # Call exonerate in a subprocess.
     with open(exonerate_output_filepath, 'w') as o:
         subprocess.call(exonerate_command_list, stdout=o, stderr=subprocess.STDOUT)
-
 
 
 
@@ -261,6 +264,7 @@ if __name__ == '__main__':
     run_exonerate_as_subprocess(query_faa_path,
                                 subseq_fasta_path,
                                 exonerate_output_filepath,
+                                '20',
                                 genetic_code
                                 )
     

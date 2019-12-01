@@ -949,6 +949,7 @@ def get_hit_seq_record_and_coord2(search_result_path,
                                   db_filename,
                                   query_filename,
                                   genetic_code_number,
+                                  exonerate_score_threshold
                                   ):
     """Given a list of SearchIO HSP objects (arguably representing a single
     gene), retrieve the corresponding region of the subject sequence, use
@@ -1031,14 +1032,16 @@ def get_hit_seq_record_and_coord2(search_result_path,
     exonerate_output_filepath = subseq_fasta_path.rsplit('.', 1)[0] + '_exonerate_out.txt'
     
     # Run exonerate as a subprocess.
+    genetic_code_number = '1'
     run_exonerate_as_subprocess(query_faa,
                                 subseq_fasta_path,
-                                exonerate_output_filepath
+                                exonerate_output_filepath,
+                                exonerate_score_threshold,
+                                genetic_code_number
                                 )
     
     # Parse output of exonerate.
     #parse_exonerate_output(exonerate_output_filepath)
-    genetic_code_number = '1'
     position_of_subject_seq_start_in_original = int(target_subseq_start)
     exonerate_locus_result_obj = ExonerateLocusResult(exonerate_output_filepath,
                                                       subseq_fasta_path,

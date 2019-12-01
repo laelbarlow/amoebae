@@ -320,8 +320,15 @@ def get_hit_obj_for_hsp_cluster(query_res_obj, cluster):
     return hit_obj
 
 
-def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list,
-        max_evalue, max_gap_setting, do_not_use_exonerate):
+def get_rows_for_fwd_srch_df(df, 
+                             q, 
+                             d, 
+                             search_result_path, 
+                             column_label_list,
+                             max_evalue, 
+                             max_gap_setting, 
+                             exonerate_score_threshold,
+                             do_not_use_exonerate):
     """Parses search result file and adds a corresponding row to an output
     pandas dataframe.
     """
@@ -445,7 +452,9 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list,
                                                   cluster,
                                                   d,
                                                   q,
-                                                  genetic_code_number)
+                                                  genetic_code_number,
+                                                  exonerate_score_threshold
+                                                  )
 
                 # Define hit sequence object.
                 hit_seq = hit_seq_record_and_coord[0] 
@@ -592,8 +601,15 @@ def get_rows_for_fwd_srch_df(df, q, d, search_result_path, column_label_list,
     return subdf
 
 
-def write_fwd_srch_res_to_csv(outdir, query_file_list, db_file_list,
-        csv_file, timestamp, max_evalue, max_gap_setting, do_not_use_exonerate):
+def write_fwd_srch_res_to_csv(outdir,
+                              query_file_list,
+                              db_file_list,
+                              csv_file, 
+                              timestamp, 
+                              max_evalue, 
+                              max_gap_setting, 
+                              exonerate_score_threshold,
+                              do_not_use_exonerate):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -672,9 +688,15 @@ def write_fwd_srch_res_to_csv(outdir, query_file_list, db_file_list,
                     #subdf = get_rows_for_fwd_srch_df(df, q, d, search_result_path, srch_file_prog,
                     #        srch_file_prog_vers, srch_file_format,
                     #        column_label_list)
-                    subdf = get_rows_for_fwd_srch_df(df, q, d, search_result_path,
-                            column_label_list, max_evalue, max_gap_setting,
-                            do_not_use_exonerate)
+                    subdf = get_rows_for_fwd_srch_df(df, 
+                                                     q, 
+                                                     d, 
+                                                     search_result_path,
+                                                     column_label_list, 
+                                                     max_evalue, 
+                                                     max_gap_setting,
+                                                     exonerate_score_threshold,
+                                                     do_not_use_exonerate)
 
                     # Append sub-dataframe to full dataframe.
                     df = df.append(subdf, ignore_index=True)
