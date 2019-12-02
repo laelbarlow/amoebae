@@ -680,8 +680,9 @@ def find_redun_model_recursively(outdir,
                                  inali,
                                  ranked_seq_objs,
                                  redundant_gene_model_dict,
-                                 metric_name,
-                                 metric_value_minimum,
+                                 #metric_name,
+                                 #metric_value_minimum,
+                                 max_percent_ident,
                                  extra_info_dict, 
                                  overlap_required,
                                  overlap_minimum_aligning_residues,
@@ -812,25 +813,31 @@ def find_redun_model_recursively(outdir,
                                   '\n']
                                   ))
 
-            # Decide whether criterion for classifying gene models/predictions
-            # as redundant is met.
+            # Obsolete code block:
+            ## Decide whether criterion for classifying gene models/predictions
+            ## as redundant is met.
+            #criterion_met = False
+            #metric_value = None
+            ## Determine value of relevant metric.
+            #assert metric_name in ['percent_identity',\
+            #        'gene_model_redundancy_index'], """Invalid metric name
+            #        provided."""
+            #if metric_name == 'percent_identity':
+            #    metric_value = info_dict['percent_identity']
+            #elif metric_name == 'gene_model_redundancy_index':
+            #    metric_value = info_dict['gene_model_redundancy_index']
+            ## Determine whether criterion met.
+            #if metric_value >= float(metric_value_minimum):
+            #    criterion_met = True
+
+            # Apply maximum percent identity cutoff criterion.
             criterion_met = False
-            metric_value = None
-            # Determine value of relevant metric.
-            assert metric_name in ['percent_identity',\
-                    'gene_model_redundancy_index'], """Invalid metric name
-                    provided."""
-            if metric_name == 'percent_identity':
-                metric_value = info_dict['percent_identity']
-            elif metric_name == 'gene_model_redundancy_index':
-                metric_value = info_dict['gene_model_redundancy_index']
-            # Determine whether criterion met.
-            if metric_value >= float(metric_value_minimum):
+            if info_dict['percent_identity'] >= float(max_percent_ident):
                 criterion_met = True
 
             # Record percent comparison metric to current "top hit".
             comparison_string1 =\
-            metric_name.replace('_', ' ') + ' of ' + str(round(metric_value, 1)) + ' in alignment with sequence ' + top_hit_seq_obj.id + ' '\
+            'percent identity' + ' of ' + str(round(info_dict['percent_identity'], 1)) + ' in alignment with sequence ' + top_hit_seq_obj.id + ' '\
             '(longest identical span ' + str(info_dict['length_of_longest_identical_span']) + ' residues)' + ' '
             # Add comparison string to full string.
             redundant_gene_model_dict[acc][2] = redundant_gene_model_dict[acc][2] + comparison_string1
@@ -942,8 +949,9 @@ def find_redun_model_recursively(outdir,
                                             cur_ali_num,
                                             inali, ranked_seq_objs,
                                             redundant_gene_model_dict,
-                                            metric_name,
-                                            metric_value_minimum,
+                                            #metric_name,
+                                            #metric_value_minimum,
+                                            max_percent_ident,
                                             extra_info_dict,
                                             overlap_required,
                                             overlap_minimum_aligning_residues,
@@ -1389,8 +1397,9 @@ def two_proteins_same_gene_in_gff3(sql_database, prot_id_1, prot_id_2):
 
 
 def count_paralogues3(csv_file,
-                      metric_name,
-                      metric_value_minimum,
+                      #metric_name,
+                      #metric_value_minimum,
+                      max_percent_ident,
                       timestamp,
                       overlap_required,
                       minimum_length_of_query_to_be_distinct_paralogue,
@@ -2068,8 +2077,9 @@ def count_paralogues3(csv_file,
                                          alignment_path,
                                          ranked_seq_objs,
                                          redundant_gene_model_dict,
-                                         metric_name,
-                                         metric_value_minimum,
+                                         #metric_name,
+                                         #metric_value_minimum,
+                                         max_percent_ident,
                                          extra_info_dict,
                                          overlap_required,
                                          overlap_minimum_aligning_residues,

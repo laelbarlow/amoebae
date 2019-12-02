@@ -1403,13 +1403,18 @@ Miscellaneous commands:
         parser.add_argument('--out_csv_path', help='''Optionally specify an
                 output file path, so that this command can be piped together
                 with others.''', default=None)
-        parser.add_argument('-m', '--metric_name', help="""Name of metric to be used
-                for evaluating whether two sequences are redundant or not. Can be
-                either 'percent_identity' or 'gene_model_redundancy_index'.""",\
-                        default='percent_identity')
-        parser.add_argument('-v', '--metric_value_minimum', help="""Minimum value of
-                specified metric for evaluating whether two sequences are redundant or
-                not.""", default=98.0)
+        #parser.add_argument('--metric_name', help="""Name of metric to be used
+        #        for evaluating whether two sequences are redundant or not. Can be
+        #        either 'percent_identity' or 'gene_model_redundancy_index'.""",\
+        #                default='percent_identity')
+        #parser.add_argument('--metric_value_minimum', help="""Minimum value of
+        #        specified metric for evaluating whether two sequences are redundant or
+        #        not.""", default=98.0)
+        parser.add_argument('--max_percent_ident', help="""Maximum percent
+        identity (among aligning residues) for evaluating whether two sequences
+        are redundant or not (secondary hits showing a percent identity with a
+        higher-ranking hit exceeding this value will be excluded).""",
+        default=98.0)
         parser.add_argument('--min_length', help="""Absolute minimum length (in
                 AA) of a hit sequence to be considered a potential distinct
                 paralogue.""", default=55)
@@ -1420,8 +1425,8 @@ Miscellaneous commands:
         parser.add_argument('--remove_tblastn_hits_at_annotated_loci',
                 help="""Ignore tblastn hits that overlap with previously
                 annotated loci. The rationale for this would be that the
-                protein sequences should have been retrieved if the tblastn hit
-                were a true positive anyway.""",
+                corresponding protein sequences should have been retrieved if
+                the tblastn hit were a true positive anyway.""",
                 action='store_true')
         parser.add_argument('--overlap_required', help="""True if hits
                 must overlap with a higher-ranking hit to be considered
@@ -1498,8 +1503,9 @@ Miscellaneous commands:
         if not args.add_ali_col: 
             # Write output file with interpetation column appended.
             final_outfp = count_paralogues3(args.csv_file,
-                                            args.metric_name,
-                                            args.metric_value_minimum,
+                                            #args.metric_name,
+                                            #args.metric_value_minimum,
+                                            args.max_percent_ident,
                                             timestamp,
                                             args.overlap_required,
                                             args.min_length,
