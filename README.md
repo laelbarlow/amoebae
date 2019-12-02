@@ -27,6 +27,8 @@ system:
 
 - Biopython (easily installed via Anaconda) ([Cock *et  al*., 2009](https://academic.oup.com/bioinformatics/article/25/11/1422/330687))
 
+- exonerate (easily installed via Anaconda)
+
 - ETE3 ([Huerta-Cepas *et  al*., 2016](https://academic.oup.com/mbe/article/33/6/1635/2579822))
 
 - [gffutils](https://pythonhosted.org/gffutils/) 
