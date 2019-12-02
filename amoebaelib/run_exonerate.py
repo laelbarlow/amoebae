@@ -56,17 +56,110 @@ class ExonerateLocusResult:
                  position_of_subject_seq_start_in_original,
                  genetic_code_number
                  ):
-        # Extract nucleotide sequence from the exonerate output text file.
-        temp_fastafp = exonerate_output_file_path.rsplit('.', 1) [0] + '_seq.fna'
-        with open(exonerate_output_file_path) as exonerate_outputfh, open(temp_fastafp, 'w') as o:
+        # Check that there is a usable nucleotide sequence in the file, and
+        # extract a list of FASTA sequence strings for the HSPs in the order
+        # that they appear in the file.
+        fasta_strings = []
+        with open(exonerate_output_file_path) as exonerate_outputfh:
+            # Get file contents as a string.
             file_text_string = exonerate_outputfh.read()
+
+            # Check that there is at least one FASTA sequence in the file.
             fasta_string = None
             try:
-                fasta_string = file_text_string.split('------------')[4].strip()
+                fasta_string = file_text_string.split('\n------------')[4].strip()
             except:
                 print("Could not parse exonerate output file %s" % exonerate_output_file_path)
             assert fasta_string is not None
-            o.write(fasta_string)
+            assert fasta_string.startswith('>')
+
+            for i in file_text_string.split('\n------------')[4:]:
+                if i.strip().startswith('>'):
+                    fasta_strings.append(i.strip())
+
+
+        # Use Biopython to parse the exonerate output file, and identify the
+        # HSP to use.
+        hsp_to_use = None
+        fasta_string_to_use = ''
+        with open(exonerate_output_file_path) as exonerate_outputfh:
+            parsed_exonerate = list(SearchIO.parse(exonerate_output_file_path, 'exonerate-text'))
+            #print(parsed_exonerate)
+            #for hsp in sorted(list(parsed_exonerate), key=lambda x: x.score, reverse=True):
+            hsp_list = []
+            for x in parsed_exonerate:
+                for y in x:
+                    for z in y:
+                        hsp_list.append(z)
+            assert len(hsp_list) == len(fasta_strings), """Different
+            number of HSPs and FASTA sequences identified in the exonerate
+            output file %s""" % exonerate_output_file_path
+            for hsp, fasta_string in zip(hsp_list, fasta_strings):
+                if len(fasta_string) > len(fasta_string_to_use):
+                    fasta_string_to_use = fasta_string
+                    hsp_to_use = hsp
+        assert hsp_to_use is not None
+        assert fasta_string_to_use is not ''
+        #print('\n')
+        #print(exonerate_output_file_path)
+        #print(fasta_string_to_use)
+
+        # Define the locations of the fragments within the selected HSP for
+        # recording in the output summary and sequence header.
+        locations = []
+        concatenated_fragment_seqs = ''
+        additional_seq_len = position_of_subject_seq_start_in_original - 1
+        #for hspfragments in hsp_to_use:
+        #    #print('\n')
+        #    #print(hspfragments)
+        for fragment in hsp_to_use:
+            #print(fragment)
+            #print(fragment.hit.seq)
+
+            #location = '[' + str(fragment.hit_start + 1) + ',' + str(fragment.hit_end) + ']'
+            #location = [min([fragment.hit_start + 1, fragment.hit_end]), max([fragment.hit_start + 1, fragment.hit_end])]
+            location = [fragment.hit_range[0] + 1 +\
+                    additional_seq_len, fragment.hit_range[1] + additional_seq_len]
+            locations.append(location)
+            
+                #concatenated_fragment_seqs = concatenated_fragment_seqs + fragment.hit
+
+        #print(concatenated_fragment_seqs.seq)
+        #print(transl_exonerate_seq_obj.seq)
+        #assert str(concatenated_fragment_seqs.seq) == str(transl_exonerate_seq_obj.seq)
+
+        # Sort locations from 5' to 3'. 
+        locations.sort(key=lambda x: x[0])
+        # Construct a string with locations.
+        location_string = '[' + ','.join([str(x).replace(' ', '') for x in locations]) + ']'
+        #print(location_string)
+
+        # Define location description strings as an attribute of instances of
+        # this class.
+        self.location_string = location_string
+
+        # Write FASTA sequence to a file.
+        temp_fastafp = exonerate_output_file_path.rsplit('.', 1) [0] + '_seq.fna'
+        with open(temp_fastafp, 'w') as o:
+            ## Get file contents as a string.
+            #file_text_string = exonerate_outputfh.read()
+
+            ## Check that there is at least one FASTA sequence in the file.
+            #fasta_string = None
+            #seq_position = XXXX + XX
+            #try:
+            #    fasta_string = file_text_string.split('\n------------')[4].strip()
+            #except:
+            #    print("Could not parse exonerate output file %s" % exonerate_output_file_path)
+            #assert fasta_string is not None
+            #assert fasta_string.startswith('>')
+
+            #print('\n\n\n')
+            #print('Sequence identified by exonerate in file %s:' % exonerate_output_file_path)
+            #print(fasta_string)
+            #print('\n\n\n')
+
+            o.write(fasta_string_to_use)
 
         # Parse the nucleotide sequence file.
         exonerate_seq_obj = SeqIO.read(temp_fastafp, 'fasta')
@@ -84,46 +177,6 @@ class ExonerateLocusResult:
         #print('\nTranslation of the coding sequence:')
         #print(transl_exonerate_seq_obj.seq)
         #print('\n')
-
-        # Use Biopython to parse the exonerate output file.
-        locations = []
-        concatenated_fragment_seqs = ''
-        additional_seq_len = position_of_subject_seq_start_in_original - 1
-        with open(exonerate_output_file_path) as exonerate_outputfh:
-            parsed_exonerate = SearchIO.read(exonerate_output_file_path, 'exonerate-text') 
-            #print(parsed_exonerate)
-            for hsp in parsed_exonerate:
-                #print(hsp)
-                for hspfragments in hsp:
-                    #print('\n')
-                    #print(hspfragments)
-                    for fragment in hspfragments:
-                        #print(fragment)
-                        #print(fragment.hit.seq)
-
-                        #location = '[' + str(fragment.hit_start + 1) + ',' + str(fragment.hit_end) + ']'
-                        #location = [min([fragment.hit_start + 1, fragment.hit_end]), max([fragment.hit_start + 1, fragment.hit_end])]
-                        location = [fragment.hit_range[0] + 1 +\
-                                additional_seq_len, fragment.hit_range[1] + additional_seq_len]
-                        #print(fragment.hit_range)
-                        locations.append(location)
-                        
-                        #concatenated_fragment_seqs = concatenated_fragment_seqs + fragment.hit
-                        concatenated_fragment_seqs = concatenated_fragment_seqs + fragment.hit
-
-        #print(concatenated_fragment_seqs.seq)
-        #print(transl_exonerate_seq_obj.seq)
-        #assert str(concatenated_fragment_seqs.seq) == str(transl_exonerate_seq_obj.seq)
-
-        # Sort locations from 5' to 3'. 
-        locations.sort(key=lambda x: x[0])
-        # Construct a string with locations.
-        location_string = '[' + ','.join([str(x).replace(' ', '') for x in locations]) + ']'
-        #print(location_string)
-
-        # Define location description strings as an attribute of instances of
-        # this class.
-        self.location_string = location_string
         
         # Add locations to header.
         transl_exonerate_seq_obj.description =\
@@ -198,6 +251,13 @@ def run_exonerate_as_subprocess(query_prot_faa,
     exonerate_command_list = ['exonerate',
                               query_prot_faa,
                               subj_subseq_fna,
+                              #'--gappedextension', # Do gapped HSP extension (default).
+                              '--extensionthreshold',
+                              '50', # Set gapped extension threshold (default=50).
+                              '--gapextend',
+                              '-4', # For Affine models (default=-4).
+                              '-i',
+                              '-15', # Specify penalty for adding introns default -30.
                               '-m',
                               'protein2genome',
                               '--ryo',
@@ -206,10 +266,14 @@ def run_exonerate_as_subprocess(query_prot_faa,
                               #'False', # Could save space.
                               '--geneticcode',
                               str(genetic_code),
-                              '--proteinhspthreshold', 
-                              '25', # Default setting is 30.
                               '--score',
                               exonerate_score_threshold,
+                              '--proteinhspthreshold', 
+                              '25', # Default setting is 30.
+                              '--proteinwordlimit', 
+                              '4', # Default setting is 4.
+                              '--frameshift',
+                              '-28', # Default penalty for adding a frameshift is -28.
                               '--splice3',
                               'primate', # Default setting.
                               '--splice5',
