@@ -35,6 +35,7 @@ import settings
 #from module_get_fas_from_db_dir import get_seq_obj_from_db_fasta
 from module_amoebae import get_seqs_from_fasta_db
 from Bio import SeqIO
+from Bio.Alphabet import IUPAC
 import warnings
 from Bio import BiopythonExperimentalWarning
 with warnings.catch_warnings():
@@ -164,6 +165,15 @@ class ExonerateLocusResult:
         # Parse the nucleotide sequence file.
         exonerate_seq_obj = SeqIO.read(temp_fastafp, 'fasta')
         #print(exonerate_seq_obj.description)
+
+        # Temp.
+        print("\nexonerate_seq_obj:")
+        print(exonerate_seq_obj)
+        exonerate_seq_obj.seq.alphabet = IUPAC.ambiguous_dna
+        print("\nexonerate_seq_obj with new alphabet:")
+        print(exonerate_seq_obj)
+        print("\nexonerate_seq_obj.seq:")
+        print(exonerate_seq_obj.seq)
 
         # Translate the nucleotide sequence with the appropriate genetic code,
         # in the appropriate strand.
