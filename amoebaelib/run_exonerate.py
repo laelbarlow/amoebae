@@ -166,14 +166,16 @@ class ExonerateLocusResult:
         exonerate_seq_obj = SeqIO.read(temp_fastafp, 'fasta')
         #print(exonerate_seq_obj.description)
 
-        # Temp.
-        print("\nexonerate_seq_obj:")
-        print(exonerate_seq_obj)
+        # Change alphabet type for the sequence to ambiguous DNA, so that it
+        # can be translated (if it is translatable).
         exonerate_seq_obj.seq.alphabet = IUPAC.ambiguous_dna
-        print("\nexonerate_seq_obj with new alphabet:")
-        print(exonerate_seq_obj)
-        print("\nexonerate_seq_obj.seq:")
-        print(exonerate_seq_obj.seq)
+
+        ## Code block for debugging issues with translating sequences using
+        ## Biopython.
+        #print("\nexonerate_seq_obj:")
+        #print(exonerate_seq_obj)
+        #print("\nexonerate_seq_obj.seq:")
+        #print(exonerate_seq_obj.seq)
 
         # Translate the nucleotide sequence with the appropriate genetic code,
         # in the appropriate strand.

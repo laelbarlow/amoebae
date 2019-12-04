@@ -617,7 +617,7 @@ def write_fwd_srch_res_to_csv(outdir,
     # Get database info spreadsheet path from settings module.
     db_info_csv = settings.db_info_csv
 
-    # Define string for header line in output spreadseheet.
+    # Define string for header line in output spreadsheet.
     # ***If this is changed, then make sure to change the corresponding code
     # for filling in data into the rows (below).
     column_label_list = module_amoebae_column_header_lists.fwd_column_label_list

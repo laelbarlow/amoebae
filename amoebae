@@ -852,8 +852,18 @@ Miscellaneous commands:
     def sum_fwd_srch(self):
         parser = argparse.ArgumentParser(
             description='''Append information about forward searches to csv
-                summary file (this is used to organize reverse searches).''',
-                formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+            summary file (this is used to organize reverse searches). For
+            TBLASTN searches (protein queries, nucleotide target sequences),
+            HSPs are clustered into groups that are close enough within the
+            target sequence to potentially represent exons from the same coding
+            sequence. The nucleotide subsequences in which these clusters of
+            HSPs are found are then analyzed using exonerate to identify and
+            translate potential exons, in "protein2genome" mode, because
+            exonerate, unlike TBLASTN, attempts to identify exon boundaries,
+            yielding translations that are less likely to include translations
+            of non-coding regions outside exons (which might include apparent
+            stop codons).''',
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('fwd_srch_out', help='''Path to directory where
                 forward search results were written.''')
         parser.add_argument('csv_file', help='''Path to summary spreadsheet
@@ -867,14 +877,18 @@ Miscellaneous commands:
         of the same gene locus. This is important, because it will be assumed
         that HSP separated by more than this number of nucleotide bases are not
         part of the same gene or TBLASTN "hit".''', default=10000)
-        parser.add_argument('--do_not_use_exonerate', help='''Use exonerate
-        instead of just TBLASTN to identify coding sequences and
-        translations.''', action='store_true')
+        parser.add_argument('--do_not_use_exonerate', help='''Override the
+        default use of exonerate to identify coding sequences and translations,
+        and just use TBLASTN instead. This option is provided because
+        concatenated TBLASTN HSPs may be more inclusive of sequences within the
+        target sequence, and the results of TBLASTN and exonerate may need to
+        be compared.''', action='store_true')
         parser.add_argument('--exonerate_score_threshold', help='''Set score
         threshold to be applied when running exonerate on nucleotide sequences
         identified by TBLASTN. The default for setting of exonerate is 100, but
         a lower score is set as default here, because otherwise exonerate
-        cannot identify some of the seqeunces identified by TBLASTN.''',
+        cannot identify some of the seqeunces identified by TBLASTN. This
+        option is only relevant if using exonerate.''',
         default='10')
         args = parser.parse_args(sys.argv[2:])
 
@@ -1336,6 +1350,7 @@ Miscellaneous commands:
                 default=None)
         parser.add_argument('--hmmer_cutoff', help='''Specify a score that hits
                 must exceed to be included.''', default=20)
+        # Is this option obsolete?
         parser.add_argument('--redun_hits', help='''Interpret which hits are
                 redundant in output of get_redun_hits command.''',
                 action='store_true')
@@ -1410,11 +1425,15 @@ Miscellaneous commands:
         #parser.add_argument('--metric_value_minimum', help="""Minimum value of
         #        specified metric for evaluating whether two sequences are redundant or
         #        not.""", default=98.0)
-        parser.add_argument('--max_percent_ident', help="""Maximum percent
-        identity (among aligning residues) for evaluating whether two sequences
-        are redundant or not (secondary hits showing a percent identity with a
-        higher-ranking hit exceeding this value will be excluded).""",
-        default=98.0)
+        parser.add_argument('--remove_tblastn_hits_at_annotated_loci',
+                help="""Ignore tblastn hits that overlap with previously
+                annotated loci. The rationale for this would be that the
+                corresponding protein sequences should have been retrieved if
+                the tblastn hit were a true positive anyway.""",
+                action='store_true')
+        parser.add_argument('--allow_internal_stops', help="""Include sequences
+        that have internal stop codons (anywhere other than the N-terminal
+        position).""", default=True)
         parser.add_argument('--min_length', help="""Absolute minimum length (in
                 AA) of a hit sequence to be considered a potential distinct
                 paralogue.""", default=55)
@@ -1422,15 +1441,14 @@ Miscellaneous commands:
                 AA) of a hit sequence as a percentage of query length for the
                 hit to be considered a potential distinct paralogue.""",
                 default=15)
-        parser.add_argument('--remove_tblastn_hits_at_annotated_loci',
-                help="""Ignore tblastn hits that overlap with previously
-                annotated loci. The rationale for this would be that the
-                corresponding protein sequences should have been retrieved if
-                the tblastn hit were a true positive anyway.""",
-                action='store_true')
         parser.add_argument('--overlap_required', help="""True if hits
                 must overlap with a higher-ranking hit to be considered
                 potential unique paralogues.""", action='store_true')
+        parser.add_argument('--max_percent_ident', help="""Maximum percent
+        identity (among aligning residues) for evaluating whether two sequences
+        are redundant or not (secondary hits showing a percent identity with a
+        higher-ranking hit exceeding this value will be excluded).""",
+        default=98.0)
         parser.add_argument('--min_alig_res_in_overlap', help="""Minimum number
         of residues which must align for two sequences to be considered as
         potentially distinct hits. This is only relevant if the
@@ -1487,6 +1505,9 @@ Miscellaneous commands:
         start_time = time.time()
         # Get current time for timestamp.
         timestamp = time.strftime("%Y%m%d%H%M%S")
+
+        if not args.allow_internal_stops:
+            input("The --allow_internal_stops option has not been implemented yet.")
 
         ## Define output file path. 
         #outfp = None
