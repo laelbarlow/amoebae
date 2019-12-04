@@ -1436,8 +1436,14 @@ def get_hsp_clusters(hit, max_gap):
             hsp_clusters = hsp_clusters + strand_hsp_clusters
 
     # Order clusters by ascending E-value.
+    #print('\n\nPrinting E-values for tblastn hsp clusters:')
+    #for h in hsp_clusters:
+    #    print(min([y.evalue for y in h[0]]))
     hsp_clusters = sorted(hsp_clusters, key=lambda x: min([y.evalue for y in x[0]]))
-
+    #print('\n\nPrinting E-values for tblastn hsp clusters after ranking:')
+    #for h in hsp_clusters:
+    #    print(min([y.evalue for y in h[0]]))
+    #print('\n\n')
 
     ## Concatenate the hsp sequences in order from 5' to 3' as they appear
     ## in the nucleotide subject sequence.
@@ -1689,6 +1695,12 @@ def split_tblastn_hits_into_separate_genes(query_res_obj, max_gap):
     #            """Clusters overlap: %s and %s""" %\
     #            (cluster1[0][0].hit_id + str(get_cluster_range(cluster1[0])),\
     #             cluster2[0][0].hit_id + str(get_cluster_range(cluster2[0])))
+
+    # Sort HSPs according to E-value (the ranking may change because when
+    # TBLASTN HSPs for the same scaffold sequence are split into those
+    # representing potentially separate genes, then some may have higher
+    # E-values).
+    all_hsp_clusters.sort(key=lambda x: min([y.evalue for y in x[0]]))
 
     # Return the list of SearchIO HSP (not Hit) object clusters/lists.
     return all_hsp_clusters

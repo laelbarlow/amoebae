@@ -472,6 +472,8 @@ def get_rows_for_fwd_srch_df(df,
                 new_row_df.loc[0]['Forward hit length'] = cur_hit_len
                 new_row_df.loc[0]['Forward hit length as a percentage of query length'] =\
                         round((cur_hit_len/query_len) * 100)
+                new_row_df.loc[0]['Forward hit percent query cover'] =\
+                        round((cur_hit_len/query_len) * 100) # Same as percent length, because all residues identified align to query sequence.
                 #new_row_df.loc[0]['Forward hit accession'] = hit.id + '_(fwdhit' + str(hit_num + 1) + ')' 
                 new_row_df.loc[0]['Forward hit accession'] = hit.id
                 new_row_df.loc[0]['Forward hit description'] = hit.description
@@ -556,9 +558,15 @@ def get_rows_for_fwd_srch_df(df,
                 new_row_df.loc[0]['Forward hit length'] = cur_hit_len
                 new_row_df.loc[0]['Forward hit length as a percentage of query length'] =\
                         round((cur_hit_len/query_len) * 100)
+
+                # Get subsequence that aligns to query, and its coordinates
+                # within the target sequence.
+                subseq_and_coord = parsed_file_obj.hit_subsequence_and_coord(hit_num)
+
+                new_row_df.loc[0]['Forward hit percent query cover'] =\
+                        round((len(subseq_and_coord[0])*100)/query_len)
                 new_row_df.loc[0]['Forward hit accession'] = parsed_file_obj.hit_id(hit_num)
                 new_row_df.loc[0]['Forward hit description'] = parsed_file_obj.hit_description(hit_num)
-
 
                 # Need to handle nucleotide and protein sequences
                 # differently!
@@ -573,7 +581,6 @@ def get_rows_for_fwd_srch_df(df,
                 #range_and_seq[0] 
                 #new_row_df.loc[0]['Forward hit subsequence(s) that align(s) to query'] = range_and_seq[1]
 
-                subseq_and_coord = parsed_file_obj.hit_subsequence_and_coord(hit_num)
                 new_row_df.loc[0]['Forward hit coordinates of subsequence(s) that align(s) to query'] =\
                 str(subseq_and_coord[1]).replace(' ', '')
                 new_row_df.loc[0]['Forward hit description of subsequence(s) that align(s) to query']\
