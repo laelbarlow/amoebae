@@ -1406,12 +1406,45 @@ Miscellaneous commands:
 
     def find_redun_seqs(self):
         parser = argparse.ArgumentParser(
-            description='''Identify sequences likely encoded on redundant gene
-            loci predicted for the same species. Note: Requires a column to be
-            manually added to the input csv file prior to running with the
-            header "Alignment for sequence comparison" and filled with the
-            appropriate alignment name to use (one for each query title, as
-            listed in the "Query title" column).''', 
+            description='''Identify hit sequences likely encoded by the same
+            gene loci in the genome of a given species, or otherwise not
+            representing paralogous genes.  
+
+            Criteria are applied in this order:
+
+            1. Peptide hits with the same ID as higher-ranking hits for the
+            same query (query title) are excluded.
+
+            2. Nucleotide hits for the same loci as peptide sequence hits are
+            excluded.
+
+            3. Sequences with internal stop codons are excluded, as these are
+            potentially pseudogenes.
+
+            4. Sequences are excluded if they do not meet several minimum
+            length criteria: Absolute minimum length (in amino acids) and
+            percent query cover.
+
+            5. Sequences are excluded if they do not overlap to a specified
+            degree with all included higher-ranking hits for the same query
+            (query title) in sequence data for the same species/genome. This is
+            determined by algorithmically comparing pairs of sequences aligned
+            to a reference alignment of homologues, and several minimum
+            measures of alignment overlap may be specified.
+
+            6. Secondary hit sequences are excluded if they do not meet a
+            specified maximum percent identity threshold. Highly identical
+            sequences may result from false segmental duplications in the
+            genome assembly, may represent alleles, etc. 
+            
+            Note: Applying these criteria requires a column to be manually
+            added to the input csv file prior to running with the header
+            "Alignment for sequence comparison" and filled with the appropriate
+            alignment name to use (one for each query title, as listed in the
+            "Query title" column). Alternatively, you can run this command with
+            the --add_ali_col option to automatically identify appropriate
+            alignments among your aligned FASTA queries used for running HMMer
+            searches.''', 
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('csv_file', help='''Path to spreadsheet with
         interpreted search results outputted by the interp_srchs command.''')
@@ -1426,10 +1459,13 @@ Miscellaneous commands:
         #        specified metric for evaluating whether two sequences are redundant or
         #        not.""", default=98.0)
         parser.add_argument('--remove_tblastn_hits_at_annotated_loci',
-                help="""Ignore tblastn hits that overlap with previously
+                help="""Ignore tblastn hits that overlap with any previously
                 annotated loci. The rationale for this would be that the
                 corresponding protein sequences should have been retrieved if
-                the tblastn hit were a true positive anyway.""",
+                the tblastn hit were a true positive anyway. If this option is
+                not specified, then sequences will still be excluded if they
+                specifically correspond to the same loci as do higher-ranking
+                hits.""",
                 action='store_true')
         parser.add_argument('--allow_internal_stops', help="""Include sequences
         that have internal stop codons (anywhere other than the N-terminal
@@ -1441,6 +1477,10 @@ Miscellaneous commands:
                 AA) of a hit sequence as a percentage of query length for the
                 hit to be considered a potential distinct paralogue.""",
                 default=15)
+        parser.add_argument('--min_percent_query_cover', help="""Minimum number
+        of residues aligning with the original query as a percentage of the
+        original query sequence length.""",
+                default=0)
         parser.add_argument('--overlap_required', help="""True if hits
                 must overlap with a higher-ranking hit to be considered
                 potential unique paralogues.""", action='store_true')
@@ -1506,9 +1546,6 @@ Miscellaneous commands:
         # Get current time for timestamp.
         timestamp = time.strftime("%Y%m%d%H%M%S")
 
-        if not args.allow_internal_stops:
-            input("The --allow_internal_stops option has not been implemented yet.")
-
         ## Define output file path. 
         #outfp = None
         #if args.out_csv_path == None:
@@ -1529,8 +1566,10 @@ Miscellaneous commands:
                                             args.max_percent_ident,
                                             timestamp,
                                             args.overlap_required,
+                                            args.allow_internal_stops,
                                             args.min_length,
                                             args.min_percent_length,
+                                            args.min_percent_query_cover,
                                             args.remove_tblastn_hits_at_annotated_loci,
                                             args.min_alig_res_in_overlap,
                                             args.min_ident_res_in_overlap,

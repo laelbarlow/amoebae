@@ -692,7 +692,9 @@ def find_redun_model_recursively(outdir,
                                  overlap_minimum_similar_span_len,
                                  overlap_minimum_percent_identity,
                                  overlap_minimum_percent_similarity,
-                                 overlap_minimum_percent_overlap
+                                 overlap_minimum_percent_overlap,
+                                 sankey_data_dict,
+                                 nucl_accs
                                  ):
     """Recursively process sequence objects, classifying them into groups of
     redundant predictions for single loci/alleles.
@@ -735,6 +737,12 @@ def find_redun_model_recursively(outdir,
         # Get sequence object accessions.
         acc = seq_obj.id
 
+        # Determine whether the sequence is from a TBLASTN (nucleotide) hit or
+        # a protein hit.
+        sequence_type = 'prot'
+        if acc in nucl_accs:
+            sequence_type = 'nucl'
+
         # Align to the HMM alignment plus top hit.
         ali_plus_top_seq_plus_1 = os.path.join(outdir, str(cur_ali_num) + '.nex')
         cur_ali_num += 1
@@ -772,6 +780,9 @@ def find_redun_model_recursively(outdir,
                 # representative of a paralogous locus distinct from higher-ranking
                 # hits).
                 acc_for_objs_to_remove.append(seq_obj.id)
+
+                # Update Sankey data dict.
+                sankey_data_dict['Overlap'][sequence_type] += 1
 
         # If significant overlap, get percent identity to decide whether the
         # sequence is representative of a different locus from the current "top
@@ -849,6 +860,8 @@ def find_redun_model_recursively(outdir,
                 redundant_gene_model_dict[acc][2] =\
                 redundant_gene_model_dict[acc][2] + 'therefore redundant ' +\
                 'with it '
+                # Update Sankey data dict.
+                sankey_data_dict['Identity'][sequence_type] += 1
 
             else:
                 # Keep sequence object in list for next recursion.
@@ -961,7 +974,9 @@ def find_redun_model_recursively(outdir,
                                             overlap_minimum_similar_span_len,
                                             overlap_minimum_percent_identity,
                                             overlap_minimum_percent_similarity,
-                                            overlap_minimum_percent_overlap
+                                            overlap_minimum_percent_overlap,
+                                            sankey_data_dict,
+                                            nucl_accs
                                             )
     else:
         return redundant_gene_model_dict
@@ -1190,7 +1205,7 @@ def count_paralogues2(csv_file, alignmentdir, fastadir, fwdeval, metric_name,
                              'Sequence accession', 
                              'Comparison with other positive hits in the same genome', 
                              'Accessions for sequences that are redundant with the sequence',
-                             'Represents an identifiably unique paralogue']
+                             'Represents a potential paralogue']
 
     # Initiate new dataframe with columns to be appended/joined to existing
     # dataframe.
@@ -1303,7 +1318,7 @@ def count_paralogues2(csv_file, alignmentdir, fastadir, fwdeval, metric_name,
                 df.at[index_in_dataframe, 'Sequence accession'] = key
                 df.at[index_in_dataframe, 'Comparison with other positive hits in the same genome'] = str(full_redundant_gene_model_dict[key][2])
                 df.at[index_in_dataframe, 'Accessions for sequences that are redundant with the sequence'] = str(full_redundant_gene_model_dict[key][3])
-                df.at[index_in_dataframe, 'Represents an identifiably unique paralogue'] = unique
+                df.at[index_in_dataframe, 'Represents a potential paralogue'] = unique
 
         # Define previous query title and alignment path for next run through loop.
         prev_query_title = query_title
@@ -1402,8 +1417,10 @@ def count_paralogues3(csv_file,
                       max_percent_ident,
                       timestamp,
                       overlap_required,
+                      allow_internal_stops,
                       minimum_length_of_query_to_be_distinct_paralogue,
                       minimum_percent_length_of_query_to_be_distinct_paralogue,
+                      minimum_percent_query_cover_to_be_distinct_paralogue,
                       remove_tblastn_hits_at_annotated_loci,
                       overlap_minimum_aligning_residues,
                       overlap_minimum_identical_residues,
@@ -1414,8 +1431,23 @@ def count_paralogues3(csv_file,
                       overlap_minimum_percent_similarity,
                       overlap_minimum_percent_overlap,
                       outfp=None):
-    """Manage input and output details.
+    """Identify hits in an amoebae search result summary CSV file which are
+    redundant, or otherwise not likely to represent paralogous loci. Append
+    columns to a new copy of the CSV file listing information for each hit, and
+    also generate figures to summarize the results of applying the specified
+    criteria.
     """
+    # Initiate a dictionary to store counts of sequences that are excluded by
+    # each type of criterion. These will be used to generate a Sankey diagram.
+    sankey_data_dict = {'Total in':         {'prot': 0, 'nucl': 0},
+                        'Location':         {'prot': 0, 'nucl': 0},
+                        'Internal stops':   {'prot': 0, 'nucl': 0},
+                        'Length':           {'prot': 0, 'nucl': 0},
+                        'Overlap':          {'prot': 0, 'nucl': 0},
+                        'Identity':         {'prot': 0, 'nucl': 0},
+                        'Total positive':   {'prot': 0, 'nucl': 0}
+                        }
+
     # Define unique identifier string for this analysis.
     paralogue_count_id = 'paralogue_count_' + timestamp
 
@@ -1490,6 +1522,7 @@ def count_paralogues3(csv_file,
                           'evalue': 'Forward hit E-value (top HSP)',
                           'hit length': 'Forward hit length',
                           'percent length': 'Forward hit length as a percentage of query length',
+                          'percent query cover': 'Forward hit percent query cover',
                           'seq': 'Forward hit sequence',
                           'subseq': 'Forward hit subsequence(s) that align(s) to query',
                           'seq descr': 'Forward hit description',
@@ -1504,10 +1537,11 @@ def count_paralogues3(csv_file,
     #                         'Accessions for sequences that are redundant with the sequence',
     #                         'Represents an identifiably unique paralogue']
     new_column_label_list = ['Does not have same ID or locus as another hit',
+                             'Number of internal stop codons',
                              'Meets length criteria',
                              'Comparison with other positive hits in the same genome', 
                              'Accessions for sequences that are redundant with the sequence',
-                             'Represents an identifiably unique paralogue',
+                             'Represents a potential paralogue',
                              'Paralogue name']
 
     # Check that a column containing the name of the alignment to use is
@@ -1572,6 +1606,8 @@ def count_paralogues3(csv_file,
 
             sequence_filename = row[column_header_dict['database filename']]
 
+            percent_query_cover = row[column_header_dict['percent query cover']]
+
             # Integrate information into dict.
             combo = (query_title, taxon_name)
             # This info tuple is used later as well...
@@ -1584,7 +1620,8 @@ def count_paralogues3(csv_file,
                           hit_range,
                           actual_acc,
                           sequence_filename,
-                          length
+                          length,
+                          percent_query_cover
                           )
             if combo not in index_dict.keys():
                 # Initiate a new key in dict.
@@ -1622,8 +1659,12 @@ def count_paralogues3(csv_file,
         else:
             # Change values in the appropriate columns to '+'.
             df.at[index, 'Does not have same ID or locus as another hit'] = '+'
+            df.at[index, 'Number of internal stop codons'] = '0'
             df.at[index, 'Meets length criteria'] = '+'
 
+    # Initiate count of total nucleotide and protein hits.
+    sankey_data_dict['Total in']['prot'] = 0
+    sankey_data_dict['Total in']['nucl'] = 0
 
     # Iterate over relevant information and feed it into paralogue_counter
     # module for processing, and then put the relevant results in the right place
@@ -1742,15 +1783,105 @@ def count_paralogues3(csv_file,
         else:
             reduced_prot_tuples = prot_tuples
 
+        # Record non-redundant count of potential positive protein hits.
+        sankey_data_dict['Total in']['prot'] = len(prot_tuples)
+
+
+        # Check for redundancy among the tblastn hits in their locations, and
+        # remove all but the best hit for each locus.
+        # Since the tuples are sorted by E-value, for each tuple in the list,
+        # any tuples further down the list that have the same filename and seq
+        # ID and overlapping coordinates can be marked for removal.
+        reduced_nucl_tuples = []
+        more_nucl_tuples_to_remove = []
+        for num, i in enumerate(nucl_tuples):
+            if num + 1 < len(nucl_tuples):
+                for j in nucl_tuples[num + 1:]:
+                    # Check whether they have the same filename and sequence ID.
+                    if j[8] == i[8] and j[7] == i[7]:
+                        # Check for overlapping ranges.
+                        ir = i[6]
+                        jr = j[6]
+                        iset = set(range(int(ir[0]), int(ir[1])))
+                        jset = set(range(int(jr[0]), int(jr[1])))
+                        if len(iset.intersection(jset)) > 0:
+                            # Then the hits have overlapping ranges/coordinates on
+                            # the same subject sequence.
+                            # Check that the E-values are right.
+                            if i[3] <= j[3]:
+                                # Mark the one with the lower or equivalent E-value for removal.
+                                more_nucl_tuples_to_remove.append(j)
+
+                                # Change value in column for ID or locus redundancy
+                                # to '-'.
+                                df.at[j[0],\
+                                    'Does not have same ID or locus as another hit']\
+                                    = '-'
+
+                                # Make a note in the spreadsheet, explaining why
+                                # this hit was excluded.
+                                df.at[j[0],\
+                                    'Comparison with other positive hits in the same genome']\
+                                    = '(This hit is at the same locus as nucleotide hit with ID: %s)' % i[1]
+
+        # Remove the identified redundant tuples. 
+        if len(more_nucl_tuples_to_remove) > 0:
+            nucl_hit_indexes_to_remove = [x[0] for x in more_nucl_tuples_to_remove]
+            for i in nucl_tuples:
+                if i[0] not in nucl_hit_indexes_to_remove:
+                    reduced_nucl_tuples.append(i)
+        else:
+            reduced_nucl_tuples = nucl_tuples
+
+
+        # Remove nucleotide hits from the tuples if they have identical accessions
+        # to higher-ranking nucleotide hits (This should be redundant, because
+        # it is already checked whether they are for the same locus).
+        further_reduced_nucl_tuples = []
+        hit_indexes_to_remove = []
+        for num, i in enumerate(reduced_nucl_tuples):
+            if num + 1 < len(reduced_nucl_tuples):
+                for j in further_reduced_nucl_tuples[num + 1:]:
+                    # Check whether they have the same filename and sequence ID
+                    # (seq.id plus coordinates).
+                    if j[8] == i[8] and j[1] == i[1]:
+                        # Check that the E-values are right.
+                        if i[3] <= j[3]:
+                            # Mark the one with the lower or equivalent E-value for removal.
+                            hit_indexes_to_remove.append(j[0])
+
+                            # Change value in column for length criteria.
+                            df.at[j[0],\
+                                'Meets length criteria']\
+                                = '-'
+
+                            # Make a note in the spreadsheet, explaining why
+                            # this hit was excluded.
+                            df.at[j[0],\
+                                'Comparison with other positive hits in the same genome']\
+                                = '(This hit has the same ID as nucleotide hit with ID: %s)' % i[1]
+        # Remove the identified redundant tuples. 
+        if len(hit_indexes_to_remove) > 0:
+            for i in reduced_nucl_tuples:
+                if i[0] not in hit_indexes_to_remove:
+                    further_reduced_nucl_tuples.append(i)
+        else:
+            further_reduced_nucl_tuples = reduced_nucl_tuples
+
+        # Record initial number of potential positive nucleotide hits before
+        # applying criteria.
+        sankey_data_dict['Total in']['nucl'] += len(further_reduced_nucl_tuples)
+
+
         # Remove nucleotide hits from the tuples, if they represent a gene
         # locus that encodes one of the protein hits, or optionally any
         # annotated gene.
-        reduced_nucl_tuples = []
+        further_reduced_nucl_tuples2 = []
         nucl_tuples_to_remove = []
         if len(prot_tuples) == 0:
             # No protein hits to compare nucleotide hits to, so keep all
             # nucleotide hits.
-            reduced_nucl_tuples = nucl_tuples
+            further_reduced_nucl_tuples2 = nucl_tuples
         else:
             # Look for nucleotide hits that are redundant with protein hits.
             for x in nucl_tuples:
@@ -1811,12 +1942,12 @@ def count_paralogues3(csv_file,
                                     % ', '.join(overlapping_genes)
 
                         # Mark tuple for removal.
-                        nucl_tuples_to_remove.append(x)
+                        further_nucl_tuples_to_remove2.append(x)
 
                     else:
                         # Loop over protein hits and see if any are redundant with the
                         # nucleotide hit.
-                        for y in reduced_prot_tuples:
+                        for y in further_reduced_prot_tuples:
                             # Add info to info text to the spreadsheet if the tblastn hit
                             # is redundant with a protein hit.
                             for i in overlapping_genes:
@@ -1848,68 +1979,31 @@ def count_paralogues3(csv_file,
         if len(nucl_tuples_to_remove) > 0:
             nucl_hit_accs_to_remove = [x[1] for x in nucl_tuples_to_remove]
             for i in nucl_tuples:
-                if i[1] not in nucl_hit_accs_to_remove:
-                    reduced_nucl_tuples.append(i)
+                if i[1] not in nucl_hit_accs_to_remove2:
+                    further_reduced_nucl_tuples2.append(i)
         else:
-            reduced_nucl_tuples = nucl_tuples
+            further_reduced_nucl_tuples2 = further_reduced_nucl_tuples
 
-        # Check for redundancy among the tblastn hits in their locations, and
-        # remove all but the best hit for each locus.
-        # Since the tuples are sorted by E-value, for each tuple in the list,
-        # any tuples further down the list that have the same filename and seq
-        # ID and overlapping coordinates can be marked for removal.
-        further_reduced_nucl_tuples = []
-        more_nucl_tuples_to_remove = []
-        for num, i in enumerate(reduced_nucl_tuples):
-            if num + 1 < len(reduced_nucl_tuples):
-                for j in reduced_nucl_tuples[num + 1:]:
-                    # Check whether they have the same filename and sequence ID.
-                    if j[8] == i[8] and j[7] == i[7]:
-                        # Check for overlapping ranges.
-                        ir = i[6]
-                        jr = j[6]
-                        iset = set(range(int(ir[0]), int(ir[1])))
-                        jset = set(range(int(jr[0]), int(jr[1])))
-                        if len(iset.intersection(jset)) > 0:
-                            # Then the hits have overlapping ranges/coordinates on
-                            # the same subject sequence.
-                            # Check that the E-values are right.
-                            if i[3] <= j[3]:
-                                # Mark the one with the lower or equivalent E-value for removal.
-                                more_nucl_tuples_to_remove.append(j)
-
-                                # Change value in column for ID or locus redundancy
-                                # to '-'.
-                                df.at[j[0],\
-                                    'Does not have same ID or locus as another hit']\
-                                    = '-'
-
-                                # Make a note in the spreadsheet, explaining why
-                                # this hit was excluded.
-                                df.at[j[0],\
-                                    'Comparison with other positive hits in the same genome']\
-                                    = '(This hit is at the same locus as nucleotide hit with ID: %s)' % i[1]
-
-                                assert j[1] != 'Chr5[17020882..17021032]' # REMOVE THIS???
-        # Remove the identified redundant tuples. 
-        if len(more_nucl_tuples_to_remove) > 0:
-            nucl_hit_indexes_to_remove = [x[0] for x in more_nucl_tuples_to_remove]
-            for i in reduced_nucl_tuples:
-                if i[0] not in nucl_hit_indexes_to_remove:
-                    further_reduced_nucl_tuples.append(i)
-        else:
-            further_reduced_nucl_tuples = reduced_nucl_tuples
+        # Record initial number of potential positive nucleotide hits before
+        # applying criteria.
+        sankey_data_dict['Location']['nucl'] += len(nucl_tuples_to_remove)
 
 
-        # Ignore protein hits that are below the minimum length or percent length.
+        # Ignore protein hits that are below the minimum length, percent
+        # length, percent query cover, or that contain internal stops.
         reduced_prot_tuples2 = []
         prm = []
         for i in reduced_prot_tuples:
+            num_internal_stops = i[2].seq[0:-1].count('*')
             length = i[9]
             percent_length = i[5]
+            percent_query_cover = i[10]
             remove = False
+
+            # Apply absolute length criterion.
             if int(length) <\
             int(minimum_length_of_query_to_be_distinct_paralogue):
+                # Flag for removal.
                 remove = True
                 # Change value in column for length criteria.
                 df.at[i[0],\
@@ -1919,6 +2013,8 @@ def count_paralogues3(csv_file,
                 df.at[i[0],'Comparison with other positive hits in the same genome'] =\
                 '(Hit length is less than %s, therefore too short to be a potential distinct paralogue)'\
                     % str(minimum_length_of_query_to_be_distinct_paralogue)
+
+            # Apply percent length criterion.
             if int(percent_length) <\
             int(minimum_percent_length_of_query_to_be_distinct_paralogue):
                 remove = True
@@ -1930,8 +2026,46 @@ def count_paralogues3(csv_file,
                 df.at[i[0],'Comparison with other positive hits in the same genome'] =\
                 '(Hit length is less than %s percent of query length, therefore too short to be a potential distinct paralogue)'\
                     % str(minimum_percent_length_of_query_to_be_distinct_paralogue)
+
+            # Apply percent query cover criterion.
+            if int(percent_query_cover) <\
+            int(minimum_percent_query_cover_to_be_distinct_paralogue):
+                remove = True
+                # Change value in column for length criteria.
+                df.at[i[0],\
+                    'Meets length criteria']\
+                    = '-'
+                # Make a note in the spreadsheet.
+                df.at[i[0],'Comparison with other positive hits in the same genome'] =\
+                '(Hit sequence has less than %s percent query cover, therefore the similar region is too short for this sequence to be a potential distinct paralogue)'\
+                    % str(minimum_percent_query_cover_to_be_distinct_paralogue)
+
+            # Update Sankey data dict.
+            if remove:
+                sankey_data_dict['Length']['prot'] += 1
+
+            # Apply criterion based on presence of internal stops.
+            if num_internal_stops > 0:
+                # Change value in column for internal stop criterion.
+                df.at[i[0],\
+                    'Number of internal stop codons',]\
+                    = str(num_internal_stops)
+                if not allow_internal_stops:
+                    # Update Sankey data dict.
+                    if not remove:
+                        sankey_data_dict['Internal stops']['prot'] += 1
+                    # Flag for removal.
+                    remove = True
+                    # Make a note in the spreadsheet.
+                    df.at[i[0],'Comparison with other positive hits in the same genome'] =\
+                    '(Hit sequence contains %s internal stops, and is therefore a potential pseudogene)'\
+                        % str(num_internal_stops)
+
+            # If the sequence is to be removed, add it to the list of sequences
+            # to remove.
             if remove:
                 prm.append(i[0])
+
         # Remove the identified redundant tuples. 
         if len(prm) > 0:
             for i in reduced_prot_tuples:
@@ -1940,12 +2074,15 @@ def count_paralogues3(csv_file,
         else:
             reduced_prot_tuples2 = reduced_prot_tuples
 
+
         # Ignore nucleotide hits that are below the minimum length or percent length.
-        further_reduced_nucl_tuples2 = []
+        further_reduced_nucl_tuples3 = []
         nrm = []
-        for i in further_reduced_nucl_tuples:
+        for i in further_reduced_nucl_tuples2:
+            num_internal_stops = i[2].seq[0:-1].count('*')
             length = i[9]
             percent_length = i[5]
+            percent_query_cover = i[10]
             remove = False
             if int(length) <\
             int(minimum_length_of_query_to_be_distinct_paralogue):
@@ -1969,50 +2106,55 @@ def count_paralogues3(csv_file,
                 df.at[i[0],'Comparison with other positive hits in the same genome'] =\
                 '(Hit length is less than %s percent of query length, therefore too short to be a potential distinct paralogue)'\
                     % str(minimum_percent_length_of_query_to_be_distinct_paralogue)
+
+            # Apply percent query cover criterion.
+            if int(percent_query_cover) <\
+            int(minimum_percent_query_cover_to_be_distinct_paralogue):
+                remove = True
+                # Change value in column for length criteria.
+                df.at[i[0],\
+                    'Meets length criteria']\
+                    = '-'
+                # Make a note in the spreadsheet.
+                df.at[i[0],'Comparison with other positive hits in the same genome'] =\
+                '(Hit sequence has less than %s percent query cover, therefore the similar region is too short for this sequence to be a potential distinct paralogue)'\
+                    % str(minimum_percent_query_cover_to_be_distinct_paralogue)
+
+            # Update Sankey data dict.
+            if remove:
+                sankey_data_dict['Length']['nucl'] += 1
+
+            # Apply criterion based on presence of internal stops.
+            if num_internal_stops > 0:
+                # Change value in column for internal stop criterion.
+                df.at[i[0],\
+                    'Number of internal stop codons',]\
+                    = str(num_internal_stops)
+                if not allow_internal_stops:
+                    # Update Sankey data dict.
+                    if not remove:
+                        sankey_data_dict['Internal stops']['nucl'] += 1
+                    # Flag for removal.
+                    remove = True
+                    # Make a note in the spreadsheet.
+                    df.at[i[0],'Comparison with other positive hits in the same genome'] =\
+                    '(Hit sequence contains %s internal stops, and is therefore a potential pseudogene)'\
+                        % str(num_internal_stops)
+
+
+            # If the hit was flagged for removal, then append to the list of
+            # hits to exclude.
             if remove:
                 nrm.append(i[0])
+
         # Remove the identified redundant tuples. 
         if len(nrm) > 0:
-            for i in further_reduced_nucl_tuples:
-                if i[0] not in nrm:
-                    further_reduced_nucl_tuples2.append(i)
-        else:
-            further_reduced_nucl_tuples2 = further_reduced_nucl_tuples
-
-
-        # Remove nucleotide hits from the tuples if they have identical accessions
-        # to higher-ranking nucleotide hits (This should be redundant, because
-        # it is already checked whether they are for the same locus).
-        further_reduced_nucl_tuples3 = []
-        hit_indexes_to_remove = []
-        for num, i in enumerate(further_reduced_nucl_tuples2):
-            if num + 1 < len(further_reduced_nucl_tuples2):
-                for j in further_reduced_nucl_tuples2[num + 1:]:
-                    # Check whether they have the same filename and sequence ID
-                    # (seq.id plus coordinates).
-                    if j[8] == i[8] and j[1] == i[1]:
-                        # Check that the E-values are right.
-                        if i[3] <= j[3]:
-                            # Mark the one with the lower or equivalent E-value for removal.
-                            hit_indexes_to_remove.append(j[0])
-
-                            # Change value in column for length criteria.
-                            df.at[j[0],\
-                                'Meets length criteria']\
-                                = '-'
-
-                            # Make a note in the spreadsheet, explaining why
-                            # this hit was excluded.
-                            df.at[j[0],\
-                                'Comparison with other positive hits in the same genome']\
-                                = '(This hit has the same ID as nucleotide hit with ID: %s)' % i[1]
-        # Remove the identified redundant tuples. 
-        if len(hit_indexes_to_remove) > 0:
             for i in further_reduced_nucl_tuples2:
-                if i[0] not in hit_indexes_to_remove:
+                if i[0] not in nrm:
                     further_reduced_nucl_tuples3.append(i)
         else:
             further_reduced_nucl_tuples3 = further_reduced_nucl_tuples2
+
 
 
         # Check that no accessions listed in the info tuples are identical to
@@ -2037,6 +2179,7 @@ def count_paralogues3(csv_file,
         # Compile lists of just the sequence objects.
         ranked_prot_seq_objs = [x[2] for x in reduced_prot_tuples2]
         ranked_nucl_seq_objs = [x[2] for x in further_reduced_nucl_tuples3]
+        nucl_accs = [x.id for x in ranked_nucl_seq_objs]
         # Concatenate the two lists, putting proteins first.
         ranked_seq_objs = ranked_prot_seq_objs + ranked_nucl_seq_objs
 
@@ -2089,13 +2232,17 @@ def count_paralogues3(csv_file,
                                          overlap_minimum_similar_span_len,
                                          overlap_minimum_percent_identity,
                                          overlap_minimum_percent_similarity,
-                                         overlap_minimum_percent_overlap
+                                         overlap_minimum_percent_overlap,
+                                         sankey_data_dict,
+                                         nucl_accs
                                          )
 
             # Extract info from full redundant gene model dict, and add to
             # corresponding cells in dataframe.
             key_num = 0
             unique_paralogue_num = 0
+            unique_paralogue_prot = 0
+            unique_paralogue_nucl = 0
             for key in sorted(full_redundant_gene_model_dict.keys(),\
                     key=lambda x: full_redundant_gene_model_dict[x][0]):
                 key_num += 1
@@ -2122,22 +2269,27 @@ def count_paralogues3(csv_file,
                     unique = 'Uncertain'
 
                 # Define dataframe values using info from dict.
+                sequence_type = 'prot'
                 if df.loc[index_in_dataframe, 'Forward search method'].startswith('tblastn'):
                     df.at[index_in_dataframe, 'Comparison with other positive hits in the same genome'] =\
                     str(full_redundant_gene_model_dict[key][1].id) + ' ' + str(full_redundant_gene_model_dict[key][2])
+                    sequence_type = 'nucl'
                 else:
                     df.at[index_in_dataframe, 'Comparison with other positive hits in the same genome'] = str(full_redundant_gene_model_dict[key][2])
                 #print(df.loc[index_in_dataframe, 'Comparison with other positive hits in the same genome'])
                 df.at[index_in_dataframe, 'Accessions for sequences that are redundant with the sequence'] = str(full_redundant_gene_model_dict[key][3])
-                df.at[index_in_dataframe, 'Represents an identifiably unique paralogue'] = unique
+                df.at[index_in_dataframe, 'Represents a potential paralogue'] = unique
 
-                # Assign paralogue name to "Paralogue name" column, if it is
-                # unique.
                 if unique == 'Yes':
+                    # Assign paralogue name to "Paralogue name" column, if it is
+                    # unique.
                     unique_paralogue_num += 1
                     df.at[index_in_dataframe, 'Paralogue name'] =\
                     df.at[index_in_dataframe, column_header_dict['taxon name']].replace(' ', '_')\
                     + '__' + combo[0] + '_' + str(unique_paralogue_num)
+
+                    # Update Sankey data dict.
+                    sankey_data_dict['Total positive'][sequence_type] += 1
 
                 # Check that a note was made for the current index (row) in the
                 # dataframe.
@@ -2181,6 +2333,18 @@ def count_paralogues3(csv_file,
 
     # Get filepath for relevant output file. 
     outputfile = get_all_comparison_output_filepath(outdir)
+
+    # Make Sankey diagram.
+    #sankey_data_dict = {'Total in':         {'prot': 0, 'nucl': 0},
+    #                    'Location':         {'prot': 0, 'nucl': 0},
+    #                    'Internal stops':   {'prot': 0, 'nucl': 0},
+    #                    'Length':           {'prot': 0, 'nucl': 0},
+    #                    'Overlap':          {'prot': 0, 'nucl': 0},
+    #                    'Identity':         {'prot': 0, 'nucl': 0},
+    #                    'Total positive':   {'prot': 0, 'nucl': 0}
+    #                    }
+    print(sankey_data_dict)
+    assert 2!=2
 
     # Return final output filepath for printing.
     return output_fp

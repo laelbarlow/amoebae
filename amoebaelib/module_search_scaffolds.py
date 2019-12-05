@@ -1576,7 +1576,7 @@ def print_cluster(clusterplus, hit_num, cluster_num, num_dots, startend=None):
     
     # Display leftover HSPs that were excluded due to overlap.
     if len(leftover_hsps) > 0:
-        t = 'Excluded HPSs '
+        t = 'HSPs excluded due to overlap with higher-scoring HSPs:'
         print('\t' + t + '=' * (num_dots - len(t)))
         for hsp in leftover_hsps:
             prepend_dots = '.' * int(((hsp.hit_start - start)*num_dots)/(subseqlen))
