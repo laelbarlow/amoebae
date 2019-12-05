@@ -60,7 +60,6 @@ class ExonerateLocusResult:
         # Check that there is a usable nucleotide sequence in the file, and
         # extract a list of FASTA sequence strings for the HSPs in the order
         # that they appear in the file.
-        fasta_strings = []
         with open(exonerate_output_file_path) as exonerate_outputfh:
             # Get file contents as a string.
             file_text_string = exonerate_outputfh.read()
@@ -70,133 +69,151 @@ class ExonerateLocusResult:
             try:
                 fasta_string = file_text_string.split('\n------------')[4].strip()
             except:
-                print("Could not parse exonerate output file %s" % exonerate_output_file_path)
-            assert fasta_string is not None
-            assert fasta_string.startswith('>')
+                print("Could not identify FASTA sequence in exonerate output file %s" % exonerate_output_file_path)
+            if fasta_string is None:
+                # If no FASTA sequence can be found in the exonerate output file,
+                # then nothing was identified by exonerate, despite TBLASTN
+                # identifying an HSP in the sequence. In this case, simply set both
+                # attributes (the sequence and location string) to None.
+                self.location_string = None
+                self.seq_record = None
+            else:
+                # Collect information regarding the sequence identified by
+                # exonerate.
 
-            for i in file_text_string.split('\n------------')[4:]:
-                if i.strip().startswith('>'):
-                    fasta_strings.append(i.strip())
+                # Check that the FASTA string is in FASTA format.
+                assert fasta_string.startswith('>')
 
+                # Compile a list of FASTA strings from the exonerate output
+                # file.
+                fasta_strings = []
+                for i in file_text_string.split('\n------------')[4:]:
+                    if i.strip().startswith('>'):
+                        fasta_strings.append(i.strip())
 
-        # Use Biopython to parse the exonerate output file, and identify the
-        # HSP to use.
-        hsp_to_use = None
-        fasta_string_to_use = ''
-        with open(exonerate_output_file_path) as exonerate_outputfh:
-            parsed_exonerate = list(SearchIO.parse(exonerate_output_file_path, 'exonerate-text'))
-            #print(parsed_exonerate)
-            #for hsp in sorted(list(parsed_exonerate), key=lambda x: x.score, reverse=True):
-            hsp_list = []
-            for x in parsed_exonerate:
-                for y in x:
-                    for z in y:
-                        hsp_list.append(z)
-            assert len(hsp_list) == len(fasta_strings), """Different
-            number of HSPs and FASTA sequences identified in the exonerate
-            output file %s""" % exonerate_output_file_path
-            for hsp, fasta_string in zip(hsp_list, fasta_strings):
-                if len(fasta_string) > len(fasta_string_to_use):
-                    fasta_string_to_use = fasta_string
-                    hsp_to_use = hsp
-        assert hsp_to_use is not None
-        assert fasta_string_to_use is not ''
-        #print('\n')
-        #print(exonerate_output_file_path)
-        #print(fasta_string_to_use)
+                # Use Biopython to parse the exonerate output file, and identify the
+                # HSP to use.
+                hsp_to_use = None
+                fasta_string_to_use = ''
+                with open(exonerate_output_file_path) as exonerate_outputfh:
+                    parsed_exonerate = list(SearchIO.parse(exonerate_output_file_path, 'exonerate-text'))
+                    #print(parsed_exonerate)
+                    #for hsp in sorted(list(parsed_exonerate), key=lambda x: x.score, reverse=True):
+                    hsp_list = []
+                    for x in parsed_exonerate:
+                        for y in x:
+                            for z in y:
+                                hsp_list.append(z)
+                    assert len(hsp_list) == len(fasta_strings), """Different
+                    number of HSPs and FASTA sequences identified in the exonerate
+                    output file %s""" % exonerate_output_file_path
+                    for hsp, fasta_string in zip(hsp_list, fasta_strings):
+                        if len(fasta_string) > len(fasta_string_to_use):
+                            fasta_string_to_use = fasta_string
+                            hsp_to_use = hsp
+                assert hsp_to_use is not None
+                assert fasta_string_to_use is not ''
+                #print('\n')
+                #print(exonerate_output_file_path)
+                #print(fasta_string_to_use)
 
-        # Define the locations of the fragments within the selected HSP for
-        # recording in the output summary and sequence header.
-        locations = []
-        concatenated_fragment_seqs = ''
-        additional_seq_len = position_of_subject_seq_start_in_original - 1
-        #for hspfragments in hsp_to_use:
-        #    #print('\n')
-        #    #print(hspfragments)
-        for fragment in hsp_to_use:
-            #print(fragment)
-            #print(fragment.hit.seq)
+                # Define the locations of the fragments within the selected HSP for
+                # recording in the output summary and sequence header.
+                locations = []
+                concatenated_fragment_seqs = ''
+                additional_seq_len = position_of_subject_seq_start_in_original - 1
+                #for hspfragments in hsp_to_use:
+                #    #print('\n')
+                #    #print(hspfragments)
+                for fragment in hsp_to_use:
+                    #print(fragment)
+                    #print(fragment.hit.seq)
 
-            #location = '[' + str(fragment.hit_start + 1) + ',' + str(fragment.hit_end) + ']'
-            #location = [min([fragment.hit_start + 1, fragment.hit_end]), max([fragment.hit_start + 1, fragment.hit_end])]
-            location = [fragment.hit_range[0] + 1 +\
-                    additional_seq_len, fragment.hit_range[1] + additional_seq_len]
-            locations.append(location)
-            
-                #concatenated_fragment_seqs = concatenated_fragment_seqs + fragment.hit
+                    #location = '[' + str(fragment.hit_start + 1) + ',' + str(fragment.hit_end) + ']'
+                    #location = [min([fragment.hit_start + 1, fragment.hit_end]), max([fragment.hit_start + 1, fragment.hit_end])]
+                    location = [fragment.hit_range[0] + 1 +\
+                            additional_seq_len, fragment.hit_range[1] + additional_seq_len]
+                    locations.append(location)
+                    
+                        #concatenated_fragment_seqs = concatenated_fragment_seqs + fragment.hit
 
-        #print(concatenated_fragment_seqs.seq)
-        #print(transl_exonerate_seq_obj.seq)
-        #assert str(concatenated_fragment_seqs.seq) == str(transl_exonerate_seq_obj.seq)
+                #print(concatenated_fragment_seqs.seq)
+                #print(transl_exonerate_seq_obj.seq)
+                #assert str(concatenated_fragment_seqs.seq) == str(transl_exonerate_seq_obj.seq)
 
-        # Sort locations from 5' to 3'. 
-        locations.sort(key=lambda x: x[0])
-        # Construct a string with locations.
-        location_string = '[' + ','.join([str(x).replace(' ', '') for x in locations]) + ']'
-        #print(location_string)
+                # Sort locations from 5' to 3'. 
+                locations.sort(key=lambda x: x[0])
+                # Construct a string with locations.
+                location_string = '[' + ','.join([str(x).replace(' ', '') for x in locations]) + ']'
+                #print(location_string)
 
-        # Define location description strings as an attribute of instances of
-        # this class.
-        self.location_string = location_string
+                # Define location description strings as an attribute of instances of
+                # this class.
+                self.location_string = location_string
 
-        # Write FASTA sequence to a file.
-        temp_fastafp = exonerate_output_file_path.rsplit('.', 1) [0] + '_seq.fna'
-        with open(temp_fastafp, 'w') as o:
-            ## Get file contents as a string.
-            #file_text_string = exonerate_outputfh.read()
+                # Write FASTA sequence to a file.
+                temp_fastafp = exonerate_output_file_path.rsplit('.', 1) [0] + '_seq.fna'
+                with open(temp_fastafp, 'w') as o:
+                    ## Get file contents as a string.
+                    #file_text_string = exonerate_outputfh.read()
 
-            ## Check that there is at least one FASTA sequence in the file.
-            #fasta_string = None
-            #seq_position = XXXX + XX
-            #try:
-            #    fasta_string = file_text_string.split('\n------------')[4].strip()
-            #except:
-            #    print("Could not parse exonerate output file %s" % exonerate_output_file_path)
-            #assert fasta_string is not None
-            #assert fasta_string.startswith('>')
+                    ## Check that there is at least one FASTA sequence in the file.
+                    #fasta_string = None
+                    #seq_position = XXXX + XX
+                    #try:
+                    #    fasta_string = file_text_string.split('\n------------')[4].strip()
+                    #except:
+                    #    print("Could not parse exonerate output file %s" % exonerate_output_file_path)
+                    #assert fasta_string is not None
+                    #assert fasta_string.startswith('>')
 
-            #print('\n\n\n')
-            #print('Sequence identified by exonerate in file %s:' % exonerate_output_file_path)
-            #print(fasta_string)
-            #print('\n\n\n')
+                    #print('\n\n\n')
+                    #print('Sequence identified by exonerate in file %s:' % exonerate_output_file_path)
+                    #print(fasta_string)
+                    #print('\n\n\n')
 
-            o.write(fasta_string_to_use)
+                    o.write(fasta_string_to_use)
 
-        # Parse the nucleotide sequence file.
-        exonerate_seq_obj = SeqIO.read(temp_fastafp, 'fasta')
-        #print(exonerate_seq_obj.description)
+                # Parse the nucleotide sequence file.
+                exonerate_seq_obj = SeqIO.read(temp_fastafp, 'fasta')
+                #print(exonerate_seq_obj.description)
 
-        # Change alphabet type for the sequence to ambiguous DNA, so that it
-        # can be translated (if it is translatable).
-        exonerate_seq_obj.seq.alphabet = IUPAC.ambiguous_dna
+                # Change alphabet type for the sequence to ambiguous DNA, so that it
+                # can be translated (if it is translatable).
+                exonerate_seq_obj.seq.alphabet = IUPAC.ambiguous_dna
 
-        ## Code block for debugging issues with translating sequences using
-        ## Biopython.
-        #print("\nexonerate_seq_obj:")
-        #print(exonerate_seq_obj)
-        #print("\nexonerate_seq_obj.seq:")
-        #print(exonerate_seq_obj.seq)
+                ## Code block for debugging issues with translating sequences using
+                ## Biopython.
+                #print("\nexonerate_seq_obj:")
+                #print(exonerate_seq_obj)
+                print("\nexonerate_seq_obj (" + exonerate_seq_obj.id + ' '\
+                        + location_string + ":")
+                print(exonerate_seq_obj)
+                print('exonerate_seq_obj.seq:')
+                print(exonerate_seq_obj.seq)
+                print("\nexonerate_seq_obj.seq.alphabet:")
+                print(exonerate_seq_obj.seq.alphabet)
 
-        # Translate the nucleotide sequence with the appropriate genetic code,
-        # in the appropriate strand.
-        transl_exonerate_seq_obj = exonerate_seq_obj.translate(table=genetic_code_number)
-        transl_exonerate_seq_obj.id = exonerate_seq_obj.id
-        transl_exonerate_seq_obj.description = exonerate_seq_obj.description
-        #print(transl_exonerate_seq_obj)
+                # Translate the nucleotide sequence with the appropriate genetic code,
+                # in the appropriate strand.
+                transl_exonerate_seq_obj = exonerate_seq_obj.translate(table=genetic_code_number)
+                transl_exonerate_seq_obj.id = exonerate_seq_obj.id
+                transl_exonerate_seq_obj.description = exonerate_seq_obj.description
+                #print(transl_exonerate_seq_obj)
 
-        #print('\nCoding sequence identified by exonerate:')
-        #print(exonerate_seq_obj.seq)
-        #print('\nTranslation of the coding sequence:')
-        #print(transl_exonerate_seq_obj.seq)
-        #print('\n')
-        
-        # Add locations to header.
-        transl_exonerate_seq_obj.description =\
-        transl_exonerate_seq_obj.description + ' ' + location_string
-        #print(transl_exonerate_seq_obj.description)
+                #print('\nCoding sequence identified by exonerate:')
+                #print(exonerate_seq_obj.seq)
+                #print('\nTranslation of the coding sequence:')
+                #print(transl_exonerate_seq_obj.seq)
+                #print('\n')
+                
+                # Add locations to header.
+                transl_exonerate_seq_obj.description =\
+                transl_exonerate_seq_obj.description + ' ' + location_string
+                #print(transl_exonerate_seq_obj.description)
 
-        # Define sequence object as an attribute of instances of this class.
-        self.seq_record = transl_exonerate_seq_obj
+                # Define sequence object as an attribute of instances of this class.
+                self.seq_record = transl_exonerate_seq_obj
 
 
 

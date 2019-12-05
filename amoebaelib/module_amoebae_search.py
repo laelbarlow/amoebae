@@ -455,6 +455,11 @@ def get_rows_for_fwd_srch_df(df,
                                                   genetic_code_number,
                                                   exonerate_score_threshold
                                                   )
+                    if hit_seq_record_and_coord == None:
+                        # Do not include the cluster in the results, because
+                        # exonerate could not identify any sequence to
+                        # translate (given the specified parameters).
+                        continue
 
                 # Define hit sequence object.
                 hit_seq = hit_seq_record_and_coord[0] 

@@ -882,7 +882,9 @@ Miscellaneous commands:
         and just use TBLASTN instead. This option is provided because
         concatenated TBLASTN HSPs may be more inclusive of sequences within the
         target sequence, and the results of TBLASTN and exonerate may need to
-        be compared.''', action='store_true')
+        be compared. Also, note that HSPs identified by TBLASTN but for which
+        exonerate yields no alignments will be ignored if exonerate is
+        used.''', action='store_true')
         parser.add_argument('--exonerate_score_threshold', help='''Set score
         threshold to be applied when running exonerate on nucleotide sequences
         identified by TBLASTN. The default for setting of exonerate is 100, but

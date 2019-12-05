@@ -2334,7 +2334,7 @@ def count_paralogues3(csv_file,
     # Get filepath for relevant output file. 
     outputfile = get_all_comparison_output_filepath(outdir)
 
-    # Make Sankey diagram.
+    # Make Sankey diagrams for protein and nucleotide hits separately.
     #sankey_data_dict = {'Total in':         {'prot': 0, 'nucl': 0},
     #                    'Location':         {'prot': 0, 'nucl': 0},
     #                    'Internal stops':   {'prot': 0, 'nucl': 0},
@@ -2344,7 +2344,55 @@ def count_paralogues3(csv_file,
     #                    'Total positive':   {'prot': 0, 'nucl': 0}
     #                    }
     print(sankey_data_dict)
-    assert 2!=2
+
+    # Define title for output figure.
+    title_prot = 'Sankey diagram of protein hits excluded by various criteria'
+    title_nucl = 'Sankey diagram of nucleotide hits excluded by various criteria'
+
+    # Define starting inflow unit count.
+    starting_inflow_unit_count_prot = sankey_data_dict['Total in']['prot']
+    starting_inflow_unit_count_nucl = sankey_data_dict['Total in']['nucl']
+
+    # Define list of outflow proportions at each stage.
+    sankey_outflow_proportions_prot =\
+        [sankey_data_dict['Location']['prot']/starting_inflow_unit_count_prot,
+         sankey_data_dict['Internal stops']['prot']/starting_inflow_unit_count_prot,
+         sankey_data_dict['Length']['prot']/starting_inflow_unit_count_prot,
+         sankey_data_dict['Overlap']['prot']/starting_inflow_unit_count_prot,
+         sankey_data_dict['Identity']['prot']/starting_inflow_unit_count_prot
+        ]
+    sankey_outflow_proportions_nucl =\
+        [sankey_data_dict['Location']['nucl']/starting_inflow_unit_count_nucl,
+         sankey_data_dict['Internal stops']['nucl']/starting_inflow_unit_count_nucl,
+         sankey_data_dict['Length']['nucl']/starting_inflow_unit_count_nucl,
+         sankey_data_dict['Overlap']['nucl']/starting_inflow_unit_count_nucl,
+         sankey_data_dict['Identity']['nucl']/starting_inflow_unit_count_nucl
+        ]
+
+    # Define list of labels for outflows.
+    sankey_outflow_labels = ['Location', 'Internal stops', 'Length', 'Overlap', '%Identity']
+
+    # Define output file path.
+    output_pdf_file_path_prot = os.path.join(outdir,
+                                             '0_test_sankey_diagram_prot.pdf')
+    assert not os.path.isfile(output_pdf_file_path_prot)
+    output_pdf_file_path_nucl = os.path.join(outdir,
+                                             '0_test_sankey_diagram_nucl.pdf')
+    assert not os.path.isfile(output_pdf_file_path_nucl)
+
+    # Call function to generate sankey diagram.
+    generate_sankey(title_prot,
+                    starting_inflow_unit_count_prot,
+                    sankey_outflow_labels,
+                    sankey_outflow_proportions_prot,
+                    output_pdf_file_path_prot
+                    )
+    generate_sankey(title_nucl,
+                    starting_inflow_unit_count_nucl,
+                    sankey_outflow_labels,
+                    sankey_outflow_proportions_nucl,
+                    output_pdf_file_path_nucl
+                    )
 
     # Return final output filepath for printing.
     return output_fp

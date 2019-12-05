@@ -1010,7 +1010,7 @@ def get_hit_seq_record_and_coord2(search_result_path,
     end_of_3prime_hsp = max([x.hit_range[1] for x in proximate_hsp_objs])
 
     # Define the number of additional basepairs to include on either side.
-    additional_flanking_basepairs = 100
+    additional_flanking_basepairs = 500
 
     # Define path to FASTA file with subsequence of interest from target
     # nucleotide sequence.
@@ -1049,17 +1049,22 @@ def get_hit_seq_record_and_coord2(search_result_path,
                                                       genetic_code_number
                                                       )
     
-    # Write output to file.
-    exonerate_output_seq_filepath = subseq_fasta_path.rsplit('.', 1)[0] +\
-    '_exonerate_out_seq.faa'
-    with open(exonerate_output_seq_filepath, 'w') as o:
-        SeqIO.write(exonerate_locus_result_obj.seq_record, o, 'fasta')
-
     # Delete temporary intermediate files.
     os.remove(subseq_fasta_path)
 
-    # Return the sequence record and location/coordinate string.
-    return [exonerate_locus_result_obj.seq_record, exonerate_locus_result_obj.location_string]
+    if exonerate_locus_result_obj.seq_record is None:
+        # Return None to indicate that exonerate did not identify anything
+        # (even though TBLASTN did).
+        return None
+    else:
+        # Write output to file.
+        exonerate_output_seq_filepath = subseq_fasta_path.rsplit('.', 1)[0] +\
+        '_exonerate_out_seq.faa'
+        with open(exonerate_output_seq_filepath, 'w') as o:
+            SeqIO.write(exonerate_locus_result_obj.seq_record, o, 'fasta')
+
+        # Return the sequence record and location/coordinate string.
+        return [exonerate_locus_result_obj.seq_record, exonerate_locus_result_obj.location_string]
 
 
 def get_hit_seq_obj(hit, max_gap):
