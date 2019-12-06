@@ -39,6 +39,10 @@ def generate_sankey(title,
     """
     # Check that the outflow proportions all add to no more than 1.
     sum_of_proportions = sum(sankey_outflow_proportions)
+    #print('sankey_outflow_proportions:')
+    #print(sankey_outflow_proportions)
+    #print('sum_of_proportions:')
+    #print(sum_of_proportions)
     assert sum_of_proportions >= -1, """Specified outflow proportions for steps
     in the Sankey diagram exceed the total inflow."""
 

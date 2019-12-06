@@ -38,6 +38,7 @@ from module_amoebae import mask_nex2
 from module_amoebae import get_seq_obj_from_srch_res_csv_info,\
 get_hit_range_from_hsp_ranges 
 from module_amoebae_trim_nex import trim_nex
+from generate_sankey_diagram import generate_sankey
 
 
 def remove_irrelevant_data_from_alignment(ali_plus_top_seq_plus_1):
@@ -1697,7 +1698,7 @@ def count_paralogues3(csv_file,
 
         # Remove protein hits from the tuples if they have identical accessions
         # to higher-ranking hits.
-        reduced_prot_tuples = []
+        prot_tuples2 = []
         hit_indexes_to_remove = []
         for num, i in enumerate(prot_tuples):
             if num + 1 < len(prot_tuples):
@@ -1779,12 +1780,12 @@ def count_paralogues3(csv_file,
         if len(hit_indexes_to_remove) > 0:
             for i in prot_tuples:
                 if i[0] not in hit_indexes_to_remove:
-                    reduced_prot_tuples.append(i)
+                    prot_tuples2.append(i)
         else:
-            reduced_prot_tuples = prot_tuples
+            prot_tuples2 = prot_tuples
 
         # Record non-redundant count of potential positive protein hits.
-        sankey_data_dict['Total in']['prot'] = len(prot_tuples)
+        sankey_data_dict['Total in']['prot'] += len(prot_tuples2)
 
 
         # Check for redundancy among the tblastn hits in their locations, and
@@ -1792,8 +1793,8 @@ def count_paralogues3(csv_file,
         # Since the tuples are sorted by E-value, for each tuple in the list,
         # any tuples further down the list that have the same filename and seq
         # ID and overlapping coordinates can be marked for removal.
-        reduced_nucl_tuples = []
-        more_nucl_tuples_to_remove = []
+        nucl_tuples2 = []
+        nucl_tuples_to_remove = []
         for num, i in enumerate(nucl_tuples):
             if num + 1 < len(nucl_tuples):
                 for j in nucl_tuples[num + 1:]:
@@ -1810,7 +1811,7 @@ def count_paralogues3(csv_file,
                             # Check that the E-values are right.
                             if i[3] <= j[3]:
                                 # Mark the one with the lower or equivalent E-value for removal.
-                                more_nucl_tuples_to_remove.append(j)
+                                nucl_tuples_to_remove.append(j)
 
                                 # Change value in column for ID or locus redundancy
                                 # to '-'.
@@ -1825,23 +1826,23 @@ def count_paralogues3(csv_file,
                                     = '(This hit is at the same locus as nucleotide hit with ID: %s)' % i[1]
 
         # Remove the identified redundant tuples. 
-        if len(more_nucl_tuples_to_remove) > 0:
-            nucl_hit_indexes_to_remove = [x[0] for x in more_nucl_tuples_to_remove]
+        if len(nucl_tuples_to_remove) > 0:
+            nucl_hit_indexes_to_remove = [x[0] for x in nucl_tuples_to_remove]
             for i in nucl_tuples:
                 if i[0] not in nucl_hit_indexes_to_remove:
-                    reduced_nucl_tuples.append(i)
+                    nucl_tuples2.append(i)
         else:
-            reduced_nucl_tuples = nucl_tuples
+            nucl_tuples2 = nucl_tuples
 
 
         # Remove nucleotide hits from the tuples if they have identical accessions
         # to higher-ranking nucleotide hits (This should be redundant, because
         # it is already checked whether they are for the same locus).
-        further_reduced_nucl_tuples = []
+        nucl_tuples3 = []
         hit_indexes_to_remove = []
-        for num, i in enumerate(reduced_nucl_tuples):
-            if num + 1 < len(reduced_nucl_tuples):
-                for j in further_reduced_nucl_tuples[num + 1:]:
+        for num, i in enumerate(nucl_tuples2):
+            if num + 1 < len(nucl_tuples2):
+                for j in nucl_tuples2[num + 1:]:
                     # Check whether they have the same filename and sequence ID
                     # (seq.id plus coordinates).
                     if j[8] == i[8] and j[1] == i[1]:
@@ -1862,29 +1863,33 @@ def count_paralogues3(csv_file,
                                 = '(This hit has the same ID as nucleotide hit with ID: %s)' % i[1]
         # Remove the identified redundant tuples. 
         if len(hit_indexes_to_remove) > 0:
-            for i in reduced_nucl_tuples:
+            for i in nucl_tuples2:
                 if i[0] not in hit_indexes_to_remove:
-                    further_reduced_nucl_tuples.append(i)
+                    nucl_tuples3.append(i)
         else:
-            further_reduced_nucl_tuples = reduced_nucl_tuples
+            nucl_tuples3 = nucl_tuples2
+
+        nucl_accs = [x[1] for x in nucl_tuples3]
+        assert len(nucl_accs) == len(list(set(nucl_accs))), """Info for hits with
+        identical accessions is present in the reduced nucleotide hit set."""
 
         # Record initial number of potential positive nucleotide hits before
         # applying criteria.
-        sankey_data_dict['Total in']['nucl'] += len(further_reduced_nucl_tuples)
+        sankey_data_dict['Total in']['nucl'] += len(nucl_tuples3)
 
 
         # Remove nucleotide hits from the tuples, if they represent a gene
         # locus that encodes one of the protein hits, or optionally any
         # annotated gene.
-        further_reduced_nucl_tuples2 = []
+        nucl_tuples4 = []
         nucl_tuples_to_remove = []
         if len(prot_tuples) == 0:
             # No protein hits to compare nucleotide hits to, so keep all
             # nucleotide hits.
-            further_reduced_nucl_tuples2 = nucl_tuples
+            nucl_tuples4 = nucl_tuples3
         else:
             # Look for nucleotide hits that are redundant with protein hits.
-            for x in nucl_tuples:
+            for x in nucl_tuples3:
                 # Check whether there is overlap with existing gene models in the
                 # corresponding GFF file (if tblastn hit).
                 # Get overlapping entries (genes) from annotation file if available.
@@ -1942,12 +1947,12 @@ def count_paralogues3(csv_file,
                                     % ', '.join(overlapping_genes)
 
                         # Mark tuple for removal.
-                        further_nucl_tuples_to_remove2.append(x)
+                        nucl_tuples_to_remove.append(x)
 
                     else:
                         # Loop over protein hits and see if any are redundant with the
                         # nucleotide hit.
-                        for y in further_reduced_prot_tuples:
+                        for y in prot_tuples2:
                             # Add info to info text to the spreadsheet if the tblastn hit
                             # is redundant with a protein hit.
                             for i in overlapping_genes:
@@ -1978,22 +1983,27 @@ def count_paralogues3(csv_file,
         # to remove from the original list.
         if len(nucl_tuples_to_remove) > 0:
             nucl_hit_accs_to_remove = [x[1] for x in nucl_tuples_to_remove]
-            for i in nucl_tuples:
-                if i[1] not in nucl_hit_accs_to_remove2:
-                    further_reduced_nucl_tuples2.append(i)
+            for i in nucl_tuples3:
+                if i[1] not in nucl_hit_accs_to_remove:
+                    nucl_tuples4.append(i)
         else:
-            further_reduced_nucl_tuples2 = further_reduced_nucl_tuples
+            nucl_tuples4 = nucl_tuples3
 
-        # Record initial number of potential positive nucleotide hits before
-        # applying criteria.
+        nucl_accs = [x[1] for x in nucl_tuples4]
+        assert len(nucl_accs) == len(list(set(nucl_accs))), """Info for hits with
+        identical accessions is present in the reduced nucleotide hit set."""
+
+        # Record number of potential positive nucleotide hits excluded by
+        # applying the criterion that they should be from different loci than
+        # the protein hits.
         sankey_data_dict['Location']['nucl'] += len(nucl_tuples_to_remove)
 
 
         # Ignore protein hits that are below the minimum length, percent
         # length, percent query cover, or that contain internal stops.
-        reduced_prot_tuples2 = []
+        prot_tuples3 = []
         prm = []
-        for i in reduced_prot_tuples:
+        for i in prot_tuples2:
             num_internal_stops = i[2].seq[0:-1].count('*')
             length = i[9]
             percent_length = i[5]
@@ -2068,17 +2078,17 @@ def count_paralogues3(csv_file,
 
         # Remove the identified redundant tuples. 
         if len(prm) > 0:
-            for i in reduced_prot_tuples:
+            for i in prot_tuples2:
                 if i[0] not in prm:
-                    reduced_prot_tuples2.append(i)
+                    prot_tuples3.append(i)
         else:
-            reduced_prot_tuples2 = reduced_prot_tuples
+            prot_tuples3 = prot_tuples2
 
 
         # Ignore nucleotide hits that are below the minimum length or percent length.
-        further_reduced_nucl_tuples3 = []
+        nucl_tuples5 = []
         nrm = []
-        for i in further_reduced_nucl_tuples2:
+        for i in nucl_tuples4:
             num_internal_stops = i[2].seq[0:-1].count('*')
             length = i[9]
             percent_length = i[5]
@@ -2149,36 +2159,42 @@ def count_paralogues3(csv_file,
 
         # Remove the identified redundant tuples. 
         if len(nrm) > 0:
-            for i in further_reduced_nucl_tuples2:
+            for i in nucl_tuples4:
                 if i[0] not in nrm:
-                    further_reduced_nucl_tuples3.append(i)
+                    nucl_tuples5.append(i)
         else:
-            further_reduced_nucl_tuples3 = further_reduced_nucl_tuples2
+            nucl_tuples5 = nucl_tuples4
 
 
 
         # Check that no accessions listed in the info tuples are identical to
         # each other.
-        all_accs = [x[1] for x in reduced_prot_tuples2 + further_reduced_nucl_tuples3]
+        prot_accs = [x[1] for x in prot_tuples3]
+        assert len(prot_accs) == len(list(set(prot_accs))), """Info for hits with
+        identical accessions is present in the reduced protein hit set."""
+        nucl_accs = [x[1] for x in nucl_tuples5]
+        assert len(nucl_accs) == len(list(set(nucl_accs))), """Info for hits with
+        identical accessions is present in the reduced nucleotide hit set."""
+        all_accs = [x[1] for x in prot_tuples3 + nucl_tuples5]
         assert len(all_accs) == len(list(set(all_accs))), """Info for hits with
-        identical accessions is present in the reduced set."""
+        identical accessions is present in the prot+nucl reduced set."""
 
 
         # Check that explanations were noted in the spreadsheet (dataframe) for
         # all the tuples that were removed from the original list.
         for i in all_tuples:
-            if i[0] not in [x[0] for x in reduced_prot_tuples2\
-            + further_reduced_nucl_tuples3]:
+            if i[0] not in [x[0] for x in prot_tuples3\
+            + nucl_tuples5]:
                 note = df.loc[i[0],'Comparison with other positive hits in the same genome'] 
                 assert note != '-', """No justification noted for not
                 considering a hit with ID %s and index %s""" % (i[1], str(i[0]))
 
         # Compile a list of all reduced tuples.
-        all_reduced_tuples = reduced_prot_tuples2 + further_reduced_nucl_tuples3
+        all_reduced_tuples = prot_tuples3 + nucl_tuples5
 
         # Compile lists of just the sequence objects.
-        ranked_prot_seq_objs = [x[2] for x in reduced_prot_tuples2]
-        ranked_nucl_seq_objs = [x[2] for x in further_reduced_nucl_tuples3]
+        ranked_prot_seq_objs = [x[2] for x in prot_tuples3]
+        ranked_nucl_seq_objs = [x[2] for x in nucl_tuples5]
         nucl_accs = [x.id for x in ranked_nucl_seq_objs]
         # Concatenate the two lists, putting proteins first.
         ranked_seq_objs = ranked_prot_seq_objs + ranked_nucl_seq_objs
@@ -2302,8 +2318,7 @@ def count_paralogues3(csv_file,
         # all the tuples list processed with the recursive function to check
         # for redundancy.
         for i in all_tuples:
-            if i[0] in [x[0] for x in reduced_prot_tuples2\
-            + further_reduced_nucl_tuples2]:
+            if i[0] in [x[0] for x in all_reduced_tuples]:
                 note = df.loc[i[0],'Comparison with other positive hits in the same genome'] 
                 assert note != '-', """No note made for hit with ID %s and index %s""" % (i[1], str(i[0]))
 
@@ -2343,7 +2358,7 @@ def count_paralogues3(csv_file,
     #                    'Identity':         {'prot': 0, 'nucl': 0},
     #                    'Total positive':   {'prot': 0, 'nucl': 0}
     #                    }
-    print(sankey_data_dict)
+    #print(sankey_data_dict)
 
     # Define title for output figure.
     title_prot = 'Sankey diagram of protein hits excluded by various criteria'
@@ -2355,18 +2370,18 @@ def count_paralogues3(csv_file,
 
     # Define list of outflow proportions at each stage.
     sankey_outflow_proportions_prot =\
-        [sankey_data_dict['Location']['prot']/starting_inflow_unit_count_prot,
-         sankey_data_dict['Internal stops']['prot']/starting_inflow_unit_count_prot,
-         sankey_data_dict['Length']['prot']/starting_inflow_unit_count_prot,
-         sankey_data_dict['Overlap']['prot']/starting_inflow_unit_count_prot,
-         sankey_data_dict['Identity']['prot']/starting_inflow_unit_count_prot
+        [-(sankey_data_dict['Location']['prot']/starting_inflow_unit_count_prot),
+         -(sankey_data_dict['Internal stops']['prot']/starting_inflow_unit_count_prot),
+         -(sankey_data_dict['Length']['prot']/starting_inflow_unit_count_prot),
+         -(sankey_data_dict['Overlap']['prot']/starting_inflow_unit_count_prot),
+         -(sankey_data_dict['Identity']['prot']/starting_inflow_unit_count_prot)
         ]
     sankey_outflow_proportions_nucl =\
-        [sankey_data_dict['Location']['nucl']/starting_inflow_unit_count_nucl,
-         sankey_data_dict['Internal stops']['nucl']/starting_inflow_unit_count_nucl,
-         sankey_data_dict['Length']['nucl']/starting_inflow_unit_count_nucl,
-         sankey_data_dict['Overlap']['nucl']/starting_inflow_unit_count_nucl,
-         sankey_data_dict['Identity']['nucl']/starting_inflow_unit_count_nucl
+        [-(sankey_data_dict['Location']['nucl']/starting_inflow_unit_count_nucl),
+         -(sankey_data_dict['Internal stops']['nucl']/starting_inflow_unit_count_nucl),
+         -(sankey_data_dict['Length']['nucl']/starting_inflow_unit_count_nucl),
+         -(sankey_data_dict['Overlap']['nucl']/starting_inflow_unit_count_nucl),
+         -(sankey_data_dict['Identity']['nucl']/starting_inflow_unit_count_nucl)
         ]
 
     # Define list of labels for outflows.
