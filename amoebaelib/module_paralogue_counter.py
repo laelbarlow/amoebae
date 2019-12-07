@@ -39,6 +39,8 @@ from module_amoebae import get_seq_obj_from_srch_res_csv_info,\
 get_hit_range_from_hsp_ranges 
 from module_amoebae_trim_nex import trim_nex
 from generate_sankey_diagram import generate_sankey
+from generate_histogram_plot import generate_histogram,\
+generate_double_histogram
 
 
 def remove_irrelevant_data_from_alignment(ali_plus_top_seq_plus_1):
@@ -1667,6 +1669,12 @@ def count_paralogues3(csv_file,
     sankey_data_dict['Total in']['prot'] = 0
     sankey_data_dict['Total in']['nucl'] = 0
 
+    # Initiate lists of hit info tuples for hits that meet various criteria.
+    nonredun_prot_tuples = []
+    nonredun_nucl_tuples = []
+    final_positive_prot_tuples = []
+    final_positive_nucl_tuples = []
+
     # Iterate over relevant information and feed it into paralogue_counter
     # module for processing, and then put the relevant results in the right place
     # in the dataframe.
@@ -1786,6 +1794,7 @@ def count_paralogues3(csv_file,
 
         # Record non-redundant count of potential positive protein hits.
         sankey_data_dict['Total in']['prot'] += len(prot_tuples2)
+        nonredun_prot_tuples = nonredun_prot_tuples + prot_tuples2
 
 
         # Check for redundancy among the tblastn hits in their locations, and
@@ -1876,6 +1885,7 @@ def count_paralogues3(csv_file,
         # Record initial number of potential positive nucleotide hits before
         # applying criteria.
         sankey_data_dict['Total in']['nucl'] += len(nucl_tuples3)
+        nonredun_nucl_tuples = nonredun_nucl_tuples + nucl_tuples3
 
 
         # Remove nucleotide hits from the tuples, if they represent a gene
@@ -2084,6 +2094,9 @@ def count_paralogues3(csv_file,
         else:
             prot_tuples3 = prot_tuples2
 
+        # Add these to the list of final positive protein tuples.
+        final_positive_prot_tuples = final_positive_prot_tuples + prot_tuples3
+
 
         # Ignore nucleotide hits that are below the minimum length or percent length.
         nucl_tuples5 = []
@@ -2165,6 +2178,8 @@ def count_paralogues3(csv_file,
         else:
             nucl_tuples5 = nucl_tuples4
 
+        # Add these to the list of final positive nucleotide tuples.
+        final_positive_nucl_tuples = final_positive_nucl_tuples + nucl_tuples5
 
 
         # Check that no accessions listed in the info tuples are identical to
@@ -2343,11 +2358,57 @@ def count_paralogues3(csv_file,
     #print('\nResults written to file:\n' + output_fp)
 
 
-    # Visualize all comparisons to evaluate whether metric adequately
-    # distinguished between sequences.
-
     # Get filepath for relevant output file. 
     outputfile = get_all_comparison_output_filepath(outdir)
+
+    # Visualize all comparisons to evaluate whether metric adequately
+    # distinguished between sequences.
+    # ...
+
+
+    # Make histograms of sequence features of positive hits.
+
+    # lists to graph:
+    #nonredun_prot_tuples = []
+    #nonredun_nucl_tuples = []
+    #final_positive_prot_tuples = []
+    #final_positive_nucl_tuples = []
+
+    # Make histogram of query cover of positive nucleotide sequence hits.
+    nucl_double_histogram_filename = os.path.join(outdir,
+            '0_histogram_of_percent_query_cover_of_nucl_hits.pdf')
+    percent_query_cover_of_nucl_hits_title = 'Percent query cover of nucleotide sequence hits'
+    percent_query_cover_of_nonredun_nucl_hits = [int(x[10]) for x in nonredun_nucl_tuples]
+    percent_query_cover_of_positive_nucl_hits = [int(x[10]) for x in final_positive_nucl_tuples]
+
+    generate_double_histogram(percent_query_cover_of_nucl_hits_title,
+                              percent_query_cover_of_nonredun_nucl_hits,
+                              'all',
+                              percent_query_cover_of_positive_nucl_hits,
+                              'positive',
+                              'auto', 
+                              nucl_double_histogram_filename
+                              )
+
+    # Make histogram of query cover of protein sequence hits.
+    prot_double_histogram_filename = os.path.join(outdir,
+            '0_histogram_of_percent_query_cover_of_prot_hits.pdf')
+    percent_query_cover_of_prot_hits_title = 'Percent query cover of all non-redundant protein sequence hits'
+    percent_query_cover_of_nonredun_prot_hits = [int(x[10]) for x in nonredun_prot_tuples]
+    percent_query_cover_of_positive_prot_hits = [int(x[10]) for x in final_positive_prot_tuples]
+
+    generate_double_histogram(percent_query_cover_of_prot_hits_title,
+                              percent_query_cover_of_nonredun_prot_hits,
+                              'all',
+                              percent_query_cover_of_positive_prot_hits,
+                              'positive',
+                              'auto',
+                              prot_double_histogram_filename
+                              )
+    #percent_query_cover_of_positive_prot_hits_title = 'Percent query cover of positive protein sequence hits'
+    #percent_query_cover_of_positive_prot_hits = [x[10] for x in prot_tuples3]
+
+
 
     # Make Sankey diagrams for protein and nucleotide hits separately.
     #sankey_data_dict = {'Total in':         {'prot': 0, 'nucl': 0},
