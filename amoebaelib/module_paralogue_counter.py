@@ -1459,6 +1459,7 @@ def count_paralogues3(csv_file,
                       overlap_minimum_percent_similarity,
                       overlap_minimum_percent_overlap,
                       just_look_for_genes_in_gff3,
+                      ignore_gff3,
                       outfp=None):
     """Identify hits in an amoebae search result summary CSV file which are
     redundant, or otherwise not likely to represent paralogous loci. Append
@@ -1476,6 +1477,16 @@ def count_paralogues3(csv_file,
                         'Identity':         {'prot': 0, 'nucl': 0},
                         'Total positive':   {'prot': 0, 'nucl': 0}
                         }
+
+    # Initate list of all nucleotide FASTA sequence files searched.
+    all_nucleotide_fasta_files_searched = []
+
+    # Initiate list of sequence filenames (nucleotide FASTA files) for which
+    # information in corresponding GFF3 files was found to link nucleotide
+    # subsequence hits to protein sequence hits (from similarity searches). The
+    # purpose of this is to flag cases where no relevant annotations are found
+    # to overlap with TBLASTN hits.
+    nucleotide_fasta_files_with_informative_gff3 = []
 
     # Define unique identifier string for this analysis.
     paralogue_count_id = 'paralogue_count_' + timestamp
@@ -1627,6 +1638,11 @@ def count_paralogues3(csv_file,
                     '[' + str(hit_range[0]) + '..' + str(hit_range[1]) + ']'
                 description = row[column_header_dict['subseq descr']]
                 seq = row[column_header_dict['subseq']]
+
+                # Add subject sequence filename to list of all nucleotide FASTA
+                # files searched.
+                all_nucleotide_fasta_files_searched.append(row[column_header_dict['database filename']])
+
             else:
                 acc = row[column_header_dict['accession']]
                 description = row[column_header_dict['seq descr']]
@@ -1924,14 +1940,14 @@ def count_paralogues3(csv_file,
         # annotated gene.
         nucl_tuples4 = []
         nucl_tuples_to_remove = []
-        if len(prot_tuples) == 0:
+        if len(prot_tuples) == 0 or ignore_gff3:
             # No protein hits to compare nucleotide hits to, so keep all
             # nucleotide hits.
             nucl_tuples4 = nucl_tuples3
         else:
             # Look for nucleotide hits that are redundant with protein hits.
             for x in nucl_tuples3:
-                print('\n\t' + x[1])
+                #print('\n\t' + x[1])
                 # Check whether there is overlap with existing gene models in the
                 # corresponding GFF file (if tblastn hit).
                 # Get overlapping entries (genes) from annotation file if available.
@@ -1950,7 +1966,7 @@ def count_paralogues3(csv_file,
                             # DataFrame.
                             if type(annotation_file).__name__ == 'float':
                                 annotation_file = None
-                print('\t\tAnnotation file: ' + annotation_file)
+                #print('\t\tAnnotation file: ' + annotation_file)
 
                 # If there is an annotation file available, determine whether
                 # the hit is at the same locus in the nucleotide sequence as
@@ -1967,7 +1983,7 @@ def count_paralogues3(csv_file,
                     overlapping_genes =\
                     get_overlapping_genes_from_gff3(annotation_file_path,
                             x[7], x[6], just_look_for_genes_in_gff3)
-                    print('\t\tOverlapping genes: ' + str(overlapping_genes))
+                    #print('\t\tOverlapping genes: ' + str(overlapping_genes))
 
                 # If there are overlapping gene loci with the tblastn hit...
                 if len(overlapping_genes) > 0:
@@ -1992,6 +2008,13 @@ def count_paralogues3(csv_file,
                         # Mark tuple for removal.
                         nucl_tuples_to_remove.append(x)
 
+                        # Found relevant information in the GFF3 file, so add
+                        # the nucleotide FASTA filename to the list of those
+                        # for which relevant annotation information could be
+                        # retrieved from the corresponding GFF3 file.
+                        if x[8] not in nucleotide_fasta_files_with_informative_gff3:
+                            nucleotide_fasta_files_with_informative_gff3.append(x[8])
+
                     #else:
                     # Loop over protein hits and see if any are redundant with the
                     # nucleotide hit.
@@ -2003,6 +2026,7 @@ def count_paralogues3(csv_file,
                             # ***Note: This may not work for all gene ID/accession
                             # nomenclature schemes.
                             if i.startswith(prot_hit_acc.rsplit('.', 1)[0]):
+                                #print("""\t\tThis annotation record that overlaps with the nucleotide hit %s has a matching ID with the protein hit %s: %s""" % (x[1], y[7], i))
 
                                 # Change value in column for ID or locus redundancy
                                 # to '-'.
@@ -2023,6 +2047,13 @@ def count_paralogues3(csv_file,
                                 # nucleotide hits correspond to which protein
                                 # hits.
                                 prot_id_nucl_id_dict[prot_hit_acc] = x[1]
+
+                                # Found relevant information in the GFF3 file, so add
+                                # the nucleotide FASTA filename to the list of those
+                                # for which relevant annotation information could be
+                                # retrieved from the corresponding GFF3 file.
+                                if x[8] not in nucleotide_fasta_files_with_informative_gff3:
+                                    nucleotide_fasta_files_with_informative_gff3.append(x[8])
 
                                 # Break the loop.
                                 break
@@ -2405,10 +2436,18 @@ def count_paralogues3(csv_file,
     # Get filepath for relevant output file. 
     outputfile = get_all_comparison_output_filepath(outdir)
 
-    print('\n\n')
-    print('prot_id_nucl_id_dict:')
-    print(prot_id_nucl_id_dict)
-    print('\n\n')
+    # Print warnings if some GFF3 files did not contain any relevant
+    # information.
+    nucleotide_sequence_filenames_without_informative_gff3 = \
+    list(
+        set(all_nucleotide_fasta_files_searched) - \
+        set(nucleotide_fasta_files_with_informative_gff3)
+        )
+    for filename in nucleotide_sequence_filenames_without_informative_gff3:
+        print("""\nWarning: No GFF3 annotations were found to correspond to any
+        nucleotide sequence hits in the nucleotide FASTA file %s. Check whether
+        your GFF3 file is formatted correctly.""")
+
 
     # Visualize all comparisons to evaluate whether metric adequately
     # distinguished between sequences.

@@ -1478,6 +1478,11 @@ Miscellaneous commands:
                 do not include "gene" records, but do include predicted coding
                 sequences for genes.""",
                 action='store_true')
+        parser.add_argument('--ignore_gff3', help="""Disregard any information
+                regarding redundancy of identified nucleotide sequences with
+                identified protein sequences that may be found in GFF3
+                annotation files.""",
+                action='store_true')
         parser.add_argument('--allow_internal_stops', help="""Include sequences
         that have internal stop codons (anywhere other than the N-terminal
         position).""", default=True)
@@ -1591,6 +1596,7 @@ Miscellaneous commands:
                                             args.min_percent_sim_in_overlap,
                                             args.min_percent_overlap,
                                             args.just_look_for_genes_in_gff3,
+                                            args.ignore_gff3,
                                             outfp)
         else:
             # Write output file listing which alignment to use.
