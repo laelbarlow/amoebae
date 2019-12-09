@@ -40,7 +40,7 @@ get_hit_range_from_hsp_ranges
 from module_amoebae_trim_nex import trim_nex
 from generate_sankey_diagram import generate_sankey
 from generate_histogram_plot import generate_histogram,\
-generate_double_histogram
+generate_double_histogram, generate_bar_chart
 
 
 def remove_irrelevant_data_from_alignment(ali_plus_top_seq_plus_1):
@@ -2094,8 +2094,8 @@ def count_paralogues3(csv_file,
         else:
             prot_tuples3 = prot_tuples2
 
-        # Add these to the list of final positive protein tuples.
-        final_positive_prot_tuples = final_positive_prot_tuples + prot_tuples3
+        ## Add these to the list of final positive protein tuples.
+        #final_positive_prot_tuples = final_positive_prot_tuples + prot_tuples3
 
 
         # Ignore nucleotide hits that are below the minimum length or percent length.
@@ -2179,7 +2179,7 @@ def count_paralogues3(csv_file,
             nucl_tuples5 = nucl_tuples4
 
         # Add these to the list of final positive nucleotide tuples.
-        final_positive_nucl_tuples = final_positive_nucl_tuples + nucl_tuples5
+        #final_positive_nucl_tuples = final_positive_nucl_tuples + nucl_tuples5
 
 
         # Check that no accessions listed in the info tuples are identical to
@@ -2272,8 +2272,6 @@ def count_paralogues3(csv_file,
             # corresponding cells in dataframe.
             key_num = 0
             unique_paralogue_num = 0
-            unique_paralogue_prot = 0
-            unique_paralogue_nucl = 0
             for key in sorted(full_redundant_gene_model_dict.keys(),\
                     key=lambda x: full_redundant_gene_model_dict[x][0]):
                 key_num += 1
@@ -2285,11 +2283,14 @@ def count_paralogues3(csv_file,
 
                 # Iterate over reduced info tuples for current query title and
                 # taxon name (combo).
+                cur_tuple = None
                 for t in all_reduced_tuples:
                     # If the accession in the tuple is the same as for the
                     # current dict key, then use the index from that tuple.
                     if t[1] == key:
                         index_in_dataframe = t[0]
+                        cur_tuple = t
+                assert cur_tuple is not None
 
                 # Determine from dict whether the hit represents the first hit
                 # for an identifiably unique paralogous gene locus.
@@ -2319,8 +2320,12 @@ def count_paralogues3(csv_file,
                     df.at[index_in_dataframe, column_header_dict['taxon name']].replace(' ', '_')\
                     + '__' + combo[0] + '_' + str(unique_paralogue_num)
 
-                    # Update Sankey data dict.
+                    # Update Sankey data dict and info for other charts.
                     sankey_data_dict['Total positive'][sequence_type] += 1
+                    if sequence_type == 'prot':
+                        final_positive_prot_tuples.append(cur_tuple)
+                    elif sequence_type == 'nucl':
+                        final_positive_nucl_tuples.append(cur_tuple)
 
                 # Check that a note was made for the current index (row) in the
                 # dataframe.
@@ -2336,6 +2341,7 @@ def count_paralogues3(csv_file,
             if i[0] in [x[0] for x in all_reduced_tuples]:
                 note = df.loc[i[0],'Comparison with other positive hits in the same genome'] 
                 assert note != '-', """No note made for hit with ID %s and index %s""" % (i[1], str(i[0]))
+
 
 
     # Change column headers in dataframe so that this function can be called
@@ -2365,6 +2371,24 @@ def count_paralogues3(csv_file,
     # distinguished between sequences.
     # ...
 
+    # Generate a bar chart to show the relative number of nonredundant and
+    # positive protein and nucleotide sequence hits.
+    bar_chart_title = 'Total hits before and after applying criteria'
+    bar_chart_categories =  ['Protein', 'Nucleotide']
+    bar_chart_labels = ['Non-redundant', 'Final positive']
+    bar_chart_data = [[len(nonredun_prot_tuples), len(final_positive_prot_tuples)],
+                      [len(nonredun_nucl_tuples), len(final_positive_nucl_tuples)]]
+    print('\n\n')
+    print(bar_chart_data)
+    print('\n\n')
+    bar_chart_output_filepath = os.path.join(outdir,
+            '0_bar_chart_of_hit_counts_before_and_after_criteria.pdf')
+    generate_bar_chart(bar_chart_title,
+                       bar_chart_categories,
+                       bar_chart_labels,
+                       bar_chart_data,
+                       bar_chart_output_filepath
+                       )
 
     # Make histograms of sequence features of positive hits.
 

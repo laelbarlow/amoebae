@@ -75,7 +75,7 @@ def generate_sankey(title,
             #print('keep')
             #print(keep)
             sankey.add(flows=[cur_in, outflow, keep],
-                       labels=['', outflow_label + '\n' +\
+                       labels=[str(starting_inflow_unit_count), outflow_label + '\n' +\
                            str(round(outflow*starting_inflow_unit_count)) + units, ''],
                        orientations=[0, -1, 0]
                        )
