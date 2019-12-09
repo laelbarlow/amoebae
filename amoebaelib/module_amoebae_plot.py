@@ -24,34 +24,63 @@ import sys
 import argparse
 
 
-def get_text_label_matrix(odf):
+def get_text_label_matrix(odf, sequence_type):
     """Takes a dataframe with information to be plotted, and returns a matrix
     of text labels for each data point.
     """
+    # example_dict = {'prot hit IDs': [accs...],
+    #                 'nucl hit IDs': [accs...],
+    #                 'top hit E-value': fwd_evalue,
+    #                 'top hit score': fwd_score
+    #                 }
+    assert sequence_type == 'prot'\
+        or sequence_type == 'nucl'\
+        or sequence_type == 'both',\
+        """Sequence type must be either prot, nucl, or both."""
     odf1 = odf.copy()
     row_labels = list(odf1.index)
     column_labels = list(odf1)
     for i in row_labels:
         for j in column_labels:
             if not odf1.at[i, j] == '-' and not odf1.at[i, j] == 'negative':
-                odf1.at[i, j] = len(odf1.at[i, j][0])
+                #odf1.at[i, j] = len(odf1.at[i, j][0])
+                if sequence_type == 'prot':
+                    odf1.at[i, j] = len(odf1.at[i, j]['prot hit IDs'])
+                elif sequence_type == 'nucl':
+                    odf1.at[i, j] = len(odf1.at[i, j]['nucl hit IDs'])
+                elif sequence_type == 'both':
+                    odf1.at[i, j] = len(odf1.at[i, j]['prot hit IDs'] + odf1.at[i, j]['nucl hit IDs'])
             elif odf1.at[i, j] == 'negative':
                 odf1.at[i, j] = 0
     data_labels = odf1.as_matrix() 
     return data_labels
     
 
-def get_hit_count_matrix(odf):
+def get_hit_count_matrix(odf, sequence_type):
     """Takes a dataframe with information to be plotted, and returns a matrix
     of hit counts for each data point.
+
+    Currently this appears to be redundant with the get_text_label_matrix
+    function.
     """
+    assert sequence_type == 'prot'\
+        or sequence_type == 'nucl'\
+        or sequence_type == 'both',\
+        """Sequence type must be either prot, nucl, or both."""
     odf2 = odf.copy()
     row_labels = list(odf2.index)
     column_labels = list(odf2)
     for i in row_labels:
         for j in column_labels:
             if not odf2.at[i, j] == '-' and not odf2.at[i, j] == 'negative':
-                odf2.at[i, j] = len(odf2.at[i, j][0])
+                # Get count from length of the list of accessions.
+                #odf2.at[i, j] = len(odf2.at[i, j][0])
+                if sequence_type == 'prot':
+                    odf2.at[i, j] = len(odf2.at[i, j]['prot hit IDs'])
+                elif sequence_type == 'nucl':
+                    odf2.at[i, j] = len(odf2.at[i, j]['nucl hit IDs'])
+                elif sequence_type == 'both':
+                    odf2.at[i, j] = len(odf2.at[i, j]['prot hit IDs'] + odf2.at[i, j]['nucl hit IDs'])
             elif odf2.at[i, j] == 'negative':
                 odf2.at[i, j] = 0
             elif odf2.at[i, j] == '-':
@@ -766,8 +795,8 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
                 odf_simple.at[i, j] = '-'
 
         # Temp.
-        print(odf)
-        print(odf_simple)
+        #print(odf)
+        #print(odf_simple)
 
         # Iterate over rows in input dataframe and add relevant information to
         # additional dataframes.
@@ -798,6 +827,10 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
             fwd_evalue = row[column_header_dict['evalue']]
             fwd_score = row[column_header_dict['score']]
             unique_positive_hit_decis = row[unique_positive_hit_decis_header]
+            fwd_srch_method = row[column_header_dict['program']]
+            sequence_type = 'prot'
+            if fwd_srch_method.startswith('tblastn'):
+                sequence_type = 'nucl'
 
             # Add relevant information to dataframe for first plot.
             if positive_or_not == '-':
@@ -815,15 +848,37 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
                     # Format: [[positive hit acc list], top fwd hit E-value, top fwd hit
                     # score] where the top hit is assumed to be the one that
                     # appears first in the input csv file. 
-                    initial_value = [[acc], fwd_evalue, fwd_score] 
+                    #initial_value = [[acc], fwd_evalue, fwd_score] 
+                    initial_value = None
+                    if sequence_type == 'prot':
+                        initial_value = {'prot hit IDs': [acc],
+                                         'nucl hit IDs': [],
+                                         'top hit E-value': fwd_evalue,
+                                         'top hit score': fwd_score
+                                         }
+                    elif sequence_type == 'nucl':
+                        initial_value = {'prot hit IDs': [],
+                                         'nucl hit IDs': [acc],
+                                         'top hit E-value': fwd_evalue,
+                                         'top hit score': fwd_score
+                                         }
+                    assert initial_value is not None
                     odf.at[index_tuple, header_tuple] = initial_value
                 else:
                     # There are one or more previous hits relevant for this cell in the
-                    # dataframe, so update existing value (list).
-                    odf.at[index_tuple, header_tuple] = [odf.at[index_tuple, header_tuple][0] +\
-                            [acc], odf.at[index_tuple, header_tuple][1], odf.at[index_tuple, header_tuple][2]]
+                    # dataframe, so update existing value (list). All this does
+                    # is add a new sequence ID to the list, and retain the
+                    # E-value and score of the top ranked hit.
+                    #odf.at[index_tuple, header_tuple] = [odf.at[index_tuple, header_tuple][0] +\
+                    #        [acc], odf.at[index_tuple, header_tuple][1], odf.at[index_tuple, header_tuple][2]]
+                    if sequence_type == 'prot':
+                        odf.at[index_tuple, header_tuple]['prot hit IDs']\
+                            = odf.at[index_tuple, header_tuple]['prot hit IDs'] + [acc]
+                    elif sequence_type == 'nucl':
+                        odf.at[index_tuple, header_tuple]['nucl hit IDs']\
+                            = odf.at[index_tuple, header_tuple]['nucl hit IDs'] + [acc]
 
-            # Add relevant information to dataframe for first plot.
+            # Add relevant information to dataframe for simple plot.
             if positive_or_not == '-' or unique_positive_hit_decis == 'No':
                 if odf_simple.at[index_simple, header_simple] == '-':
                     odf_simple.at[index_simple, header_simple] = 'negative'
@@ -833,13 +888,33 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
                     # Format: [[positive hit acc list], top fwd hit E-value, top fwd hit
                     # score] where the top hit is assumed to be the one that
                     # appears first in the input csv file. 
-                    initial_value = [[acc], fwd_evalue, fwd_score] 
+                    #initial_value = [[acc], fwd_evalue, fwd_score] 
+                    initial_value = None
+                    if sequence_type == 'prot':
+                        initial_value = {'prot hit IDs': [acc],
+                                         'nucl hit IDs': [],
+                                         'top hit E-value': fwd_evalue,
+                                         'top hit score': fwd_score
+                                         }
+                    elif sequence_type == 'nucl':
+                        initial_value = {'prot hit IDs': [],
+                                         'nucl hit IDs': [acc],
+                                         'top hit E-value': fwd_evalue,
+                                         'top hit score': fwd_score
+                                         }
+                    assert initial_value is not None
                     odf_simple.at[index_simple, header_simple] = initial_value
                 else:
                     # There are one or more previous hits relevant for this cell in the
                     # dataframe, so update existing value (list).
-                    odf_simple.at[index_simple, header_simple] = [odf_simple.at[index_simple, header_simple][0] +\
-                            [acc], odf_simple.at[index_simple, header_simple][1], odf_simple.at[index_simple, header_simple][2]]
+                    #odf_simple.at[index_simple, header_simple] = [odf_simple.at[index_simple, header_simple][0] +\
+                    #        [acc], odf_simple.at[index_simple, header_simple][1], odf_simple.at[index_simple, header_simple][2]]
+                    if sequence_type == 'prot':
+                        odf_simple.at[index_simple, header_simple]['prot hit IDs']\
+                            = odf_simple.at[index_simple, header_simple]['prot hit IDs'] + [acc]
+                    elif sequence_type == 'nucl':
+                        odf_simple.at[index_simple, header_simple]['nucl hit IDs']\
+                            = odf_simple.at[index_simple, header_simple]['nucl hit IDs'] + [acc]
 
         
         ######
@@ -850,13 +925,13 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         #data_count = d.as_matrix()
 
         # Get matrix for text labels for output plot.
-        data_labels = get_text_label_matrix(odf)
-        data_labels_simple = get_text_label_matrix(odf_simple)
+        data_labels = get_text_label_matrix(odf, 'both')
+        data_labels_simple = get_text_label_matrix(odf_simple, 'both')
 
 
         # Get matrix of positive hit counts (in input spreadsheet).
-        data_count = get_hit_count_matrix(odf)
-        data_count_simple = get_hit_count_matrix(odf_simple)
+        data_count = get_hit_count_matrix(odf, 'both')
+        data_count_simple = get_hit_count_matrix(odf_simple, 'both')
 
         
         # Get matrix of heat values translated from matrix of counts.
@@ -903,12 +978,29 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
             # Only make a coulson plot at this point if there was only one
             # input file.
             if len(csv_paths) == 1:
-                # Coulson plot.
-                outpdfpath_coulson = outpdfpath_simple.rsplit('_', 1)[0] + '_coulson.pdf'
-                make_coulson_plot(column_labels_simple, row_labels_simple,
-                        data_labels_simple, [data_count_simple],
-                    data_heat_simple, outpdfpath_coulson, complex_info)
-                final_output_path = outpdfpath_coulson
+                # Coulson plots.
+                for seq_type in ['prot', 'nucl', 'both']:
+                    outpdfpath_coulson = outpdfpath_simple.rsplit('_', 1)[0] +\
+                        '_coulson_' + seq_type + '.pdf'
+                    if seq_type == 'both':
+                        final_output_path = outpdfpath_coulson
+                    # Determine data counts to use.
+                    data_counts_to_use = None
+                    if seq_type == 'both':
+                        data_counts_to_use = data_count_simple
+                    elif seq_type == 'prot':
+                        data_counts_to_use = get_hit_count_matrix(odf_simple, 'prot')
+                    elif seq_type == 'nucl':
+                        data_counts_to_use = get_hit_count_matrix(odf_simple, 'nucl')
+
+                    # Call function for generating plot.
+                    make_coulson_plot(column_labels_simple,
+                                      row_labels_simple,
+                                      data_labels_simple,
+                                      [data_counts_to_use],
+                                      data_heat_simple,
+                                      outpdfpath_coulson,
+                                      complex_info)
 
         # Define data to use for comparing more than one csv file.
         column_labels_simple_list.append(column_labels_simple)
