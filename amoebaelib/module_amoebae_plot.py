@@ -684,7 +684,8 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         unique_positive_hit_decis_header = None
         decision_type = None
         for header in indf.columns:
-            if header.startswith('Represents an identifiably unique paralogue'):
+            #if header.startswith('Represents an identifiably unique paralogue'):
+            if header.startswith('Represents a potential paralogue'):
                 unique_positive_hit_decis_header = header
                 decision_type = 'nonredundant_positive_hit'
                 break
@@ -695,7 +696,7 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
                 decision_type = 'topology_test_result'
                 break
         if unique_positive_hit_decis_header is None:
-            print('\nWarning: reporting all hits that meet the reverse search criteria.')
+            print('\n\nWarning: reporting all hits that meet the reverse search criteria.\n\n')
             for header in indf.columns:
                 if header.startswith('Collective interpretation of reverse search results'):
                     unique_positive_hit_decis_header = header
