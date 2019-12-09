@@ -1344,7 +1344,11 @@ def count_paralogues2(csv_file, alignmentdir, fastadir, fwdeval, metric_name,
     # ...
 
 
-def get_overlapping_genes_from_gff3(sql_database, seq_id, cluster_range):
+def get_overlapping_genes_from_gff3(sql_database,
+                                    seq_id,
+                                    cluster_range,
+                                    just_gene=False
+                                    ):
     """Take a path to a gffutils SQL database (based on a gff3 file), the
     sequence id for the relevant sequence referred to in the gff file, and a
     range (coordinates in the form of a list object with two items). And,
@@ -1357,9 +1361,30 @@ def get_overlapping_genes_from_gff3(sql_database, seq_id, cluster_range):
 
     # Find any genes that fall within the range (or overlap at
     # all).
-    overlapping_entries = list(db.region(region=(seq_id, cluster_range[0], cluster_range[1]),
-                                    completely_within=False, featuretype='gene'
-                                    ))
+    overlapping_entries = []
+
+    if just_gene:
+        # This was all that was done previously, and so in cases where the GFF3
+        # file does not contain records that are explicitly labeled "gene", then it
+        # ignores them, even if there is a coding sequence that overlaps with them.
+        overlapping_entries = list(db.region(region=(seq_id, cluster_range[0], cluster_range[1]),
+                                        completely_within=False, featuretype='gene'
+                                        ))
+    else:
+        # Retrieve entries in the GFF3 file that correspond to the same subsequence
+        # on one of the nucleotide sequences.
+        overlapping_entries = list(db.region(region=(seq_id, cluster_range[0], cluster_range[1]),
+                                        completely_within=False, featuretype='gene'
+                                        )) + \
+                              list(db.region(region=(seq_id, cluster_range[0], cluster_range[1]),
+                                        completely_within=False, featuretype='CDS'
+                                        )) + \
+                              list(db.region(region=(seq_id, cluster_range[0], cluster_range[1]),
+                                        completely_within=False, featuretype='mRNA'
+                                        )) + \
+                              list(db.region(region=(seq_id, cluster_range[0], cluster_range[1]),
+                                        completely_within=False, featuretype='exon'
+                                        )) 
 
     # Get gene IDs.
     overlap_ids = []
@@ -1433,6 +1458,7 @@ def count_paralogues3(csv_file,
                       overlap_minimum_percent_identity,
                       overlap_minimum_percent_similarity,
                       overlap_minimum_percent_overlap,
+                      just_look_for_genes_in_gff3,
                       outfp=None):
     """Identify hits in an amoebae search result summary CSV file which are
     redundant, or otherwise not likely to represent paralogous loci. Append
@@ -1675,6 +1701,11 @@ def count_paralogues3(csv_file,
     final_positive_prot_tuples = []
     final_positive_nucl_tuples = []
 
+    # Initiate dictionary for keeping track of which nucleotide hit IDs
+    # correspond to which protein hit IDs (where a nucleotide hit was found to
+    # correspond to a protein hit based on information in a GFF3 file).
+    prot_id_nucl_id_dict = {}
+
     # Iterate over relevant information and feed it into paralogue_counter
     # module for processing, and then put the relevant results in the right place
     # in the dataframe.
@@ -1883,7 +1914,7 @@ def count_paralogues3(csv_file,
         identical accessions is present in the reduced nucleotide hit set."""
 
         # Record initial number of potential positive nucleotide hits before
-        # applying criteria.
+        # applying further criteria.
         sankey_data_dict['Total in']['nucl'] += len(nucl_tuples3)
         nonredun_nucl_tuples = nonredun_nucl_tuples + nucl_tuples3
 
@@ -1900,6 +1931,7 @@ def count_paralogues3(csv_file,
         else:
             # Look for nucleotide hits that are redundant with protein hits.
             for x in nucl_tuples3:
+                print('\n\t' + x[1])
                 # Check whether there is overlap with existing gene models in the
                 # corresponding GFF file (if tblastn hit).
                 # Get overlapping entries (genes) from annotation file if available.
@@ -1918,7 +1950,7 @@ def count_paralogues3(csv_file,
                             # DataFrame.
                             if type(annotation_file).__name__ == 'float':
                                 annotation_file = None
-
+                print('\t\tAnnotation file: ' + annotation_file)
 
                 # If there is an annotation file available, determine whether
                 # the hit is at the same locus in the nucleotide sequence as
@@ -1934,7 +1966,8 @@ def count_paralogues3(csv_file,
                     # Call function for getting IDs of overlapping genes.
                     overlapping_genes =\
                     get_overlapping_genes_from_gff3(annotation_file_path,
-                            x[7], x[6])
+                            x[7], x[6], just_look_for_genes_in_gff3)
+                    print('\t\tOverlapping genes: ' + str(overlapping_genes))
 
                 # If there are overlapping gene loci with the tblastn hit...
                 if len(overlapping_genes) > 0:
@@ -1959,35 +1992,40 @@ def count_paralogues3(csv_file,
                         # Mark tuple for removal.
                         nucl_tuples_to_remove.append(x)
 
-                    else:
-                        # Loop over protein hits and see if any are redundant with the
-                        # nucleotide hit.
-                        for y in prot_tuples2:
-                            # Add info to info text to the spreadsheet if the tblastn hit
-                            # is redundant with a protein hit.
-                            for i in overlapping_genes:
-                                prot_hit_acc = y[7]
-                                # ***Note: This may not work for all gene ID/accession
-                                # nomenclature schemes.
-                                if i.startswith(prot_hit_acc.rsplit('.', 1)[0]):
+                    #else:
+                    # Loop over protein hits and see if any are redundant with the
+                    # nucleotide hit.
+                    for y in prot_tuples2:
+                        # Add info to info text to the spreadsheet if the tblastn hit
+                        # is redundant with a protein hit.
+                        for i in overlapping_genes:
+                            prot_hit_acc = y[7]
+                            # ***Note: This may not work for all gene ID/accession
+                            # nomenclature schemes.
+                            if i.startswith(prot_hit_acc.rsplit('.', 1)[0]):
 
-                                    # Change value in column for ID or locus redundancy
-                                    # to '-'.
-                                    df.at[x[0],\
-                                        'Does not have same ID or locus as another hit']\
-                                        = '-'
+                                # Change value in column for ID or locus redundancy
+                                # to '-'.
+                                df.at[x[0],\
+                                    'Does not have same ID or locus as another hit']\
+                                    = '-'
 
-                                    # Make note in spreadsheet.
-                                    df.at[x[0],\
-                                        'Comparison with other positive hits in the same genome']\
-                                        = '(This hit is at the same locus as protein hit with ID: %s)' % prot_hit_acc
+                                # Make note in spreadsheet.
+                                df.at[x[0],\
+                                    'Comparison with other positive hits in the same genome']\
+                                    = '(This hit is at the same locus as protein hit with ID: %s)' % prot_hit_acc
 
-                                    # Mark tuple for removal, because it is redundant
-                                    # with a peptide hit.
-                                    nucl_tuples_to_remove.append(x)
+                                # Mark tuple for removal, because it is redundant
+                                # with a peptide hit.
+                                nucl_tuples_to_remove.append(x)
 
-                                    # Break the loop.
-                                    break
+                                # Update the dictionary to keep track of which
+                                # nucleotide hits correspond to which protein
+                                # hits.
+                                prot_id_nucl_id_dict[prot_hit_acc] = x[1]
+
+                                # Break the loop.
+                                break
 
         # Generate a reduced list of nucleotide info tuples, if there are any
         # to remove from the original list.
@@ -2367,6 +2405,11 @@ def count_paralogues3(csv_file,
     # Get filepath for relevant output file. 
     outputfile = get_all_comparison_output_filepath(outdir)
 
+    print('\n\n')
+    print('prot_id_nucl_id_dict:')
+    print(prot_id_nucl_id_dict)
+    print('\n\n')
+
     # Visualize all comparisons to evaluate whether metric adequately
     # distinguished between sequences.
     # ...
@@ -2378,9 +2421,6 @@ def count_paralogues3(csv_file,
     bar_chart_labels = ['Non-redundant', 'Final positive']
     bar_chart_data = [[len(nonredun_prot_tuples), len(final_positive_prot_tuples)],
                       [len(nonredun_nucl_tuples), len(final_positive_nucl_tuples)]]
-    print('\n\n')
-    print(bar_chart_data)
-    print('\n\n')
     bar_chart_output_filepath = os.path.join(outdir,
             '0_bar_chart_of_hit_counts_before_and_after_criteria.pdf')
     generate_bar_chart(bar_chart_title,

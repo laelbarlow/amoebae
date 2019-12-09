@@ -1469,6 +1469,15 @@ Miscellaneous commands:
                 specifically correspond to the same loci as do higher-ranking
                 hits.""",
                 action='store_true')
+        parser.add_argument('--just_look_for_genes_in_gff3',
+                help="""When looking for records in GFF3 annotation files that
+                overlap with subsequences identified by similarity searching
+                (TBLASTN), ignore records that are not explicitly "gene" (for
+                example, "CDS", "mRNA", and "exon"). This option should
+                probably not be selected, because in some GFF3 annotation files
+                do not include "gene" records, but do include predicted coding
+                sequences for genes.""",
+                action='store_true')
         parser.add_argument('--allow_internal_stops', help="""Include sequences
         that have internal stop codons (anywhere other than the N-terminal
         position).""", default=True)
@@ -1581,6 +1590,7 @@ Miscellaneous commands:
                                             args.min_percent_ident_in_overlap,
                                             args.min_percent_sim_in_overlap,
                                             args.min_percent_overlap,
+                                            args.just_look_for_genes_in_gff3,
                                             outfp)
         else:
             # Write output file listing which alignment to use.
