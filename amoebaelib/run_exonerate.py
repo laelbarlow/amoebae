@@ -165,9 +165,9 @@ class ExonerateLocusResult:
                     location_string = '[' + ','.join([str(x).replace(' ', '') for x in locations]) + ']'
                     #print(location_string)
 
-                    # Define location description strings as an attribute of instances of
-                    # this class.
-                    self.location_string = location_string
+                # Define location description strings as an attribute of instances of
+                # this class.
+                self.location_string = location_string
 
                 # Write FASTA sequence to a file.
                 temp_fastafp = exonerate_output_file_path.rsplit('.', 1) [0] + '_seq.fna'
