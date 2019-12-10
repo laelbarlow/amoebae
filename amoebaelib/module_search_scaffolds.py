@@ -1042,11 +1042,15 @@ def get_hit_seq_record_and_coord2(search_result_path,
     
     # Parse output of exonerate.
     #parse_exonerate_output(exonerate_output_filepath)
+    rough_start = start_of_5prime_hsp
+    rough_end = end_of_3prime_hsp
     position_of_subject_seq_start_in_original = int(target_subseq_start)
     exonerate_locus_result_obj = ExonerateLocusResult(exonerate_output_filepath,
                                                       subseq_fasta_path,
                                                       position_of_subject_seq_start_in_original,
-                                                      genetic_code_number
+                                                      genetic_code_number,
+                                                      rough_start,
+                                                      rough_end
                                                       )
     
     # Delete temporary intermediate files.

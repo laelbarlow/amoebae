@@ -262,10 +262,14 @@ def get_sig_overlap(inali,
 
         # Determine length of longest continuous span of aligned residues that
         # are similar/identical.
-        longest_identical_span = sorted(identical_spans, key=lambda x: len(x))[-1]
-        longest_identical_span_len = len(longest_identical_span)
-        longest_similar_span = sorted(similar_spans, key=lambda x: len(x))[-1]
-        longest_similar_span_len = len(longest_similar_span)
+        longest_identical_span_len = 0
+        if len(identical_spans) > 0:
+            longest_identical_span = sorted(identical_spans, key=lambda x: len(x), reverse=True)[0]
+            longest_identical_span_len = len(longest_identical_span)
+        longest_similar_span_len = 0
+        if len(similar_spans) > 0:
+            longest_similar_span = sorted(similar_spans, key=lambda x: len(x), reverse=True)[0]
+            longest_similar_span_len = len(longest_similar_span)
 
     # Initiate variable to indicate whether significant overlap was found.
     sig_overlap = False
@@ -2449,7 +2453,7 @@ def count_paralogues3(csv_file,
     for filename in nucleotide_sequence_filenames_without_informative_gff3:
         print("""\nWarning: No GFF3 annotations were found to correspond to any
         nucleotide sequence hits in the nucleotide FASTA file %s. Check whether
-        your GFF3 file is formatted correctly.""")
+        your GFF3 file is formatted correctly.""" % filename)
 
 
     # Visualize all comparisons to evaluate whether metric adequately

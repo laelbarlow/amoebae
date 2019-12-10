@@ -55,7 +55,9 @@ class ExonerateLocusResult:
                  exonerate_output_file_path,
                  subject_seq_fasta,
                  position_of_subject_seq_start_in_original,
-                 genetic_code_number
+                 genetic_code_number,
+                 rough_start,
+                 rough_end
                  ):
         # Check that there is a usable nucleotide sequence in the file, and
         # extract a list of FASTA sequence strings for the HSPs in the order
@@ -95,7 +97,8 @@ class ExonerateLocusResult:
                 # HSP to use.
                 hsp_to_use = None
                 fasta_string_to_use = ''
-                with open(exonerate_output_file_path) as exonerate_outputfh:
+                #with open(exonerate_output_file_path) as exonerate_outputfh:
+                try:
                     parsed_exonerate = list(SearchIO.parse(exonerate_output_file_path, 'exonerate-text'))
                     #print(parsed_exonerate)
                     #for hsp in sorted(list(parsed_exonerate), key=lambda x: x.score, reverse=True):
@@ -111,45 +114,55 @@ class ExonerateLocusResult:
                         if len(fasta_string) > len(fasta_string_to_use):
                             fasta_string_to_use = fasta_string
                             hsp_to_use = hsp
-                assert hsp_to_use is not None
+                    assert hsp_to_use is not None
+                except:
+                    print("""\n\nWarning: This exonerate output file could
+                    not be parsed using Bio.SearchIO: %s""" % exonerate_output_file_path
+
+                    # Just use a rough estimate of location in the sequnce
+                    # header. Maybe Biopython will be updated at some point... 
+
                 assert fasta_string_to_use is not ''
-                #print('\n')
-                #print(exonerate_output_file_path)
-                #print(fasta_string_to_use)
 
-                # Define the locations of the fragments within the selected HSP for
-                # recording in the output summary and sequence header.
-                locations = []
-                concatenated_fragment_seqs = ''
-                additional_seq_len = position_of_subject_seq_start_in_original - 1
-                #for hspfragments in hsp_to_use:
-                #    #print('\n')
-                #    #print(hspfragments)
-                for fragment in hsp_to_use:
-                    #print(fragment)
-                    #print(fragment.hit.seq)
+                location_string = '[' + rough_start + ',' + rough_end + ']'
+                if not hsp_to_use is None:
+                    #print('\n')
+                    #print(exonerate_output_file_path)
+                    #print(fasta_string_to_use)
 
-                    #location = '[' + str(fragment.hit_start + 1) + ',' + str(fragment.hit_end) + ']'
-                    #location = [min([fragment.hit_start + 1, fragment.hit_end]), max([fragment.hit_start + 1, fragment.hit_end])]
-                    location = [fragment.hit_range[0] + 1 +\
-                            additional_seq_len, fragment.hit_range[1] + additional_seq_len]
-                    locations.append(location)
-                    
-                        #concatenated_fragment_seqs = concatenated_fragment_seqs + fragment.hit
+                    # Define the locations of the fragments within the selected HSP for
+                    # recording in the output summary and sequence header.
+                    locations = []
+                    concatenated_fragment_seqs = ''
+                    additional_seq_len = position_of_subject_seq_start_in_original - 1
+                    #for hspfragments in hsp_to_use:
+                    #    #print('\n')
+                    #    #print(hspfragments)
+                    for fragment in hsp_to_use:
+                        #print(fragment)
+                        #print(fragment.hit.seq)
 
-                #print(concatenated_fragment_seqs.seq)
-                #print(transl_exonerate_seq_obj.seq)
-                #assert str(concatenated_fragment_seqs.seq) == str(transl_exonerate_seq_obj.seq)
+                        #location = '[' + str(fragment.hit_start + 1) + ',' + str(fragment.hit_end) + ']'
+                        #location = [min([fragment.hit_start + 1, fragment.hit_end]), max([fragment.hit_start + 1, fragment.hit_end])]
+                        location = [fragment.hit_range[0] + 1 +\
+                                additional_seq_len, fragment.hit_range[1] + additional_seq_len]
+                        locations.append(location)
+                        
+                            #concatenated_fragment_seqs = concatenated_fragment_seqs + fragment.hit
 
-                # Sort locations from 5' to 3'. 
-                locations.sort(key=lambda x: x[0])
-                # Construct a string with locations.
-                location_string = '[' + ','.join([str(x).replace(' ', '') for x in locations]) + ']'
-                #print(location_string)
+                    #print(concatenated_fragment_seqs.seq)
+                    #print(transl_exonerate_seq_obj.seq)
+                    #assert str(concatenated_fragment_seqs.seq) == str(transl_exonerate_seq_obj.seq)
 
-                # Define location description strings as an attribute of instances of
-                # this class.
-                self.location_string = location_string
+                    # Sort locations from 5' to 3'. 
+                    locations.sort(key=lambda x: x[0])
+                    # Construct a string with locations.
+                    location_string = '[' + ','.join([str(x).replace(' ', '') for x in locations]) + ']'
+                    #print(location_string)
+
+                    # Define location description strings as an attribute of instances of
+                    # this class.
+                    self.location_string = location_string
 
                 # Write FASTA sequence to a file.
                 temp_fastafp = exonerate_output_file_path.rsplit('.', 1) [0] + '_seq.fna'
