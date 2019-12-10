@@ -186,13 +186,13 @@ class ExonerateLocusResult:
                 ## Biopython.
                 #print("\nexonerate_seq_obj:")
                 #print(exonerate_seq_obj)
-                print("\nexonerate_seq_obj (" + exonerate_seq_obj.id + ' '\
-                        + location_string + ":")
-                print(exonerate_seq_obj)
-                print('exonerate_seq_obj.seq:')
-                print(exonerate_seq_obj.seq)
-                print("\nexonerate_seq_obj.seq.alphabet:")
-                print(exonerate_seq_obj.seq.alphabet)
+                #print("\nexonerate_seq_obj (" + exonerate_seq_obj.id + ' '\
+                #        + location_string + ":")
+                #print(exonerate_seq_obj)
+                #print('exonerate_seq_obj.seq:')
+                #print(exonerate_seq_obj.seq)
+                #print("\nexonerate_seq_obj.seq.alphabet:")
+                #print(exonerate_seq_obj.seq.alphabet)
 
                 # Translate the nucleotide sequence with the appropriate genetic code,
                 # in the appropriate strand.

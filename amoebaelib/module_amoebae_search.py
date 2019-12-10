@@ -515,7 +515,7 @@ def get_rows_for_fwd_srch_df(df,
                 # Decide whether the E-value is low enough to meet the
                 # cutoff.
                 decis = '-'
-                if e_cur <= max_evalue:
+                if e_cur <= float(max_evalue):
                     decis = '+'
                 new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
@@ -596,7 +596,7 @@ def get_rows_for_fwd_srch_df(df,
                 # Decide whether the E-value is low enough to meet the
                 # cutoff.
                 decis = '-'
-                if e_cur <= max_evalue:
+                if e_cur <= float(max_evalue):
                     decis = '+'
                 new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 

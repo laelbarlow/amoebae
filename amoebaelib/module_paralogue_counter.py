@@ -239,8 +239,11 @@ def get_sig_overlap(inali,
                     cur_similar_span = ''
 
         # Calculate percent identity and similarity among aligned residues.
-        percent_identity = (identical_residues_count/aligned_residues_count)*100
-        percent_similarity = ((identical_residues_count + similar_not_ident_residues_count)/aligned_residues_count)*100
+        percent_identity = 0
+        percent_similarity = 0
+        if aligned_residues_count > 0:
+            percent_identity = (identical_residues_count/aligned_residues_count)*100
+            percent_similarity = ((identical_residues_count + similar_not_ident_residues_count)/aligned_residues_count)*100
 
         # Calculate the length of the aligning residues as a percentage of the
         # total length of the second sequence in the alignment.
