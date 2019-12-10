@@ -117,14 +117,13 @@ class ExonerateLocusResult:
                     assert hsp_to_use is not None
                 except:
                     print("""\n\nWarning: This exonerate output file could
-                    not be parsed using Bio.SearchIO: %s""" % exonerate_output_file_path
-
+                    not be parsed using Bio.SearchIO: %s""" % exonerate_output_file_path)
                     # Just use a rough estimate of location in the sequnce
                     # header. Maybe Biopython will be updated at some point... 
 
                 assert fasta_string_to_use is not ''
 
-                location_string = '[' + rough_start + ',' + rough_end + ']'
+                location_string = '[' + str(rough_start) + ',' + str(rough_end) + ']'
                 if not hsp_to_use is None:
                     #print('\n')
                     #print(exonerate_output_file_path)
