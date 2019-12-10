@@ -121,6 +121,12 @@ class ExonerateLocusResult:
                     # Just use a rough estimate of location in the sequnce
                     # header. Maybe Biopython will be updated at some point... 
 
+                    # Choose the longest FASTA sequence in the exonerate
+                    # output.
+                    for fasta_string in fasta_strings:
+                        if len(fasta_string) > len(fasta_string_to_use):
+                            fasta_string_to_use = fasta_string
+
                 assert fasta_string_to_use is not ''
 
                 location_string = '[' + str(rough_start) + ',' + str(rough_end) + ']'
