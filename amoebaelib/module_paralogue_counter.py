@@ -1374,7 +1374,7 @@ def count_paralogues3(csv_file, metric_name, metric_value_minimum,
             #        str(row[column_header_dict['hit rank']]) + ')'
             alignment_path = os.path.join(alignmentdir,\
                             row[column_header_dict['alignment name']])
-            evalue = row[column_header_dict['evalue']]
+            evalue = float(row[column_header_dict['evalue']])
             percent_len = row[column_header_dict['percent length']]
             length = row[column_header_dict['hit length']]
 
@@ -1483,8 +1483,13 @@ def count_paralogues3(csv_file, metric_name, metric_value_minimum,
                 prot_tuples.append(i)
 
         # Sort the tuple lists by ascending E-value.
-        prot_tuples = sorted(prot_tuples, key=lambda x: x[3])
-        nucl_tuples = sorted(nucl_tuples, key=lambda x: x[3])
+        prot_tuples = sorted(prot_tuples, key=lambda x: float(x[3]))
+        nucl_tuples = sorted(nucl_tuples, key=lambda x: float(x[3]))
+        print('\n\nnucl_tuples E-values:')
+        for x in nucl_tuples:
+            print(x[3])
+        print('\n\n')
+
 
         # Remove protein hits from the tuples if they have identical accessions
         # to higher-ranking hits.
@@ -1511,6 +1516,11 @@ def count_paralogues3(csv_file, metric_name, metric_value_minimum,
                             df.at[j[0],\
                                 'Comparison with other positive hits in the same genome']\
                                 = '(This hit has the same ID as protein hit with ID: %s)' % i[1]
+                        #else:
+                        #    print('\n')
+                        #    print(i[8] + ' ' + i[7])
+                        #    print(j[8] + ' ' + j[7])
+                        #    print('\tAccepted*****')
         # Remove the identified redundant tuples. 
         if len(hit_indexes_to_remove) > 0:
             for i in prot_tuples:
@@ -1518,6 +1528,9 @@ def count_paralogues3(csv_file, metric_name, metric_value_minimum,
                     reduced_prot_tuples.append(i)
         else:
             reduced_prot_tuples = prot_tuples
+        all_prot_accs = [x[1] for x in reduced_prot_tuples]
+        assert len(all_prot_accs) == len(list(set(all_prot_accs))), """Info for hits with
+        identical accessions is present in the reduced prot set."""
 
         # Remove nucleotide hits from the tuples, if they represent a gene
         # locus that encodes one of the protein hits, or optionally any
@@ -1794,6 +1807,12 @@ def count_paralogues3(csv_file, metric_name, metric_value_minimum,
 
         # Check that no accessions listed in the info tuples are identical to
         # each other.
+        all_prot_accs = [x[1] for x in reduced_prot_tuples2]
+        assert len(all_prot_accs) == len(list(set(all_prot_accs))), """Info for hits with
+        identical accessions is present in the reduced prot set."""
+        all_nucl_accs = [x[1] for x in further_reduced_nucl_tuples3]
+        assert len(all_nucl_accs) == len(list(set(all_nucl_accs))), """Info for hits with
+        identical accessions is present in the reduced nucl set."""
         all_accs = [x[1] for x in reduced_prot_tuples2 + further_reduced_nucl_tuples3]
         assert len(all_accs) == len(list(set(all_accs))), """Info for hits with
         identical accessions is present in the reduced set."""
