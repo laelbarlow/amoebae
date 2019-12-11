@@ -1667,9 +1667,9 @@ def count_paralogues3(csv_file,
             #        str(row[column_header_dict['hit rank']]) + ')'
             alignment_path = os.path.join(alignmentdir,\
                             row[column_header_dict['alignment name']])
-            evalue = row[column_header_dict['evalue']]
-            percent_len = row[column_header_dict['percent length']]
-            length = row[column_header_dict['hit length']]
+            evalue = float(row[column_header_dict['evalue']])
+            percent_len = float(row[column_header_dict['percent length']])
+            length = int(row[column_header_dict['hit length']])
 
             # Get hit range.
             hit_range =\
@@ -1799,8 +1799,12 @@ def count_paralogues3(csv_file,
                 prot_tuples.append(i)
 
         # Sort the tuple lists by ascending E-value.
-        prot_tuples = sorted(prot_tuples, key=lambda x: x[3])
-        nucl_tuples = sorted(nucl_tuples, key=lambda x: x[3])
+        prot_tuples = sorted(prot_tuples, key=lambda x: float(x[3]))
+        nucl_tuples = sorted(nucl_tuples, key=lambda x: float(x[3]))
+        #print('\n\nE-values of nucleotide tuples:')
+        #for x in nucl_tuples:
+        #    print(x[3])
+        #print('\n\n')
 
         # Remove protein hits from the tuples if they have identical accessions
         # to higher-ranking hits.
@@ -2079,7 +2083,7 @@ def count_paralogues3(csv_file,
                             #if i.startswith(prot_hit_acc.rsplit('.', 1)[0]):
                             if annot_id_matches_prot_id(i,
                                                         prot_hit_acc,
-                                                        just_gene):
+                                                        just_look_for_genes_in_gff3):
                                 #print("""\t\tThis annotation record that overlaps with the nucleotide hit %s has a matching ID with the protein hit %s: %s""" % (x[1], y[7], i))
 
                                 # Change value in column for ID or locus redundancy
