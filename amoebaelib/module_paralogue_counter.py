@@ -1370,6 +1370,9 @@ def get_overlapping_genes_from_gff3(sql_database,
     # all).
     overlapping_entries = []
 
+    # Initiate list of IDs (which may include names as well).
+    overlap_ids = []
+
     if just_gene:
         # This was all that was done previously, and so in cases where the GFF3
         # file does not contain records that are explicitly labeled "gene", then it
@@ -1377,6 +1380,9 @@ def get_overlapping_genes_from_gff3(sql_database,
         overlapping_entries = list(db.region(region=(seq_id, cluster_range[0], cluster_range[1]),
                                         completely_within=False, featuretype='gene'
                                         ))
+        # Get gene IDs.
+        for gene in overlapping_entries:
+            overlap_ids.append(gene.id)
     else:
         # Retrieve entries in the GFF3 file that correspond to the same subsequence
         # on one of the nucleotide sequences.
@@ -1393,10 +1399,13 @@ def get_overlapping_genes_from_gff3(sql_database,
                                         completely_within=False, featuretype='exon'
                                         )) 
 
-    # Get gene IDs.
-    overlap_ids = []
-    for gene in overlapping_entries:
-        overlap_ids.append(gene.id)
+        # Get gene IDs.
+        for gene in overlapping_entries:
+            overlap_ids.append(gene.id)
+            try:
+                overlap_ids.append(gene.name)
+            except:
+                pass
 
     # Return list of IDs.
     return overlap_ids
@@ -1444,6 +1453,41 @@ def two_proteins_same_gene_in_gff3(sql_database, prot_id_1, prot_id_2):
         return True
     else:
         return False
+
+
+def annot_id_matches_prot_id(annot_id,
+                             prot_hit_acc,
+                             just_gene):
+    """Take an annotation ID/Name from a parsed GFF3 file and a protein hit ID,
+    and return true if the annotation matches the protein ID. The annot_id
+    variable is a list of IDs from a GFF3 file for records that may include
+    'gene', 'CDS', 'exon', and 'mRNA', and this list of IDs may include names
+    as well.
+    """
+    # Initiate variable to be returned.
+    ids_match = False
+
+    if just_gene:
+        # Same functionality as originally used by Larson et al. 2019.
+        if annot_id.startswith(prot_hit_acc.rsplit('.', 1)[0]):
+            ids_match = True
+
+    else:
+        # Account for IDs and Names with different formats.
+
+        # This works for the Arabidopsis thaliana, Oryza sativa, and
+        # Selaginella moellendorffii genomes:
+        relevant_prot_acc_portion = prot_hit_acc.rsplit('.', 1)[0]
+        if annot_id.startswith(relevant_prot_acc_portion):
+            ids_match = True
+
+        # This works for the Physcomytrella patens genome:
+        elif prot_hit_acc.rsplit('V', 1)[0] == annot_id:
+            ids_match = True
+
+    # Return value of the variable to indicate whether the protein ID matches
+    # the annotation record information.
+    return ids_match
 
 
 def count_paralogues3(csv_file,
@@ -2032,7 +2076,10 @@ def count_paralogues3(csv_file,
                             prot_hit_acc = y[7]
                             # ***Note: This may not work for all gene ID/accession
                             # nomenclature schemes.
-                            if i.startswith(prot_hit_acc.rsplit('.', 1)[0]):
+                            #if i.startswith(prot_hit_acc.rsplit('.', 1)[0]):
+                            if annot_id_matches_prot_id(i,
+                                                        prot_hit_acc,
+                                                        just_gene):
                                 #print("""\t\tThis annotation record that overlaps with the nucleotide hit %s has a matching ID with the protein hit %s: %s""" % (x[1], y[7], i))
 
                                 # Change value in column for ID or locus redundancy
