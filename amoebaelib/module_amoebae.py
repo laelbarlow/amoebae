@@ -691,6 +691,8 @@ def get_hit_range_from_hsp_ranges(subseq_coord):
     """Take subsequence coordinates as a string, and return a list containing
     the lowest and highest numbers.
     """
+    print('subseq_coord:')
+    print(subseq_coord)
     # Compile regular expressions to identify relevant substrings.
     low = re.compile(r'\[\d+,')
     high = re.compile(r',\d+\]')

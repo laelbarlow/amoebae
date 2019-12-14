@@ -129,7 +129,7 @@ class ExonerateLocusResult:
 
                 assert fasta_string_to_use is not ''
 
-                location_string = '[' + str(rough_start) + ',' + str(rough_end) + ']'
+                location_string = 'approx[' + str(rough_start) + ',' + str(rough_end) + ']'
                 if not hsp_to_use is None:
                     #print('\n')
                     #print(exonerate_output_file_path)
