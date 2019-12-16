@@ -359,7 +359,7 @@ def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
     exists: %s""" % subdirpath
 
     # Read csv file into a pandas dataframe.
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, low_memory=False)
 
     # Do it differently depending on if all hits are to be included or not.
     seq_objs = []
