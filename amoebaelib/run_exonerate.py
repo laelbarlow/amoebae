@@ -99,14 +99,24 @@ class ExonerateLocusResult:
                 fasta_string_to_use = ''
                 #with open(exonerate_output_file_path) as exonerate_outputfh:
                 try:
-                    parsed_exonerate = list(SearchIO.parse(exonerate_output_file_path, 'exonerate-text'))
+                    #parsed_exonerate = list(SearchIO.parse(exonerate_output_file_path, 'exonerate-text'))
+                    parsed_exonerate =\
+                    list(SearchIO.parse(exonerate_output_file_path,\
+                        'exonerate-vulgar')) # Use the vulgar string to avoid erroneous start and stop positions.
                     #print(parsed_exonerate)
                     #for hsp in sorted(list(parsed_exonerate), key=lambda x: x.score, reverse=True):
+
+                    # Make a list of HSPs.
                     hsp_list = []
                     for x in parsed_exonerate:
                         for y in x:
                             for z in y:
                                 hsp_list.append(z)
+
+                    # Note: HSPs must be in the same order as the FASTA
+                    # sequences (in order of appearance in the exonerate output
+                    # file).
+
                     assert len(hsp_list) == len(fasta_strings), """Different
                     number of HSPs and FASTA sequences identified in the exonerate
                     output file %s""" % exonerate_output_file_path
@@ -129,6 +139,11 @@ class ExonerateLocusResult:
 
                 assert fasta_string_to_use is not ''
 
+                # Check that the start and end positions are not negative
+                # numbers.
+                assert rough_start >= 0
+                assert rough_end >= 0
+
                 location_string = 'approx[' + str(rough_start) + ',' + str(rough_end) + ']'
                 if not hsp_to_use is None:
                     #print('\n')
@@ -149,6 +164,12 @@ class ExonerateLocusResult:
 
                         #location = '[' + str(fragment.hit_start + 1) + ',' + str(fragment.hit_end) + ']'
                         #location = [min([fragment.hit_start + 1, fragment.hit_end]), max([fragment.hit_start + 1, fragment.hit_end])]
+
+                        # Check that the start and end positions are not
+                        # negative numbers.
+                        assert fragment.hit_range[0] >= 0
+                        assert fragment.hit_range[1] >= 0
+
                         location = [fragment.hit_range[0] + 1 +\
                                 additional_seq_len, fragment.hit_range[1] + additional_seq_len]
                         locations.append(location)

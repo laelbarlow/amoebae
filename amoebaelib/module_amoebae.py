@@ -359,7 +359,8 @@ def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
     exists: %s""" % subdirpath
 
     # Read csv file into a pandas dataframe.
-    df = pd.read_csv(csv_file, low_memory=False)
+    #df = pd.read_csv(csv_file, low_memory=False)
+    df = pd.read_csv(csv_file)
 
     # Do it differently depending on if all hits are to be included or not.
     seq_objs = []
@@ -691,6 +692,7 @@ def get_hit_range_from_hsp_ranges(subseq_coord):
     """Take subsequence coordinates as a string, and return a list containing
     the lowest and highest numbers.
     """
+    print('\nget_hit_range_from_hsp_ranges:')
     print('subseq_coord:')
     print(subseq_coord)
     # Compile regular expressions to identify relevant substrings.
@@ -699,7 +701,14 @@ def get_hit_range_from_hsp_ranges(subseq_coord):
 
     # Compile lists of numbers.
     low_list = [x[1:-1] for x in low.findall(subseq_coord)]
+    print('low_list:')
+    print(low_list)
     high_list = [x[1:-1] for x in high.findall(subseq_coord)]
+    print('high_list:')
+    print(high_list)
+
+    assert '-' not in subseq_coord, """There appears to be unexpected
+    characters in the subsequence coordinates."""
 
     # Return a list containing the lowest and highest numbers.
     return [min(low_list), max(high_list)]

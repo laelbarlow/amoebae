@@ -1655,7 +1655,9 @@ def count_paralogues3(csv_file,
     # Get sets of indexes for which summaries should be made, organized by
     # query title and taxon combinations as well as corresponding relevant information.
     index_dict = {}
+    rownum = 0
     for index, row in df.iterrows():
+        rownum += 1
         if row[column_header_dict['positive or not']] == '-':
             # Ignore negative hits.
             pass
@@ -1672,6 +1674,16 @@ def count_paralogues3(csv_file,
             length = int(row[column_header_dict['hit length']])
 
             # Get hit range.
+            #print('\n')
+            #actual_acc = row[column_header_dict['accession']]
+            #print('row number:')
+            #print(rownum)
+            #print('row:')
+            #print(row)
+            #print('query_title:')
+            #print(query_title)
+            #print('actual_acc:')
+            #print(actual_acc)
             hit_range =\
             get_hit_range_from_hsp_ranges(row[column_header_dict['subseq coordinates']])
 
