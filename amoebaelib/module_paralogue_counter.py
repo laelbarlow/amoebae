@@ -2320,6 +2320,12 @@ def count_paralogues3(csv_file,
         # Add these to the list of final positive nucleotide tuples.
         #final_positive_nucl_tuples = final_positive_nucl_tuples + nucl_tuples5
 
+        # Temporary print statement.
+        prot_accs = [x[1] for x in prot_tuples3]
+        for x in prot_accs:
+            xnum = prot_accs.count(x)
+            if xnum > 1:
+                print('ID ' + x + ' occurs ' + str(xnum) + ' times.')
 
         # Check that no accessions listed in the info tuples are identical to
         # each other.
@@ -2603,20 +2609,39 @@ def count_paralogues3(csv_file,
     starting_inflow_unit_count_nucl = sankey_data_dict['Total in']['nucl']
 
     # Define list of outflow proportions at each stage.
-    sankey_outflow_proportions_prot =\
-        [-(sankey_data_dict['Location']['prot']/starting_inflow_unit_count_prot),
-         -(sankey_data_dict['Internal stops']['prot']/starting_inflow_unit_count_prot),
-         -(sankey_data_dict['Length']['prot']/starting_inflow_unit_count_prot),
-         -(sankey_data_dict['Overlap']['prot']/starting_inflow_unit_count_prot),
-         -(sankey_data_dict['Identity']['prot']/starting_inflow_unit_count_prot)
-        ]
-    sankey_outflow_proportions_nucl =\
-        [-(sankey_data_dict['Location']['nucl']/starting_inflow_unit_count_nucl),
-         -(sankey_data_dict['Internal stops']['nucl']/starting_inflow_unit_count_nucl),
-         -(sankey_data_dict['Length']['nucl']/starting_inflow_unit_count_nucl),
-         -(sankey_data_dict['Overlap']['nucl']/starting_inflow_unit_count_nucl),
-         -(sankey_data_dict['Identity']['nucl']/starting_inflow_unit_count_nucl)
-        ]
+    if starting_inflow_unit_count_prot == 0:
+        sankey_outflow_proportions_prot =\
+            [-0,
+             -0,
+             -0,
+             -0,
+             -0
+             ]
+    else:
+        sankey_outflow_proportions_prot =\
+            [-(sankey_data_dict['Location']['prot']/starting_inflow_unit_count_prot),
+             -(sankey_data_dict['Internal stops']['prot']/starting_inflow_unit_count_prot),
+             -(sankey_data_dict['Length']['prot']/starting_inflow_unit_count_prot),
+             -(sankey_data_dict['Overlap']['prot']/starting_inflow_unit_count_prot),
+             -(sankey_data_dict['Identity']['prot']/starting_inflow_unit_count_prot)
+            ]
+    
+    if starting_inflow_unit_count_nucl == 0:
+        sankey_outflow_proportions_nucl =\
+            [-0,
+             -0,
+             -0,
+             -0,
+             -0
+             ]
+    else:
+        sankey_outflow_proportions_nucl =\
+            [-(sankey_data_dict['Location']['nucl']/starting_inflow_unit_count_nucl),
+             -(sankey_data_dict['Internal stops']['nucl']/starting_inflow_unit_count_nucl),
+             -(sankey_data_dict['Length']['nucl']/starting_inflow_unit_count_nucl),
+             -(sankey_data_dict['Overlap']['nucl']/starting_inflow_unit_count_nucl),
+             -(sankey_data_dict['Identity']['nucl']/starting_inflow_unit_count_nucl)
+            ]
 
     # Define list of labels for outflows.
     sankey_outflow_labels = ['Location', 'Internal stops', 'Length', 'Overlap', '%Identity']

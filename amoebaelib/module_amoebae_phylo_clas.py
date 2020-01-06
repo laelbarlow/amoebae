@@ -839,7 +839,7 @@ def classify_seq_with_constrained_tree2(file_with_seqs, model=None,
         # Get column header for column with Yes/No data.
         yes_no_col = None
         for header in df.columns:
-            if header.startswith('Represents an identifiably unique paralogue'):
+            if header.startswith('Represents a potential paralogue'):
                 yes_no_col = header
                 break
         if yes_no_col is None:

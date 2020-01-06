@@ -32,7 +32,7 @@ from module_amoebae_name_replace import write_newick_tree_with_uncoded_names
 from ete3 import Tree, NodeStyle, TreeStyle, TextFace
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
-from scipy.misc import imread
+#from scipy.misc import imread
 import numpy as np
 from string import Template
 from PyPDF2 import PdfFileWriter, PdfFileReader
@@ -44,6 +44,7 @@ import matplotlib.colors as mc
 import colorsys
 from module_boots_on_mb import mbcontre_to_newick_w_probs
 import matplotlib
+from matplotlib.pyplot import imread
 import matplotlib.pyplot as plt
 import numpy as np
 from search_alignment_space import get_type_seqs_dict, get_nodes_of_interest, get_clade_name_from_model2

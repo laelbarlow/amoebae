@@ -102,15 +102,26 @@ def convert_headers(infp, outfp, split_char=' ', split_pos='0',
 
                 # Modify the accession if a previous sequence has the same
                 # accession.
+                alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 if acc in accs:
                     modified = False
                     old_acc = acc
-                    for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                    for letter in alphabet:
                         modified_acc = acc + '_' + letter
                         if modified_acc not in accs:
                             acc = modified_acc
                             modified = True
                             break
+                    if not modified:
+                        for letter1 in alphabet:
+                            for letter2 in alphabet:
+                                modified_acc = acc + '_' + letter1 + letter2
+                                if modified_acc not in accs:
+                                    acc = modified_acc
+                                    modified = True
+                                    break
+                            if modified:
+                                break
                     assert modified, """Could not modify the accession number
                     for sequence with duplicate accession number %s.""" % acc
 

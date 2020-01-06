@@ -369,18 +369,22 @@ def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
     yes_no_col = None
     if all_hits:
         # Use all forward hits.
+        print('\nWriting all forward search hits to FASTA files.')
         pass
     else:
         # Look a column to use to indicate whether a hit meets the criteria or
         # not.
         for header in df.columns:
-            if header.startswith('Represents an identifiably unique paralogue'):
+            if header.startswith('Represents a potential paralogue'):
                 yes_no_col = header
+                print('\nWriting non-redundant sequences to FASTA files.')
                 break
         if yes_no_col is None:
             for header in df.columns:
                 if header == 'Collective interpretation of reverse search results':
                     yes_no_col = header
+                    print("""\nWriting all sequences meeting forward and reverse
+                    search criteria to FASTA files.""")
                     break
         assert yes_no_col is not None, """Could not determine which column to
         use to decide whether each sequence should be written."""

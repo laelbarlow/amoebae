@@ -713,7 +713,6 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         unique_positive_hit_decis_header = None
         decision_type = None
         for header in indf.columns:
-            #if header.startswith('Represents an identifiably unique paralogue'):
             if header.startswith('Represents a potential paralogue'):
                 unique_positive_hit_decis_header = header
                 decision_type = 'nonredundant_positive_hit'
