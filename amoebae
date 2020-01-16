@@ -161,7 +161,7 @@ Miscellaneous commands:
 
         # Check for phylogenetics programs.
         print('\nIQ-TREE version:')
-        subprocess.call(['iqtree', '-version'])
+        subprocess.call(['iqtree', '-h', '|', 'head', '-n', '1'])
 
         # Check for latex (pdflatex)?
         # ...
