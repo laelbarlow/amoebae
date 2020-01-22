@@ -259,7 +259,8 @@ class SrchResFile:
         seq_id = self.hit_id(hit_rank) 
         db_path = os.path.join(dbdir_path, self.db_file)
         assert os.path.isfile(db_path), """Given path is not a file."""
-        seq_obj = get_seqs_from_fasta_db(db_path, [seq_id])[0]
+        #seq_obj = get_seqs_from_fasta_db(db_path, [seq_id])[0]
+        seq_obj = get_seqs_from_fasta_db(self.db_file, [seq_id])[0]
 
         # Check that it worked.
         assert seq_obj is not None, """Could not retrieve sequence for hit."""

@@ -196,11 +196,13 @@ def update_query_csv(csv_file, mod_query_path, datatype):
         # Get species based on taxon.
         species = module_amoebae.get_species_from_db_csv(taxon)
     else:
-        # Print warning.
-        print("""Warning: Could not identify query title or database/taxon name
-        in input filename.""")
-        # Just use the whole filename minus the filename extension.
-        query_title = query_basename.rsplit('.')[0]
+        ## Print warning.
+        #print("""Warning: Could not identify query title or database/taxon name
+        #in input filename.""")
+        ## Just use the whole filename minus the filename extension.
+        #query_title = query_basename.rsplit('.')[0]
+
+        query_title = query_basename.split('_')[0]
 
     # Initiate dataframe for line to append.
     new_row = pd.DataFrame(columns=headers)

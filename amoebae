@@ -899,7 +899,7 @@ Miscellaneous commands:
             print("""\n\nWarning: Using experimental code for running exonerate to
             improve translation of sequences identified by TBLASTN. If you do not
             want to do this, then use the --do_not_use_exonerate option.\n\n""") 
-            input("""Continue?""")
+            #input("""Continue?""")
 
         # Import command-specific modules.
         import module_amoebae_search
@@ -2575,6 +2575,78 @@ Miscellaneous commands:
         module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
+
+    def align_fa(self):
+        parser = argparse.ArgumentParser(
+            description="""This command is for calling alignment software
+            (MUSCLE) to align FASTA files and save them in nexus format.  This
+            assumes that you want to use default settings for MUSCLE. By
+            default, the output file is written to the same directory as the
+            input file.""")
+        parser.add_argument('input_file_path', help='''Path to a multiple
+        peptide sequence file in FASTA format.''')
+        parser.add_argument('--output_file_path', help='''Path to output
+        multiple sequence alignment file.''',
+        default=None)
+        parser.add_argument('--output_format', help='''Multiple sequence
+        alignment format for output file. Valid options are 'fasta' or
+        'nexus'.''', choices=['fasta','nexus'], default='nexus')
+        args = parser.parse_args(sys.argv[2:])
+
+        # Import command-specific modules.
+        from module_afa_to_nex import align_one_fa
+
+        # Record start time.
+        start_time = time.time()
+        # Get current time for timestamp.
+        timestamp = time.strftime("%Y%m%d%H%M%S")
+
+        # Do stuff.
+
+        # Set amino acid scoring matrix path to use if mafft program called
+        # (default is settings.blosum62_path).
+        #print('Matrix: ' + settings.align_fa_matrix)
+        aamatrix_path = None
+        if settings.align_fa_matrix == 'blosum62':
+            aamatrix_path = settings.blosum62_path
+        elif settings.align_fa_matrix == 'cc140':
+            aamatrix_path = settings.cc140_path
+        else:
+            print('Error! matrix not specified.')
+        #print('Matrix file: ' + aamatrix_path)
+
+        # Set alignment program to use (default is 'muscle', use 'altmafft' if
+        # experimenting with different parameters).
+        program = settings.align_fa_program 
+        #print('Program: ' + program + '\n')
+
+        # Determine what format the output file should be in.
+        conv_to_nexus_format = None
+        if args.output_format == 'fasta':
+            conv_to_nexus_format = False
+        elif args.output_format == 'nexus':
+            conv_to_nexus_format = True
+        assert conv_to_nexus_format is not None, """Output format must be fasta
+        or nexus."""
+
+        # Align the fasta file.
+        main_out_path = align_one_fa(args.input_file_path,
+                                             args.output_file_path,
+                                             program,
+                                             aamatrix_path,
+                                             conv_to_nexus_format)
+
+        # Record end time.
+        end_time = time.time()
+        # Define command line input.
+        commandline = ' '.join(sys.argv)
+        # Define output file/directory.
+        outdir = main_out_path
+        if not os.path.isdir(outdir):
+            outdir = os.path.dirname(main_out_path)
+        # Record info to log file.
+        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+                start_time, end_time, timestamp, main_out_path)
 
     # TEMPLATE FUNCTION:
     def commandx(self):

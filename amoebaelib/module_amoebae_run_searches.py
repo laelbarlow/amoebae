@@ -49,6 +49,8 @@ def get_db_list_from_file(infp):
         for i in infh:
             if not i.startswith('#') and not i.startswith('\n'):
                 db_list.append(i.strip())
+    #print('db_list')
+    #print(db_list)
     return db_list
 
 

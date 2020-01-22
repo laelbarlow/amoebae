@@ -36,8 +36,7 @@ os.path.join(root_amoebae_data_dir, 'Genomes')
 
 # Set path to csv file with information about the relevant genome data.
 db_info_csv =\
-os.path.join(root_amoebae_data_dir, os.path.join(dbdirpath,
-    '0_genome_info.csv'))
+os.path.join(dbdirpath, '0_genome_info.csv')
 
 # Set path to directory containing query files (.faa, .afaa, etc.).
 querydirpath =\
@@ -45,8 +44,7 @@ os.path.join(root_amoebae_data_dir, 'Queries')
 
 # Set path to csv file with information about the relevant query files.
 query_info_csv =\
-os.path.join(root_amoebae_data_dir, os.path.join(querydirpath,
-    '0_query_info.csv'))
+os.path.join(querydirpath, '0_query_info.csv')
 
 # Set path to directory containing reference tree (and alignment) files.
 model_dir_path =\
@@ -55,8 +53,7 @@ os.path.join(root_amoebae_data_dir, 'Models')
 # Set path to csv file with information about reference tree (and alignment)
 # files.
 model_info_csv =\
-os.path.join(root_amoebae_data_dir, os.path.join(model_dir_path,
-    '0_models_info.csv'))
+os.path.join(model_dir_path, '0_models_info.csv')
 
 
 #############################################################################

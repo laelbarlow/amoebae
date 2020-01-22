@@ -87,7 +87,8 @@ def get_seqs_from_fasta_db(db_name, accs, slow=False):
     db_dir = settings.dbdirpath
 
     # Get database filepath.
-    db_path = os.path.join(db_dir, db_name)
+    #db_path = os.path.join(db_dir, db_name)
+    db_path = os.path.join(db_dir, os.path.basename(db_name))
     assert os.path.isfile(db_path), """Path is not a file: %s""" % db_path
 
     # Old way:
@@ -176,7 +177,8 @@ def get_subseq_from_fasta_db(db_name, acc, subseq_coord):
     db_dir = settings.dbdirpath
 
     # Get database filepath.
-    db_path = os.path.join(db_dir, db_name)
+    #db_path = os.path.join(db_dir, db_name)
+    db_path = os.path.join(db_dir, os.path.basename(db_name))
     assert os.path.isfile(db_path), """Path is not a file: %s""" % db_path
 
     # Old way:

@@ -23,6 +23,9 @@ from Bio import AlignIO
 from Bio.Alphabet import IUPAC, Gapped
 from module_amoebae_get_datatype import get_dbtype
 from Bio.Seq import Seq
+import glob
+import subprocess
+import settings
 
 
 def determine_alphabet(filepath):
@@ -160,5 +163,84 @@ def nex_to_mbnex(infilepath, outfilepath, mrbayescodeblocks):
     # Remove temporary file.
     os.remove(infilepath2)
 
+
+def align_fa(infilepath, outfilepath, aamatrix_path, program='muscle'):
+    """Calls MUSCLE or MAFFT."""
+    # Run MUSCLE by default.
+    if program is None:
+        program='muscle'
+
+    # Check that an alignment program was specified.
+    #assert program == 'muscle' or program == 'mafft', 'Error: Must specify\
+    #alignment program as either muscle or mafft.'
+
+    if program == 'muscle':
+        # Call MUSCLE with default options.
+        subprocess.call(["muscle", "-in", infilepath, "-out", outfilepath])
+
+    # Run MAFFT if specified using somewhat default parameters.
+    elif program == 'mafft':
+        # Get the matrix file path with user's home directory. 
+        aamatrix_path = os.path.expanduser(aamatrix_path)
+        with open(outfilepath, 'w') as o:
+            # The --localpair option may not be optimal. There are two other
+            # options suggested for accurate alignments in the mafft
+            # documentation. The --genafpair option is what Surkont et al.
+            # used.
+            stdoutdata = subprocess.call(['mafft', '--maxiterate', '1000',
+                '--ep', '0', '--genafpair', '--aamatrix', aamatrix_path, infilepath], stdout=o)
+
+    # Run MAFFT with variable parameters (modify this code).
+    elif program == 'altmafft':
+        # Get the matrix file path with user's home directory. 
+        aamatrix_path = os.path.expanduser(aamatrix_path)
+        with open(outfilepath, 'w') as o:
+            # The --localpair option may not be optimal. There are two other
+            # options suggested for accurate alignments in the mafft
+            # documentation.
+            stdoutdata = subprocess.call(['mafft', '--maxiterate', '1000',
+                '--localpair', '--aamatrix', aamatrix_path, infilepath], stdout=o)
+
+
+def align_all_fa(indirpath=None, outdirpath=None):
+    """Calls the align_fa_muscle function on all .fa files in a given
+    directory, which is the cwd by default.  And, outputs to a given output
+    directory, which is also cwd by default.
+    """
+    cwd = os.getcwd()
+    if indirpath == None:
+        indirpath = cwd
+    if outdirpath == None:
+        outdirpath = cwd
+    for f in [x for x in glob.glob(os.path.join(indirpath, '*.fa'))]:
+        outfilename = os.path.basename(f).replace('.fa', '.afaa')
+        align_fa(f, os.path.join(outdirpath, outfilename))
+
+
+def align_one_fa(infilepath, outdirpath=None, program=None, aamatrix_path=None,
+        conv_to_nex=None):
+    """Calls the align_fa_muscle function on a .fa file.  And, outputs to a
+    given output directory, which is the cwd by default.
+    """
+    #if not infilepath.rsplit('.', 1)[1] == 'fa':
+    #    print('\n*** Warning: The file specified does not have the extension fa.')
+    if outdirpath == None:
+        outdirpath = os.path.dirname(infilepath)
+    outfilename = os.path.basename(infilepath).rsplit('.', 1)[0] + '.afaa'
+    outfilepath = os.path.join(outdirpath, outfilename)
+    # Align with muscle with default settings and aamatrix.
+    align_fa(infilepath, outfilepath, aamatrix_path,\
+            program)
+
+    # Optionally convert output file to nex and delete afa.
+    if conv_to_nex:
+        o = os.path.join(outdirpath, outfilename)
+        outfilepath2 = outfilepath.rsplit('.', 1)[0] + '.nex'
+        afa_to_nex(outfilepath, outfilepath2)
+        os.remove(outfilepath)
+        outfilepath = outfilepath2
+    
+    # Return path to output file.
+    return outfilepath
 
 
