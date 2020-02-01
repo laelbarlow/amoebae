@@ -596,6 +596,7 @@ def make_coulson_plot(column_labels_simple,
     # Save figure to pdf file. (transparent=True gets rid of white
     # backgrounds).
     fig.savefig(outpdfpath_coulson, bbox_inches='tight', transparent=True)
+    fig.savefig(outpdfpath_coulson.rsplit('.', 1)[0] + '.png', bbox_inches='tight', transparent=True)
 
 
 def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
