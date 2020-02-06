@@ -45,12 +45,13 @@ keepspaces=true
 } 
 
 
-% Format section headers. 
-\usepackage[tiny]{titlesec}
-\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
-\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
-\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus
-2pt}
+%% Format section headers (this is not ideal when there are many short
+%%subsections. 
+%\usepackage[tiny]{titlesec}
+%\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+%\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+%\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus
+%2pt}
 
 \marginsize{2.5 cm}{2.5 cm}{1 cm}{1 cm} % Works out to one inch margins.
 
@@ -102,7 +103,8 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
 
 \subsection{Why AMOEBAE?}
 
-    Webservices such as those provided by NCBI (URL*****) provide a means to
+    Webservices such as those provided by NCBI
+    (\url{https://blast.ncbi.nlm.nih.gov/Blast.cgi}) provide a means to
     investigate the evolution of one or a few genes via similarity searching,
     and automated pipelines such as orthoMCL (REFERENCE) attempt to rapidly
     perform orthology prediction for all genes in several genomes. AMOEBAE
@@ -260,7 +262,7 @@ well.
 \item Ensure that Git is installed on your computer This program should be
     already installed by default on your operating system. You can check
     which version you have by running the command below. Documentation for
-    Git is available here: \url{https://git-scm.com/doc}.
+    Git is available here: \url{https://git-scm.com/doc}. 
 
 \begin{lstlisting}
 >>> git --version

@@ -12,3 +12,13 @@ settings.py
 *.xdy
 *.swp
 *.DS_Store
+*.idx
+*.lof
+*.log
+*.lot
+*.out
+*.glg
+*.glsdefs
+*.gls
+*.ist
+
