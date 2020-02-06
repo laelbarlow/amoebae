@@ -18,6 +18,8 @@ that AMOEBAE is currently under development and is not yet fully functional.
 
 ## Setup
 
+<!---
+
 1) Ensure that the following dependencies are installed and working on your
 system:
 
@@ -41,6 +43,11 @@ system:
 
 - MUSCLE ([Edgar, 2004](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-5-113))
 
+-->
+
+1) Install ([Docker](https://www.docker.com/products/docker-desktop) for
+building virtual environments in which to install dependencies.
+
 2) Download the amoebae source code, or clone the amoebae repository using git,
 add the directory to your $PATH variable for access via the command line (as
 well as the misc\_scripts directory, if you wish to access those files).
@@ -50,13 +57,16 @@ the relevant variable definitions therein.
 
 4) Enter the following command in a terminal window, which should display a
 list of commands that you can use with amoebae:
-
+```
     amoebae -h
+```
 
 You can access further information about each listed command with the -h option
 as follows:
-
+```
     amoebae <commandnamehere> -h
+```
+
 
 
 ## Documentation

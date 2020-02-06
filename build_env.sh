@@ -14,7 +14,7 @@ SECONDS=0
 # Prompt user to add the amoebae-lite path to the files for sharing via the
 # Docker Desktop App GUI.
 printf "Add this directory path to the Docker files that can be shared and
-mounted to Docker containers via the Docker graphical user interface:\n" &&\
+mounted to Docker containers via the Docker graphical user interface:\n\n" &&\
 pwd &&\
 printf "\nPress enter to continue" &&\
 read EMPTYVAR &&\

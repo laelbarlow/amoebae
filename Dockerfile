@@ -4,10 +4,12 @@ USER root
 
 WORKDIR /home/lael/software
 
+#RUN conda install python=3.6.9
+
 # Update all conda to avoid inconsistencies.
 RUN conda update --all
 
-#RUN conda install python=3.6.9
+RUN conda install python=3.6.9
 
 # This fails:
 #RUN conda install -c anaconda gcc
