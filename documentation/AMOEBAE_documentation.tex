@@ -1,0 +1,422 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{amsmath}
+\usepackage[pdftex]{graphicx}
+\usepackage{hyperref} 
+\usepackage{color} 
+\usepackage{xcolor} 
+\usepackage{xspace}
+\usepackage{anysize}
+\usepackage{setspace}
+\usepackage{multicol} % This allows multiple columns
+\usepackage[nottoc,numbib]{tocbibind} % This makes refs a section
+\usepackage[pagewise]{lineno}
+\usepackage{tcolorbox} % For making boxes around text.
+\usepackage[xindy,toc]{glossaries} % Must come after hyperref package.
+\usepackage{url}
+\usepackage[T1]{fontenc} % Makes > not typeset as inverted question mark.
+
+% Run external commands to generate a tex file containing the output of the
+% 'amoebae -h' command.
+\immediate\write18{bash generate_amoebae_help_output_text.sh}
+
+
+% Import stuff for formatting citations.
+\usepackage{natbib}
+
+% Format paragraphs.
+%\setlength{\parskip}{\baselineskip}%
+%\setlength{\parindent}{0pt}%
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+%\renewcommand{\baselinestretch}{2.0}
+
+% Define command for wrapping large words.
+\newcommand*\wrapletters[1]{\wr@pletters#1\@nil}
+\def\wr@pletters#1#2\@nil{#1\allowbreak\if&#2&\else\wr@pletters#2\@nil\fi}
+
+% Use the listings package to automatically wrap text (unlike with just using
+% verbatim).
+\usepackage{listings}
+\lstset{
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true,
+keepspaces=true
+} 
+
+
+% Format section headers. 
+\usepackage[tiny]{titlesec}
+\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus
+2pt}
+
+\marginsize{2.5 cm}{2.5 cm}{1 cm}{1 cm} % Works out to one inch margins.
+
+%\parindent 1cm
+\graphicspath{{figures/}}
+%\pagenumbering{arabic}
+
+\pagenumbering{roman}
+
+\makeglossaries
+
+\begin{document}
+\begin{titlepage}
+	\centering
+    {\huge AMOEBAE documentation\par}
+	\vspace{2cm}
+    {\Large Lael D. Barlow\par}
+	\vfill
+	{\large Version of \today\par}
+\end{titlepage}
+
+%Optional table of contents.
+\newpage
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+% Start line numbers on this page
+\begin{linenumbers}
+
+\section{Introduction}
+
+
+\subsection{What is AMOEBAE?}
+
+Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
+    software toolkit composed primarily of scripts written in the Python3
+    language.  AMOEBAE scripts use existing Python packages including Biopython
+    \citep{cock2009}, the Environment for Tree Exploration (ETE3)
+    \citep{huerta-cepas2016}, pandas, and Matplotlib \citep{hunter2007} for
+    setting up, running, and summarizing analyses of molecular evolution using
+    bioinformatics software packages including MUSCLE \citep{edgar2004}, BLAST+
+    \citep{camacho2009}, HMMer3 \citep{eddy1998}, and IQ-Tree
+    \citep{nguyen2015}. Applications include identifying and classifying
+    predicted peptide sequences according to their evolutionary relationships
+    with homologues. All dependencies are freely available, and AMOEBAE code is
+    open-source (see section \ref{icense_section} and available on GitHub
+    (\url{https://github.com/laelbarlow/amoebae}). 
+
+\subsection{Why AMOEBAE?}
+
+    Webservices such as those provided by NCBI (URL*****) provide a means to
+    investigate the evolution of one or a few genes via similarity searching,
+    and automated pipelines such as orthoMCL (REFERENCE) attempt to rapidly
+    perform orthology prediction for all genes in several genomes. AMOEBAE
+    addresses the problem mid-scale analyses which are too cumbersome to be
+    done via webservices and yet requiring a level of detail and flexibility
+    not offered by automated pipelines. AMOEBAE may be useful for analyzing the
+    distribution of orthologues of up to perhaps 30 genes/proteins among a
+    sampling of no more than approximately 100 eukaryotic genomes.  However,
+    you may need to carefully define the scope of your analysis depending on
+    what additional steps you may find necessary beyond those that may be
+    performed using AMOEBAE (30 queries and 100 genomes may in fact be
+    unmanageable). AMOEBAE provides many options which can be tailored to the
+    specific genes/proteins being analyzed, and allow analyses using complex
+    sets of customized criteria to be reproduced more practically. 
+
+    %Although scripts in the AMOEBAE toolkit perform many operations more
+    %efficiently than can be done without scripts, these are not applicable to
+    %high-throughput genome-scale analysis as they do not constitute an
+    %automated pipeline, and do not provide the efficiency necessary to run
+    %analyses with hundreds of protein queries simultaneously. AMOEBAE is
+    %instead a toolkit of scripts designed to provide the flexibility required
+    %for detailed analysis of specific protein families, by performing specific
+    %operations you may wish to include in your similarity searching workflow.
+    %Therefore, the following documentation assumes that if you choose to use
+    %AMOEBAE then you are using 
+
+    %Moreover, it should be clear that AMOEBAE identifies "positive" and
+    %"negative" results simply by applying criteria that the user specifies. So,
+    %it is entirely the users responsibility to select appropriate criteria and
+    %interpret the results critically. 
+
+\subsection{Key features}
+
+The core functionality is to run sequence similarity searches with multiple
+    algorithms, multiple queries, and multiple databases simultaneously and
+    facilitate efficient and highly customizable implementation of
+    reciprocal-best-hit search strategies. The output includes detailed
+    summaries of results in the form of a spreadsheet and plots.
+
+\subsection{User support}
+
+For specific issues with the code, please use the issue tracker on the GitHub
+    webpage here: \url{https://github.com/laelbarlow/amoebae/issues}. 
+
+If you have general questions regarding AMOEBAE, please email the author at
+    lael (at) ualberta.ca.
+
+\subsection{Documentation}
+
+This document provides an overview of AMOEBAE and describes the functionality
+of the various commands/scripts. For a tutorial which includes a working
+example of a similarity search analysis run using AMOEBAE, see the Jupyter
+Notebook: amoebae/notebooks/similarity\_search\_tutorial.ipynb. For code
+documentation, please see the html file(s), which can be opened with your web
+browser: \url{amoebae/doc/code_documentation/html/index.html}.
+
+% Make this a separate file.
+%\subsection{Suggestions for new bioinformaticians}
+%
+%This assumes that you have some experience running similarity searches using
+%BLAST on webservices such as NCBI.
+%
+%To use AMOEBAE effectively, you will need the following skills:
+%
+%a basic understanding of commandline usage on macOS or Linux
+%    Link to command-line cheatsheet.
+%
+%know how to install software. 
+%
+%Some basic understanding of how to run scripts written in various languages.
+%
+%If you are new to using scripts for comparative genomics
+%analysis, a simpler Jupyter Notebook is included: XXXXXXlink. 
+
+
+\subsection{How to cite AMOEBAE}
+
+Please cite the GitHub webpage \url{https://github.com/laelbarlow/amoebae} (or
+alternative permanent repositories if relevant). Also, the first publication to
+make use of a version of AMOEBAE was an analysis of Adaptor Protein subunits in
+embryophytes by \cite{larson2019}.
+
+Also, you may wish to cite the software packages which are key dependencies of
+AMOEBAE, since AMOEBAE would not work without these (see section
+\ref{dependencies_section}).
+% Need to insert a mini bibliography here?
+
+\subsection{Acknowledgments}
+
+\subsection{License}
+\label{license_section}
+
+Copyright 2018 Lael D. Barlow
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+\url{http://www.apache.org/licenses/LICENSE-2.0}
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+
+\section{How to start using AMOEBAE}
+
+\subsection{System requirements}
+
+Please note that the commands shown likely only work on macOS or Linux operating
+systems (you may have trouble running AMOEBAE directly on Windows). 
+
+
+\subsection{Dependencies}
+\label{dependencies_section}
+
+All dependencies are free and open-source, and can be automatically installed
+in a virtual environment (see section \ref{setup_section}).
+
+These are the main depencencies of AMOEBAE:
+
+\begin{itemize}
+
+\item Python3 (the Anaconda distribution works well).
+
+\item Biopython, a Python package for bioinformatics \citep{cock2009}.
+
+\item The Environment for Tree Exploration 3 (ETE3), a Python package for
+    working with phylogenetic trees \citep{huerta-cepas2016}.
+
+\item Matplotlib, a Python package for generating plots \citep{hunter2007}.
+
+\item (\href{https://pythonhosted.org/gffutils/}{gffutils}).
+
+\item NCBI BLAST+, a software package for sequence similarity searching \citep{camacho2009}.
+
+\item HMMer3, a software package for profile sequence similarity searching \citep{eddy1998}.
+
+\item MUSCLE, for multiple sequence alignment \citep{edgar2004}.
+
+\item IQ-TREE, for phylogenetic analysis \citep{nguyen2015}.
+
+
+\end{itemize}
+
+
+\subsection{Setting up an environment for AMOEBAE using Docker}
+\label{setup_section}
+
+%Note that currently ETE3, a dependency of AMOEBAE does not work properly with
+%Python 3.7, so Python 3.6 will be installed in the virtual environment.
+
+Follow the steps below to set up AMOEBAE on your personal computer.
+Instructions for setting up AMOBEAE on a remote server will soon be added as
+well.
+
+\begin{enumerate}
+
+\item Ensure that Git is installed on your computer This program should be
+    already installed by default on your operating system. You can check
+    which version you have by running the command below. Documentation for
+    Git is available here: \url{https://git-scm.com/doc}.
+
+\begin{lstlisting}
+>>> git --version
+\end{lstlisting}
+
+\item Clone the AMOEBAE repository using Git. If you simply download the code
+    from GitHub, instead of cloning the repository, then AMOEBAE cannot record
+        specifically what version of the code you use, and will not run
+        properly. Make sure to use the appropriate directory path (the path
+        shown is just an example).  Please note: Here "\texttt{>{}>{}>}" is
+        used to indicate that the following text in the line is to be entered
+        in you terminal command prompt.
+
+\begin{lstlisting}
+>>> cd /path/to/directory/where/you/keep/scripts
+>>> git clone https://github.com/laelbarlow/amoebae.git
+\end{lstlisting}
+
+%\item Add the directory to your \$PATH variable for access via the command line
+%(as well as the misc\_scripts directory, if you wish to access those files). Do
+%this by appending a customized version of the following line to your
+%        .bash\_profile file.
+
+%\textbf{Warning:} make sure to use '\texttt{>{}>}' rather than '\texttt{>}'
+%otherwise you will overwrite any existing lines in your .bash\_profile file.
+%
+%\begin{lstlisting}
+%>>> cd 
+%>>> echo 'export PATH=/path/to/directory/where/you/keep/scripts/amoebae:$PATH' >> .bash_profile
+%\end{lstlisting}
+
+%\begin{lstlisting}
+%export PATH=/path/to/directory/where/you/keep/scripts/amoebae:$PATH
+%\end{lstlisting}
+
+
+\item Make a copy of the settings.py.example file as settings.py. This will be
+    customized later. 
+
+\begin{lstlisting}
+>>> cd amoebae
+>>> cp settings.py.example settings.py
+\end{lstlisting}
+
+
+\item Download and install the appropriate version of Docker from this website:
+    \url{https://www.docker.com/products/docker-desktop}.
+
+
+\item Add the amoebae directory to the list of directories that can be shared
+    with Docker containers using the Docker graphical user interface by
+    selecting Preferences > Resources > File sharing.
+
+
+\item Customize the CPUs, memory, etc. that you wish to make available to
+    docker containers using the Docker graphical user interface by
+    selecting Preferences > Resources > Advanced.
+
+
+\item Build a Docker image (virtual environment) using the build\_env.sh
+    script. This uses the continuumio/anaconda3 image from DockerHub
+    (\url{https://hub.docker.com/r/continuumio/anaconda3}), and extends it by
+    downloading and installing several software packages that AMOEBAE depends
+    on. The details of this process are defined in the Dockerfile file in
+    the amoebae repository. 
+
+\begin{lstlisting}
+>>> bash build_env.sh
+\end{lstlisting}
+
+
+\item Run the Docker using the run\_env.sh script. This generates a Docker
+    container from the Docker image built in the preceding step. 
+
+\begin{lstlisting}
+>>> bash run_env.sh
+\end{lstlisting}
+
+
+\item Copy and past the resulting URL into the address bar of your web browser
+    (either Firefox, Chrome, or Safari will work). This should launch a Jupyter
+    sesssion with an interface where you can navigate within the amoebae directory.
+    Documentation on Jupyter is available here:
+    \url{https://jupyter-notebook.readthedocs.io/en/stable/}. 
+
+
+\item Click on the "notebooks" directory to open it. Then open one of the
+    tutorial files.  
+
+
+\end{enumerate}
+
+\section{Command reference}
+
+%\item Enter the following command in a terminal window, which should display a
+%list of commands that you can use with amoebae:
+%
+%\begin{lstlisting}
+%>>> amoebae -h
+%\end{lstlisting}
+%
+%You can access further information about each listed command with the -h option
+%as follows, and it is recommended that you do this before using each command:
+%
+%\begin{lstlisting}
+%>>> amoebae <commandnamehere> -h
+%\end{lstlisting}
+%
+%To verify that dependencies such as NCBI BLAST are installed, see what is
+%printed to standard output upon running the 'check\_depend' command:
+%
+%\begin{lstlisting}
+%>>> amoebae check_depend
+%\end{lstlisting}
+%
+%To verify that modules and python packages such as gffutils can be imported
+%successfully by AMOEBAE scripts, use the 'check\_imports' command: 
+%
+%\begin{lstlisting}
+%>>> amoebae check_imports
+%\end{lstlisting}
+
+%Import what is printed when amoebae -h is called...
+
+Documentation for each AMOEBAE command and the various options may be accessed
+from the command-line via the "-h" options. The following command reference
+information is the output of running amoebae (and each command) with the "-h"
+option.
+
+% Import tex file output from the generate_amoebae_help_output_text.sh.
+\input{amoebae_help_output.tex}
+
+
+\section{Miscellaneous scripts}
+
+see amoebae/misc\_scripts...
+
+%\section{Recommendations regarding similarity searching analysis design}
+% (Incorporate into the tutorials)
+
+
+\printglossaries % https://en.wikibooks.org/wiki/LaTeX/Glossary
+
+\newpage
+% End line numbering.
+\end{linenumbers}
+
+% The unsrt style orders references by appearance, but puts given names first.
+% The plain style orders references alphabetically, but puts surnames first.
+\bibliographystyle{laelstyle5} 
+\begin{multicols}{2}
+{\footnotesize % The footnotesize command makes the text smaller.
+\bibliography{references/AMOEBAE}}
+\end{multicols}
+
+
+\end{document}
+
+
