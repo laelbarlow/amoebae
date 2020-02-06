@@ -21,4 +21,5 @@ settings.py
 *.glsdefs
 *.gls
 *.ist
+*help_output.tex
 

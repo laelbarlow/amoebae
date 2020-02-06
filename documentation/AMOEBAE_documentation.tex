@@ -1,7 +1,8 @@
 \documentclass[12pt,letterpaper]{article}
 \usepackage{amsmath}
 \usepackage[pdftex]{graphicx}
-\usepackage{hyperref} 
+% Load hyperref package without putting lines around hyperlinks.
+\usepackage[hidelinks]{hyperref}
 \usepackage{color} 
 \usepackage{xcolor} 
 \usepackage{xspace}
@@ -104,32 +105,22 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
 \subsection{Why AMOEBAE?}
 
     Webservices such as those provided by NCBI
-    (\url{https://blast.ncbi.nlm.nih.gov/Blast.cgi}) provide a means to
-    investigate the evolution of one or a few genes via similarity searching,
-    and automated pipelines such as orthoMCL (REFERENCE) attempt to rapidly
-    perform orthology prediction for all genes in several genomes. AMOEBAE
-    addresses the problem mid-scale analyses which are too cumbersome to be
-    done via webservices and yet requiring a level of detail and flexibility
-    not offered by automated pipelines. AMOEBAE may be useful for analyzing the
-    distribution of orthologues of up to perhaps 30 genes/proteins among a
-    sampling of no more than approximately 100 eukaryotic genomes.  However,
-    you may need to carefully define the scope of your analysis depending on
-    what additional steps you may find necessary beyond those that may be
-    performed using AMOEBAE (30 queries and 100 genomes may in fact be
-    unmanageable). AMOEBAE provides many options which can be tailored to the
-    specific genes/proteins being analyzed, and allow analyses using complex
-    sets of customized criteria to be reproduced more practically. 
-
-    %Although scripts in the AMOEBAE toolkit perform many operations more
-    %efficiently than can be done without scripts, these are not applicable to
-    %high-throughput genome-scale analysis as they do not constitute an
-    %automated pipeline, and do not provide the efficiency necessary to run
-    %analyses with hundreds of protein queries simultaneously. AMOEBAE is
-    %instead a toolkit of scripts designed to provide the flexibility required
-    %for detailed analysis of specific protein families, by performing specific
-    %operations you may wish to include in your similarity searching workflow.
-    %Therefore, the following documentation assumes that if you choose to use
-    %AMOEBAE then you are using 
+    (\url{https://blast.ncbi.nlm.nih.gov/Blast.cgi}) \citep{camacho2009}
+    provide a means to investigate the evolution of one or a few genes via
+    similarity searching, and automated pipelines such as orthoMCL
+    \citep{li2003} attempt to rapidly perform orthology prediction for all
+    genes in several genomes. AMOEBAE addresses the problem mid-scale analyses
+    which are too cumbersome to be done via webservices and yet requiring a
+    level of detail and flexibility not offered by automated pipelines. AMOEBAE
+    may be useful for analyzing the distribution of orthologues of up to
+    perhaps 30 genes/proteins among a sampling of no more than approximately
+    100 eukaryotic genomes.  However, you may need to carefully define the
+    scope of your analysis depending on what additional steps you may find
+    necessary beyond those that may be performed using AMOEBAE (30 queries and
+    100 genomes may in fact be unmanageable). AMOEBAE provides many options
+    which can be tailored to the specific genes/proteins being analyzed, and
+    allow analyses using complex sets of customized criteria to be reproduced
+    more practically. 
 
     %Moreover, it should be clear that AMOEBAE identifies "positive" and
     %"negative" results simply by applying criteria that the user specifies. So,
@@ -388,7 +379,7 @@ well.
 %Import what is printed when amoebae -h is called...
 
 Documentation for each AMOEBAE command and the various options may be accessed
-from the command-line via the "-h" options. The following command reference
+from the command line via the "-h" options. The following command reference
 information is the output of running amoebae (and each command) with the "-h"
 option.
 
