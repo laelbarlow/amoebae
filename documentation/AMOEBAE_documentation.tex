@@ -153,23 +153,6 @@ Notebook: amoebae/notebooks/similarity\_search\_tutorial.ipynb. For code
 documentation, please see the html file(s), which can be opened with your web
 browser: \url{amoebae/doc/code_documentation/html/index.html}.
 
-% Make this a separate file.
-%\subsection{Suggestions for new bioinformaticians}
-%
-%This assumes that you have some experience running similarity searches using
-%BLAST on webservices such as NCBI.
-%
-%To use AMOEBAE effectively, you will need the following skills:
-%
-%a basic understanding of commandline usage on macOS or Linux
-%    Link to command-line cheatsheet.
-%
-%know how to install software. 
-%
-%Some basic understanding of how to run scripts written in various languages.
-%
-%If you are new to using scripts for comparative genomics
-%analysis, a simpler Jupyter Notebook is included: XXXXXXlink. 
 
 
 \subsection{How to cite AMOEBAE}
@@ -245,9 +228,11 @@ These are the main depencencies of AMOEBAE:
 %Note that currently ETE3, a dependency of AMOEBAE does not work properly with
 %Python 3.7, so Python 3.6 will be installed in the virtual environment.
 
-Follow the steps below to set up AMOEBAE on your personal computer.
-Instructions for setting up AMOBEAE on a remote server will soon be added as
-well.
+Follow the steps below to set up AMOEBAE on your personal computer. This setup
+process will take approximately 1 hour to complete, however, most of the
+process is automated, so only about 20 minutes or less is required for the
+steps that require manual input.  Instructions for setting up AMOBEAE on a
+remote server will soon be added as well.
 
 \begin{enumerate}
 
@@ -320,7 +305,8 @@ well.
     (\url{https://hub.docker.com/r/continuumio/anaconda3}), and extends it by
     downloading and installing several software packages that AMOEBAE depends
     on. The details of this process are defined in the Dockerfile file in
-    the amoebae repository. 
+    the amoebae repository. This step will take approximately 40 minutes to
+    complete.
 
 \begin{lstlisting}
 >>> bash build_env.sh

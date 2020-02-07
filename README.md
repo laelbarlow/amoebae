@@ -18,6 +18,11 @@ that AMOEBAE is currently under development and is not yet fully functional.
 
 ## Setup
 
+Setting up AMOEBAE is easy. Instructions for automatically installing a virtual environment
+with all the dependencies are included in the main documentation file
+here:[AMOEBAE_documentation.pdf](
+https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf). The whole process takes approximately 1 hour. 
+
 <!---
 
 1) Ensure that the following dependencies are installed and working on your
@@ -45,6 +50,8 @@ system:
 
 -->
 
+
+<!---
 1) Install ([Docker](https://www.docker.com/products/docker-desktop) for
 building virtual environments in which to install dependencies.
 
@@ -67,14 +74,21 @@ as follows:
     amoebae <commandnamehere> -h
 ```
 
+-->
 
 
 ## Documentation
 
-A tutorial is currently in preparation.
-
-For code documentation, please see the html file(s), which can be opened with
-your web browser: amoebae/doc/code_documentation/html/index.html
+See the main documentation file for an overview and setup instructions:
+[AMOEBAE_documentation.pdf](
+https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf).
+Once you have set up an environment for running AMOEBAE, see the tutorials
+which are in the form of Jupyter notebooks with code that runs analyses using
+example data: [AMOEBAE
+notebooks](https://github.com/laelbarlow/amoebae/tree/master/notebooks). For
+documentation on the AMOEBAE code library, please see the html file(s), which
+can be opened with your web browser: [Code
+documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/code_documentation/html/index.html).
 
 
 ## Reporting problems
