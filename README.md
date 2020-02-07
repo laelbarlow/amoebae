@@ -20,7 +20,7 @@ that AMOEBAE is currently under development and is not yet fully functional.
 
 Setting up AMOEBAE is easy. Instructions for automatically installing a virtual environment
 with all the dependencies are included in the main documentation file
-here:[AMOEBAE_documentation.pdf](
+here: [AMOEBAE_documentation.pdf](
 https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf). The whole process takes approximately 1 hour. 
 
 <!---
