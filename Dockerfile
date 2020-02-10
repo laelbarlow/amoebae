@@ -2,7 +2,7 @@ FROM continuumio/anaconda3:5.0.1
 
 USER root
 
-WORKDIR /home/lael/software
+WORKDIR /home/amoebae_user/software
 
 #RUN conda install python=3.6.9
 
@@ -30,7 +30,7 @@ RUN echo '***********************************' && \
     tar zxvpf ncbi-blast-2.10.0+-x64-linux.tar.gz && \
     rm ncbi-blast-2.10.0+-x64-linux.tar.gz
 
-ENV PATH "$PATH:/home/lael/software/ncbi-blast-2.10.0+/bin"
+ENV PATH "$PATH:/home/amoebae_user/software/ncbi-blast-2.10.0+/bin"
 
 
 # Install HMMer3 for similarity searching.
@@ -48,9 +48,9 @@ ENV PATH "$PATH:/home/lael/software/ncbi-blast-2.10.0+/bin"
 #    make install &&\
 #    cd easel; make install
 #
-#WORKDIR /home/lael/software
+#WORKDIR /home/amoebae_user/software
 #
-#ENV PATH "$PATH:/home/lael/software/hmmer-3.3/binaries"
+#ENV PATH "$PATH:/home/amoebae_user/software/hmmer-3.3/binaries"
 
 RUN conda install -c bioconda hmmer
 
@@ -62,7 +62,7 @@ RUN echo '***********************************' && \
     tar zxvpf iqtree-1.6.12-Linux.tar.gz &&\
     rm iqtree-1.6.12-Linux.tar.gz
 
-ENV PATH "$PATH:/home/lael/software/iqtree-1.6.12-Linux/bin"
+ENV PATH "$PATH:/home/amoebae_user/software/iqtree-1.6.12-Linux/bin"
 #RUN conda install -c bioconda iqtree
 
 # Install GCC for compiling mrbayes.
@@ -80,7 +80,7 @@ ENV PATH "$PATH:/home/lael/software/iqtree-1.6.12-Linux/bin"
 #    ./configure &&\
 #    make && sudo make install 
 #
-#WORKDIR /home/lael/software
+#WORKDIR /home/amoebae_user/software
 
 # Install MUSCLE for multiple sequence alignment.
 #RUN conda install -c bioconda muscle
@@ -92,7 +92,7 @@ RUN echo '***********************************' && \
     rm muscle3.8.31_i86linux64.tar.gz && \
     mv muscle3.8.31_i86linux64 muscle
 
-ENV PATH "$PATH:/home/lael/software"
+ENV PATH "$PATH:/home/amoebae_user/software"
 
 # Install additional python packages.
 RUN pip install --upgrade pip
@@ -113,7 +113,7 @@ RUN echo '***********************************' && \
     tar zxvpf exonerate-2.2.0-x86_64.tar.gz && \
     rm exonerate-2.2.0-x86_64.tar.gz
 
-ENV PATH "$PATH:/home/lael/software/exonerate-2.2.0-x86_64/bin"
+ENV PATH "$PATH:/home/amoebae_user/software/exonerate-2.2.0-x86_64/bin"
 
 # Install latex environments for jupyter markdown cells (all these don't work).
 #RUN conda install -c conda-forge jupyter_latex_envs

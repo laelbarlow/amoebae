@@ -5,12 +5,6 @@
 
 SECONDS=0
 
-# Clone the git repo.
-#echo \nCloning git repo... &&\
-#git clone https://laelbarlow@bitbucket.org/laelbarlow/amoebae-lite.git &&\
-# Change directories into the cloned repo.
-#echo \nChanging directories into git repo... &&\
-#cd amoebae-lite &&\
 # Prompt user to add the amoebae-lite path to the files for sharing via the
 # Docker Desktop App GUI.
 printf "If you have not already done so, add this directory path to the Docker
