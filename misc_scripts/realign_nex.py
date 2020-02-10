@@ -25,7 +25,7 @@ import shutil
 import re
 from module_afa_to_nex import afa_to_nex, nex_to_afa, delete_extra_mesquite_lines
 from afa_to_fa import afa_to_fa
-from align_fa import align_one_fa
+from module_afa_to_nex import align_one_fa
 from Bio import SeqIO
 
 def realign_nex(infilepath, outdirpath=None, text_append='_realigned'):
