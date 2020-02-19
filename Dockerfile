@@ -1,21 +1,61 @@
-FROM continuumio/anaconda3:5.0.1
+FROM continuumio/anaconda3
+
+# miniconda may be a more efficient way to set up amoebae in the future.
+#FROM continuumio/miniconda3
 
 USER root
 
 WORKDIR /home/amoebae_user/software
 
-#RUN conda install python=3.6.9
-
 # Update all conda to avoid inconsistencies.
-RUN conda update --all
+#RUN conda update --all
 
+# These packages are necessary for installing ete3:
+# ete3 3.1.1 does not work with Python 3.7 or above.
 RUN conda install python=3.6.9
+RUN conda install lxml
+# libgl1-mesa-dev is a dependency of PyQt, which is apparently not provided via
+# conda.
+RUN apt-get update
+RUN apt-get install -y libgl1-mesa-dev
+# PyQt5 is necessary for ete3 to generate graphics.
+RUN conda install pyqt
+# Check that PyQt5 can actually be imported via python3.
+RUN python3 -c "from PyQt5 import QtGui"
+
+# Install ete3 (the ete3 external tools are not available for install via conda
+# on linux).
+RUN conda install -c etetoolkit ete3 ete_toolchain
+# Check that ete3 was installed correctly.
+RUN ete3 build check
+
+
 
 # This fails:
 #RUN conda install -c anaconda gcc
 
 # Install a C compiler.
 #RUN apt install build-essential
+
+# Install GCC for compiling mrbayes.
+#RUN conda install -c anaconda gcc # Didn't work because of missing dependancy.
+# Install clang instead for compiling mrbayes.
+#RUN conda install -c anaconda clang # Also doesn't work!
+
+# Install MrBayes for phylogenetic analysis.
+#RUN conda install -c bioconda mrbayes
+#RUN echo '***********************************' && \
+#    echo '*******        MrBayes        *****' && \
+#    echo '***********************************' && \
+#    git clone --depth=1 https://github.com/NBISweden/MrBayes.git  --branch v3.2.7a &&\
+#    cd MrBayes &&\
+#    ./configure &&\
+#    make && sudo make install 
+#
+#WORKDIR /home/amoebae_user/software
+
+
+
 
 # Install biopython for parsing various bioinformatics software output files,
 # etc.
@@ -51,7 +91,7 @@ ENV PATH "$PATH:/home/amoebae_user/software/ncbi-blast-2.10.0+/bin"
 #WORKDIR /home/amoebae_user/software
 #
 #ENV PATH "$PATH:/home/amoebae_user/software/hmmer-3.3/binaries"
-
+# Install via conda.
 RUN conda install -c bioconda hmmer
 
 # Install iqtree for phylogenetic analysis.
@@ -65,22 +105,6 @@ RUN echo '***********************************' && \
 ENV PATH "$PATH:/home/amoebae_user/software/iqtree-1.6.12-Linux/bin"
 #RUN conda install -c bioconda iqtree
 
-# Install GCC for compiling mrbayes.
-#RUN conda install -c anaconda gcc # Didn't work because of missing dependancy.
-# Install clang instead for compiling mrbayes.
-#RUN conda install -c anaconda clang # Also doesn't work!
-
-# Install MrBayes for phylogenetic analysis.
-#RUN conda install -c bioconda mrbayes
-#RUN echo '***********************************' && \
-#    echo '*******        MrBayes        *****' && \
-#    echo '***********************************' && \
-#    git clone --depth=1 https://github.com/NBISweden/MrBayes.git  --branch v3.2.7a &&\
-#    cd MrBayes &&\
-#    ./configure &&\
-#    make && sudo make install 
-#
-#WORKDIR /home/amoebae_user/software
 
 # Install MUSCLE for multiple sequence alignment.
 #RUN conda install -c bioconda muscle
@@ -100,20 +124,18 @@ RUN pip install gffutils
 RUN pip install PyPDF2
 RUN pip install reportlab
 
-# Install ete3 for working with phylogenetic trees.
-#RUN conda install -c etetoolkit ete3
-RUN pip install ete3 
 
 # Install exonerate for exon prediction (at least better than TBLASTN).
-#RUN conda install -c bioconda exonerate
-RUN echo '***********************************' && \
-    echo '******* Installing exonerate  *****' && \
-    echo '***********************************' && \
-    wget "http://ftp.ebi.ac.uk/pub/software/vertebrategenomics/exonerate/exonerate-2.2.0-x86_64.tar.gz" &&\
-    tar zxvpf exonerate-2.2.0-x86_64.tar.gz && \
-    rm exonerate-2.2.0-x86_64.tar.gz
-
-ENV PATH "$PATH:/home/amoebae_user/software/exonerate-2.2.0-x86_64/bin"
+#RUN echo '***********************************' && \
+#    echo '******* Installing exonerate  *****' && \
+#    echo '***********************************' && \
+#    wget "http://ftp.ebi.ac.uk/pub/software/vertebrategenomics/exonerate/exonerate-2.2.0-x86_64.tar.gz" &&\
+#    tar zxvpf exonerate-2.2.0-x86_64.tar.gz && \
+#    rm exonerate-2.2.0-x86_64.tar.gz
+#
+#ENV PATH "$PATH:/home/amoebae_user/software/exonerate-2.2.0-x86_64/bin"
+# Install via conda.
+RUN conda install -c bioconda exonerate
 
 # Install latex environments for jupyter markdown cells (all these don't work).
 #RUN conda install -c conda-forge jupyter_latex_envs
