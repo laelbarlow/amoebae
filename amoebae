@@ -2648,6 +2648,46 @@ Miscellaneous commands:
         module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
+
+    def afa_to_nex(self):
+        parser = argparse.ArgumentParser(
+            description='Convert an alignment file in fasta format to nexus
+            format.')
+        parser.add_argument('input_fasta_path', help='''Path to a multiple
+                sequence alignment file in FASTA format.''')
+        parser.add_argument('--output_nexus_path', help='''Path to output
+                multiple sequence alignment file in nexus format.''',
+                default=None)
+        args = parser.parse_args(sys.argv[2:])
+
+        # Record start time.
+        start_time = time.time()
+        # Get current time for timestamp.
+        timestamp = time.strftime("%Y%m%d%H%M%S")
+
+        # Import command-specific modules.
+        from module_afa_to_nex import afa_to_nex
+
+        # Do stuff.
+        main_out_path = None
+        if args.output_nexus_path is None:
+            main_out_path = args.output_nexus_path
+        else:
+            main_out_path = args.input_fasta_path.replace('.afa', '.nex')
+        assert outfilepath is not None
+        afa_to_nex(args.input_fasta_path, main_out_path)
+
+        # Record end time.
+        end_time = time.time()
+        # Define command line input.
+        commandline = ' '.join(sys.argv)
+        # Define output directory.
+        outdir = os.path.dirname(main_out_path)
+        # Record info to log file.
+        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+                start_time, end_time, timestamp, main_out_path)
+
+
     # TEMPLATE FUNCTION:
     def commandx(self):
         parser = argparse.ArgumentParser(

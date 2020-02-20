@@ -39,6 +39,9 @@ def determine_alphabet(filepath):
 
 def afa_to_nex(infilepath, outfilepath=None):
     """Takes an aligned fasta file (protein) and writes a nexus format file.
+    This function replaces the record.id with the record.description in the
+    nexus files, otherwise only the accession (before the first space character) is
+    written to the nexus file records.
     """
     # Delete extra mesquite lines if present (otherwise they cause errors).
     # These may have been added if the nex file was opened and saved in
