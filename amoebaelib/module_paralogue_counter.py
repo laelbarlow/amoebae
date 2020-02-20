@@ -1864,6 +1864,25 @@ def count_paralogues3(csv_file,
                                         if type(annotation_file).__name__ == 'float':
                                             annotation_file = None
 
+                            # If there is no annotation file listed, then
+                            # see whether there is a gff file with the same
+                            # filename (excluding extension) as the sequence
+                            # file name.
+                            if annotation_file is None:
+                                # Define the possible file name.
+                                possible_sql_filename =\
+                                sequence_filename.rsplit('.', 1)[0] + ".sql"
+                                # Define the possible file path.
+                                possible_file_path = os.path.join(settings.dbdirpath,
+                                        possible_gff_filename)
+                                # Check whether that path exists.
+                                if os.path.isfile(possible_file_path):
+                                    # Define the annotation file name.
+                                    annotation_file = possible_sql_filename
+                                # Temporary.
+                                assert os.path.isfile(possible_file_path),\
+                                """No SQL file matching the sequence file name
+                                %s exists.""" % sequence_filename
 
                             # If there is an annotation file available, determine whether
                             # the hit is at the same locus in the nucleotide sequence as
