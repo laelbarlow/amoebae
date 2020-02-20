@@ -2651,8 +2651,8 @@ Miscellaneous commands:
 
     def afa_to_nex(self):
         parser = argparse.ArgumentParser(
-            description='Convert an alignment file in fasta format to nexus
-            format.')
+            description="""Convert an alignment file in fasta format to nexus
+            format.""")
         parser.add_argument('input_fasta_path', help='''Path to a multiple
                 sequence alignment file in FASTA format.''')
         parser.add_argument('--output_nexus_path', help='''Path to output
@@ -2671,10 +2671,10 @@ Miscellaneous commands:
         # Do stuff.
         main_out_path = None
         if args.output_nexus_path is None:
-            main_out_path = args.output_nexus_path
+            main_out_path = args.input_fasta_path.rsplit('.', 1)[0] + '.nex'
         else:
-            main_out_path = args.input_fasta_path.replace('.afa', '.nex')
-        assert outfilepath is not None
+            main_out_path = args.output_nexus_path
+        assert main_out_path is not None
         afa_to_nex(args.input_fasta_path, main_out_path)
 
         # Record end time.
