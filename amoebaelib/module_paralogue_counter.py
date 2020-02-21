@@ -1474,13 +1474,32 @@ def cds_record_matches_prot_id(cds_obj, prot_id):
     """Take a CDS record object (constructed using gffutils) and a protein
     sequence ID, and return true if the CDS record is linked to the protein
     sequence ID (the CDS is part of the sequence encoding that peptide).
+
+    Some SQL databases will be structured differently such that information
+    cannot be retrieved in the same way for each, hence the try-except
+    statements.
     """
-    if cds_obj.id[4:] == prot_id or \
-       cds_obj.attributes['Name'][0] == prot_id or \
-       cds_obj.attributes['protein_id'][0] == prot_id:
-        return True
-    else:
-        return False
+    prot_id_associated_with_cds_obj = False
+
+    try:
+        if cds_obj.id[4:] == prot_id: 
+            prot_id_associated_with_cds_obj  = True
+    except:
+        pass
+
+    try:
+        if cds_obj.attributes['Name'][0] == prot_id:
+            prot_id_associated_with_cds_obj  = True
+    except:
+        pass
+
+    try:
+        if cds_obj.attributes['protein_id'][0] == prot_id:
+            prot_id_associated_with_cds_obj  = True
+    except:
+        pass
+
+    return prot_id_associated_with_cds_obj
 
 
 def two_proteins_same_gene_in_gff3_2(sql_database, prot_id_1, prot_id_2):
