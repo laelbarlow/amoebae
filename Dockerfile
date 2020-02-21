@@ -143,6 +143,10 @@ RUN conda install -c bioconda exonerate
 #RUN conda install -c anaconda nbconvert
 #RUN apt-get install texlive-xetex texlive-fonts-recommended texlive-generic-recommended
 
+# Install runipy for running Jupyter notebooks as scripts from command line. 
+RUN apt-get install python3-pip
+RUN pip3 install runipy
+
 
 # Add amoebae repository directory to path so that amoebae scripts can be run
 # from the docker container.
