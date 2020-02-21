@@ -1481,23 +1481,33 @@ def cds_record_matches_prot_id(cds_obj, prot_id):
     """
     prot_id_associated_with_cds_obj = False
 
+    max_exceptions = 3
+
+    exception_count = 0
+
     try:
         if cds_obj.id[4:] == prot_id: 
             prot_id_associated_with_cds_obj  = True
     except:
-        pass
+        exception_count += 1
 
     try:
         if cds_obj.attributes['Name'][0] == prot_id:
             prot_id_associated_with_cds_obj  = True
     except:
-        pass
+        exception_count += 1
 
     try:
         if cds_obj.attributes['protein_id'][0] == prot_id:
             prot_id_associated_with_cds_obj  = True
     except:
-        pass
+        exception_count += 1
+
+    assert exception_count < max_exceptions, """No attempts to identify a
+    protein ID associated with the given CDS record were successful, so even if
+    the CDS encodes a portion of this peptide, then this function would not be
+    able to tell.
+    """
 
     return prot_id_associated_with_cds_obj
 
