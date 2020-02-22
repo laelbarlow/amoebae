@@ -147,6 +147,12 @@ RUN conda install -c bioconda exonerate
 RUN apt-get install python3-pip
 RUN pip3 install runipy
 
+# Install jupyter notebook extensions.
+# This includes the TableOfContents extension for navigating large jupyter
+# notebooks: https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html
+# documentation: https://github.com/ipython-contrib/jupyter_contrib_nbextensions
+RUN conda install -c conda-forge jupyter_contrib_nbextensions
+
 
 # Add amoebae repository directory to path so that amoebae scripts can be run
 # from the docker container.

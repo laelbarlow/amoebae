@@ -16,6 +16,11 @@
 \usepackage{url}
 \usepackage[T1]{fontenc} % Makes > not typeset as inverted question mark.
 
+% Remove the "References" header from the bibliography.
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
+
+
 % Run external commands to generate a tex file containing the output of the
 % 'amoebae -h' command.
 \immediate\write18{bash generate_amoebae_help_output_text.sh}

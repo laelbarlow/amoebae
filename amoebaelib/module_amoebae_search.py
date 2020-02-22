@@ -328,7 +328,8 @@ def get_rows_for_fwd_srch_df(df,
                              max_evalue, 
                              max_gap_setting, 
                              exonerate_score_threshold,
-                             do_not_use_exonerate):
+                             do_not_use_exonerate,
+                             max_hits_to_sum):
     """Parses search result file and adds a corresponding row to an output
     pandas dataframe.
     """
@@ -417,6 +418,11 @@ def get_rows_for_fwd_srch_df(df,
                 cluster = clusterplus[0]
                 #row_num += 1
                 hit_num += 1
+
+                # Only process hits up to the maximum number specified.
+                if max_hits_to_sum != 0:
+                    if hit_num > int(max_hits_to_sum):
+                        break # *******
 
                 # Get SearchIO Hit object from QueryResult object that
                 # corresponds to the HSPs in the cluster.
@@ -539,6 +545,12 @@ def get_rows_for_fwd_srch_df(df,
                 #row_num += 1
                 hit_num += 1
 
+                # Only process hits up to the maximum number specified.
+                if max_hits_to_sum != 0:
+                    if hit_num > int(max_hits_to_sum):
+                        break # *******
+
+
                 # Get score difference between current hit and top hit.
                 score_cur = parsed_file_obj.hit_score(hit_num)
                 scorediff = round(abs(score_cur - top_hit_score))
@@ -621,7 +633,8 @@ def write_fwd_srch_res_to_csv(outdir,
                               max_evalue, 
                               max_gap_setting, 
                               exonerate_score_threshold,
-                              do_not_use_exonerate):
+                              do_not_use_exonerate,
+                              max_hits_to_sum):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -708,7 +721,8 @@ def write_fwd_srch_res_to_csv(outdir,
                                                      max_evalue, 
                                                      max_gap_setting,
                                                      exonerate_score_threshold,
-                                                     do_not_use_exonerate)
+                                                     do_not_use_exonerate,
+                                                     max_hits_to_sum)
 
                     # Append sub-dataframe to full dataframe.
                     df = df.append(subdf, ignore_index=True)
