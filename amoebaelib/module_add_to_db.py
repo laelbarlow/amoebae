@@ -212,6 +212,7 @@ def update_csv(outfp, csv_file):
 
     # Get abbreviation to add.
     fp_without_ext = os.path.basename(outfp.rsplit('.',1)[0])
+    species_name = fp_without_ext.replace('_', ' ')
 
     # Check whether file has a newline character at the end so a new line can
     # start correctly.
@@ -224,7 +225,12 @@ def update_csv(outfp, csv_file):
         x = '\n'
         if newline:
             x = ''
-        csvh.write(x + os.path.basename(outfp) + ',,,,' + fp_without_ext + ',,,' +\
-                        dbtype + ',,,' + cur_date +\
-        '\n')
+        csvh.write(x + os.path.basename(outfp) \
+                   + ',,,,' \
+                   + species_name \
+                   + ',,,' \
+                   + dbtype \
+                   + ',,,' \
+                   + cur_date \
+                   + '\n')
 
