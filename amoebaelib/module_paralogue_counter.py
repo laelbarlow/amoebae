@@ -1406,22 +1406,22 @@ def get_overlapping_genes_from_gff3(sql_database,
         # the cluster range).
         for gene in overlapping_entries:
             overlap_ids.append(gene.id)
-            try:
-                overlap_ids.append(gene.name)
-            except:
-                pass
-            try:
-                overlap_ids.append(gene.attributes['Name'])
-            except:
-                pass
-            try:
-                overlap_ids.append(gene.attributes['protein_id'])
-            except:
-                pass
-            try:
-                overlap_ids.append(gene.attributes['transcript_id'])
-            except:
-                pass
+            #try:
+            #    overlap_ids.append(gene.name)
+            #except:
+            #    pass
+            #try:
+            #    overlap_ids.append(gene.attributes['Name'])
+            #except:
+            #    pass
+            #try:
+            #    overlap_ids.append(gene.attributes['protein_id'])
+            #except:
+            #    pass
+            #try:
+            #    overlap_ids.append(gene.attributes['transcript_id'])
+            #except:
+            #    pass
 
     # Return list of IDs.
     return overlap_ids
@@ -1783,6 +1783,7 @@ def two_proteins_same_gene_in_gff3_3(sql_database, prot_id_1, prot_id_2):
 
 def annot_id_matches_prot_id(annot_id,
                              prot_hit_acc,
+                             annotation_file_path,
                              just_gene):
     """Take an annotation ID/Name from a parsed GFF3 file and a protein hit ID,
     and return true if the annotation matches the protein ID. The annot_id
@@ -1801,19 +1802,83 @@ def annot_id_matches_prot_id(annot_id,
     else:
         # Account for IDs and Names with different formats.
 
-        # This works for the Arabidopsis thaliana, Oryza sativa, and
-        # Selaginella moellendorffii genomes:
-        relevant_prot_acc_portion = prot_hit_acc.rsplit('.', 1)[0]
-        if annot_id.startswith(relevant_prot_acc_portion):
-            ids_match = True
+        if not ids_match:
+            if annot_id == prot_hit_acc:
+                ids_match
+            # This works for the Arabidopsis thaliana, Oryza sativa, and
+            # Selaginella moellendorffii genomes:
+            elif annot_id.startswith(prot_hit_acc.rsplit('.', 1)[0]):
+                ids_match = True
 
-        # This works for the Physcomytrella patens genome:
-        elif prot_hit_acc.rsplit('V', 1)[0] == annot_id:
-            ids_match = True
+            # This works for the Physcomytrella patens genome:
+            elif prot_hit_acc.rsplit('V', 1)[0] == annot_id:
+                ids_match = True
+
+        if not ids_match:
+            # Load the annotation database.
+            db = gffutils.FeatureDB(annotation_file_path, keep_order=True)
+
+            # Retrieve the relevent annotation record.
+            annot = db[annot_id]
+            
+            # Determine if this annotation is associated with the given protein ID.
+            # *** This may need to be modified to accomodate different formats.
+            if not ids_match:
+                try:
+                    if annot.attributes['Name'][0] == prot_hit_acc:
+                        ids_match = True
+                except:
+                    pass
+            if not ids_match:
+                try:
+                    if annot.attributes['protein_id'][0] == prot_hit_acc:
+                        ids_match = True
+                except:
+                    pass
 
     # Return value of the variable to indicate whether the protein ID matches
     # the annotation record information.
     return ids_match
+
+
+def get_relevant_annot_sql_file(sequence_filename):
+    """...
+    """
+    # Determine whether there is a relevant annotation file to
+    # check in.
+    annotation_file = None
+    with open(settings.db_info_csv) as infh:
+        dfx = pd.read_csv(infh)
+        for index, row in dfx.iterrows():
+            if row['Filename'] == sequence_filename:
+                annotation_file = row['Annotations file']
+
+                # Change the value back to None if it is NaN in the
+                # DataFrame.
+                if type(annotation_file).__name__ == 'float':
+                    annotation_file = None
+
+    # If there is no annotation file listed, then
+    # see whether there is a gff file with the same
+    # filename (excluding extension) as the sequence
+    # file name.
+    if annotation_file is None:
+        # Define the possible file name.
+        possible_sql_filename =\
+        sequence_filename.rsplit('.', 1)[0] + ".sql"
+        # Define the possible file path.
+        possible_file_path = os.path.join(settings.dbdirpath,
+                possible_sql_filename)
+        # Check whether that path exists.
+        if os.path.isfile(possible_file_path):
+            # Define the annotation file name.
+            annotation_file = possible_sql_filename
+        # Temporary.
+        assert os.path.isfile(possible_file_path),\
+        """No SQL file matching the sequence file name
+        %s exists.""" % sequence_filename
+
+    return annotation_file
 
 
 def count_paralogues3(csv_file,
@@ -2177,38 +2242,8 @@ def count_paralogues3(csv_file,
                         else:
                             # Determine whether there is a relevant annotation file to
                             # check in.
-                            annotation_file = None
                             sequence_filename = j[8]
-                            with open(settings.db_info_csv) as infh:
-                                dfx = pd.read_csv(infh)
-                                for index, row in dfx.iterrows():
-                                    if row['Filename'] == sequence_filename:
-                                        annotation_file = row['Annotations file']
-
-                                        # Change the value back to None if it is NaN in the
-                                        # DataFrame.
-                                        if type(annotation_file).__name__ == 'float':
-                                            annotation_file = None
-
-                            # If there is no annotation file listed, then
-                            # see whether there is a gff file with the same
-                            # filename (excluding extension) as the sequence
-                            # file name.
-                            if annotation_file is None:
-                                # Define the possible file name.
-                                possible_sql_filename =\
-                                sequence_filename.rsplit('.', 1)[0] + ".sql"
-                                # Define the possible file path.
-                                possible_file_path = os.path.join(settings.dbdirpath,
-                                        possible_sql_filename)
-                                # Check whether that path exists.
-                                if os.path.isfile(possible_file_path):
-                                    # Define the annotation file name.
-                                    annotation_file = possible_sql_filename
-                                # Temporary.
-                                assert os.path.isfile(possible_file_path),\
-                                """No SQL file matching the sequence file name
-                                %s exists.""" % sequence_filename
+                            annotation_file = get_relevant_annot_sql_file(sequence_filename)
 
                             # If there is an annotation file available, determine whether
                             # the hit is at the same locus in the nucleotide sequence as
@@ -2367,19 +2402,8 @@ def count_paralogues3(csv_file,
                 overlapping_genes = []
                 # Determine whether there is a relevant annotation file to
                 # check in.
-                annotation_file = None
                 sequence_filename = x[8]
-                with open(settings.db_info_csv) as infh:
-                    dfx = pd.read_csv(infh)
-                    for index, row in dfx.iterrows():
-                        if row['Filename'] == sequence_filename:
-                            annotation_file = row['Annotations file']
-
-                            # Change the value back to None if it is NaN in the
-                            # DataFrame.
-                            if type(annotation_file).__name__ == 'float':
-                                annotation_file = None
-                #print('\t\tAnnotation file: ' + annotation_file)
+                annotation_file = get_relevant_annot_sql_file(sequence_filename)
 
                 # If there is an annotation file available, determine whether
                 # the hit is at the same locus in the nucleotide sequence as
@@ -2393,14 +2417,21 @@ def count_paralogues3(csv_file,
                             annotation_file)
 
                     # Call function for getting IDs of overlapping genes.
-                    print("""Call function for getting IDs of overlapping genes.""")
+                    #print("""Call function for getting IDs of overlapping genes.""")
                     overlapping_genes =\
                     get_overlapping_genes_from_gff3(annotation_file_path,
                             x[7], x[6], just_look_for_genes_in_gff3)
-                    #print('\t\tOverlapping genes: ' + str(overlapping_genes))
+                    #print('\t\tOverlapping gene IDs: ' + str(overlapping_genes))
 
                 # If there are overlapping gene loci with the tblastn hit...
                 if len(overlapping_genes) > 0:
+                    # Found relevant information in the GFF3 file, so add
+                    # the nucleotide FASTA filename to the list of those
+                    # for which relevant annotation information could be
+                    # retrieved from the corresponding GFF3 file.
+                    if x[8] not in nucleotide_fasta_files_with_informative_gff3:
+                        nucleotide_fasta_files_with_informative_gff3.append(x[8])
+
                     if remove_tblastn_hits_at_annotated_loci:
                         # If there are any overlapping annotated genes, then remove the
                         # nucleotide tuple and make a note. This only makes sense
@@ -2422,13 +2453,6 @@ def count_paralogues3(csv_file,
                         # Mark tuple for removal.
                         nucl_tuples_to_remove.append(x)
 
-                        # Found relevant information in the GFF3 file, so add
-                        # the nucleotide FASTA filename to the list of those
-                        # for which relevant annotation information could be
-                        # retrieved from the corresponding GFF3 file.
-                        if x[8] not in nucleotide_fasta_files_with_informative_gff3:
-                            nucleotide_fasta_files_with_informative_gff3.append(x[8])
-
                     #else:
                     # Loop over protein hits and see if any are redundant with the
                     # nucleotide hit.
@@ -2437,11 +2461,14 @@ def count_paralogues3(csv_file,
                         # is redundant with a protein hit.
                         for i in overlapping_genes:
                             prot_hit_acc = y[7]
+                            # *******************************************
                             # ***Note: This may not work for all gene ID/accession
-                            # nomenclature schemes.
+                            # nomenclature schemes. ***
+                            # *******************************************
                             #if i.startswith(prot_hit_acc.rsplit('.', 1)[0]):
                             if annot_id_matches_prot_id(i,
                                                         prot_hit_acc,
+                                                        annotation_file_path,
                                                         just_look_for_genes_in_gff3):
                                 #print("""\t\tThis annotation record that overlaps with the nucleotide hit %s has a matching ID with the protein hit %s: %s""" % (x[1], y[7], i))
 
