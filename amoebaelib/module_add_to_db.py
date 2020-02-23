@@ -210,7 +210,9 @@ def update_csv(outfp, csv_file):
     # Get current date.
     cur_date = time.strftime("%Y/%m/%d")
 
-    # Get abbreviation to add.
+    # Get abbreviation to add. Here it is assumed that the filenames are named
+    # with the binomial name of the organism from which the sequences were
+    # taken, with underscores instead of spaces.
     fp_without_ext = os.path.basename(outfp.rsplit('.',1)[0])
     species_name = fp_without_ext.replace('_', ' ')
 
