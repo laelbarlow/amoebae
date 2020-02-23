@@ -477,7 +477,9 @@ def make_coulson_plot(column_labels_simple,
 
                         if jnum == 0:
                             # Define string to make species name italicized.
+                            print('\n\n\n')
                             print(species)
+                            print('\n\n\n')
                             italic_species = '$\it{' + species.split(' ')[0] + '}$' + ' ' + '$\it{' + species.split(' ')[1] + '}$'
                             # Add a title for the complex.
                             title = axs[i,j].set_title(italic_species,

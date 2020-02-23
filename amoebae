@@ -148,20 +148,21 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Check for similarity search programs.
-        print('\nBLASTP version:')
-        subprocess.call(['blastp', '-version'])
-        print('\nHMMer version:')
-        subprocess.call("hmmsearch -h | head -n 4", shell=True)
-        print('\nHMMer esl-fetch utilities:')
-        subprocess.call("esl-sfetch -h | head -n 4", shell=True)
+        print('\n\nBLASTP version:')
+        print(subprocess.getoutput(['blastp -version | head -n 1']))
+        print('\n\nHMMer version:')
+        print(subprocess.getoutput("hmmsearch -h | head -n 4"))
+        print('\n\nHMMer esl-fetch utilities:')
+        print(subprocess.getoutput("esl-sfetch -h | head -n 4"))
 
         # Check for alignment programs.
-        print('\nMUSCLE version:')
-        subprocess.call(['muscle', '-version'])
+        print('\n\nMUSCLE version:')
+        print(subprocess.getoutput(['muscle -version']))
 
         # Check for phylogenetics programs.
-        print('\nIQ-TREE version:')
-        subprocess.call(['iqtree', '-h', '|', 'head', '-n', '1'])
+        print('\n\nIQ-TREE version:')
+        #print(subprocess.getoutput(['iqtree', '-h', '|', 'head', '-n', '1']))
+        print(subprocess.getoutput(['iqtree -h | head -n 1']))
 
         # Check for latex (pdflatex)?
         # ...
