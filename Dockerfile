@@ -153,6 +153,9 @@ RUN pip3 install runipy
 # documentation: https://github.com/ipython-contrib/jupyter_contrib_nbextensions
 RUN conda install -c conda-forge jupyter_contrib_nbextensions
 
+# Install program for displaying directory contents in a tree structure.
+RUN apt-get install tree
+
 
 # Add amoebae repository directory to path so that amoebae scripts can be run
 # from the docker container.
