@@ -238,7 +238,9 @@ def get_redun_hits_in_dbs(query_title,
                     # Get description.
                     description = parsed_file_obj.hit_description(hit_num)
                     if not description.startswith('\"'):
-                        description = '\"' + description + '\"'
+                        description = '\"' + description
+                    if not description.endswith('\"'):
+                        description = description + '\"'
 
                     # Append line with relevant info to spreadsheet.
                     line_to_write = ','.join([query_title, 

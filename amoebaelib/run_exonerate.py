@@ -268,8 +268,6 @@ def get_subseq_from_nucl(subj_seq_id,
     """Take a sequence ID, FASTA filepath, start position, end position,
     and output filepath, and write a FASTA subsequence to the filepath.
     """
-    print('db_filepathXYZ')
-    print(db_filepath)
     # Retrieve object for full hit sequence.
     full_seq_obj = get_seqs_from_fasta_db(db_filepath, [subj_seq_id], False)[0]
     #full_seq_obj = get_seq_obj_from_db_fasta([subj_seq_id], db_filepath)[0]
