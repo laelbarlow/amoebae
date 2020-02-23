@@ -144,14 +144,15 @@ RUN conda install -c bioconda exonerate
 #RUN apt-get install texlive-xetex texlive-fonts-recommended texlive-generic-recommended
 
 # Install runipy for running Jupyter notebooks as scripts from command line. 
-RUN apt-get install python3-pip
-RUN pip3 install runipy
+RUN pip install runipy
 
-# Install jupyter notebook extensions.
-# This includes the TableOfContents extension for navigating large jupyter
+# Install and enable relevant jupyter notebook extensions.
+# This includes the TableOfContents (toc2) extension for navigating large jupyter
 # notebooks: https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html
 # documentation: https://github.com/ipython-contrib/jupyter_contrib_nbextensions
 RUN conda install -c conda-forge jupyter_contrib_nbextensions
+RUN jupyter contrib nbextension install --user
+RUN jupyter nbextension enable toc2/main
 
 # Install program for displaying directory contents in a tree structure.
 RUN apt-get install tree

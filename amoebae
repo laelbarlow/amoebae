@@ -319,8 +319,16 @@ Miscellaneous commands:
 
             # Make a SQL database.
             sql_path = outfp1.rsplit('.', 1)[0] + '.sql'
-            db = gffutils.create_db(outfp1, sql_path, force=True, keep_order=True,
-                merge_strategy='merge', sort_attribute_values=True)
+            #db = gffutils.create_db(outfp1, sql_path, force=True, keep_order=True,
+            #    merge_strategy='merge', sort_attribute_values=True)
+            db = gffutils.create_db(outfp1,
+                                    sql_path,
+                                    force=True,
+                                    keep_order=False, # False is faster.
+                                    merge_strategy='create_unique', # Faster than "merge"?
+                                    sort_attribute_values=False, # False is faster.
+                                    force_gff=True # Faster?
+                                    )
 
             # Define the SQL database file as the one to list in the
             # spreadsheet (because this is the one that will be accessed).
