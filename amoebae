@@ -572,7 +572,6 @@ Miscellaneous commands:
                 settings.py file ('query_info_csv').''', default=None)
         parser.add_argument('--outdir', help='''Path to directory to write
                 search results to.''', default=None)
-
         parser.add_argument('--blast_report_evalue_cutoff', help='''Maximum
         E-value for reporting BLAST hits.''', default=0.05)
         parser.add_argument('--blast_max_target_seqs', help='''Maximum BLAST
