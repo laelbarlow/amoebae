@@ -21,6 +21,7 @@ Usage:
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
+sys.path.append(os.path.dirname(sys.path[0]))
 #import os
 #from Bio import AlignIO
 #from Bio.Alphabet import IUPAC, Gapped

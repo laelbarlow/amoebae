@@ -20,6 +20,7 @@ analysis software, including RAxML and MrBayes.
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
+sys.path.append(os.path.dirname(sys.path[0]))
 from module_amoebae_name_replace import codenames_nex
 
 
