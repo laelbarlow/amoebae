@@ -52,7 +52,9 @@ def get_text_label_matrix(odf, sequence_type):
                     odf1.at[i, j] = len(odf1.at[i, j]['prot hit IDs'] + odf1.at[i, j]['nucl hit IDs'])
             elif odf1.at[i, j] == 'negative':
                 odf1.at[i, j] = 0
-    data_labels = odf1.as_matrix() 
+    #data_labels = odf1.as_matrix() 
+    #data_count = odf1.loc[:, column_labels].values
+    data_labels = odf1.to_numpy()
     return data_labels
     
 
@@ -85,7 +87,9 @@ def get_hit_count_matrix(odf, sequence_type):
                 odf2.at[i, j] = 0
             elif odf2.at[i, j] == '-':
                 odf2.at[i, j] = 0
-    data_count = odf2.as_matrix()
+    #data_count = odf2.as_matrix()
+    #data_count = odf2.loc[:, column_labels].values
+    data_count = odf2.to_numpy()
     return data_count
 
 
@@ -169,21 +173,25 @@ def generate_heatmap_figure(column_labels, row_labels, data_labels, data_count,
     ax = plt.gca()
     
     for t in ax.xaxis.get_major_ticks():
-        t.tick1On = False
-        t.tick2On = False
+        #t.tick1On = False
+        #t.tick2On = False
+        t.set_visible(False)
     for t in ax.yaxis.get_major_ticks():
-        t.tick1On = False
-        t.tick2On = False
+        #t.tick1On = False
+        #t.tick2On = False
+        t.set_visible(False)
         
     # Turn off all the minor ticks (tick marks).
     ax = plt.gca()
     
     for t in ax.xaxis.get_minor_ticks():
-        t.tick1On = False
-        t.tick2On = False
+        #t.tick1On = False
+        #t.tick2On = False
+        t.set_visible(False)
     for t in ax.yaxis.get_minor_ticks():
-        t.tick1On = False
-        t.tick2On = False
+        #t.tick1On = False
+        #t.tick2On = False
+        t.set_visible(False)
     
     
     # Show plot.
