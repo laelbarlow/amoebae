@@ -238,15 +238,15 @@ def update_query_csv(csv_file, mod_query_path, datatype):
     df.to_csv(csv_file, index=False) 
 
     # Report activity:
-    print('Information added to spreadsheet %s:' % os.path.basename(csv_file))
-    print('\tFilename: ' +  query_basename)
-    print('\tQuery title: ' + query_title)
-    print('\tQuery source description: ' + taxon)
-    print('\tQuery taxon (species if applicable): ' + species)
-    print('\tData type: ' + datatype)
-    print('\tFile type: ' + exten)
-    print('\tDate added: ' + cur_date)
-    print('\tCitation: ' + '?')
-    print('\tQuery database filename (if applicable): ' + db_filename)
+    #print('Information added to spreadsheet %s:' % os.path.basename(csv_file))
+    #print('\tFilename: ' +  query_basename)
+    #print('\tQuery title: ' + query_title)
+    #print('\tQuery source description: ' + taxon)
+    #print('\tQuery taxon (species if applicable): ' + species)
+    #print('\tData type: ' + datatype)
+    #print('\tFile type: ' + exten)
+    #print('\tDate added: ' + cur_date)
+    #print('\tCitation: ' + '?')
+    #print('\tQuery database filename (if applicable): ' + db_filename)
 
 
