@@ -2,7 +2,8 @@
 \usepackage{amsmath}
 \usepackage[pdftex]{graphicx}
 % Load hyperref package without putting lines around hyperlinks.
-\usepackage[hidelinks]{hyperref}
+%\usepackage[hidelinks]{hyperref}
+\PassOptionsToPackage{hyphens}{url}\usepackage[hidelinks]{hyperref}
 \usepackage{color} 
 \usepackage{xcolor} 
 \usepackage{xspace}
@@ -13,7 +14,7 @@
 \usepackage[pagewise]{lineno}
 \usepackage{tcolorbox} % For making boxes around text.
 \usepackage[xindy,toc]{glossaries} % Must come after hyperref package.
-\usepackage{url}
+%\usepackage{url}
 \usepackage[T1]{fontenc} % Makes > not typeset as inverted question mark.
 
 % Remove the "References" header from the bibliography.
@@ -307,7 +308,7 @@ remote server will soon be added as well.
 
 \item Build a Docker image (virtual environment) using the build\_env.sh
     script. This uses the continuumio/anaconda3 image from DockerHub
-    (\url{https://hub.docker.com/r/continuumio/anaconda3}), and extends it by
+    (\sloppy\url{https://hub.docker.com/r/continuumio/anaconda3}), and extends it by
     downloading and installing several software packages that AMOEBAE depends
     on. The details of this process are defined in the Dockerfile file in
     the amoebae repository. This step will take approximately 40 minutes to
