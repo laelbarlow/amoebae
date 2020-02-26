@@ -26,7 +26,7 @@ import os
 # is optional, but matches that of the template data directory and allows you
 # to avoid modifying the variables for paths to specific sub-directories and
 # files).
-root_amoebae_data_dir = "/Full/Path/To/Your/Main/Data/Storage/Directory"
+root_amoebae_data_dir = "AMOEBAE_Data"
 
 
 # Set path to directory containing genome data (predicted peptide sequences,
