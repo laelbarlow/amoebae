@@ -330,12 +330,30 @@ remote server will soon be added as well.
 \item Copy and past the resulting URL (the one at the bottom of the output)
     into the address bar of your web browser (either Firefox, Chrome, or Safari
     will work). This should launch a Jupyter sesssion with an interface where
-    you can navigate within the amoebae directory.  Documentation on Jupyter is
-    available here: \url{https://jupyter-notebook.readthedocs.io/en/stable/}. 
+    you can navigate within the amoebae directory from inside the Docker
+    container.  For the purposes of the operating system running in the Docker
+    container, the amoebae directory is an external volume, like an external
+    hard drive. Documentation on Jupyter is available here:
+    \url{https://jupyter-notebook.readthedocs.io/en/stable/}. 
+
 
 
 \item Click on the "notebooks" directory to open it. Then open one of the
-    tutorial files.  
+    tutorial files (.ipynb). These Jupyter notebooks include information on how
+    to use them once opened.
+
+
+\item If you wish to save the output displayed within the notebook(s) after
+    running, then it may be useful to save a copy of the notebook or save it in
+    HTML or PDF format.
+
+
+\item To shut down the Jupyter session, click the logout button in the jupyter
+    browser tabs, and then go to the terminal window that you used to startup
+    the Docker container, and press CTRL-C to kill the Jupyter kernel. This
+    will close the Jupyter notebooks, but the analysis output files will
+    remain, because they are saved to your amoebae/notebooks folder which is on
+    your host machine and accessed from within the container.
 
 
 \end{enumerate}
