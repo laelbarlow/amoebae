@@ -104,6 +104,24 @@ permanent repositories if relevant). Also, remember to cite other software
 packages which you may have also installed and used for your work via AMOEBAE
 scripts.
 
+## Acknowledgments
+
+AMOEBAE was initially developed at the Dacks Laboratory at the University of
+Alberta, and was supported by National Sciences and Engineering Council of
+Canada (NSERC) Discovery grants RES0021028, RES0043758, and RES0046091 awarded
+to Joel B. Dacks, as well as an NSERC Postgraduate Scholarship-Doctoral awarded
+to Lael D. Barlow.
+
+We acknowledge the support of the Natural Sciences and Engineering Research Council of Canada (NSERC).
+
+Cette recherche a été financée par le Conseil de recherches en sciences naturelles et en génie du Canada (CRSNG).
+
+<img src="images/NSERC_FIP_RGB.png">
+
+
+Also, help with testing AMOEBAE has been kindly provided by Raegan T. Larson,
+Shweta V. Pipalya, and Kira More.
+
 
 ## License
 
