@@ -2,7 +2,6 @@
 
 ## Introduction
 
-### Synopsis 
 **A**nalysis of **MO**lecular **E**volution with **BA**tch **E**ntry (AMOEBAE)
 is a bioinformatics software toolkit composed of scripts written in the Python3
 language. AMOEBAE performs certain tasks involved in identifying and
