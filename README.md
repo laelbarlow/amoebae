@@ -1,5 +1,20 @@
+<!---
+## Quickstart
+
+This works on macOS and ubuntu (linux).
+
+Clone this git repository:
+
+    git clone https://github.com/laelbarlow/amoebae.git
+
+Run the setup script:
+    cd amoebae
+    bash setup.sh
 
 
+***Embedded video...
+
+--->
 ## Introduction
 
 **A**nalysis of **MO**lecular **E**volution with **BA**tch **E**ntry (AMOEBAE)
@@ -15,68 +30,12 @@ open-source, and all dependencies are freely available. However, please note
 that AMOEBAE is currently under development and is not yet fully functional. 
 
 
-## Setup
+## Documentation
 
 Setting up AMOEBAE is easy. Instructions for automatically setting up a virtual environment
 with all the dependencies are included in the main documentation file
 here: [AMOEBAE_documentation.pdf](
 https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf). The whole process takes approximately 1 hour. 
-
-<!---
-
-1) Ensure that the following dependencies are installed and working on your
-system:
-
-- Python3 (Anaconda distribution works well on personal computers)
-
-- pandas (packaged with the Anaconda Python3 distribution)
-
-- Biopython (easily installed via Anaconda) ([Cock *et  al*., 2009](https://academic.oup.com/bioinformatics/article/25/11/1422/330687))
-
-- exonerate (easily installed via Anaconda)
-
-- ETE3 ([Huerta-Cepas *et  al*., 2016](https://academic.oup.com/mbe/article/33/6/1635/2579822))
-
-- [gffutils](https://pythonhosted.org/gffutils/) 
-
-- NCBI BLAST+ ([Camacho *et  al*., 2009](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-421))
-
-- HMMer3 ([Eddy, 1998](https://doi.org/10.1093/bioinformatics/14.9.755))
-
-- IQtree ([Nguyen *et  al*., 2015](https://academic.oup.com/mbe/article/32/1/268/2925592))
-
-- MUSCLE ([Edgar, 2004](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-5-113))
-
--->
-
-
-<!---
-1) Install ([Docker](https://www.docker.com/products/docker-desktop) for
-building virtual environments in which to install dependencies.
-
-2) Download the amoebae source code, or clone the amoebae repository using git,
-add the directory to your $PATH variable for access via the command line (as
-well as the misc\_scripts directory, if you wish to access those files).
-
-3) Save a copy of the settings.py.example file as settings.py, and customize
-the relevant variable definitions therein.
-
-4) Enter the following command in a terminal window, which should display a
-list of commands that you can use with amoebae:
-```
-    amoebae -h
-```
-
-You can access further information about each listed command with the -h option
-as follows:
-```
-    amoebae <commandnamehere> -h
-```
-
--->
-
-
-## Documentation
 
 See the main documentation file for an overview and setup instructions:
 [AMOEBAE_documentation.pdf](
@@ -119,7 +78,7 @@ Cette recherche a été financée par le Conseil de recherches en sciences natur
 
 
 Also, help with testing AMOEBAE has been kindly provided by Raegan T. Larson,
-Shweta V. Pipalya, and Kira More.
+Shweta V. Pipalya, Kira More, and Kristína Záhonová.
 
 
 ## License
