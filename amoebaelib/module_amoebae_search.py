@@ -976,8 +976,17 @@ def get_evaldiff(evalue1, evalue2):
     return round(abs(math.log(float(evalue1),10) - math.log(float(evalue2),10)))
 
 
-def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
-        csv_file, redun_hit_csv, min_evaldiff, timestamp, aasubseq, max_num_reverse_searches_per_database):
+def write_rev_srch_res_to_csv(rev_srch_id,
+                              outdir,
+                              query_file_list,
+                              db_file,
+                              csv_file,
+                              redun_hit_csv,
+                              min_evaldiff,
+                              timestamp,
+                              aasubseq,
+                              max_num_reverse_searches_per_database
+                              ):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -1146,12 +1155,32 @@ def write_rev_srch_res_to_csv(rev_srch_id, outdir, query_file_list, db_file,
                 if redun_hit_list is not None: 
                     first_neg_hit_rank = parsed_file_obj.rank_of_first_nonredun_hit(redun_hit_list)
                 else:
-                    if len(query_res_obj) > 1:
-                        first_neg_hit_rank = 1 # (the first rank is 0)
+                    # The redun_hit_list is None when there is no redundant hit
+                    # list CSV file input via the --redun_hit_csv option.
 
-                    # Assume that the top reverse search hit matches the
-                    # original query.
-                    redun_hit_list = [top_hit_acc]
+                    #######################################
+                    # ***This old code doesn't make sense and results in
+                    # misleading summary of results:
+
+                    # Assume any hits after the top reverse search hit are not
+                    # equivalent/orthologous to the original query.
+                    #if len(query_res_obj) > 1:
+                    #    first_neg_hit_rank = 1 # (the first rank is 0)
+
+                    ## Assume that the top reverse search hit matches the
+                    ## original query.
+                    #redun_hit_list = [top_hit_acc]
+                    #######################################
+
+                    # Indicate that there are no hits to be considered
+                    # nonredundant with the original query in the reverse
+                    # search results.
+                    first_neg_hit_rank = None
+
+                    # All reverse search hits should be considered redundant,
+                    # so all their accessions should be added to the list.
+                    redun_hit_list = parsed_file_obj.all_hit_ids()
+
 
             #if len(query_res_obj) >= 1:
             #    hit_num = 0

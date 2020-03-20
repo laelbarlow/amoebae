@@ -25,6 +25,7 @@ from module_amoebae_get_datatype import get_dbtype
 from Bio.Seq import Seq
 import glob
 import subprocess
+sys.path.append(os.path.dirname(sys.path[0]))
 import settings
 
 

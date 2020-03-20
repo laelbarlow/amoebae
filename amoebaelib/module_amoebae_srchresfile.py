@@ -152,6 +152,21 @@ class SrchResFile:
         return hit_id
 
 
+    def all_hit_ids(self):
+        """Return a list of ids (accessions) (if any are present) for all the
+        hits.
+        """
+        hit_ids = []
+
+        if not self.format == 'hhsearch':
+            hit_ids = [x.id for x in SearchIO.read(self.filepath, self.format)]
+
+        else:
+            pass # ...
+
+        return hit_ids
+
+
     def hit_description(self, hit_rank):
         """Return description (if present) for sequence/profile with a given
         rank in the results.
