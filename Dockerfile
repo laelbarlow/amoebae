@@ -165,9 +165,8 @@ RUN apt-get install -y pandoc
 # Install program for displaying directory contents in a tree structure.
 RUN apt-get install tree
 
-# Install python package for accessing jupyter notebook parameters such as the
-# current file name.
-RUN pip install ipyparams
+# Install python package for parsing bibtex files.
+RUN pip install bibtexparser
 
 
 # Add amoebae repository directory to path so that amoebae scripts can be run
