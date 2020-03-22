@@ -137,11 +137,6 @@ RUN pip install reportlab
 # Install via conda.
 RUN conda install -c bioconda exonerate
 
-# Install latex environments for jupyter markdown cells (all these don't work).
-#RUN conda install -c conda-forge jupyter_latex_envs
-#RUN conda install -c conda-forge texlive-core
-#RUN conda install -c anaconda nbconvert
-#RUN apt-get install texlive-xetex texlive-fonts-recommended texlive-generic-recommended
 
 # Install runipy for running Jupyter notebooks as scripts from command line. 
 RUN pip install runipy
@@ -154,8 +149,25 @@ RUN conda install -c conda-forge jupyter_contrib_nbextensions
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextension enable toc2/main
 
+# Install latex.
+#RUN apt-get install -y texlive-latex-extra
+RUN apt-get install -y texlive-xetex texlive-fonts-recommended texlive-generic-recommended
+RUN apt-get install -y texlive-bibtex-extra
+RUN apt-get install -y pandoc
+
+
+# Install latex environments for jupyter markdown cells (all these don't work).
+#RUN conda install -c conda-forge jupyter_latex_envs
+#RUN conda install -c conda-forge texlive-core
+#RUN conda install -c anaconda nbconvert
+#RUN apt-get install texlive-xetex texlive-fonts-recommended texlive-generic-recommended
+
 # Install program for displaying directory contents in a tree structure.
 RUN apt-get install tree
+
+# Install python package for accessing jupyter notebook parameters such as the
+# current file name.
+RUN pip install ipyparams
 
 
 # Add amoebae repository directory to path so that amoebae scripts can be run
