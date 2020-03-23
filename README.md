@@ -1,15 +1,19 @@
 ## Quickstart
 
-This works on macOS.
+Open a terminal window and enter the following commands. This works on macOS.
 
 Clone this git repository:
 
     git clone https://github.com/laelbarlow/amoebae.git
 
-Run the setup script:
+Run the setup script (this will take about 1 hour to complete):
 
     cd amoebae
     bash setup.sh
+
+Now open one of the tutorial jupyter notebooks:
+
+    bash run_env.sh
 
 
 <!---
