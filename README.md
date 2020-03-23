@@ -11,7 +11,7 @@ Run the setup script (this will take about 1 hour to complete):
     cd amoebae
     bash setup.sh
 
-Now open one of the tutorial jupyter notebooks:
+Now start up the environment, and open one of the tutorial jupyter notebooks:
 
     bash run_env.sh
 
