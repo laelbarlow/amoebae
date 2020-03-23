@@ -172,7 +172,7 @@ RUN pip install bibtexparser
 
 # Add amoebae repository directory to path so that amoebae scripts can be run
 # from the docker container.
-ENV PATH "$PATH:/opt/notebooks"
+ENV PATH "$PATH:/opt/amoebae"
 
 
 

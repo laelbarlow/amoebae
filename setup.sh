@@ -12,7 +12,10 @@ SECONDS=0
 
 #######################################################
 # Copy the example settings file.
-cp settings.py.example settings.py
+if [ ! -f "settings.py" ]; then
+    printf "\tWriting settings file.\n\n"
+    cp settings.py.example settings.py
+fi
 
 
 #######################################################
