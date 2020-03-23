@@ -1,17 +1,10 @@
 #!/usr/bin/env bash
 
-# TODO:
-    # Update the code for automatically configuring container CPU, RAM, etc.
-    # Update code for telling docker what directory to mount as a volume (the
-    # amoebae directory) is this just permissions?
-    # Uninstall Docker, and see whether this script works for me on macos.
-    # Ask Kika to test on Ubuntu.
-
-
 # Script for setting up AMOEBAE to run in a Docker container after cloning the
 # git repository. This is a bash script so it does not depend on python3 being
 # installed (for a setup.py script to work) and it does not depend on developer
 # tools being installed on MacOS (for make to work).
+
 
 # Start timing this script.
 SECONDS=0
@@ -26,7 +19,6 @@ cp settings.py.example settings.py
 # Check whether Docker is installed or not.
 printf "\nDetermining whether Docker needs to be installed or not.\n\n"
 
-#if [ "$(command -v docker)" == "" ]; then
 if test "$(command -v docker)"; then
     printf "\tDocker is installed.\n\n"
     
@@ -56,7 +48,7 @@ printf "If you have not already done so, customize settings for defining number
 of CPUs and amount of memory, swap space, and storage made available to Docker
 containers that will run on your machine, via the Docker graphical user
 interface. These can be accessed in Preferences > Resources.\n\n" &&\
-read -p "\nDone? (press enter to continue)" &&\
+read -p "\nDone? (press enter to continue)"
 
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     printf "\nDetected Linux."

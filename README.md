@@ -1,33 +1,35 @@
-<!---
 ## Quickstart
 
-This works on macOS and ubuntu (linux).
+This works on macOS.
 
 Clone this git repository:
 
     git clone https://github.com/laelbarlow/amoebae.git
 
 Run the setup script:
+
     cd amoebae
     bash setup.sh
 
 
+<!---
 ***Embedded video...
 
 --->
+
 ## Introduction
 
 **A**nalysis of **MO**lecular **E**volution with **BA**tch **E**ntry (AMOEBAE)
-is a bioinformatics software toolkit composed of scripts written in the Python3
-language. AMOEBAE performs certain tasks involved in identifying and
-classifying amino acid sequences. Specifically, AMOEBAE uses Python packages
-including Biopython, ETE3, pandas, and Matplotlib for setting up, running, and
-summarizing analyses of molecular evolution using bioinformatics software
-packages including MUSCLE, BLAST+, HMMER3, and IQ-Tree.  Applications include
-identifying and classifying predicted genes in novel biological sequence data
-according to their evolutionary relationships with homologues.  AMOEBAE is
-open-source, and all dependencies are freely available. However, please note
-that AMOEBAE is currently under development and is not yet fully functional. 
+is a bioinformatics software toolkit composed of scripts and modules written in
+the Python3 language. AMOEBAE performs certain tasks involved in identifying
+and classifying amino acid sequences. Specifically, AMOEBAE uses Python
+packages including Biopython, ETE3, pandas, and Matplotlib for setting up,
+running, and summarizing analyses of molecular evolution using bioinformatics
+software packages including MUSCLE, BLAST+, HMMER3, and IQ-Tree.  Applications
+include identifying and classifying predicted genes in novel biological
+sequence data according to their evolutionary relationships with homologues.
+AMOEBAE is open-source, and all dependencies are freely available. However,
+please note that AMOEBAE is currently under development. 
 
 
 ## Documentation
