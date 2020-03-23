@@ -148,6 +148,7 @@ RUN pip install runipy
 RUN conda install -c conda-forge jupyter_contrib_nbextensions
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextension enable toc2/main
+RUN jupyter nbextension enable spellchecker/main
 
 # Install latex.
 #RUN apt-get install -y texlive-latex-extra
