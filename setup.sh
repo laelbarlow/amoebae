@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
+# Copyright 2018 Lael D. Barlow
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# 
 
 # Script for setting up AMOEBAE to run in a Docker container after cloning the
 # git repository. This is a bash script so it does not depend on python3 being
@@ -105,6 +119,7 @@ docker build -t amoebaedockerimage:1.0 .
 
 #######################################################
 # Report how much time it took for this script to run.
+echo ""
 ELAPSED="Setting up AMOEBAE took the following amount of time: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"
 echo $ELAPSED
 

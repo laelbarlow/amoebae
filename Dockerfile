@@ -149,6 +149,8 @@ RUN conda install -c conda-forge jupyter_contrib_nbextensions
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextension enable toc2/main
 RUN jupyter nbextension enable spellchecker/main
+#RUN python3 -m pip install cite2c
+#RUN python3 -m cite2c.install
 
 # Install latex.
 #RUN apt-get install -y texlive-latex-extra
@@ -174,7 +176,9 @@ RUN pip install bibtexparser
 # from the docker container.
 ENV PATH "$PATH:/opt/amoebae"
 
-
+# Define the working directory that users will have when first logging into the
+# container via command line.
+WORKDIR /home/amoebae_user
 
 
 
