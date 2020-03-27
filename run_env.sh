@@ -95,7 +95,7 @@ printf "\n\nGenerating a container from the Docker image...\n\n" &&\
 if test $a_flag; then
 
 docker run --rm -it \
-    -v $(PWD):/opt/amoebae \
+    -v ${PWD}:/opt/amoebae \
     ${USEV2:--v $V2:$V2N} \
     $DI /bin/bash
 

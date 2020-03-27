@@ -8,7 +8,7 @@ USER root
 WORKDIR /home/amoebae_user/software
 
 # Update all conda to avoid inconsistencies.
-#RUN conda update --all
+RUN conda update --all
 
 # These packages are necessary for installing ete3:
 # ete3 3.1.1 does not work with Python 3.7 or above.
