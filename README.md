@@ -1,6 +1,11 @@
 ## Quickstart
 
-Open a terminal window and enter the following commands. This works on macOS.
+On **MacOS** install Docker Desktop
+(https://www.docker.com/products/docker-desktop). On **Ubuntu** install Docker
+using the install_docker_on_ubuntu.sh script.
+
+Open a terminal window and enter the following commands. This works on MacOS
+and Ubuntu.
 
 Clone this git repository:
 
