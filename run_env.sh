@@ -77,7 +77,7 @@ printf "\nDocker image used for running container: "$DI"\n"
 
 # Define directories on host machine to load as volumes to docker container.
 printf "\nDirectories loaded as volumes in container: " &&\
-V1=$(PWD)
+V1=${PWD}
 V1N=/opt/amoebae
 printf "\n\t$V1  loaded as  $V1N" &&\
 V2=${dirpath:-''}
@@ -85,7 +85,7 @@ USEV2=' '
 V2N=''
 if test $V2; then 
 USEV2=''
-V2N=/opt/$(basename -- "$V2")
+V2N=/opt/${basename -- "$V2"}
 printf "\n\t$V2  loaded as  $V2N\n"
 fi
 

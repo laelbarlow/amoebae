@@ -73,16 +73,19 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 
     # Install docker.
     # This should work on ubuntu:
-    sudo apt-get install -y \
-        apt-transport-https \
-        ca-certificates \
-        curl \
-        software-properties-common curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add - sudo add-apt-repository \
-        "deb https://apt.dockerproject.org/repo/ \
-        ubuntu-$(lsb_release -cs) \
-        main" sudo apt-get update
-    sudo apt-get -y install docker-engine # add current user to docker group so there is no need to use sudo when running docker
-    sudo usermod -aG docker $(whoami)
+    #sudo apt-get install -y \
+    #    apt-transport-https \
+    #    ca-certificates \
+    #    curl \
+    #    software-properties-common curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add - sudo add-apt-repository \
+    #    "deb https://apt.dockerproject.org/repo/ \
+    #    ubuntu-$(lsb_release -cs) \
+    #    main" sudo apt-get update
+    #sudo apt-get -y install docker-engine # add current user to docker group so there is no need to use sudo when running docker
+    #sudo usermod -aG docker $(whoami)
+
+    printf "\nProcedures for installing Docker on linux vary. Consult the
+    Docker documentation: https://docs.docker.com/install/"
 
     # ***Note: It may be necessary to customize memory and CPU usage options:
     # https://docs.docker.com/config/containers/resource_constraints/
