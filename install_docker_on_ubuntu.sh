@@ -26,7 +26,7 @@ sudo apt install docker.io &&\
 sudo systemctl start docker &&\
 sudo systemctl enable docker &&\
 # Create a docker group.
-sudo groupadd docker &&\
+#sudo groupadd docker &&\
 # Add your user to the docker group.
 sudo usermod -aG docker ${USER} &&\
 # Prompt user to restart their computer.
