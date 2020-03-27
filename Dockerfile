@@ -171,6 +171,9 @@ RUN apt-get install tree
 # Install python package for parsing bibtex files.
 RUN pip install bibtexparser
 
+# Upgrade jupyter.
+RUN conda update jupyter
+
 
 # Add amoebae repository directory to path so that amoebae scripts can be run
 # from the docker container.
