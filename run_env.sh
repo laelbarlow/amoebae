@@ -102,7 +102,7 @@ docker run --rm -it \
 else
 
 docker run --rm -p 8888:8888 \
-    -v $(PWD):/opt/amoebae \
+    -v ${PWD}:/opt/amoebae \
     ${USEV2:--v $V2:$V2N} \
     $DI /bin/bash -c "/opt/conda/bin/jupyter notebook --ip=0.0.0.0 --port=8888 --notebook-dir=${V2N:-/opt/amoebae/notebooks} --allow-root --no-browser"
 
