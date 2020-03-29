@@ -946,7 +946,7 @@ Miscellaneous commands:
                           args.csv_file, 
                           timestamp,
                           args.max_evalue, 
-                          args.max_gap_between_tblastn_hsps, 
+                          int(args.max_gap_between_tblastn_hsps), 
                           args.exonerate_score_threshold,
                           args.do_not_use_exonerate,
                           args.max_hits_to_sum)
