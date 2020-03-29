@@ -84,8 +84,10 @@ V2=${dirpath:-''}
 USEV2=' '
 V2N=''
 if test $V2; then 
+printf "\nV2\n"
+printf $V2
 USEV2=''
-V2N=/opt/${basename -- "$V2"}
+V2N=/opt/$(basename -- $V2)
 printf "\n\t$V2  loaded as  $V2N\n"
 fi
 
