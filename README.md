@@ -1,8 +1,12 @@
+
+<img src="images/AMOEBAE_logo10.png">
+
 ## Quickstart
 
 On **MacOS** install Docker Desktop
 (https://www.docker.com/products/docker-desktop). On **Ubuntu** install Docker
-using the install_docker_on_ubuntu.sh script.
+using the install_docker_on_ubuntu.sh script (your computer will need to be
+rebooted after installation).
 
 Open a terminal window and enter the following commands. This works on MacOS
 and Ubuntu.
@@ -29,21 +33,22 @@ Now start up the virtual environment, and open one of the tutorial jupyter noteb
 ## Introduction
 
 **A**nalysis of **MO**lecular **E**volution with **BA**tch **E**ntry (AMOEBAE)
-is a bioinformatics software toolkit composed of scripts and modules written in
-the Python3 language. AMOEBAE performs certain tasks involved in identifying
-and classifying amino acid sequences. Specifically, AMOEBAE uses Python
-packages including Biopython, ETE3, pandas, and Matplotlib for setting up,
-running, and summarizing analyses of molecular evolution using bioinformatics
-software packages including MUSCLE, BLAST+, HMMER3, and IQ-Tree.  Applications
-include identifying and classifying predicted genes in novel biological
-sequence data according to their evolutionary relationships with homologues.
-AMOEBAE is open-source, and all dependencies are freely available. However,
-please note that AMOEBAE is currently under development. 
+is a bioinformatics software toolkit primarily composed of scripts and modules
+written in the Python3 language. AMOEBAE performs certain tasks involved in
+identifying and classifying amino acid sequences. Specifically, AMOEBAE uses
+Python packages including Biopython, ETE3, pandas, and Matplotlib for setting
+up, running, and summarizing analyses of molecular evolution using
+bioinformatics software packages including MUSCLE, BLAST+, HMMER3, and IQ-Tree.
+Applications include identifying and classifying predicted genes in novel
+biological sequence data according to their evolutionary relationships with
+homologues. AMOEBAE is open-source, and all dependencies are freely available.
+However, please note that AMOEBAE is currently under development. [Lael D.
+Barlow](https://scholar.google.com/citations?user=wohF-LAAAAAJ&hl=en&oi=ao) is the author. 
 
 
 ## Documentation
 
-Setting up AMOEBAE is easy. Instructions for automatically setting up a virtual environment
+Instructions for automatically setting up a virtual environment
 with all the dependencies are included in the main documentation file
 here: [AMOEBAE_documentation.pdf](
 https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf). The whole process takes approximately 1 hour. 
