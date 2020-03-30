@@ -143,10 +143,7 @@ Miscellaneous commands:
             description="""Check that all the dependencies (other than python
             modules) are properly installed and useable.""",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        # now that we're inside a subcommand, ignore the first
-        # two argvs, ie the command (add_to_db) and the subcommand(s)
-        # (new_file).
-        args = parser.parse_args(sys.argv[2:])
+        parser.parse_args(sys.argv[2:])
 
         # Check for similarity search programs.
         print('\n\nBLASTP version:')
@@ -176,7 +173,7 @@ Miscellaneous commands:
             description="""Check that all the problematic dependency qt is
             running properly.""",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        args = parser.parse_args(sys.argv[2:])
+        parser.parse_args(sys.argv[2:])
 
         # Print try importing modules.
         print('Trying to import necessary modules.')
@@ -198,10 +195,7 @@ Miscellaneous commands:
             description="""Check that all the import statements used in the
             AMOEBAE repository run without error.""",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        # now that we're inside a subcommand, ignore the first
-        # two argvs, ie the command (add_to_db) and the subcommand(s)
-        # (new_file).
-        args = parser.parse_args(sys.argv[2:])
+        parser.parse_args(sys.argv[2:])
 
         # Import command-specific functions.
         from get_nonredun_import_statements_for_amoebae import find_and_test_all_import_statements_in_amoebae
@@ -320,16 +314,14 @@ Miscellaneous commands:
 
             # Make a SQL database.
             sql_path = outfp1.rsplit('.', 1)[0] + '.sql'
-            #db = gffutils.create_db(outfp1, sql_path, force=True, keep_order=True,
-            #    merge_strategy='merge', sort_attribute_values=True)
-            db = gffutils.create_db(outfp1,
-                                    sql_path,
-                                    force=True,
-                                    keep_order=False, # False is faster.
-                                    merge_strategy='create_unique', # Faster than "merge"?
-                                    sort_attribute_values=False, # False is faster.
-                                    force_gff=True # Faster?
-                                    )
+            gffutils.create_db(outfp1,
+                               sql_path,
+                               force=True,
+                               keep_order=False, # False is faster.
+                               merge_strategy='create_unique', # Faster than "merge"?
+                               sort_attribute_values=False, # False is faster.
+                               force_gff=True # Faster?
+                               )
 
             # Define the SQL database file as the one to list in the
             # spreadsheet (because this is the one that will be accessed).
@@ -369,7 +361,7 @@ Miscellaneous commands:
             description='''Print a list of all usable query files in the query
             directory as defined in the settings file.''',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        args = parser.parse_args(sys.argv[2:])
+        parser.parse_args(sys.argv[2:])
 
         # Get current time for timestamp.
         #timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
@@ -507,7 +499,7 @@ Miscellaneous commands:
             description='''Print a list of all usable query files in the query
             directory as defined in the settings file.''',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        args = parser.parse_args(sys.argv[2:])
+        parser.parse_args(sys.argv[2:])
 
         # Get current time for timestamp.
         #timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
@@ -616,10 +608,6 @@ Miscellaneous commands:
         # Get current time for timestamp.
         timestamp = time.strftime("%Y%m%d%H%M%S")
 
-        # Get paths to query and database directories from settings.py file.
-        query_dir = settings.querydirpath
-        db_dir = settings.dbdirpath
-        
         # Get query filename list (full paths will be determined downstream based
         # on settings).
         query_file_list = []
@@ -818,10 +806,6 @@ Miscellaneous commands:
         #timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
         #timestamp = time.strftime("%Y%m%d%H%M%S")
 
-        # Get paths to query and database directories from settings.py file.
-        query_dir = settings.querydirpath
-        db_dir = settings.dbdirpath
-
         ## Check that csv file is in the right place.
         #assert args.srch_dir == os.path.dirname(args.csv_file), """Error: Input csv
         #file is not in the specified search directory (srch_dir)."""
@@ -921,10 +905,6 @@ Miscellaneous commands:
         start_time = time.time()
         # Get current time for timestamp.
         timestamp = time.strftime("%Y%m%d%H%M%S")
-
-        # Get paths to query and database directories from settings.py file.
-        query_dir = settings.querydirpath
-        db_dir = settings.dbdirpath
 
         # Get query_list_file and db_list_file paths.
         out_query_file = search.get_out_query_list_path(args.fwd_srch_out)
@@ -1241,7 +1221,6 @@ Miscellaneous commands:
 
         # Import command-specific modules.
         import search
-        import run_searches
 
         # Record start time.
         start_time = time.time()
@@ -1250,13 +1229,6 @@ Miscellaneous commands:
 
         # Get timestamp of reverse search results.
         rev_srch_timestamp = '_'.join(args.rev_srch_out.split('_')[-3:]) 
-
-        # Get paths to query directory from settings.py file.
-        db_dir = settings.dbdirpath
-
-        # Get path for query subdirectory.
-        #query_dir = settings.querydirpath
-        query_dir = run_searches.get_query_subdir(args.rev_srch_out)
 
         # Get query_list_file and db_list_file paths.
         out_query_file =\
@@ -1585,9 +1557,6 @@ Miscellaneous commands:
         outfp = args.out_csv_path
         final_outfp = None
 
-        # Define parameters.
-        alignmentdir = settings.querydirpath
-
         if not args.add_ali_col: 
             # Write output file with interpetation column appended.
             final_outfp = count_paralogues3(args.csv_file,
@@ -1705,40 +1674,40 @@ Miscellaneous commands:
             description='''Print a list of all usable model/reference tree
             names in the models directory as defined in the settings file.''',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        args = parser.parse_args(sys.argv[2:])
-
-        # Get current time for timestamp.
-        #timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
-
-        # Get path to models directory from settings.py file.
-        model_dir = settings.model_dir_path
-
-        # Get all files in models directory.
-        all_files = glob.glob(os.path.join(model_dir, '*'))
+        parser.parse_args(sys.argv[2:])
 
         # Should actually look in CSV file...
         assert 2 != 2
 
-        # Define regular expression for identifying usable query file
-        # paths.
-        usable_model = re.compile(r'.+\.faa$|.+\.fna$|.+\.hmmdb$')
+        # Get current time for timestamp.
+        #timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
 
-        # Get list of files that can be used as databases.
-        db_file_list = []
-        for f in all_files:
-            if usable_db.search(f):
-                db_file_list.append(f)
+        ## Get path to models directory from settings.py file.
+        #model_dir = settings.model_dir_path
 
-        # Check that at least one usable query file was identified.
-        assert len(db_file_list) > 0, """Error: No usable database files
-        could be identified in database directory: %s""" % db_dir
+        ## Get all files in models directory.
+        #all_files = glob.glob(os.path.join(model_dir, '*'))
 
-        # Sort database file list.
-        db_file_list.sort()
+        ## Define regular expression for identifying usable query file
+        ## paths.
+        #usable_model = re.compile(r'.+\.faa$|.+\.fna$|.+\.hmmdb$')
 
-        # Print database file list.
-        for i in db_file_list:
-            print(os.path.basename(i))
+        ## Get list of files that can be used as databases.
+        #db_file_list = []
+        #for f in all_files:
+        #    if usable_db.search(f):
+        #        db_file_list.append(f)
+
+        ## Check that at least one usable query file was identified.
+        #assert len(db_file_list) > 0, """Error: No usable database files
+        #could be identified in database directory: %s""" % db_dir
+
+        ## Sort database file list.
+        #db_file_list.sort()
+
+        ## Print database file list.
+        #for i in db_file_list:
+        #    print(os.path.basename(i))
 
 
     def phylo_class(self):
@@ -2720,6 +2689,8 @@ Miscellaneous commands:
 
         # Do stuff.
         print('Running commandx')
+
+        main_out_path = 'main output path here'
 
         # Record end time.
         end_time = time.time()
