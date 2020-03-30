@@ -32,7 +32,7 @@ from Bio import SeqIO
 #from Bio import AlignIO
 #from Bio.Alphabet import IUPAC, Gapped
 
-import module_amoebae
+import amoebae_m
 from module_amoebae_get_datatype import get_dbtype
 
 
@@ -191,10 +191,10 @@ def update_query_csv(csv_file, mod_query_path, datatype):
         # Get query taxon name.
         # Assumes that there is an accession or something else after the "taxon" in
         # the query file name.
-        taxon = module_amoebae.get_query_taxon_from_filename(query_basename)
+        taxon = amoebae_m.get_query_taxon_from_filename(query_basename)
 
         # Get species based on taxon.
-        species = module_amoebae.get_species_from_db_csv(taxon)
+        species = amoebae_m.get_species_from_db_csv(taxon)
     else:
         ## Print warning.
         #print("""Warning: Could not identify query title or database/taxon name
@@ -208,7 +208,7 @@ def update_query_csv(csv_file, mod_query_path, datatype):
     new_row = pd.DataFrame(columns=headers)
 
     # Get database filename.
-    db_filename = module_amoebae.get_db_filename_for_query_from_db_csv(taxon)
+    db_filename = amoebae_m.get_db_filename_for_query_from_db_csv(taxon)
 
     # Add info to new row.
     new_row.loc[0] = ['???'] * len(headers)

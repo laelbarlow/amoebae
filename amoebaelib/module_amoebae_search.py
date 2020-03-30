@@ -46,7 +46,7 @@ with warnings.catch_warnings():
     warnings.simplefilter('ignore', BiopythonExperimentalWarning)
     from Bio import SearchIO
 
-import module_amoebae
+import amoebae_m
 from module_amoebae_srchresfile import SrchResFile
 import module_amoebae_column_header_lists 
 from module_amoebae_run_searches import get_query_list_from_file,\
@@ -196,7 +196,7 @@ def get_redun_hits_in_dbs(query_title,
         for q in query_file_list:
             # Define query title to use.
             if find_query_titles:
-                query_title = module_amoebae.get_query_title_from_csv(q)
+                query_title = amoebae_m.get_query_title_from_csv(q)
             # Loop over database file names.
             for d in db_file_list:
                 # Find relevant result file in output directory.
@@ -364,7 +364,7 @@ def get_rows_for_fwd_srch_df(df,
         
     # Define a sub-dataframe to populate and return.
     subdf = pd.DataFrame(columns=column_label_list) # Define query title to use.
-    query_title = module_amoebae.get_query_title_from_csv(q)
+    query_title = amoebae_m.get_query_title_from_csv(q)
 
     # Initiate dataframe for a new row to append to dataframe
     # for output.
@@ -375,21 +375,21 @@ def get_rows_for_fwd_srch_df(df,
     # Fill in info to row.
     new_row_df.loc[0]['Query title'] = query_title
     new_row_df.loc[0]['Query file'] = q
-    new_row_df.loc[0]['Query species (if applicable)'] = module_amoebae.get_query_taxon_from_csv(q)
+    new_row_df.loc[0]['Query species (if applicable)'] = amoebae_m.get_query_taxon_from_csv(q)
 
     # Get "taxon" from query filename.
     #taxon = module_amoebae.get_query_taxon_from_filename(q)
-    taxon = module_amoebae.get_query_taxon_from_csv(q)
+    taxon = amoebae_m.get_query_taxon_from_csv(q)
 
     # Use query "taxon" to look up the database, if any, that
     # the query came from (in the query info csv file).
-    new_row_df.loc[0]['Query database name'] = module_amoebae.get_db_filename_for_query_from_db_csv(taxon)
+    new_row_df.loc[0]['Query database name'] = amoebae_m.get_db_filename_for_query_from_db_csv(taxon)
 
     new_row_df.loc[0]['Query accession (if applicable)'] = query_res_obj.id
     new_row_df.loc[0]['Query description'] = query_res_obj.description
     new_row_df.loc[0]['Query length'] = query_len
     new_row_df.loc[0]['Subject database species (if applicable)'] =\
-        module_amoebae.get_species_for_db_filename(d) ### PROBLEM?
+        amoebae_m.get_species_for_db_filename(d) ### PROBLEM?
     new_row_df.loc[0]['Subject database file'] = d
     new_row_df.loc[0]['Forward search method'] = srch_file_prog + ' ' + srch_file_prog_vers
 
@@ -803,7 +803,7 @@ def get_rev_queries(csv_file, query_subdir, aasubseq, nafullseq):
                 # Then hit is a single fasta sequence.
 
                 # Determine whether prot or nucl.
-                dtype = module_amoebae.get_dbtype_from_file_exten(row['Subject database file'])
+                dtype = amoebae_m.get_dbtype_from_file_exten(row['Subject database file'])
 
                 # Determine alphabet to use.
                 #?
@@ -1081,7 +1081,7 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             query_file = row['Query file']
 
             # Get species for db_file.
-            db_file_sp = module_amoebae.get_species_for_db_filename(db_file)
+            db_file_sp = amoebae_m.get_species_for_db_filename(db_file)
             row['Reverse search species (if applicable)'] = db_file_sp
 
 
