@@ -1,6 +1,6 @@
 
 <p align="center">
-   <img src="images/AMOEBAE_logo10.png" width=500>
+   <img src="images/AMOEBAE_logo10.png" width=600>
 </p>
 
 ## Quickstart
