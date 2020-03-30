@@ -1,5 +1,5 @@
 
-<img src="images/AMOEBAE_logo10.png">
+<img src="images/AMOEBAE_logo10.png" width=500>
 
 ## Quickstart
 
