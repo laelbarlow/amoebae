@@ -37,7 +37,7 @@ from module_align_to_profile_iter import do_align_iteratively
 from module_mask_nex import mask_nex
 from module_amoebae_trim_nex import trim_nex
 from module_afa_to_nex import delete_extra_mesquite_lines
-from module_amoebae import get_seqs_from_fasta_db
+from amoebae_m import get_seqs_from_fasta_db
 
 # Import functions for working with sequences, alignments, and trees.
 #from ete3 import Tree, TreeStyle, Tree, TextFace, add_face_to_node

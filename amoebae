@@ -34,7 +34,7 @@ import time
 
 # Import module specifically written for this script (command-specific modules
 # imported below).
-import module_amoebae
+import amoebae_m
 
 
 class DispatchAmoebae(object):
@@ -342,7 +342,7 @@ Miscellaneous commands:
             # (if input file is a fasta file)
 
             # Get new filename extension to use.
-            exten = module_amoebae.get_corr_fasta_exten(args.new_file)
+            exten = amoebae_m.get_corr_fasta_exten(args.new_file)
 
             # Convert headers and write output to new path.
             new_file_new_exten = args.new_file.rsplit('.', 1)[0] + '.' + exten
@@ -687,7 +687,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = args.srch_dir
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_outfp)
         
 
@@ -783,7 +783,7 @@ Miscellaneous commands:
         main_out_path = outdir
         outdir = args.srch_dir
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -962,7 +962,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.csv_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, final_outfp)
 
 
@@ -1079,7 +1079,7 @@ Miscellaneous commands:
         main_out_path = outdir
         outdir = args.srch_dir
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -1325,7 +1325,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.csv_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, final_outfp)
 
 
@@ -1415,7 +1415,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.csv_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, outfp)
 
 
@@ -1627,7 +1627,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.csv_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, final_outfp)
 
 
@@ -1815,7 +1815,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.file_with_seqs)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, outfile)
 
 
@@ -1878,7 +1878,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.csv_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, final_outfp)
 
 
@@ -1925,7 +1925,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.csv_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, outfp)
 
 
@@ -1974,7 +1974,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.csv_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2018,7 +2018,7 @@ Miscellaneous commands:
            #output_fasta = args.csv_file.rsplit('.', 1)[0] + '.fa' 
            output_dir = args.csv_file.rsplit('.', 1)[0]
 
-        module_amoebae.write_seqs_to_fasta(args.csv_file, output_dir,
+        amoebae_m.write_seqs_to_fasta(args.csv_file, output_dir,
                 args.abbrev, args.paralogue_names, args.only_descr, args.subseq, args.all_hits,
                 args.split_by_top_rev_srch_hit, args.split_by_query_title)
 
@@ -2064,7 +2064,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.tree_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
     def auto_prune(self):
@@ -2140,7 +2140,7 @@ Miscellaneous commands:
         #outdir = os.path.dirname(args.tree_file)
         outdir = args.in_dir
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2176,7 +2176,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.tree_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2213,7 +2213,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.tree_file)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2306,7 +2306,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = main_out_path
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2340,7 +2340,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.alignment)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
         
@@ -2391,7 +2391,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.file_with_seqs)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2428,7 +2428,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.file_with_seqs)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2489,7 +2489,7 @@ Miscellaneous commands:
         # Define command line input.
         commandline = ' '.join(sys.argv)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline,
+        amoebae_m.record_amoebae_info_in_log_file(commandline,
                                                        args.out_dir_path,
                                                        start_time,
                                                        end_time,
@@ -2546,7 +2546,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = args.input_directory
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2585,7 +2585,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.alignment)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2658,7 +2658,7 @@ Miscellaneous commands:
         if not os.path.isdir(outdir):
             outdir = os.path.dirname(main_out_path)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2697,7 +2697,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(main_out_path)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 
@@ -2727,7 +2727,7 @@ Miscellaneous commands:
         # Define output directory.
         outdir = os.path.dirname(args.file_with_seqs)
         # Record info to log file.
-        module_amoebae.record_amoebae_info_in_log_file(commandline, outdir,
+        amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_out_path)
 
 

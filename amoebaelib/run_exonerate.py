@@ -33,7 +33,7 @@ import os
 sys.path.append(os.path.dirname(sys.path[0]))
 import settings
 #from module_get_fas_from_db_dir import get_seq_obj_from_db_fasta
-from module_amoebae import get_seqs_from_fasta_db
+from amoebae_m import get_seqs_from_fasta_db
 from Bio import SeqIO
 from Bio.Alphabet import IUPAC
 import warnings

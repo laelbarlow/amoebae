@@ -42,7 +42,7 @@ get_clade_name_from_model, code_names_in_ali, quote_tree, code_tree,\
 uncode_tree, uncode_tree_obj
 from module_paralogue_counter import add_seq_to_alignment3
 from module_amoebae_select_seqs import get_ml_tree_branch_lengths
-from module_amoebae import find_input_file_in_parent_directory
+from amoebae_m import find_input_file_in_parent_directory
 
 # If running on computecanada, set Qt to offscreen mode so that it works on clusters.
 import platform

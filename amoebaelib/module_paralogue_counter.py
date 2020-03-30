@@ -32,10 +32,10 @@ import pandas as pd
 import settings
 import glob
 from module_similarity_score import get_similarity_score, get_score_dataframe_from_file
-import module_amoebae
+import amoebae_m
 import gffutils
-from module_amoebae import mask_nex2
-from module_amoebae import get_seq_obj_from_srch_res_csv_info,\
+from amoebae_m import mask_nex2
+from amoebae_m import get_seq_obj_from_srch_res_csv_info,\
 get_hit_range_from_hsp_ranges 
 from module_amoebae_trim_nex import trim_nex
 from generate_sankey_diagram import generate_sankey
@@ -1116,7 +1116,7 @@ def get_seq_obj_x2(acc_list):
     acc_list2 = acc_list
     ranked_seq_obj_list = []
     for x in acc_list2:
-        seq = module_amoebae.get_seqs_from_fasta_db(x[0], [x[1]])[0]
+        seq = amoebae_m.get_seqs_from_fasta_db(x[0], [x[1]])[0]
         ranked_seq_obj_list.append(seq)
         acc = seq.id
         seq_obj_accs.append(acc)

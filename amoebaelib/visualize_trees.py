@@ -48,7 +48,7 @@ from matplotlib.pyplot import imread
 import matplotlib.pyplot as plt
 import numpy as np
 from search_alignment_space import get_type_seqs_dict, get_nodes_of_interest, get_clade_name_from_model2
-from module_amoebae import find_input_file_in_parent_directory
+from amoebae_m import find_input_file_in_parent_directory
 
 ## Get directory path from input.
 #command_line_list = sys.argv

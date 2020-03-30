@@ -39,7 +39,7 @@ from module_amoebae_trim_nex import trim_nex
 from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
 import pandas as pd
 import module_amoebae_column_header_lists
-from module_amoebae import mask_nex2
+from amoebae_m import mask_nex2
 from module_paralogue_counter import add_seq_to_alignment3,\
 modify_seq_descr_for_tree
 from module_amoebae_name_replace import write_afa_with_code_names,\
