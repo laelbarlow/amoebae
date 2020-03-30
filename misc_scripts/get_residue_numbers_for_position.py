@@ -30,12 +30,12 @@ sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 sys.path.append(os.path.dirname(sys.path[0]))
 from Bio import AlignIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import delete_extra_mesquite_lines
+from afa_to_nex import delete_extra_mesquite_lines
 import numpy as np
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import collections
-import module_dacksify_pos_hmmer_hits
+import dacksify_pos_hmmer_hits
 import settings
 
 command_line_list = sys.argv
@@ -86,7 +86,7 @@ def get_residue_numbers_for_position(infp, position_num):
             rec_id = records[tax_num -1].id
             #split = rec_id.strip().split(' ')
             #name = split[1].split('_')[0]
-            #unabbrev_name = module_dacksify_pos_hmmer_hits.find_unabbrev_name(name, tablefilepath)
+            #unabbrev_name = dacksify_pos_hmmer_hits.find_unabbrev_name(name, tablefilepath)
             #taxon_name = unabbrev_name + ' ' + split[1].split('_')[1] + ' ' + split[0]
             taxon_name = rec_id
 

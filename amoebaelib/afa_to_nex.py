@@ -21,7 +21,7 @@ import os
 import shutil
 from Bio import AlignIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_amoebae_get_datatype import get_dbtype
+from get_datatype import get_dbtype
 from Bio.Seq import Seq
 import glob
 import subprocess

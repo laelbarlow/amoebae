@@ -14,7 +14,7 @@
 # limitations under the License.
 # 
 # Define column header lists to be shared between functions in the
-# module_amoebae_search module.
+# search module.
 
 fwd_column_label_list = ['Query title',
                          'Query file',

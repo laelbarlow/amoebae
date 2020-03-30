@@ -25,7 +25,7 @@ sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 sys.path.append(os.path.dirname(sys.path[0]))
 import argparse
 import settings
-import module_amoebae_run_searches
+import run_searches
 
 
 parser = argparse.ArgumentParser(
@@ -38,20 +38,20 @@ args = parser.parse_args()
 
 # Get query file path list from file.
 query_file_list =\
-module_amoebae_run_searches.get_query_list_from_file(module_amoebae_run_searches.get_out_query_list_path(args.rev_srch_dir))
+run_searches.get_query_list_from_file(run_searches.get_out_query_list_path(args.rev_srch_dir))
 
 # Get database file path list from file.
 db_file_list =\
-module_amoebae_run_searches.get_db_list_from_file(module_amoebae_run_searches.get_out_db_list_path(args.rev_srch_dir))
+run_searches.get_db_list_from_file(run_searches.get_out_db_list_path(args.rev_srch_dir))
 
 # For reverse searches, the queries are in a subdirectory of the
 # reverse search directory, not in the query file directory specified
 # in the settings.py file.
-query_dir = module_amoebae_run_searches.get_query_subdir(args.rev_srch_dir)
+query_dir = run_searches.get_query_subdir(args.rev_srch_dir)
 
 # Run searches (query_file_list contains full filepaths, so can use
 # query_subdir contents).
-module_amoebae_run_searches.run_all_searches(query_file_list, db_file_list,
+run_searches.run_all_searches(query_file_list, db_file_list,
         args.rev_srch_dir, query_dir)
 
 # Report output.

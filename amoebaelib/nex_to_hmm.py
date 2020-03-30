@@ -20,7 +20,7 @@ converting them to aligned fasta files and then running hmmbuild.
 import os
 import sys
 import subprocess
-from module_afa_to_nex import nex_to_afa, delete_extra_mesquite_lines
+from afa_to_nex import nex_to_afa, delete_extra_mesquite_lines
 
 
 def nex_to_hmm(infilepath, outfilepath=None):

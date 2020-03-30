@@ -33,7 +33,7 @@ from Bio import SeqIO
 #from Bio.Alphabet import IUPAC, Gapped
 
 import amoebae_m
-from module_amoebae_get_datatype import get_dbtype
+from get_datatype import get_dbtype
 
 
 # Define functions to be used in amoebae.

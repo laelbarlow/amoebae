@@ -25,8 +25,8 @@ import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 import glob
 import shutil
-from module_afa_to_nex import align_one_fa
-from module_afa_to_nex import afa_to_nex
+from afa_to_nex import align_one_fa
+from afa_to_nex import afa_to_nex
 
 
 command_line_list = sys.argv

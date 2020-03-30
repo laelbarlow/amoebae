@@ -20,7 +20,7 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 import gffutils
-from module_search_scaffolds import check_if_two_hsp_ranges_overlap
+from search_scaffolds import check_if_two_hsp_ranges_overlap
 
 
 command_line_list = sys.argv

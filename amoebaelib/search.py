@@ -47,13 +47,13 @@ with warnings.catch_warnings():
     from Bio import SearchIO
 
 import amoebae_m
-from module_amoebae_srchresfile import SrchResFile
-import module_amoebae_column_header_lists 
-from module_amoebae_run_searches import get_query_list_from_file,\
+from srchresfile import SrchResFile
+import column_header_lists 
+from run_searches import get_query_list_from_file,\
 get_db_list_from_file, get_out_query_list_path, get_out_db_list_path,\
 determine_search_method, search_result_filepath, run_any_search,\
 run_all_searches, get_out_hmm_path, get_query_subdir
-from module_search_scaffolds import split_tblastn_hits_into_separate_genes,\
+from search_scaffolds import split_tblastn_hits_into_separate_genes,\
 get_hit_seq_record_and_coord, get_hit_seq_record_and_coord2, get_cluster_range
 
 
@@ -206,7 +206,7 @@ def get_redun_hits_in_dbs(query_title,
                 # For certain formats the search method is required, so may
                 # need to figure out how to get that info later (see
                 # http://biopython.org/DIST/docs/api/Bio.SearchIO-module.html)
-                #srch_file_prog_vers_fmt = module_amoebae_srchresfile.get_srch_file_info(search_result_path)
+                #srch_file_prog_vers_fmt = srchresfile.get_srch_file_info(search_result_path)
                 #srch_file_prog = srch_file_prog_vers_fmt[0]
                 #srch_file_prog_vers = srch_file_prog_vers_fmt[1]
                 #srch_file_format = srch_file_prog_vers_fmt[2]
@@ -652,7 +652,7 @@ def write_fwd_srch_res_to_csv(outdir,
     # Define string for header line in output spreadsheet.
     # ***If this is changed, then make sure to change the corresponding code
     # for filling in data into the rows (below).
-    column_label_list = module_amoebae_column_header_lists.fwd_column_label_list
+    column_label_list = column_header_lists.fwd_column_label_list
 
     # Make an output spreadsheet file if it does not already exist.
     if not os.path.isfile(csv_file):
@@ -1008,7 +1008,7 @@ def write_rev_srch_res_to_csv(rev_srch_id,
 
     # Get same list of header titles that the sum_fwd_srch command makes (for
     # parsing).
-    fwd_column_label_list = module_amoebae_column_header_lists.fwd_column_label_list 
+    fwd_column_label_list = column_header_lists.fwd_column_label_list 
 
     ## Make an output spreadsheet file if it does not already exist.
     #if not os.path.isfile(csv_file):
@@ -1031,7 +1031,7 @@ def write_rev_srch_res_to_csv(rev_srch_id,
     #expected."""
 
     # Define a list of new column headers to be appended.
-    new_column_label_list = module_amoebae_column_header_lists.rev_column_label_list
+    new_column_label_list = column_header_lists.rev_column_label_list
     #assert len(new_column_labels_list) > 0
 
     # Initiate new dataframe with columns to be appended/joined to spreadsheet.
@@ -1299,7 +1299,7 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
     containing reverse search E-values in input spreadsheet: %s""" % csv_file
 
     # Define a list of new column headers to be appended.
-    new_column_label_list = module_amoebae_column_header_lists.interp_column_label_list
+    new_column_label_list = column_header_lists.interp_column_label_list
 
     # Initiate new dataframe with columns to be appended/joined to spreadsheet.
     #num_rows = len(list(df.index))
@@ -1362,7 +1362,7 @@ def write_fwd_srch_interp_csv(csv_file, outfp, score_cutoff):
     #containing relevant information in input spreadsheet: %s""" % csv_file
 
     # Define a list of new column headers to be appended.
-    new_column_label_list = module_amoebae_column_header_lists.interp_column_label_list
+    new_column_label_list = column_header_lists.interp_column_label_list
 
     # Initiate new dataframe with columns to be appended/joined to spreadsheet.
     #num_rows = len(list(df.index))

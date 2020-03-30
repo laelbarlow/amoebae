@@ -36,11 +36,11 @@ import glob
 #from Bio.Alphabet import IUPAC, Gapped
 
 #from get_datatype import get_dbtype
-#from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
+#from paralogue_counter import get_seq_obj_from_srch_res_csv_info
 
-from module_afa_to_nex import delete_extra_mesquite_lines
-from module_amoebae_name_replace import get_conversion_dict_from_table
-from module_amoebae_name_replace import write_afa_with_code_names,\
+from afa_to_nex import delete_extra_mesquite_lines
+from name_replace import get_conversion_dict_from_table
+from name_replace import write_afa_with_code_names,\
 write_newick_tree_with_uncoded_names,\
 write_newick_tree_with_coded_names
 

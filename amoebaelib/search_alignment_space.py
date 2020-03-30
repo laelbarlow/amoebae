@@ -34,14 +34,14 @@ import pandas as pd
 import random
 import copy
 
-from module_amoebae_trim_nex import trim_nex
-from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
-import module_amoebae_column_header_lists
-from module_amoebae_phylo_clas import ModelInfoFromCSV,\
+from trim_nex import trim_nex
+from paralogue_counter import get_seq_obj_from_srch_res_csv_info
+import column_header_lists
+from phylo_clas import ModelInfoFromCSV,\
 get_clade_name_from_model, code_names_in_ali, quote_tree, code_tree,\
 uncode_tree, uncode_tree_obj
-from module_paralogue_counter import add_seq_to_alignment3
-from module_amoebae_select_seqs import get_ml_tree_branch_lengths
+from paralogue_counter import add_seq_to_alignment3
+from select_seqs import get_ml_tree_branch_lengths
 from amoebae_m import find_input_file_in_parent_directory
 
 # If running on computecanada, set Qt to offscreen mode so that it works on clusters.
@@ -51,7 +51,7 @@ if 'computecanada' in str(platform.uname()) or\
     graham_node.search(str(platform.uname())) is not None:
     os.environ['QT_QPA_PLATFORM']='offscreen'
 
-#from module_amoebae_select_seqs import get_clade_name_from_model2,\
+#from select_seqs import get_clade_name_from_model2,\
 #get_nodes_of_interest, get_list_of_leaf_names_for_node, TaxonomicInfo,\
 #get_taxonomic_info, define_nodestyles_dict_for_colourcoding,\
 #define_textface_for_labeling_stem, get_corresponding_node,\
@@ -62,7 +62,7 @@ if 'computecanada' in str(platform.uname()) or\
 from Bio import AlignIO
 from Bio import SeqIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import delete_extra_mesquite_lines, afa_to_nex, nex_to_afa, nex_to_phylip
+from afa_to_nex import delete_extra_mesquite_lines, afa_to_nex, nex_to_afa, nex_to_phylip
 from Bio.Align import MultipleSeqAlignment
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord

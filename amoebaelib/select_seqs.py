@@ -33,19 +33,19 @@ import statistics
 import pandas as pd
 from random import shuffle
 
-from module_amoebae_trim_nex import trim_nex
-from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
-import module_amoebae_column_header_lists
-from module_amoebae_phylo_clas import ModelInfoFromCSV,\
+from trim_nex import trim_nex
+from paralogue_counter import get_seq_obj_from_srch_res_csv_info
+import column_header_lists
+from phylo_clas import ModelInfoFromCSV,\
 get_clade_name_from_model, code_names_in_ali, quote_tree, code_tree,\
 uncode_tree, uncode_tree_obj
-from module_paralogue_counter import add_seq_to_alignment3
+from paralogue_counter import add_seq_to_alignment3
 
 # Import functions for working with sequences, alignments, and trees.
 from Bio import AlignIO
 from Bio import SeqIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import delete_extra_mesquite_lines, afa_to_nex, nex_to_afa, nex_to_phylip
+from afa_to_nex import delete_extra_mesquite_lines, afa_to_nex, nex_to_afa, nex_to_phylip
 from Bio.Align import MultipleSeqAlignment
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord

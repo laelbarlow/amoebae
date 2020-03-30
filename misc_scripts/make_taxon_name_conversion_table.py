@@ -26,7 +26,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 from Bio import SeqIO
-from module_afa_to_nex import nex_to_afa, afa_to_nex
+from afa_to_nex import nex_to_afa, afa_to_nex
 
 command_line_list = sys.argv
 

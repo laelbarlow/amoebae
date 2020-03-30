@@ -29,14 +29,14 @@ import pandas as pd
 
 # Import amoebae modules.
 import settings
-from module_afa_to_nex import nex_to_afa, afa_to_nex, determine_alphabet
-from module_add_to_db import make_blast_db
+from afa_to_nex import nex_to_afa, afa_to_nex, determine_alphabet
+from add_to_db import make_blast_db
 from misc_functions import get_fa_record_text_from_obj
-from module_paralogue_counter import add_seq_to_alignment3
-from module_align_to_profile_iter import do_align_iteratively
-from module_mask_nex import mask_nex
-from module_amoebae_trim_nex import trim_nex
-from module_afa_to_nex import delete_extra_mesquite_lines
+from paralogue_counter import add_seq_to_alignment3
+from align_to_profile_iter import do_align_iteratively
+from mask_nex import mask_nex
+from trim_nex import trim_nex
+from afa_to_nex import delete_extra_mesquite_lines
 from amoebae_m import get_seqs_from_fasta_db
 
 # Import functions for working with sequences, alignments, and trees.

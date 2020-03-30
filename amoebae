@@ -117,7 +117,8 @@ Miscellaneous commands:
         # exclude the rest of the args too, or validation will fail
         args = parser.parse_args(sys.argv[1:2])
 
-        help_for_commands_under_development = """
+        # Help for commands under development:
+        """
    phylo_class       Determine whether sequences can be classified into one of
                      several pre-defined orthogroups using an
                      established backbone phylogeny by either topology testing with
@@ -277,8 +278,8 @@ Miscellaneous commands:
 
         # Import command-specific modules.
         import gffutils
-        import module_add_to_db
-        from module_amoebae_hmmscan import determine_if_is_hmmdb
+        import add_to_db
+        from hmmscan import determine_if_is_hmmdb
 
         # Define paths to database directory and genome info spreadsheet file.
         db_dir = settings.dbdirpath
@@ -347,20 +348,20 @@ Miscellaneous commands:
             # Convert headers and write output to new path.
             new_file_new_exten = args.new_file.rsplit('.', 1)[0] + '.' + exten
             outfp = os.path.join(db_dir, os.path.basename(new_file_new_exten))
-            module_add_to_db.convert_headers(args.new_file, outfp, args.split_char,
+            add_to_db.convert_headers(args.new_file, outfp, args.split_char,
                     args.split_pos, args.skip_header_reformat, args.auto_extract_accs)
 
             # Make blastable database.
-            module_add_to_db.make_blast_db(outfp)
+            add_to_db.make_blast_db(outfp)
 
             # Make index file with esl-sfetch from the HMMer3 software package.
             if exten == 'faa' or exten == 'fna':
-                module_add_to_db.make_easel_index(outfp)
+                add_to_db.make_easel_index(outfp)
             else:
                 pass # ...
 
         # Add corresponding line to spreadsheet.
-        module_add_to_db.update_csv(outfp, csv_file)
+        add_to_db.update_csv(outfp, csv_file)
 
 
     def list_dbs(self):
@@ -428,10 +429,10 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_amoebae_search
-        import module_add_to_queries
-        from module_amoebae_get_datatype import get_dbtype
-        from module_amoebae_nex_to_hmm import afa_to_hmm
+        import search
+        import add_to_queries
+        from get_datatype import get_dbtype
+        from nex_to_hmm import afa_to_hmm
 
         assert not args.query_file.startswith('.nex'), """Input file must be in
         fasta format."""
@@ -458,7 +459,7 @@ Miscellaneous commands:
         for query_file in new_query_file_list:
             # Detect input file type (FASTA or aligned FASTA).
             filetype = None
-            if module_add_to_queries.is_single_fasta(query_file):
+            if add_to_queries.is_single_fasta(query_file):
                 filetype = 'fa'
             else:
                 filetype = 'afa'
@@ -466,7 +467,7 @@ Miscellaneous commands:
             # Check that sequences are all the same length if an alignment.
             if filetype == 'afa':
                 assert\
-                module_add_to_queries.fasta_seqs_all_same_len(query_file),\
+                add_to_queries.fasta_seqs_all_same_len(query_file),\
                 """Error: Sequences in input alignment are not all the same length:
                     %s""" % query_file
 
@@ -478,7 +479,7 @@ Miscellaneous commands:
 
             # Define a modified query file path with extension.
             mod_query_path =\
-            module_add_to_queries.get_mod_query_path(query_file, filetype,
+            add_to_queries.get_mod_query_path(query_file, filetype,
                     datatype, query_dir)
 
             # Check that such a query file does not already exist.
@@ -492,13 +493,13 @@ Miscellaneous commands:
             # Construct HMM file if input is alignment.
             if filetype == 'afa':
                 # Define path for hmm file.
-                hmm_path = module_amoebae_search.get_out_hmm_path(mod_query_path)
+                hmm_path = search.get_out_hmm_path(mod_query_path)
 
                 # Make HMM out of alignment.
                 afa_to_hmm(mod_query_path, hmm_path)
 
             # Add corresponding line to query info spreadsheet.
-            module_add_to_queries.update_query_csv(csv_file, mod_query_path,
+            add_to_queries.update_query_csv(csv_file, mod_query_path,
                     datatype)
 
     def list_queries(self):
@@ -595,7 +596,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_amoebae_search
+        import search
 
         # Check that arguments used properly.
         assert not (args.query_name != None and args.query_list_file != None),\
@@ -625,7 +626,7 @@ Miscellaneous commands:
         if args.query_list_file is not None:
             # Generate a list from file.
             query_file_list =\
-            module_amoebae_search.get_query_list_from_file(args.query_list_file)               
+            search.get_query_list_from_file(args.query_list_file)               
         else:
             # Use input query name.
             query_file_list = [args.query_name]
@@ -641,7 +642,7 @@ Miscellaneous commands:
         elif args.db_list_file is not None:
             # Read list from input file.
             db_file_list =\
-            module_amoebae_search.get_db_list_from_file(args.db_list_file)
+            search.get_db_list_from_file(args.db_list_file)
         assert len(db_file_list) >= 1, """Error: No database files in database
         file list."""
 
@@ -666,7 +667,7 @@ Miscellaneous commands:
         # Run searches, interpret searches, and append to spreadsheet, then
         # delete intermediate files (search method is determined downstream
         # based on input filename extensions and settings).
-        main_outfp = module_amoebae_search.get_redun_hits_in_dbs(args.query_title,
+        main_outfp = search.get_redun_hits_in_dbs(args.query_title,
                 query_file_list, db_file_list, csv_file, outdir, timestamp,
                           args.blast_report_evalue_cutoff,
                           args.blast_max_target_seqs,
@@ -713,7 +714,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_amoebae_run_searches
+        import run_searches
 
         # Record start time.
         start_time = time.time()
@@ -743,8 +744,8 @@ Miscellaneous commands:
         outdir
 
         # Define file paths for new query and db list files.
-        db_file_path = module_amoebae_run_searches.get_out_db_list_path(outdir)
-        query_file_path = module_amoebae_run_searches.get_out_query_list_path(outdir)
+        db_file_path = run_searches.get_out_db_list_path(outdir)
+        query_file_path = run_searches.get_out_query_list_path(outdir)
 
         # Write query and db list files to output folder.
         shutil.copyfile(args.db_list_file, db_file_path)
@@ -758,7 +759,7 @@ Miscellaneous commands:
         #    o.write(content_template)
 
         # Write output bash script for running searches.
-        with open(module_amoebae_run_searches.get_out_bash_path(outdir), 'w') as o:
+        with open(run_searches.get_out_bash_path(outdir), 'w') as o:
             o.write(settings.bash_script_content)
             o.write('run_fwd_srch.py' + ' ' + os.path.join(settings.remote_home_dir, os.path.basename(outdir)))
 
@@ -767,13 +768,13 @@ Miscellaneous commands:
 
         ## Get query list from file.
         #query_file_list =\
-        #module_amoebae_search.get_query_list_from_file(args.query_list_file)
+        #search.get_query_list_from_file(args.query_list_file)
 
         ## Get database list from file.
-        #db_file_list = module_amoebae_search.get_db_list_from_file(args.db_list_file)
+        #db_file_list = search.get_db_list_from_file(args.db_list_file)
 
         ## Run searches.
-        #module_amoebae_search.run_all_searches(query_file_list, db_file_list, outdir)
+        #search.run_all_searches(query_file_list, db_file_list, outdir)
 
         # Record end time.
         end_time = time.time()
@@ -810,8 +811,8 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_amoebae_search
-        import module_amoebae_run_searches
+        import search
+        import run_searches
 
         # Get current time for timestamp.
         #timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
@@ -841,14 +842,14 @@ Miscellaneous commands:
 
         # Get query list from file.
         query_file_list =\
-        module_amoebae_run_searches.get_query_list_from_file(module_amoebae_run_searches.get_out_query_list_path(args.fwd_srch_dir))
+        run_searches.get_query_list_from_file(run_searches.get_out_query_list_path(args.fwd_srch_dir))
 
         # Get database list from file.
         db_file_list =\
-        module_amoebae_run_searches.get_db_list_from_file(module_amoebae_run_searches.get_out_db_list_path(args.fwd_srch_dir))
+        run_searches.get_db_list_from_file(run_searches.get_out_db_list_path(args.fwd_srch_dir))
 
         # Run searches.
-        module_amoebae_search.run_all_searches(query_file_list, db_file_list,
+        search.run_all_searches(query_file_list, db_file_list,
                 args.fwd_srch_dir,
                      args.blast_report_evalue_cutoff,
                      args.blast_max_target_seqs,
@@ -914,7 +915,7 @@ Miscellaneous commands:
             #input("""Continue?""")
 
         # Import command-specific modules.
-        import module_amoebae_search
+        import search
 
         # Record start time.
         start_time = time.time()
@@ -926,20 +927,20 @@ Miscellaneous commands:
         db_dir = settings.dbdirpath
 
         # Get query_list_file and db_list_file paths.
-        out_query_file = module_amoebae_search.get_out_query_list_path(args.fwd_srch_out)
+        out_query_file = search.get_out_query_list_path(args.fwd_srch_out)
         assert os.path.isfile(out_query_file), """Could not find file with
         query list with path: %s""" % out_query_file
-        out_db_file = module_amoebae_search.get_out_db_list_path(args.fwd_srch_out)
+        out_db_file = search.get_out_db_list_path(args.fwd_srch_out)
         assert os.path.isfile(out_db_file), """Could not find file with
         database list with path: %s""" % out_db_file
 
         # Get query and database lists.
-        query_file_list = module_amoebae_search.get_query_list_from_file(out_query_file)
-        db_file_list = module_amoebae_search.get_db_list_from_file(out_db_file)
+        query_file_list = search.get_query_list_from_file(out_query_file)
+        db_file_list = search.get_db_list_from_file(out_db_file)
 
         # Loop over files in the correct order, extract information, and write
         # to csv spreadsheet.
-        final_outfp = module_amoebae_search.write_fwd_srch_res_to_csv(\
+        final_outfp = search.write_fwd_srch_res_to_csv(\
                           args.fwd_srch_out,
                           query_file_list, 
                           db_file_list, 
@@ -992,8 +993,8 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_amoebae_run_searches
-        import module_amoebae_search
+        import run_searches
+        import search
 
         # Record start time.
         start_time = time.time()
@@ -1021,7 +1022,7 @@ Miscellaneous commands:
         os.mkdir(outdir)
 
         # Define subdirectory path for output, and create directory.
-        query_subdir = module_amoebae_run_searches.get_query_subdir(outdir)
+        query_subdir = run_searches.get_query_subdir(outdir)
         os.mkdir(query_subdir)
 
 
@@ -1029,7 +1030,7 @@ Miscellaneous commands:
         # results, and write to files in subdirectory of output directory.
         # Get sequences to use as reverse search queries.
         #seq_objs = get_seq_from_fasta_db(db_name, accs)
-        query_file_list = module_amoebae_search.get_rev_queries(args.csv_file,
+        query_file_list = search.get_rev_queries(args.csv_file,
                 query_subdir, args.aasubseq, args.nafullseq)
 
         # Get database(s) to search in.
@@ -1038,7 +1039,7 @@ Miscellaneous commands:
             # Check that the input file path is not a fasta file.
             assert not open(args.databases, 'r').read().startswith('>'), """Don't input fasta file paths."""
             # Get list from file.
-            db_file_list = module_amoebae_search.get_db_list_from_file(args.databases)
+            db_file_list = search.get_db_list_from_file(args.databases)
         else:
             # then argument is a filename (not a path).
             expected_path_to_file_in_genomes_folder = os.path.join(db_dir, args.databases)
@@ -1055,8 +1056,8 @@ Miscellaneous commands:
 
 
         # Define file paths for new query and db list files.
-        db_file_path = module_amoebae_run_searches.get_out_db_list_path(outdir)
-        query_file_path = module_amoebae_run_searches.get_out_query_list_path(outdir)
+        db_file_path = run_searches.get_out_db_list_path(outdir)
+        query_file_path = run_searches.get_out_query_list_path(outdir)
 
         # Write query and db list files to output folder.
         with open(db_file_path, 'w') as o1, open(query_file_path, 'w') as o2:
@@ -1067,7 +1068,7 @@ Miscellaneous commands:
 
 
         # Write output bash script for running searches.
-        with open(module_amoebae_run_searches.get_out_bash_path(outdir), 'w') as o:
+        with open(run_searches.get_out_bash_path(outdir), 'w') as o:
             o.write(settings.bash_script_content)
             o.write('run_rev_srch.py' + ' ' + os.path.join(settings.remote_home_dir, os.path.basename(outdir)))
 
@@ -1119,8 +1120,8 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_amoebae_run_searches
-        import module_amoebae_search
+        import run_searches
+        import search
 
         ## Get current time for timestamp.
         ##timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
@@ -1147,7 +1148,7 @@ Miscellaneous commands:
         #os.mkdir(outdir)
 
         ## Define subdirectory path for output, and create directory.
-        #query_subdir = module_amoebae_search.get_query_subdir(outdir)
+        #query_subdir = search.get_query_subdir(outdir)
         #os.mkdir(query_subdir)
 
 
@@ -1155,12 +1156,12 @@ Miscellaneous commands:
         ## results, and write to files in subdirectory of output directory.
         ## Get sequences to use as reverse search queries.
         ##seq_objs = get_seq_from_fasta_db(db_name, accs)
-        #query_file_list = module_amoebae_search.get_rev_queries(args.csv_file,
+        #query_file_list = search.get_rev_queries(args.csv_file,
         #        query_subdir, args.aasubseq, args.nafullseq)
 
         # Get query file path list from file.
         query_file_list =\
-        module_amoebae_run_searches.get_query_list_from_file(module_amoebae_run_searches.get_out_query_list_path(args.rev_srch_dir))
+        run_searches.get_query_list_from_file(run_searches.get_out_query_list_path(args.rev_srch_dir))
 
         ## Get database(s) to search in.
         #db_file_list = None
@@ -1176,7 +1177,7 @@ Miscellaneous commands:
 
         # Get database file path list from file.
         db_file_list =\
-        module_amoebae_run_searches.get_db_list_from_file(module_amoebae_run_searches.get_out_db_list_path(args.rev_srch_dir))
+        run_searches.get_db_list_from_file(run_searches.get_out_db_list_path(args.rev_srch_dir))
 
         ##Check that database was found.
         #assert db_file_list is not None, """Could not find database(s) to use
@@ -1185,11 +1186,11 @@ Miscellaneous commands:
         # For reverse searches, the queries are in a subdirectory of the
         # reverse search directory, not in the query file directory specified
         # in the settings.py file.
-        query_dir = module_amoebae_run_searches.get_query_subdir(args.rev_srch_dir)
+        query_dir = run_searches.get_query_subdir(args.rev_srch_dir)
 
         # Run searches (query_file_list contains full filepaths, so can use
         # query_subdir contents).
-        module_amoebae_search.run_all_searches(query_file_list, db_file_list,
+        search.run_all_searches(query_file_list, db_file_list,
                 args.rev_srch_dir,
                      args.blast_report_evalue_cutoff,
                      args.blast_max_target_seqs,
@@ -1239,8 +1240,8 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_amoebae_search
-        import module_amoebae_run_searches
+        import search
+        import run_searches
 
         # Record start time.
         start_time = time.time()
@@ -1255,18 +1256,18 @@ Miscellaneous commands:
 
         # Get path for query subdirectory.
         #query_dir = settings.querydirpath
-        query_dir = module_amoebae_run_searches.get_query_subdir(args.rev_srch_out)
+        query_dir = run_searches.get_query_subdir(args.rev_srch_out)
 
         # Get query_list_file and db_list_file paths.
         out_query_file =\
-        module_amoebae_search.get_out_query_list_path(args.rev_srch_out)
+        search.get_out_query_list_path(args.rev_srch_out)
         assert os.path.isfile(out_query_file), """Could not find file with
         query list with path: %s""" % out_query_file
 
         assert os.path.isdir(args.rev_srch_out)
 
         out_db_file =\
-        module_amoebae_search.get_out_db_list_path(args.rev_srch_out)
+        search.get_out_db_list_path(args.rev_srch_out)
         assert os.path.isfile(out_db_file), """Could not find file with
         database list with path: %s""" % out_db_file
 
@@ -1278,8 +1279,8 @@ Miscellaneous commands:
                 assert len(i) < 1000
 
         # Get query (will be full paths) and database lists.
-        query_file_list = module_amoebae_search.get_query_list_from_file(out_query_file)
-        db_file_list = module_amoebae_search.get_db_list_from_file(out_db_file)
+        query_file_list = search.get_query_list_from_file(out_query_file)
+        db_file_list = search.get_db_list_from_file(out_db_file)
 
         ## Get redundant hit spreadsheet filepath.
         #redun_hit_csv = None
@@ -1290,7 +1291,7 @@ Miscellaneous commands:
 
         #if args.redun_hit_csv is not None:
         #    # Get redundant hit dict from from input redundant hit csv file.
-        #    redun_hit_dict = module_amoebae_search.get_redun_hit_dict(args.redun_hit_csv)
+        #    redun_hit_dict = search.get_redun_hit_dict(args.redun_hit_csv)
 
         # Loop over files corresponding to results for reverse searches into
         # each reverse search database, in the correct order, extract
@@ -1308,7 +1309,7 @@ Miscellaneous commands:
             print('\nSummarizing results from reverse searches into ' +\
                     os.path.basename(db_file) + ' (database #' + str(db_num) +\
                     ')')
-            final_outfp = module_amoebae_search.write_rev_srch_res_to_csv(rev_srch_timestamp + '-' + str(db_num), args.rev_srch_out,
+            final_outfp = search.write_rev_srch_res_to_csv(rev_srch_timestamp + '-' + str(db_num), args.rev_srch_out,
                     query_file_list, db_file, args.csv_file, args.redun_hit_csv,
                     args.min_evaldiff, timestamp, args.aasubseq,
                     args.max_rev_srchs)
@@ -1316,7 +1317,7 @@ Miscellaneous commands:
         # Prompt manual inspection of spreadsheet.
         print("""\n\nForward search results written/appended to
                 spreadsheet:\n\n\t%s\n""" %\
-                module_amoebae_search.get_csv_with_rev_path(args.csv_file))
+                search.get_csv_with_rev_path(args.csv_file))
 
         # Record end time.
         end_time = time.time()
@@ -1341,7 +1342,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_hmmscan import make_hmm_db
+        from hmmscan import make_hmm_db
 
         # Call the function imported from the module.
         make_hmm_db(args.indirpath)
@@ -1375,7 +1376,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_amoebae_search
+        import search
 
         # Record start time.
         start_time = time.time()
@@ -1392,16 +1393,16 @@ Miscellaneous commands:
         if not args.redun_hits:
             if args.fwd_only:
                 # Write output file with interpetation column appended.
-                module_amoebae_search.write_fwd_srch_interp_csv(args.csv_file,
+                search.write_fwd_srch_interp_csv(args.csv_file,
                         outfp, args.hmmer_cutoff, args.fwd_evalue_cutoff)
             else:
                 # Write output file with interpetation column appended.
-                module_amoebae_search.write_interp_csv(args.csv_file, outfp,
+                search.write_interp_csv(args.csv_file, outfp,
                         args.fwd_evalue_cutoff, args.rev_evalue_cutoff)
 
         else:
             # Write output file with interpetation column appended.
-            module_amoebae_search.write_redun_hit_interp_csv(args.csv_file, outfp)
+            search.write_redun_hit_interp_csv(args.csv_file, outfp)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nInterpretations written/appended to
@@ -1568,7 +1569,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_paralogue_counter import count_paralogues3, add_alignment_column
+        from paralogue_counter import count_paralogues3, add_alignment_column
 
         # Record start time.
         start_time = time.time()
@@ -1664,7 +1665,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        import module_add_to_models
+        import add_to_models
 
         # Parse input files to verify formatting.
         assert args.alignment.endswith('.nex'), """Input alignment must be in
@@ -1694,7 +1695,7 @@ Miscellaneous commands:
         shutil.copyfile(args.type_seqs, type_seqsfp)
 
         # Add corresponding line to spreadsheet.
-        module_add_to_models.update_models_csv(args.model_name,
+        add_to_models.update_models_csv(args.model_name,
                 settings.model_info_csv, alignmentfp, topologyfp, args.subs_model,
                 type_seqsfp, args.taxon)
 
@@ -1765,7 +1766,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_phylo_clas import classify_seq_with_constrained_tree2
+        from phylo_clas import classify_seq_with_constrained_tree2
 
         # Record start time.
         start_time = time.time()
@@ -1836,8 +1837,8 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_phylo_clas import get_phylo_class_csv
-        from module_amoebae_phylo_clas import write_phylo_class_to_csv
+        from phylo_clas import get_phylo_class_csv
+        from phylo_clas import write_phylo_class_to_csv
 
         # Record start time.
         start_time = time.time()
@@ -1911,7 +1912,7 @@ Miscellaneous commands:
             outfp = args.out_csv_path
 
         # Write output file with interpetation column appended.
-        #module_amoebae_search.write_redun_hit_interp_csv(args.csv_file, outfp)
+        #search.write_redun_hit_interp_csv(args.csv_file, outfp)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nInterpretations written/appended to
@@ -1956,7 +1957,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_plot import plot_amoebae_res
+        from plot import plot_amoebae_res
 
         # Record start time.
         start_time = time.time()
@@ -2045,7 +2046,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_prune import manually_select_nodes_and_remove_seqs
+        from prune import manually_select_nodes_and_remove_seqs
 
         # Record start time.
         start_time = time.time()
@@ -2106,8 +2107,8 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        #from module_amoebae_prune import automatically_select_nodes_and_remove_seqs
-        from module_amoebae_prune import automatically_select_nodes_and_remove_seqs_in_dir
+        #from prune import automatically_select_nodes_and_remove_seqs
+        from prune import automatically_select_nodes_and_remove_seqs_in_dir
 
         # Record start time.
         start_time = time.time()
@@ -2158,7 +2159,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_prune import remove_nodes_to_match_ali
+        from prune import remove_nodes_to_match_ali
 
         # Record start time.
         start_time = time.time()
@@ -2196,7 +2197,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_prune import manually_select_nodes_to_constrain
+        from prune import manually_select_nodes_to_constrain
 
         # Record start time.
         start_time = time.time()
@@ -2228,7 +2229,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_phylo_clas import polyt_model_backbone
+        from phylo_clas import polyt_model_backbone
 
         ## Record start time.
         #start_time = time.time()
@@ -2281,7 +2282,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_phylo_clas import get_all_alt_model_backbones
+        from phylo_clas import get_all_alt_model_backbones
 
         # Record start time.
         start_time = time.time()
@@ -2324,7 +2325,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_constrain_mb import constrain_mb_with_tree
+        from constrain_mb import constrain_mb_with_tree
 
         # Record start time.
         start_time = time.time()
@@ -2363,7 +2364,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_select_seqs import optimize_sequence_selection2
+        from select_seqs import optimize_sequence_selection2
 
         # Record start time.
         start_time = time.time()
@@ -2410,7 +2411,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_amoebae_select_positions import optimize_position_selection
+        from select_positions import optimize_position_selection
 
         # Record start time.
         start_time = time.time()
@@ -2465,8 +2466,8 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        #from module_amoebae_select_seqs import optimize_sequence_selection2
-        #from module_amoebae_select_positions import optimize_position_selection
+        #from select_seqs import optimize_sequence_selection2
+        #from select_positions import optimize_position_selection
         from search_alignment_space import search_alignment_space
 
         # Record start time.
@@ -2607,7 +2608,7 @@ Miscellaneous commands:
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
-        from module_afa_to_nex import align_one_fa
+        from afa_to_nex import align_one_fa
 
         # Record start time.
         start_time = time.time()
@@ -2679,7 +2680,7 @@ Miscellaneous commands:
         timestamp = time.strftime("%Y%m%d%H%M%S")
 
         # Import command-specific modules.
-        from module_afa_to_nex import afa_to_nex
+        from afa_to_nex import afa_to_nex
 
         # Do stuff.
         main_out_path = None

@@ -20,10 +20,10 @@ import argparse
 import re
 from Bio import AlignIO, SeqIO
 from Bio.Seq import Seq
-from module_amoebae_nex_to_hmm import nex_to_hmm
+from nex_to_hmm import nex_to_hmm
 import os
 import subprocess
-from module_afa_to_nex import afa_to_nex, delete_extra_mesquite_lines
+from afa_to_nex import afa_to_nex, delete_extra_mesquite_lines
 from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC, Gapped
 from Bio.SeqRecord import SeqRecord
@@ -31,17 +31,17 @@ import time
 import pandas as pd
 import settings
 import glob
-from module_similarity_score import get_similarity_score, get_score_dataframe_from_file
+from similarity_score import get_similarity_score, get_score_dataframe_from_file
 import amoebae_m
 import gffutils
 from amoebae_m import mask_nex2
 from amoebae_m import get_seq_obj_from_srch_res_csv_info,\
 get_hit_range_from_hsp_ranges 
-from module_amoebae_trim_nex import trim_nex
+from trim_nex import trim_nex
 from generate_sankey_diagram import generate_sankey
 from generate_histogram_plot import generate_histogram,\
 generate_double_histogram, generate_bar_chart
-from module_search_scaffolds import check_if_two_hsp_ranges_overlap
+from search_scaffolds import check_if_two_hsp_ranges_overlap
 
 
 def remove_irrelevant_data_from_alignment(ali_plus_top_seq_plus_1):

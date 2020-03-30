@@ -25,7 +25,7 @@ import glob
 from Bio import SeqIO
 from Bio import AlignIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import afa_to_nex
+from afa_to_nex import afa_to_nex
 
 command_line_list = sys.argv
 indp = str(command_line_list[1])

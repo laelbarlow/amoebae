@@ -43,7 +43,7 @@ with warnings.catch_warnings():
 from Bio.Blast import NCBIXML
 
 from amoebae_m import get_seqs_from_fasta_db, get_subseq_from_fasta_db
-from module_search_scaffolds import get_blastp_hit_seq_obj_and_coord, get_tblastn_hit_seq_obj_and_coord
+from search_scaffolds import get_blastp_hit_seq_obj_and_coord, get_tblastn_hit_seq_obj_and_coord
 
 # How to iterate over all hits in a result file?
 

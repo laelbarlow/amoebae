@@ -26,11 +26,11 @@ import re
 import subprocess
 import itertools
 import argparse
-from module_get_fas_from_db_dir import get_seq_obj_from_db_fasta
+from get_fas_from_db_dir import get_seq_obj_from_db_fasta
 import settings
 from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
-import module_nhmmer_scaffolds
+import nhmmer_scaffolds
 
 #command_line_list = sys.argv
 #hmm_path = str(command_line_list[1])
@@ -55,7 +55,7 @@ args = parser.parse_args()
 
 if __name__ == '__main__':
     # Find query file path from db_name.
-    db_path = module_nhmmer_scaffolds.get_db_fasta_filepath(settings.dbdirpath,
+    db_path = nhmmer_scaffolds.get_db_fasta_filepath(settings.dbdirpath,
             args.db_name)
 
 
@@ -64,16 +64,16 @@ if __name__ == '__main__':
     if args.no_search: 
         pass
     else:
-        module_nhmmer_scaffolds.run_nhmmer_search(args.hmm_path, db_path, nhmmer_outfilepath)
+        nhmmer_scaffolds.run_nhmmer_search(args.hmm_path, db_path, nhmmer_outfilepath)
 
     # Parse the nhmmer output file.
-    hit_align_objs = module_nhmmer_scaffolds.parse_nhmmer_out(nhmmer_outfilepath)
+    hit_align_objs = nhmmer_scaffolds.parse_nhmmer_out(nhmmer_outfilepath)
 
     # Define path for output sequences.
     seq_filepath = nhmmer_outfilepath.rsplit('.', 1)[0] + '_seqs.fa'
 
     # Get concatenated sequence for aligning hits that may correspond to the
-    # same gene.  module_nhmmer_scaffolds.get_nhmmer_hit_gene_region_seqs(hit_align_objs,
+    # same gene.  nhmmer_scaffolds.get_nhmmer_hit_gene_region_seqs(hit_align_objs,
             seq_filepath)
 
 

@@ -32,7 +32,7 @@ from Bio import SeqIO
 #from Bio import AlignIO
 #from Bio.Alphabet import IUPAC, Gapped
 
-from module_amoebae_get_datatype import get_dbtype
+from get_datatype import get_dbtype
 
 
 # Define functions to be used in amoebae.

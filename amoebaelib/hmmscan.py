@@ -33,8 +33,8 @@ import pandas as pd
 #from Bio.Alphabet import IUPAC, Gapped
 
 #from get_datatype import get_dbtype
-#from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
-from module_amoebae_nex_to_hmm import nex_to_hmm
+#from paralogue_counter import get_seq_obj_from_srch_res_csv_info
+from nex_to_hmm import nex_to_hmm
 
 #import settings
 

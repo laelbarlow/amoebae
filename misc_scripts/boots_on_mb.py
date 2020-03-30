@@ -41,9 +41,9 @@ import glob
 import re
 from ete3 import Tree
 from settings import raxmlname
-from module_amoebae_name_replace import write_newick_tree_with_uncoded_names
+from name_replace import write_newick_tree_with_uncoded_names
 
-from module_boots_on_mb import reformat_combined_supports, combine_supports,\
+from boots_on_mb import reformat_combined_supports, combine_supports,\
 mbcontre_to_newick_w_probs, contre_to_newick 
 
 

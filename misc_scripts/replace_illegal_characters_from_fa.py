@@ -20,9 +20,9 @@ import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 import shutil
 import time
-from module_afa_to_nex import afa_to_nex, nex_to_afa
+from afa_to_nex import afa_to_nex, nex_to_afa
 from afa_to_fa import afa_to_fa
-from module_afa_to_nex import align_one_fa
+from afa_to_nex import align_one_fa
 from subprocess import call
 from parse_mod_num import update_mod_num_numeric
 

@@ -22,7 +22,7 @@ import sys
 import os
 from Bio import AlignIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import delete_extra_mesquite_lines
+from afa_to_nex import delete_extra_mesquite_lines
 
 ## Increase recursion limit for python. Potentially dangerous, but necessary for
 ## large alignments, like for Giantin and lava lamp proteins!

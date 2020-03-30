@@ -22,7 +22,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 import subprocess
 from Bio import SeqIO
-from module_afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines
+from afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines
 
 command_line_list = sys.argv
 infp1 = str(command_line_list[1])

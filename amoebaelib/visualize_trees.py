@@ -27,8 +27,8 @@ import os
 import subprocess
 import glob
 import re
-# from module_afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines
-from module_amoebae_name_replace import write_newick_tree_with_uncoded_names
+# from afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines
+from name_replace import write_newick_tree_with_uncoded_names
 from ete3 import Tree, NodeStyle, TreeStyle, TextFace
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
@@ -42,7 +42,7 @@ from reportlab.lib.pagesizes import letter
 import time
 import matplotlib.colors as mc
 import colorsys
-from module_boots_on_mb import mbcontre_to_newick_w_probs
+from boots_on_mb import mbcontre_to_newick_w_probs
 import matplotlib
 from matplotlib.pyplot import imread
 import matplotlib.pyplot as plt

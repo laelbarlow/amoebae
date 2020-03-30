@@ -31,7 +31,7 @@ import glob
 import subprocess
 import argparse
 from Bio import SeqIO
-from module_afa_to_nex import nex_to_afa, afa_to_nex
+from afa_to_nex import nex_to_afa, afa_to_nex
 import shutil
 
 

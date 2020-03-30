@@ -25,8 +25,8 @@ sys.path.append(os.path.dirname(sys.path[0]))
 #import os
 #from Bio import AlignIO
 #from Bio.Alphabet import IUPAC, Gapped
-#from module_afa_to_nex import delete_extra_mesquite_lines
-from module_amoebae_trim_nex import trim_nex
+#from afa_to_nex import delete_extra_mesquite_lines
+from trim_nex import trim_nex
 
 # Increase recursion limit for python. Potentially dangerous, but necessary for
 # large alignments, like for Giantin and lava lamp proteins!

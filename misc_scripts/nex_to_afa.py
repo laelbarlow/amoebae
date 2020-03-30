@@ -21,7 +21,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 #from Bio import AlignIO
 #from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import nex_to_afa, delete_extra_mesquite_lines
+from afa_to_nex import nex_to_afa, delete_extra_mesquite_lines
 #from afa_to_fa import afa_to_fa
 
 command_line_list = sys.argv

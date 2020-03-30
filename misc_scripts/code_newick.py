@@ -19,7 +19,7 @@ table.
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
-from module_amoebae_name_replace import write_newick_tree_with_coded_names
+from name_replace import write_newick_tree_with_coded_names
 
 command_line_list = sys.argv
 infile = str(command_line_list[1])

@@ -35,7 +35,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 import argparse
 import settings
-from module_paralogue_counter import count_paralogues2
+from paralogue_counter import count_paralogues2
 
 
 # Set up argument parsing.

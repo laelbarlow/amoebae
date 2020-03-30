@@ -23,7 +23,7 @@ import os
 import re
 import subprocess
 from ete3 import Tree
-from module_afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines, nex_to_phylip, nex_to_mbnex
+from afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines, nex_to_phylip, nex_to_mbnex
 from string import Template
 
 def generate_code_name(number):

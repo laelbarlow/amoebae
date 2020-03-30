@@ -27,10 +27,10 @@ sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 sys.path.append(os.path.dirname(sys.path[0]))
 import argparse
 import settings
-#from module_get_fas_from_db_dir import get_fas_from_db_dir
-from module_get_fas_from_db_dir import get_seq_obj_from_db_fasta
+#from get_fas_from_db_dir import get_fas_from_db_dir
+from get_fas_from_db_dir import get_seq_obj_from_db_fasta
 from Bio import AlignIO
-import module_afa_to_nex
+import afa_to_nex
 
 # Set up argument parsing.
 parser = argparse.ArgumentParser(
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     prot_name = input('\nProtein name: ')
 
     # Remove any additional mesquite blocks.
-    module_afa_to_nex.delete_extra_mesquite_lines(args.infp1)
+    afa_to_nex.delete_extra_mesquite_lines(args.infp1)
 
     # Get necessary sequences and write to file.
     write_pos_seqs(args.infp1, dbdirpath, outfp, prot_name)

@@ -26,7 +26,7 @@ import glob
 import re
 from ete3 import Tree
 from settings import raxmlname
-from module_amoebae_name_replace import write_newick_tree_with_uncoded_names
+from name_replace import write_newick_tree_with_uncoded_names
 
 
 def reformat_combined_supports(tree_string):

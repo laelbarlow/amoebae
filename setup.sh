@@ -33,6 +33,13 @@ fi
 
 
 #######################################################
+# Make scripts executable.
+chmod a+x amoebae
+chmod a+x misc_scripts/*.py
+chmod a+x misc_scripts/*.sh
+
+
+#######################################################
 # Check whether Docker is installed or not.
 printf "\nDetermining whether Docker needs to be installed or not.\n\n"
 

@@ -36,15 +36,15 @@ sys.path.append(os.path.dirname(sys.path[0]))
 
 # Import functions and classes from AMOEBAE modules.
 import settings
-from module_amoebae_phylo_clas import ModelInfoFromCSV
+from phylo_clas import ModelInfoFromCSV
 from search_alignment_space import get_type_seqs_dict, get_nodes_of_interest,\
      get_corresponding_node
-from module_afa_to_nex import nex_to_afa, afa_to_nex
+from afa_to_nex import nex_to_afa, afa_to_nex
 from amoebae_m import mask_nex2
-from module_amoebae_trim_nex import trim_nex
-from module_amoebae_name_replace import codenames_nex
-from module_amoebae_constrain_mb import constrain_mb_with_tree
-from module_amoebae_name_replace import write_newick_tree_with_coded_names
+from trim_nex import trim_nex
+from name_replace import codenames_nex
+from constrain_mb import constrain_mb_with_tree
+from name_replace import write_newick_tree_with_coded_names
 
 # Import modules from python3 packages.
 from ete3 import Tree

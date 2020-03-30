@@ -22,7 +22,7 @@ import os
 from Bio import AlignIO
 from Bio import SeqIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import delete_extra_mesquite_lines, afa_to_nex, nex_to_afa, nex_to_phylip
+from afa_to_nex import delete_extra_mesquite_lines, afa_to_nex, nex_to_afa, nex_to_phylip
 import numpy as np
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -34,10 +34,10 @@ import datetime
 import glob
 from ete3 import Tree
 import re
-from module_amoebae_trim_nex import trim_nex
-from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
+from trim_nex import trim_nex
+from paralogue_counter import get_seq_obj_from_srch_res_csv_info
 import pandas as pd
-import module_amoebae_column_header_lists
+import column_header_lists
 
 def get_taxon_number_dict(alignment):
     """Take a nexus alignment file and return a dictionary with taxon names as

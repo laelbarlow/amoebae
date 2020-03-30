@@ -23,6 +23,9 @@ import glob
 import pprint
 import subprocess
 
+# Don't run this script without backing up files and customizing code.
+assert 2 != 2
+
 # Identify necessary name changes.
 filepathdict = {}
 namedict = {}
@@ -61,7 +64,7 @@ print('\n')
 for oldpath in filepathdict.keys():
     command =  ['git', 'mv', oldpath, filepathdict[oldpath]]
     print(' '.join(command))
-    #subprocess.call(command)
+    subprocess.call(command)
 
 
 # Find instances within files that need to change (this is independent of what
@@ -92,11 +95,11 @@ for f in relevant_files:
                 #if namedict[key] in i and not key in i:
                 #    print(i.strip())
             # Write (updated) line to temporary file.
-            #o.write(newi)
+            o.write(newi)
     # Remove original file.
-    #os.remove(f)
+    os.remove(f)
     # Rename temporary file with original filename.
-    #os.rename(f2, f)
+    os.rename(f2, f)
 print('\nNumber of lines changed:')
 print(num_lines_changed)
 

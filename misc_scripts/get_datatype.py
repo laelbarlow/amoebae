@@ -21,7 +21,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 import re
 from Bio import AlignIO
-from module_amoebae_get_datatype import get_dbtype
+from get_datatype import get_dbtype
 
 
 command_line_list = sys.argv

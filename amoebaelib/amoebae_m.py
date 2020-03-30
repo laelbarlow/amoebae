@@ -38,9 +38,9 @@ from Bio.Alphabet import IUPAC, Gapped
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-from module_amoebae_get_datatype import get_dbtype
-from module_afa_to_nex import delete_extra_mesquite_lines 
-#from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info, get_hit_range_from_hsp_ranges
+from get_datatype import get_dbtype
+from afa_to_nex import delete_extra_mesquite_lines 
+#from paralogue_counter import get_seq_obj_from_srch_res_csv_info, get_hit_range_from_hsp_ranges
 #from module_amoebae import get_seq_obj_from_srch_res_csv_info,\
 #get_hit_range_from_hsp_ranges 
 

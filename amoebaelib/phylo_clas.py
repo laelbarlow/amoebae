@@ -23,7 +23,7 @@ import shutil
 from Bio import AlignIO
 from Bio import SeqIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import delete_extra_mesquite_lines, afa_to_nex, nex_to_afa, nex_to_phylip
+from afa_to_nex import delete_extra_mesquite_lines, afa_to_nex, nex_to_afa, nex_to_phylip
 import numpy as np
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -35,17 +35,17 @@ import datetime
 import glob
 from ete3 import Tree
 import re
-from module_amoebae_trim_nex import trim_nex
-from module_paralogue_counter import get_seq_obj_from_srch_res_csv_info
+from trim_nex import trim_nex
+from paralogue_counter import get_seq_obj_from_srch_res_csv_info
 import pandas as pd
-import module_amoebae_column_header_lists
+import column_header_lists
 from amoebae_m import mask_nex2
-from module_paralogue_counter import add_seq_to_alignment3,\
+from paralogue_counter import add_seq_to_alignment3,\
 modify_seq_descr_for_tree
-from module_amoebae_name_replace import write_afa_with_code_names,\
+from name_replace import write_afa_with_code_names,\
 codenames_nex, write_newick_tree_with_coded_names
 from get_alt_topos import get_all_alt_topologies, get_polytomy_for_treenode
-from module_amoebae_constrain_mb import constrain_mb_with_tree
+from constrain_mb import constrain_mb_with_tree
 
 
 
@@ -127,7 +127,7 @@ def code_names_in_ali(indp, inalifp, outalifp, outtablefp):
     #subprocess.call(['name_replace.pl', '-f', inalifp, outalifp,\
     #outtablefp])
 
-    # Call function from module_amoebae_name_replace.py.
+    # Call function from name_replace.py.
     write_afa_with_code_names(inalifp, outalifp, outtablefp)
 
 
@@ -1774,7 +1774,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
     
     # Get same list of header titles that the sum_fwd_srch command makes (for
     # parsing).
-    fwd_column_label_list = module_amoebae_column_header_lists.fwd_column_label_list 
+    fwd_column_label_list = column_header_lists.fwd_column_label_list 
 
     # Get data from input file.
     print('\tReading input csv file into a pandas dataframe.')
@@ -1793,7 +1793,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
 
     if not place:
         # Define a list of new column headers to be appended.
-        new_column_label_list = module_amoebae_column_header_lists.phylo_class_column_label_list
+        new_column_label_list = column_header_lists.phylo_class_column_label_list
 
         # Initiate new dataframe with columns to be appended/joined to spreadsheet.
         #num_rows = len(list(df.index))
@@ -1921,7 +1921,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
     elif place:
         # Define a list of new column headers to be appended.
         new_column_label_list =\
-        module_amoebae_column_header_lists.phylo_class_place_column_label_list
+        column_header_lists.phylo_class_place_column_label_list
 
         # Initiate new dataframe with columns to be appended/joined to spreadsheet.
         #num_rows = len(list(df.index))

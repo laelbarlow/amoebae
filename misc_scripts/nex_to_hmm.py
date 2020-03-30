@@ -22,8 +22,8 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 #import subprocess
-#from module_afa_to_nex import nex_to_afa, delete_extra_mesquite_lines
-from module_amoebae_nex_to_hmm import nex_to_hmm 
+#from afa_to_nex import nex_to_afa, delete_extra_mesquite_lines
+from nex_to_hmm import nex_to_hmm 
 
 command_line_list = sys.argv
 infp1 = str(command_line_list[1])

@@ -25,7 +25,7 @@ sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 sys.path.append(os.path.dirname(sys.path[0]))
 import argparse
 import settings
-import module_amoebae_run_searches
+import run_searches
 
 parser = argparse.ArgumentParser(
     description='''Perform searches with original queries into subject
@@ -64,12 +64,12 @@ db_dir = settings.dbdirpath
 
 # Get query list from file.
 query_file_list =\
-module_amoebae_run_searches.get_query_list_from_file(module_amoebae_run_searches.get_out_query_list_path(args.fwd_srch_dir))
+run_searches.get_query_list_from_file(run_searches.get_out_query_list_path(args.fwd_srch_dir))
 
 # Get database list from file.
 db_file_list =\
-module_amoebae_run_searches.get_db_list_from_file(module_amoebae_run_searches.get_out_db_list_path(args.fwd_srch_dir))
+run_searches.get_db_list_from_file(run_searches.get_out_db_list_path(args.fwd_srch_dir))
 
 # Run searches.
-module_amoebae_run_searches.run_all_searches(query_file_list, db_file_list,
+run_searches.run_all_searches(query_file_list, db_file_list,
         args.fwd_srch_dir)

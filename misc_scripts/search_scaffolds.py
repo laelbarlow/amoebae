@@ -25,7 +25,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 import settings
-import module_search_scaffolds
+import search_scaffolds
 
 
 command_line_list = sys.argv
@@ -36,5 +36,5 @@ max_gap = settings.max_gap
 
 
 if __name__ == '__main__':
-    module_search_scaffolds.search_scaffolds(query_file, subject_db, max_gap)
-    #module_search_scaffolds.parse_tblastn(query_file, subject_db, max_gap) # but pass tblastn output and sequence file
+    search_scaffolds.search_scaffolds(query_file, subject_db, max_gap)
+    #search_scaffolds.parse_tblastn(query_file, subject_db, max_gap) # but pass tblastn output and sequence file

@@ -27,7 +27,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 from Bio import AlignIO
 from Bio.Alphabet import IUPAC, Gapped
-from module_afa_to_nex import delete_extra_mesquite_lines
+from afa_to_nex import delete_extra_mesquite_lines
 import numpy as np
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord

@@ -35,8 +35,8 @@ sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 import subprocess
 import glob
 import settings
-# from module_afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines
-from module_amoebae_name_replace import write_newick_tree_with_uncoded_names
+# from afa_to_nex import nex_to_afa, afa_to_nex, delete_extra_mesquite_lines
+from name_replace import write_newick_tree_with_uncoded_names
 
 command_line_list = sys.argv
 indp = str(command_line_list[1])
