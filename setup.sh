@@ -128,6 +128,13 @@ docker build -t amoebaedockerimage:1.0 .
 
 
 #######################################################
+# Run test code using pytest. This runs all the tests defined in files in the
+# tests subdirectory.
+#printf "\nTesting AMOEBAE source code using PyTest..." &&\
+#pytest
+
+
+#######################################################
 # Report how much time it took for this script to run.
 echo ""
 ELAPSED="Setting up AMOEBAE took the following amount of time: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"
