@@ -454,7 +454,7 @@ class TestConstInterp(unittest.TestCase):
     #    self.assertEqual('(A,((B,((C,D),(I,(J,(K,L))))),(E,(F,(G,H)))));', output_topo.replace(' ', ''))
 
 
-    def test_multiple_constraint_trees(self):
+    def test_two_constraint_trees(self):
         # Define a string constituting an alignment in phylip format.
         alignment_string = '\n'.join([' 8 10',
                                       'A  LLLLLLLLLL',
@@ -467,54 +467,54 @@ class TestConstInterp(unittest.TestCase):
                                       'H  FFFVVVVVVV',
                                       ])
 
-        # No constraints.
-        constraint_tree_string = "(A, B, C, D, E, F, G, H);"
-        output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
-                                                             constraint_tree_string)
-        print('\n\n#######################\nNo constraints\n')
-        print('Contents of input constraint tree file:')
-        print(constraint_tree_string)
-        print('Resulting topology:')
-        t1 = Tree(output_topo_1)
-        print(t1)
+        ## No constraints.
+        #constraint_tree_string = "(A, B, C, D, E, F, G, H);"
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string)
+        #print('\n\n#######################\nNo constraints\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
 
-        # First subtree constrained.
+        ## First subtree constrained.
         constraint_tree_string_1 = "(A,C,(B,D));"
-        output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
-                                                             constraint_tree_string_1)
-        print('\n\n#######################\nFirst subtree constrained\n')
-        print('Contents of input constraint tree file:')
-        print(constraint_tree_string_1)
-        print('Resulting topology:')
-        t1 = Tree(output_topo_1)
-        print(t1)
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string_1)
+        #print('\n\n#######################\nFirst subtree constrained\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string_1)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
 
-        # Second subtree constrained.
+        ## Second subtree constrained.
         constraint_tree_string_2 = "(E,G,(F,H));"
-        output_topo_2 = run_simple_constrained_iqtree_analysis(alignment_string,
-                                                             constraint_tree_string_2)
-        print('\n\n#######################\nSecond subtree constrained\n')
-        print('Contents of input constraint tree file:')
-        print(constraint_tree_string_2)
-        print('Resulting topology:')
-        t1 = Tree(output_topo_2)
-        print(t1)
+        #output_topo_2 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string_2)
+        #print('\n\n#######################\nSecond subtree constrained\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string_2)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_2)
+        #print(t1)
 
         # Both constraints.
         constraint_tree_string = constraint_tree_string_1 + '\n' + constraint_tree_string_2
         output_topo = run_simple_constrained_iqtree_analysis(alignment_string,
                                                              constraint_tree_string)
-        print('\n\n#######################\nBoth subtrees constrained\n')
-        print('Contents of input constraint tree file:')
-        print(constraint_tree_string)
-        print('Resulting topology:')
-        t1 = Tree(output_topo)
-        print(t1)
+        #print('\n\n#######################\nBoth subtrees constrained\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo)
+        #print(t1)
 
-        # Print tree to illustrate expected results with both constraints.
-        print('\nExpected topology when both subtrees are constrained:')
-        t2 = Tree("(A,((C,(B,D)),(E,(G,(F,H)))));")
-        print(t2)
+        ## Print tree to illustrate expected results with both constraints.
+        #print('\nExpected topology when both subtrees are constrained:')
+        #t2 = Tree("(A,((C,(B,D)),(E,(G,(F,H)))));")
+        #print(t2)
 
 
         # Check that output topology for clade 1 is the same as the constraint topology.
@@ -528,6 +528,246 @@ class TestConstInterp(unittest.TestCase):
                 '(F,H)' in output_topo.replace(' ', '') \
                 or '(E,G)' in output_topo.replace(' ', '')
                 )
+
+
+    def test_multiple_constraint_trees(self):
+        # Define a string constituting an alignment in phylip format.
+        alignment_string = '\n'.join([' 12 15',
+                                      'A  AAAAAAAAAAAAAAA',
+                                      'B  AAAAAAAAAAWWWWW',
+                                      'C  AAAAAAAWWWWWWWW',
+                                      'D  AAAAAAAWWWWWWWW',
+                                      'E  FDDDDDDDDDDDDDD',
+                                      'F  FFDDDDDDDDDDDDD',
+                                      'G  FFFDDDDDDDDDDDD',
+                                      'H  FFFDDDDDDDDDDDD',
+                                      'I  KEEEEEEEEEEEEEE',
+                                      'J  KKEEEEEEEEEEEEE',
+                                      'K  KKKEEEEEEEEEEEE',
+                                      'L  KKKEEEEEEEEEEEE',
+                                      ])
+
+        ## No constraints.
+        #constraint_tree_string = "(A, B, C, D, E, F, G, H, I, J, K, L);"
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string)
+        #print('\n\n#######################\nNo constraints\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
+
+        ## First subtree constrained.
+        constraint_tree_string_1 = "(A,C,(B,D));"
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string_1)
+        #print('\n\n#######################\nFirst subtree constrained\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string_1)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
+
+        ## Second subtree constrained.
+        constraint_tree_string_2 = "(E,G,(F,H));"
+        #output_topo_2 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string_2)
+        #print('\n\n#######################\nSecond subtree constrained\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string_2)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_2)
+        #print(t1)
+
+        ## Third subtree constrained.
+        constraint_tree_string_3 = "(I,K,(J,L));"
+        #output_topo_3 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string_3)
+        #print('\n\n#######################\nThird subtree constrained\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string_3)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_3)
+        #print(t1)
+
+        # All three constraints.
+        constraint_tree_string = constraint_tree_string_1 + '\n' \
+                + constraint_tree_string_2 + '\n' \
+                + constraint_tree_string_3
+        output_topo = run_simple_constrained_iqtree_analysis(alignment_string,
+                                                             constraint_tree_string)
+        #print('\n\n#######################\nBoth subtrees constrained\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo)
+        #print(t1)
+
+
+        # Check that output topology for clade 1 is the same as the constraint topology.
+        self.assertTrue(\
+                '(B,D)' in output_topo.replace(' ', '') \
+                or '(A,C)' in output_topo.replace(' ', '') #\
+                )
+
+        # Check that output topology for clade 2 is the same as the constraint topology.
+        self.assertTrue(\
+                '(F,H)' in output_topo.replace(' ', '') \
+                or '(E,G)' in output_topo.replace(' ', '')
+                )
+
+        # Check that output topology for clade 3 is the same as the constraint topology.
+        self.assertTrue(\
+                '(J,L)' in output_topo.replace(' ', '') \
+                or '(I,K)' in output_topo.replace(' ', '')
+                )
+
+
+    def test_possibility_of_different_rooting_of_constrained_subtrees(self):
+        # Define a string constituting an alignment in phylip format.
+        alignment_string = '\n'.join([' 12 15',
+                                      'A  AAAAAAAAAAAAAAA',
+                                      'B  WAAAAAAAAAAAAAA',
+                                      'C  WWAAAAAAAAAAAAA',
+                                      'D  WWWAAAAAAAAAAAA',
+                                      'E  WWWWAAAAAAAAAAA',
+                                      'F  WWWWWAAAAAAAAAA',
+                                      'G  WWWWWWAAAAAAAAA',
+                                      'H  WWWWWWWAAAAAAAA',
+                                      'I  WWWWWWWWAAAAAAA',
+                                      'J  WWWWWWWWWAAAAAA',
+                                      'K  WWWWWWWWWWAAAAA',
+                                      'L  WWWWWWWWWWWAAAA',
+                                      ])
+
+        ## No constraints.
+        #constraint_tree_string = "(A, B, C, D, E, F, G, H, I, J, K, L);"
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string)
+        #print('\n\n#######################\nNo constraints\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
+
+        ## Multiple small constraint trees.
+        ##constraint_tree_string = ';\n'.join(["(
+        #constraint_tree_string = "((L,J),H,(I,K));"
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                       constraint_tree_string)
+        #print('\n\n#######################\nMultiple small constraint trees\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
+
+
+        ## Define a string constituting an alignment in phylip format.
+        #alignment_string = '\n'.join([' 12 15',
+        #                              'A  AAAAAAAAAAAAAAA',
+        #                              'B  WAAAAAAAAAAAAAA',
+        #                              'C  WWAAAAAAAAAAAAA',
+        #                              'D  WWWAAAAAAAAAAAA',
+        #                              'E  WWWWAAAAAAAAAAA',
+        #                              'F  WWWWWAAAAAAAAAA',
+        #                              'G  WWWWWWAAAAAAAAA',
+        #                              'L  WWWWWWWAAAAAAAA',
+        #                              'K  WWWWWWWWAAAAAAA',
+        #                              'J  WWWWWWWWWAAAAAA',
+        #                              'I  WWWWWWWWWWAAAAA',
+        #                              'H  WWWWWWWWWWWAAAA',
+        #                              ])
+
+        ## Multiple small constraint trees.
+        ##constraint_tree_string = ';\n'.join(["(
+        #constraint_tree_string = "((L,J),H,(I,K));"
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string)
+        #print('\n\n#######################\nMultiple small constraint trees\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
+
+
+        self.assertTrue(True)
+
+
+    def test_alternate_rooting_of_constrained_subtrees(self):
+        # Define a string constituting an alignment in phylip format.
+        alignment_string = '\n'.join([' 10 15',
+                                      'A         AAAAAAAAAAAAAAA',
+                                      'GolgiQb   WAAAAAAAAAAAAAA',
+                                      'Endo1Qb   WWAAAAAAAAAAAAA',
+                                      'Endo2Qb   WWWAAAAAAAAAAAA',
+                                      'PMQb      WWWWAAAAAAAAAAA',
+                                      'PMQc      WWWWWAAAAAAAAAA',
+                                      'Endo2Qc   WWWWWWAAAAAAAAA',
+                                      'Endo1Qc   WWWWWWWAAAAAAAA',
+                                      'GolgiQc   WWWWWWWWAAAAAAA',
+                                      'ERQc      WWWWWWWWWAAAAAA',
+                                      ])
+
+
+
+        # No constraints.
+        constraint_tree_string = "(A,GolgiQb,Endo1Qb,Endo2Qb,PMQb,ERQc,GolgiQc,Endo1Qc,Endo2Qc,PMQc);"
+        output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+                                                             constraint_tree_string)
+        print('\n\n#######################\nNo constraints\n')
+        print('Contents of input constraint tree file:')
+        print(constraint_tree_string)
+        print('Resulting topology:')
+        t1 = Tree(output_topo_1)
+        print(t1)
+
+        ## Multiple small constraint trees.
+        ##constraint_tree_string = ';\n'.join(["(
+        #constraint_tree_string = "((L,J),H,(I,K));"
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                       constraint_tree_string)
+        #print('\n\n#######################\nMultiple small constraint trees\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
+
+
+        ## Define a string constituting an alignment in phylip format.
+        #alignment_string = '\n'.join([' 12 15',
+        #                              'A  AAAAAAAAAAAAAAA',
+        #                              'B  WAAAAAAAAAAAAAA',
+        #                              'C  WWAAAAAAAAAAAAA',
+        #                              'D  WWWAAAAAAAAAAAA',
+        #                              'E  WWWWAAAAAAAAAAA',
+        #                              'F  WWWWWAAAAAAAAAA',
+        #                              'G  WWWWWWAAAAAAAAA',
+        #                              'L  WWWWWWWAAAAAAAA',
+        #                              'K  WWWWWWWWAAAAAAA',
+        #                              'J  WWWWWWWWWAAAAAA',
+        #                              'I  WWWWWWWWWWAAAAA',
+        #                              'H  WWWWWWWWWWWAAAA',
+        #                              ])
+
+        ## Multiple small constraint trees.
+        ##constraint_tree_string = ';\n'.join(["(
+        #constraint_tree_string = "((L,J),H,(I,K));"
+        #output_topo_1 = run_simple_constrained_iqtree_analysis(alignment_string,
+        #                                                     constraint_tree_string)
+        #print('\n\n#######################\nMultiple small constraint trees\n')
+        #print('Contents of input constraint tree file:')
+        #print(constraint_tree_string)
+        #print('Resulting topology:')
+        #t1 = Tree(output_topo_1)
+        #print(t1)
+
+
+        self.assertTrue(True)
 
 
 if __name__ == '__main__':

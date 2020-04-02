@@ -124,14 +124,17 @@ fi
 #sudo chown -R 1000:100 ${PWD}/notebooks &&\
 # Build a docker image using the Dockerfile file in the amoebae-lite repo.
 printf "\nBuilding Docker image from Dockerfile..." &&\
-docker build -t amoebaedockerimage:1.0 .
+DI=amoebaedockerimage:1.0
+docker build -t $DI .
 
 
 #######################################################
 # Run test code using pytest. This runs all the tests defined in files in the
 # tests subdirectory.
 #printf "\nTesting AMOEBAE source code using PyTest..." &&\
-#pytest
+#docker run --rm -it \
+#    -v ${PWD}:/opt/amoebae \
+#    $DI /bin/bash -c "pytest"
 
 
 #######################################################
