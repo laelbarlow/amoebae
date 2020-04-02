@@ -805,8 +805,8 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
                 odf_simple.at[i, j] = '-'
 
         # Temp.
-        #print(odf)
-        #print(odf_simple)
+        print(odf)
+        print(odf_simple)
 
         # Iterate over rows in input dataframe and add relevant information to
         # additional dataframes.
@@ -978,6 +978,12 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         row_labels_simple = list(odf_simple.index)
         generate_heatmap_figure(column_labels_simple, row_labels_simple, data_labels_simple, data_count_simple,
             data_heat_simple, outpdfpath_simple)
+
+        # Temp.
+        print(column_labels)
+        print(row_labels)
+        print(column_labels_simple)
+        print(row_labels_simple)
 
 
         if file_num == 1:
