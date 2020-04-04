@@ -148,6 +148,9 @@ def generate_heatmap_figure(column_labels, row_labels, data_labels, data_count,
     ax.set_xticklabels(column_labels, minor=False, fontsize=10,
             fontweight='regular', rotation='vertical')
     ax.set_yticklabels(row_labels, fontsize=10, fontweight='regular', minor=False)
+    ## Temp.
+    #plt.show() # Labels show up here.
+    #assert 2!=2
     
     #if not args.confidence_heat_map:
     # Add text labels to heatmap (number of identified orthologues listed in input spreadsheet).
@@ -168,34 +171,25 @@ def generate_heatmap_figure(column_labels, row_labels, data_labels, data_count,
                      color=font_color,
                      weight = 'bold'
                      )
-    
-    # Turn off all the major ticks (tick marks).
-    ax = plt.gca()
-    
-    for t in ax.xaxis.get_major_ticks():
-        #t.tick1On = False
-        #t.tick2On = False
-        t.set_visible(False)
-    for t in ax.yaxis.get_major_ticks():
-        #t.tick1On = False
-        #t.tick2On = False
-        t.set_visible(False)
-        
-    # Turn off all the minor ticks (tick marks).
-    ax = plt.gca()
-    
-    for t in ax.xaxis.get_minor_ticks():
-        #t.tick1On = False
-        #t.tick2On = False
-        t.set_visible(False)
-    for t in ax.yaxis.get_minor_ticks():
-        #t.tick1On = False
-        #t.tick2On = False
-        t.set_visible(False)
-    
+
+    # Turn off all the tick marks on the x axis.
+    plt.tick_params(
+    axis='x',          # changes apply to the x-axis
+    which='both',      # both major and minor ticks are affected
+    bottom=False,      # ticks along the bottom edge are off
+    top=False,         # ticks along the top edge are off
+    labelbottom=False, # labels along the bottom edge are off
+    labeltop=True) 
+    # Turn off all the tick marks on the y axis.
+    plt.tick_params(
+    axis='y',          # changes apply to the x-axis
+    which='both',      # both major and minor ticks are affected
+    left=False,        # ticks along the left edge are off
+    right=False,       # ticks along the left edge are off
+    labelleft=True,    # labels along the left edge are on
+    labelright=False)   # labels along the right edge are on
     
     # Show plot.
-    #plt.show()
     plt.savefig(outpdfpath, bbox_inches='tight')
 
 
