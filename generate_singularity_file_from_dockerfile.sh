@@ -1,1 +1,1 @@
-spython recipe Dockerfile >> Singularity.sif
+spython recipe Dockerfile >> Singularity.recipe
