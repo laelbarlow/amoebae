@@ -5,26 +5,30 @@
 
 ## Quickstart
 
-On **MacOS** install Docker Desktop
-(https://www.docker.com/products/docker-desktop). On **Ubuntu** install Docker
-using the install_docker_on_ubuntu.sh script (your computer will need to be
-rebooted after installation).
-
-Open a terminal window and enter the following commands. This works on MacOS
-and Ubuntu.
+On **MacOS** or **Ubuntu**, open a terminal window and enter the commands
+described below. 
 
 Clone this git repository:
 
     git clone https://github.com/laelbarlow/amoebae.git
 
-Run the setup script (this will take about 1 hour to complete):
+Run the setup script (this will take about 1 hour to complete). Also, this will
+prompt you to install singularity if you are running **Linux**. On **MacOS**
+this will install Vagrant for running Linux virtual machines, if necessary:
 
     cd amoebae
-    bash setup.sh
+    /bin/bash setup.sh
 
-Now start up the virtual environment, and open one of the tutorial jupyter notebooks:
+Now start up the virtual environment, and open one of the tutorial jupyter
+notebooks using the appropriate script for your operating system.
 
-    bash run_env.sh
+On **MacOS**:
+
+    /bin/bash singularity_jupyter_on_mac.sh
+
+On **Linux**:
+
+    /bin/bash singularity_jupyter.sh
 
 
 <!---
