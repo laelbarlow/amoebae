@@ -21,10 +21,13 @@ TEXT=$"#!/bin/bash
 # Import singularity.
 module load singularity/3.5
 
+echo \$PATH
+
 # Run amoebae commands to check whether all the subprocess calls and import statements will work.
 printf \"\n\n\nChecking dependencies of amoebae:\n\"
-echo $PATH
-singularity exec -B /home -B /projects -B /scratch -B /localscratch singularity.sif amoebae check_depend
+singularity exec -B /home -B /project -B /scratch -B /localscratch singularity.sif echo \$PATH
+
+singularity exec -B /home -B /project -B /scratch -B /localscratch singularity.sif amoebae check_depend
 
 printf \"\n\n\nChecking all import statements for amoebae:\n\"
 singularity exec singularity.sif amoebae check_imports
