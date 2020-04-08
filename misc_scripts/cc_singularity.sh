@@ -13,7 +13,7 @@ timestamp() {
 TEXT=$"#!/bin/bash
 #SBATCH --ntasks=1              # number of MPI processes (mb should be faster with 16, but for some reason when 16 is specified the job times out without starting on cedar).
 #SBATCH --mem-per-cpu=16000M   
-#SBATCH --time=0:30:00
+#SBATCH --time=0:10:00
 #SBATCH --account=def-dacks
 #SBATCH --mail-user=lael@ualberta.ca
 #SBATCH --mail-type=END
