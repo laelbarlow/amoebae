@@ -27,7 +27,7 @@ echo \$PATH
 printf \"\n\n\nChecking dependencies of amoebae:\n\"
 singularity exec -B /home -B /project -B /scratch -B /localscratch singularity.sif echo \$PATH
 
-singularity exec -B /home -B /project -B /scratch -B /localscratch singularity.sif amoebae check_depend
+singularity exec -B /home -B /project -B /scratch -B /localscratch singularity.sif /home/lael/projects/def-dacks/lael/amoebae check_depend
 
 printf \"\n\n\nChecking all import statements for amoebae:\n\"
 singularity exec singularity.sif amoebae check_imports
