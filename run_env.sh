@@ -110,4 +110,4 @@ docker run --rm -p 8888:8888 \
 
 fi
 
-
+# jupyter notebook --ip=0.0.0.0 --port=8888 --notebook-dir=~/amoebae/notebooks --allow-root --no-browser

@@ -22,4 +22,5 @@ settings.py
 *.gls
 *.ist
 *help_output.tex
+*.sif
 

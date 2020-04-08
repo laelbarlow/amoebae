@@ -40,7 +40,8 @@ export PATH=/opt/conda/bin:$PATH
 
     # Install miniconda
     cd /opt
-    curl -o /opt/miniconda.sh -O  https://repo.continuum.io/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh
+    curl -o /opt/miniconda.sh -O \
+    https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh &&\
     chmod +x /opt/miniconda.sh
     /opt/miniconda.sh -b -p /opt/conda
     rm /opt/miniconda.sh
@@ -207,24 +208,9 @@ conda install -c conda-forge matplotlib
 #cd /home/amoebae_user
 
 %environment
-export PATH="PATH:/opt/conda/bin"
-export PATH="$PATH:/home/vagrant/ncbi-blast-2.10.0+/bin"
-export PATH="$PATH:/home/vagrant/iqtree-1.6.12-Linux/bin"
-export PATH="$PATH:/home/vagrant/"
+export PATH="$PATH:/opt/conda/bin"
+export PATH="$PATH:/opt/ncbi-blast-2.10.0+/bin"
+export PATH="$PATH:/opt/iqtree-1.6.12-Linux/bin"
+export PATH="$PATH:/opt/"
 export PATH="$PATH:/home/vagrant/amoebae"
 
-#%runscript
-##cd /home/amoebae_user
-#exec /bin/bash "$@"
-#
-#%startscript
-##cd /home/amoebae_user
-#exec /bin/bash "$@"
-
-#%runscript
-#cd /home/vagrant/
-#exec /usr/bin/tini -- /bin/bash "$@"
-#
-#%startscript
-#cd /home/vagrant/
-#exec /usr/bin/tini -- /bin/bash "$@"
