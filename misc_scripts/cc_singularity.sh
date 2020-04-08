@@ -23,7 +23,8 @@ module load singularity/3.5
 
 # Run amoebae commands to check whether all the subprocess calls and import statements will work.
 printf \"\n\n\nChecking dependencies of amoebae:\n\"
-singularity exec singularity.sif amoebae check_depend
+echo $PATH
+singularity exec -B /home -B /projects -B /scratch -B /localscratch singularity.sif amoebae check_depend
 
 printf \"\n\n\nChecking all import statements for amoebae:\n\"
 singularity exec singularity.sif amoebae check_imports
