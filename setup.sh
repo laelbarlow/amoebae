@@ -71,6 +71,15 @@ if [ "$(uname)" == "Darwin" ]; then
         # Install Vagrant on MacOS.
         brew cask install vagrant && \
         brew cask install vagrant-manager
+    fi
+
+
+    # Look for an existing singularity .sif file.
+    if [ -f "singularity.sif" ]; then
+        printf "\tSingularity .sif file found.\n\n"
+        
+    else
+        printf "\tSingularity .sif file not found.\n\n"
 
         # Proceed with building a .sif file.
         printf "\tBuilding singularity container image file.\n\n"
@@ -85,9 +94,17 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     if test "$(command -v singularity)"; then
         printf "\tSingularity is installed.\n\n"
 
-        # Proceed with building a .sif file.
-        printf "\tBuilding singularity container image file.\n\n"
-        /bin/bash singularity_build.sh
+        # Look for an existing singularity .sif file.
+        if [ -f "singularity.sif" ]; then
+            printf "\tSingularity .sif file found.\n\n"
+            
+        else
+            printf "\tSingularity .sif file not found.\n\n"
+
+            # Proceed with building a .sif file.
+            printf "\tBuilding singularity container image file.\n\n"
+            /bin/bash singularity_build.sh
+        fi
         
     else
         printf "\tSingularity is not installed.\n\n"
