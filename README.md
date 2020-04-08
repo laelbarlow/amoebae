@@ -5,7 +5,7 @@
 
 ## Quickstart
 
-On **MacOS** or **Ubuntu**, open a terminal window and enter the commands
+On **MacOS** or **Linux**, open a terminal window and enter the commands
 described below. 
 
 Clone this git repository:
