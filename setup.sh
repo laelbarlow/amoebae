@@ -81,9 +81,13 @@ if [ "$(uname)" == "Darwin" ]; then
     else
         printf "\tSingularity .sif file not found.\n\n"
 
-        # Proceed with building a .sif file.
-        printf "\tBuilding singularity container image file.\n\n"
-        /bin/bash singularity_build_on_mac.sh
+        ## Proceed with building a .sif file.
+        #printf "\tBuilding singularity container image file.\n\n"
+        #/bin/bash singularity_build_on_mac.sh
+
+        # Proceed with pulling a .sif file.
+        printf "\tDownloading singularity container image file.\n\n"
+        /bin/bash singularity_pull_on_mac.sh
     fi
 
 
@@ -101,9 +105,13 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         else
             printf "\tSingularity .sif file not found.\n\n"
 
+            ## Proceed with building a .sif file.
+            #printf "\tBuilding singularity container image file.\n\n"
+            #/bin/bash singularity_build.sh
+
             # Proceed with building a .sif file.
-            printf "\tBuilding singularity container image file.\n\n"
-            /bin/bash singularity_build.sh
+            printf "\tDownloading singularity container image file.\n\n"
+            /bin/bash singularity_pull.sh
         fi
         
     else
