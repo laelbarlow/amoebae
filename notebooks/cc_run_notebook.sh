@@ -41,7 +41,7 @@ singularity exec -B /home -B /project -B /scratch -B /localscratch -B ${PWD} sin
 
 # Define a path to an output script.
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
-OUTPATH=cc_singularity_$TIMESTAMP.sh
+OUTPATH=${NBFILE}_$TIMESTAMP.sh
 
 # Write script text to output path.
 printf "$TEXT" > $OUTPATH 
