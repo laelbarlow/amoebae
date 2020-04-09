@@ -33,7 +33,7 @@ cd ..
 module load singularity/3.5
 
 # Run the notebook.
-singularity exec -B /home -B /project -B /scratch -B /localscratch -B ${PWD} singularity.sif runipy -o notebooks/$NBFILE
+singularity exec -B /home -B /project -B /scratch -B /localscratch -B "$(dirname "$PWD")" singularity.sif runipy -o notebooks/$NBFILE
 
 
 #***
