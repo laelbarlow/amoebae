@@ -120,7 +120,7 @@ sys.path.append(os.path.join(sys.path[0],'misc_scripts'))
     #subprocess.call(['chmod', 'a+x', output_path])
     #subprocess.call(['./' + os.path.basename(output_path)], cwd=sys.path[0])
     #subprocess.call(['bash', os.path.basename(output_path)], cwd=sys.path[0])
-    subprocess.call(['/bin/bash', os.path.basename(output_path)], cwd=sys.path[0])
+    subprocess.call(['python3', os.path.basename(output_path)], cwd=sys.path[0])
     print('\nFinished.')
 
     # Remove output file.

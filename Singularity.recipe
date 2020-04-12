@@ -116,9 +116,12 @@ conda install -y -c anaconda biopython
 echo '***********************************' && \
 echo '*******Installing ncbi-blast+ *****' && \
 echo '***********************************' && \
-wget "ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.10.0+-x64-linux.tar.gz" &&\
-tar zxvpf ncbi-blast-2.10.0+-x64-linux.tar.gz && \
-rm ncbi-blast-2.10.0+-x64-linux.tar.gz
+#wget "ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.10.0+-x64-linux.tar.gz" &&\
+#tar zxvpf ncbi-blast-2.10.0+-x64-linux.tar.gz && \
+#rm ncbi-blast-2.10.0+-x64-linux.tar.gz
+wget "ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.9.0/ncbi-blast-2.9.0+-x64-linux.tar.gz" &&\
+tar zxvpf ncbi-blast-2.9.0+-x64-linux.tar.gz && \
+rm ncbi-blast-2.9.0+-x64-linux.tar.gz
 
 # Install HMMer3 for similarity searching.
 conda install -y -c bioconda hmmer
@@ -143,10 +146,10 @@ mv muscle3.8.31_i86linux64 muscle
 # Install additional python packages.
 # *** This will update the most recent versions of these packages, which may be
 # a reproducibility issue.
-apt-get -y install python3-pip
-pip3 install --upgrade pip
-pip3 install gffutils
-pip3 install PyPDF2
+#apt-get -y install python3-pip
+pip install --upgrade pip
+pip install gffutils
+pip install PyPDF2
 pip install reportlab
 
 # Install exonerate for exon prediction (at least better than TBLASTN).
@@ -164,11 +167,6 @@ conda install -y -c bioconda exonerate
 # Install jupyter.
 conda install jupyter
 
-# Install runipy for running Jupyter notebooks as scripts from command line.
-# *** trouble installing...
-#pip3 install runipy
-conda install -c conda-forge runipy
-
 # Install and enable relevant jupyter notebook extensions.
 # This includes the TableOfContents (toc2) extension for navigating large jupyter
 # notebooks: https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html
@@ -178,16 +176,16 @@ jupyter contrib nbextension install --user
 jupyter nbextension enable toc2/main
 #jupyter nbextension enable spellchecker/main
 
-# Install latex (necessary?).
-#apt-get install -y texlive-xetex texlive-fonts-recommended texlive-generic-recommended
-#apt-get install -y texlive-bibtex-extra
+# Install latex.
+apt-get install -y texlive-xetex texlive-fonts-recommended texlive-generic-recommended
+apt-get install -y texlive-bibtex-extra
 apt-get install -y pandoc
 
 # Install program for displaying directory contents in a tree structure.
 apt-get install tree
 
 # Install python package for parsing bibtex files.
-pip3 install bibtexparser
+pip install bibtexparser
 
 # Upgrade jupyter.
 #conda update jupyter
@@ -209,7 +207,8 @@ conda install -c conda-forge matplotlib
 
 %environment
 export PATH="$PATH:/opt/conda/bin"
-export PATH="$PATH:/opt/ncbi-blast-2.10.0+/bin"
+#export PATH="$PATH:/opt/ncbi-blast-2.10.0+/bin"
+export PATH="$PATH:/opt/ncbi-blast-2.9.0+/bin"
 export PATH="$PATH:/opt/iqtree-1.6.12-Linux/bin"
 export PATH="$PATH:/opt/"
 export PATH="$PATH:/home/vagrant/amoebae"

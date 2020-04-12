@@ -4,5 +4,5 @@
 # This simply runs a singularity command, and it must be run on a Linux
 # machine.
 
-singularity pull singularity.sif library://laelbarlow/default/amoebae:0.0.0
+singularity pull singularity.sif library://laelbarlow/default/amoebae:latest
 
