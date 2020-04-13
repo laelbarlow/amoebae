@@ -177,7 +177,7 @@ jupyter nbextension enable toc2/main
 #jupyter nbextension enable spellchecker/main
 
 # Install latex.
-apt-get install -y texlive-xetex texlive-fonts-recommended texlive-generic-recommended
+apt-get install -y texlive-xetex texlive-fonts-recommended texlive-generic-recommended texlive-plain-generic
 apt-get install -y texlive-bibtex-extra
 apt-get install -y pandoc
 
