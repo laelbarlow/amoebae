@@ -137,10 +137,19 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
 
 
 The core functionality is to run sequence similarity searches with multiple
-    algorithms, multiple queries, and multiple databases simultaneously and
-    facilitate efficient and highly customizable implementation of
-    reciprocal-best-hit search strategies. The output includes detailed
+    algorithms, multiple queries, and multiple databases simultaneously in
+    parallel and to facilitate efficient and highly customizable implementation
+    of reciprocal-best-hit search strategies. The output includes detailed
     summaries of results in the form of a spreadsheet and plots.
+    
+    A particular advantage of AMOEBAE over other tools is the functionality for
+    parsing results of TBLASTN (searching in nucleotide sequences with peptide
+    sequence queries) search results. This allows rapid identification of
+    High-scoring Segment Pair (HSP) clusters at separate gene loci (identified
+    according to user-defined criteria), automatic checking of those loci
+    against information in genome annotation files, and systematic use of
+    Exonerate \citep{slater2005} where possible for obtaining better exon
+    predictions.  
 
 \subsection{User support}
 
@@ -155,10 +164,9 @@ If you have general questions regarding AMOEBAE, please email the author at
 This document provides an overview of AMOEBAE and describes the functionality
 of the various commands/scripts. For a tutorial which includes a working
 example of a similarity search analysis run using AMOEBAE, see the Jupyter
-Notebook: amoebae/notebooks/similarity\_search\_tutorial.ipynb. For code
+Notebook: amoebae/notebooks/similarity\_search\_tutorial\_2.ipynb. For code
 documentation, please see the html file(s), which can be opened with your web
 browser: \url{amoebae/doc/code_documentation/html/index.html}.
-
 
 
 \subsection{How to cite AMOEBAE}
