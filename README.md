@@ -12,9 +12,9 @@ Clone this git repository:
 
     git clone https://github.com/laelbarlow/amoebae.git
 
-Run the setup script (this will take about 1 hour to complete). Also, this will
+Run the setup script (this will take about 5 minutes to complete). Also, this may
 prompt you to install singularity if you are running **Linux**. On **MacOS**
-this will install Vagrant for running Linux virtual machines, if necessary:
+this will install Vagrant for managing Linux virtual machines, if necessary:
 
     cd amoebae
     /bin/bash setup.sh
