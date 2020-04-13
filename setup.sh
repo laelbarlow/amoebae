@@ -87,7 +87,7 @@ if [ "$(uname)" == "Darwin" ]; then
 
         # Proceed with pulling a .sif file.
         printf "\tDownloading singularity container image file.\n\n"
-        /bin/bash singularity_pull_on_mac.sh
+        /bin/bash singularity_pull.sh
     fi
 
 
@@ -136,6 +136,7 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     printf "\nDetected Windows."
     # Do something under 64 bits Windows NT platform
     echo "AMOEBAE has not been tested on Windows, please contact the developer."
+
     exit 1
 fi
 
