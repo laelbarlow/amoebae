@@ -183,6 +183,19 @@ AMOEBAE, since AMOEBAE would not work without these (see
 
 \subsection{Acknowledgments}
 
+AMOEBAE was initially developed at the Dacks Laboratory at the University of
+Alberta, and was supported by National Sciences and Engineering Council of
+Canada (NSERC) Discovery grants RES0021028, RES0043758, and RES0046091 awarded
+to Joel B. Dacks, as well as an NSERC Postgraduate Scholarship-Doctoral awarded
+to Lael D. Barlow.
+
+We acknowledge the support of the Natural Sciences and Engineering Research Council of Canada (NSERC).
+
+Cette recherche a été financée par le Conseil de recherches en sciences naturelles et en génie du Canada (CRSNG).
+
+Also, help with testing AMOEBAE has been kindly provided by Raegan T. Larson,
+Shweta V. Pipalya, Kira More, and Kristína Záhonová.
+
 \subsection{License}
 \label{license_section}
 
@@ -236,7 +249,7 @@ These are the main depencencies of AMOEBAE:
 \end{itemize}
 
 
-\subsection{Setting up an environment for AMOEBAE using Docker}
+\subsection{Setting up an environment for AMOEBAE using Singularity}
 \label{setup_section}
 
 %Note that currently ETE3, a dependency of AMOEBAE does not work properly with
@@ -291,43 +304,7 @@ remote server will soon be added as well.
 %\end{lstlisting}
 
 
-\item Make a copy of the settings.py.example file as settings.py. This will be
-    customized later. 
-
-\begin{lstlisting}
->>> cd amoebae
->>> cp settings.py.example settings.py
-\end{lstlisting}
-
-
-\item Download and install the appropriate version of Docker from this website:
-    \url{https://www.docker.com/products/docker-desktop}.
-
-
-\item Add the amoebae directory to the list of directories that can be shared
-    with Docker containers using the Docker graphical user interface by
-    selecting Preferences > Resources > File sharing.
-
-
-\item Customize the CPUs, memory, etc. that you wish to make available to
-    docker containers using the Docker graphical user interface by
-    selecting Preferences > Resources > Advanced.
-
-
-\item Build a Docker image (virtual environment) using the build\_env.sh
-    script. This uses the continuumio/anaconda3 image from DockerHub
-    (\sloppy\url{https://hub.docker.com/r/continuumio/anaconda3}), and extends it by
-    downloading and installing several software packages that AMOEBAE depends
-    on. The details of this process are defined in the Dockerfile file in
-    the amoebae repository. This step will take approximately 40 minutes to
-    complete.
-
-\begin{lstlisting}
->>> bash build_env.sh
-\end{lstlisting}
-
-
-\item Run the Docker using the run\_env.sh script. This generates a Docker
+\item Run the AMOEBAE code in a ... using the run\_env.sh script. This generates a Docker
     container from the Docker image built in the preceding step. 
 
 \begin{lstlisting}

@@ -22,12 +22,6 @@ this will install Vagrant for running Linux virtual machines, if necessary:
 Now start up the virtual environment, and open one of the tutorial jupyter
 notebooks using the appropriate script for your operating system.
 
-On **MacOS**:
-
-    /bin/bash singularity_jupyter_on_mac.sh
-
-On **Linux**:
-
     /bin/bash singularity_jupyter.sh
 
 
