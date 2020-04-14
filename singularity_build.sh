@@ -6,11 +6,7 @@
 # singularity.recipe file. Also, this requires the use of the sudo command, so
 # you won't be able to run this on linux without being an administrator.
 
-
-if [ "$(uname)" == "Darwin" ]; then
-    printf "\nDetected MacOS.\n"
-    # Do something under Mac OS X platform
-
+singularity_build_in_vm () {
     # Spin up a Vagrant VM.
     vagrant up && \
     # Copy recipe file from the host to the VM.
@@ -24,14 +20,33 @@ if [ "$(uname)" == "Darwin" ]; then
     vagrant halt
     # Erase VM.
     #vagrant destroy
+}
+
+if [ "$(uname)" == "Darwin" ]; then
+    printf "\nDetected MacOS.\n"
+    # Do something under Mac OS X platform
+
+    # Run singularity build command from within a virtual machine.
+    singularity_build_in_vm
 
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     printf "\nDetected Linux.\n"
     # Do something under GNU/Linux platform
 
-    # Use singularity directly.
-    sudo singularity build singularity.sif singularity.recipe
+    # Check whether singularity is installed, and if not then run singularity
+    # in a virtual machine using vagrant.
+    if test "$(command -v singularity)"; then
+        printf "\nSingularity is installed.\n\n"
 
+        # Use singularity directly.
+        sudo singularity build singularity.sif singularity.recipe
+        
+    else
+        printf "\nSingularity is not installed.\n"
+        printf "\nRunning singularity in a virtual machine.\n\n"
+
+        # Run singularity build command from within a virtual machine.
+        singularity_build_in_vm
 
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     printf "\nDetected Windows.\n"

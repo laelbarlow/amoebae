@@ -51,42 +51,45 @@ if [ "$(uname)" == "Darwin" ]; then
     printf "\nDetermining whether Vagrant needs to be installed or not.\n\n"
 
     if test "$(command -v vagrant)"; then
-        printf "\tVagrant is installed.\n\n"
+        printf "\nVagrant is installed.\n\n"
         
     else
-        printf "\tVagrant is not installed.\n\n"
+        printf "\nVagrant is not installed.\n\n"
 
         # Install Virtualbox (and Homebrew, if necessary).
         printf "\nInstalling dependencies of Vagrant."
-        if test "$(command -v virtualbox)"; then
-        if test "$(command -v brew)"; then
-        /bin/bash -c "$(curl -fsSL \
-        https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-        fi
+            if test "$(command -v virtualbox)"; then
+                if test "$(command -v brew)"; then
+                /bin/bash -c "$(curl -fsSL \
+                https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" \
+                && printf "\nDone installing homebrew."
+                fi
 
-        brew cask install virtualbox
+            brew cask install virtualbox \
+            && printf "\nDone installing virtualbox."
 
-        fi
+            fi
 
         # Install Vagrant on MacOS.
         brew cask install vagrant && \
-        brew cask install vagrant-manager
-    fi
+        brew cask install vagrant-manager && \
+        printf "\nDone installing vagrant.\n"
 
+    fi
 
     # Look for an existing singularity .sif file.
     if [ -f "singularity.sif" ]; then
-        printf "\tSingularity .sif file found.\n\n"
+        printf "\nSingularity .sif file found.\n\n"
         
     else
-        printf "\tSingularity .sif file not found.\n\n"
+        printf "\nSingularity .sif file not found.\n\n"
 
         ## Proceed with building a .sif file.
         #printf "\tBuilding singularity container image file.\n\n"
         #/bin/bash singularity_build_on_mac.sh
 
         # Proceed with pulling a .sif file.
-        printf "\tDownloading singularity container image file.\n\n"
+        printf "\nDownloading singularity container image file.\n\n"
         /bin/bash singularity_pull.sh
     fi
 
@@ -96,34 +99,82 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # Do something under GNU/Linux platform
 
     if test "$(command -v singularity)"; then
-        printf "\tSingularity is installed.\n\n"
+        printf "\nSingularity is installed.\n\n"
 
         # Look for an existing singularity .sif file.
         if [ -f "singularity.sif" ]; then
-            printf "\tSingularity .sif file found.\n\n"
+            printf "\nSingularity .sif file found.\n\n"
             
         else
-            printf "\tSingularity .sif file not found.\n\n"
+            printf "\nSingularity .sif file not found.\n\n"
 
             ## Proceed with building a .sif file.
             #printf "\tBuilding singularity container image file.\n\n"
             #/bin/bash singularity_build.sh
 
             # Proceed with building a .sif file.
-            printf "\tDownloading singularity container image file.\n\n"
+            printf "\nDownloading singularity container image file.\n\n"
             /bin/bash singularity_pull.sh
         fi
         
     else
-        printf "\tSingularity is not installed.\n\n"
+        printf "\nSingularity is not installed.\n\n"
 
+        # Ask user if they want to install virtualbox and vagrant for running
+        # a vm with singularity in it (this option will work well for desktops
+        # and laptops).
         printf "\nProcedures for installing singularity on linux vary. If
         singularity is not installed on your system, consult the singularity
         documentation, install singularity, and re-run this script. This will
-        not work on clusters where you do not have administrative privileges.
+        not work on clusters where you do not have administrative privileges,
+        so have your system administrator install singularity if necessary.
 
-            https://sylabs.io/guides/3.0/user-guide/installation.html"
-        exit 1
+            https://sylabs.io/guides/3.0/user-guide/installation.html
+
+        Alternatively, if you are working with linux on a personal computer
+        (laptop or desktop machine) then you may find it easier to run a
+        virtual machine with singularity and dependencies already installed,
+        this requires VirtualBox and Vagrant, which can be installed
+        automatically.
+        "
+        # Prompt user.
+        while true; do
+            read -p "Do you wish to run singularity using VirtualBox and Vagrant?" yn
+            case $yn in
+                [Yy]* ) break;;
+                [Nn]* ) exit;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
+
+        # Optionally install virtualbox and vagrant, similarly to how it is
+        # done on MacOS.
+        # This code is run if user selects yes when prompted above.
+
+        # Check whether Vagrant is installed or not.
+        printf "\nDetermining whether Vagrant needs to be installed or not.\n\n"
+
+        if test "$(command -v vagrant)"; then
+            printf "\nVagrant is installed.\n\n"
+            
+        else
+            printf "\nVagrant is not installed.\n\n"
+
+            # Install Virtualbox.
+            printf "\nInstalling dependencies of Vagrant."
+                if test "$(command -v virtualbox)"; then
+
+                sudo apt-get install virtualbox \
+                && printf "\nDone installing virtualbox."
+
+                fi
+
+            # Install Vagrant on Linux.
+            sudo apt-get install vagrant && \
+            printf "\nDone installing vagrant."
+
+        fi
+
     fi
 
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
