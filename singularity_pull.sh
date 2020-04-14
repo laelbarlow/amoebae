@@ -28,7 +28,7 @@ if [ "$(uname)" == "Darwin" ]; then
     singularity_pull_in_vm
 
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    printf "\nDetected Linux."
+    printf "\nDetected Linux.\n"
     # Do something under GNU/Linux platform
 
     # Check whether singularity is installed, and if not then run singularity
@@ -45,6 +45,8 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 
         # Run singularity pull command from within a virtual machine.
         singularity_pull_in_vm
+
+    fi
 
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     printf "\nDetected Windows."

@@ -113,7 +113,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
             #/bin/bash singularity_build.sh
 
             # Proceed with building a .sif file.
-            printf "\nDownloading singularity container image file.\n\n"
+            printf "\nDownloading singularity container image file using the singularity_pull.sh script.\n\n"
             /bin/bash singularity_pull.sh
         fi
         
