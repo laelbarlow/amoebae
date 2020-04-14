@@ -28,10 +28,6 @@ TEXT=$"#!/bin/bash
 #SBATCH --mail-user=lael@ualberta.ca # Update this too!
 #SBATCH --mail-type=END
 
-## Change directories into the amoebae directory (parent of current notebooks
-## directory).
-#cd ..
-
 # Import singularity.
 module load singularity/3.5
 
@@ -40,8 +36,13 @@ module load singularity/3.5
 export PATH=\"\$PATH:\$( dirname \$PWD)\"
 
 # Run the notebook.
-singularity exec -B /home -B /project -B /scratch -B /localscratch -B \$( dirname \$PWD) \
-    ../singularity.sif jupyter nbconvert \
+singularity exec \
+        -B /home \
+        -B /project \
+        -B /scratch \
+        -B /localscratch \
+        -B \$( dirname \$PWD):/opt/amoebae \
+        ../singularity.sif jupyter nbconvert \
         --to notebook \
         --allow-errors \
         --inplace \

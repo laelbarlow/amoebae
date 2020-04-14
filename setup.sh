@@ -112,7 +112,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
             #printf "\tBuilding singularity container image file.\n\n"
             #/bin/bash singularity_build.sh
 
-            # Proceed with building a .sif file.
+            # Proceed with downloading a .sif file.
             printf "\nDownloading singularity container image file using the singularity_pull.sh script.\n\n"
             /bin/bash singularity_pull.sh
         fi
@@ -139,7 +139,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         "
         # Prompt user.
         while true; do
-            read -p "Do you wish to run singularity using VirtualBox and Vagrant?" yn
+            read -p "Do you wish to run singularity using VirtualBox and Vagrant? (yes or no)" yn
             case $yn in
                 [Yy]* ) break;;
                 [Nn]* ) exit;;
@@ -174,6 +174,10 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
             printf "\nDone installing vagrant."
 
         fi
+
+        # Proceed with downloading a .sif file.
+        printf "\nDownloading singularity container image file using the singularity_pull.sh script.\n\n"
+        /bin/bash singularity_pull.sh
 
     fi
 

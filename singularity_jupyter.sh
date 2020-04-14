@@ -10,7 +10,9 @@ singularity_jupyter_in_vm () {
   # Copy singularity container from the host to the VM.
   vagrant ssh -c 'cp amoebae/singularity.sif singularity.sif' && \
   # Run the command to start Jupyter.
-  vagrant ssh -c 'singularity exec singularity.sif \
+  vagrant ssh -c 'singularity exec \
+                       -B /home/vagrant/amoebae:/opt/amoebae \
+                       singularity.sif \
                        jupyter notebook \
                        --ip=0.0.0.0 \
                        --port=8888 \
@@ -43,12 +45,15 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         printf "\nSingularity is installed.\n\n"
 
         # Run jupyter using the singularity container.
-        singularity exec singularity.sif \
-            jupyter notebook --ip=0.0.0.0 \
-                             --port=8888 \
-                             --notebook-dir=notebooks \
-                             --allow-root \
-                             --no-browser
+        singularity exec \
+            -B $PWD:/opt/amoebae \
+            singularity.sif \
+            jupyter notebook \
+            --ip=0.0.0.0 \
+            --port=8888 \
+            --notebook-dir=notebooks \
+            --allow-root \
+            --no-browser
         
     else
         printf "\nSingularity is not installed.\n"
