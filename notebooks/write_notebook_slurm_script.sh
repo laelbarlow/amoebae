@@ -37,7 +37,7 @@ module load singularity/3.5
 
 # Add current directory (the main amoebae directory) to the \$PATH so that the
 # amoebae script can be accessed.
-export PATH=\"\$PATH:\$\( dirname \$PWD\)\"
+export PATH=\"\$PATH:\$( dirname \$PWD)\"
 
 # Run the notebook.
 singularity exec -B /home -B /project -B /scratch -B /localscratch -B \$\( dirname \$PWD\) \
