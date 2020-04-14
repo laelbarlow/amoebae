@@ -45,6 +45,7 @@ singularity exec -B /home -B /project -B /scratch -B /localscratch -B \$( dirnam
         --to notebook \
         --allow-errors \
         --inplace \
+        --clear-output \
         --execute \
         --ExecutePreprocessor.timeout=None \
         $NBFILE
