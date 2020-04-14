@@ -40,7 +40,7 @@ module load singularity/3.5
 export PATH=\"\$PATH:\$( dirname \$PWD)\"
 
 # Run the notebook.
-singularity exec -B /home -B /project -B /scratch -B /localscratch -B \$\( dirname \$PWD\) \
+singularity exec -B /home -B /project -B /scratch -B /localscratch -B \$( dirname \$PWD) \
     ../singularity.sif jupyter nbconvert \
         --to notebook \
         --allow-errors \
