@@ -4,6 +4,9 @@
 # scheduler. The output script must then be submitted via the sbatch command to
 # run the notebook.
 
+# Usage:
+#     write_notebook_slurm_script.sh <notebook file name (.ipynb)>
+
 # Define the filename (including extension) of the jupyter notebook to be run.
 NBFILE="$1"
 
@@ -20,9 +23,9 @@ timestamp() {
 TEXT=$"#!/bin/bash
 #SBATCH --ntasks=1              
 #SBATCH --mem-per-cpu=16000M   
-#SBATCH --time=0:10:00
-#SBATCH --account=def-dacks
-#SBATCH --mail-user=lael@ualberta.ca
+#SBATCH --time=0:10:00 # More time will be required!
+#SBATCH --account=def-dacks # Update this!
+#SBATCH --mail-user=lael@ualberta.ca # Update this too!
 #SBATCH --mail-type=END
 
 # Change directories into the amoebae directory (parent of current notebooks
@@ -33,7 +36,7 @@ cd ..
 module load singularity/3.5
 
 # Run the notebook.
-singularity exec -B /home -B /project -B /scratch -B /localscratch -B "$(dirname "$PWD")" \
+singularity exec -B /home -B /project -B /scratch -B /localscratch -B \$PWD \
     singularity.sif jupyter nbconvert \
         --to notebook \
         --allow-errors \
