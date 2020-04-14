@@ -22,32 +22,32 @@ timestamp() {
 
 TEXT=$"#!/bin/bash
 #SBATCH --ntasks=1              
-#SBATCH --mem-per-cpu=16000M   
-#SBATCH --time=0:10:00 # More time will be required!
+#SBATCH --mem-per-cpu=8000M   
+#SBATCH --time=0:05:00 # More time will be required!
 #SBATCH --account=def-dacks # Update this!
 #SBATCH --mail-user=lael@ualberta.ca # Update this too!
 #SBATCH --mail-type=END
 
-# Change directories into the amoebae directory (parent of current notebooks
-# directory).
-cd ..
+## Change directories into the amoebae directory (parent of current notebooks
+## directory).
+#cd ..
 
 # Import singularity.
 module load singularity/3.5
 
-# Add current directory (the main amoebae directory) to
-# the \$PATH so that the amoebae script can be accessed.
-export PATH="\$PATH:\$PWD"
+# Add current directory (the main amoebae directory) to the \$PATH so that the
+# amoebae script can be accessed.
+export PATH=\"\$PATH:\$\( dirname \$PWD\)\"
 
 # Run the notebook.
-singularity exec -B /home -B /project -B /scratch -B /localscratch -B \$PWD \
-    singularity.sif jupyter nbconvert \
+singularity exec -B /home -B /project -B /scratch -B /localscratch -B \$\( dirname \$PWD\) \
+    ../singularity.sif jupyter nbconvert \
         --to notebook \
         --allow-errors \
         --inplace \
         --execute \
         --ExecutePreprocessor.timeout=None \
-        notebooks/$NBFILE
+        $NBFILE
 
 
 #***
