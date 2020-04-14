@@ -48,6 +48,8 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         # Run singularity build command from within a virtual machine.
         singularity_build_in_vm
 
+    fi
+
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     printf "\nDetected Windows.\n"
     # Do something under 32 bits Windows NT platform
