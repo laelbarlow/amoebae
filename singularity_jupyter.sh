@@ -75,3 +75,4 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     echo "AMOEBAE has not been tested on Windows, please contact the developer."
     exit 1
 fi
+

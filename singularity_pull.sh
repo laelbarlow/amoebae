@@ -4,6 +4,9 @@
 # If this is run on MacOS, then it spins up a Vagrant virtual machine running
 # Ubuntu (because singularity only runs on Linux).
 
+# Start timing this script.
+SECONDS=0
+
 singularity_pull_in_vm () {
   # Spin up a Vagrant VM.
   vagrant up && \
@@ -60,3 +63,10 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     echo "AMOEBAE has not been tested on Windows, please contact the developer."
     exit 1
 fi
+
+#######################################################
+# Report how much time it took for this script to run.
+echo ""
+ELAPSED="Downloading a Singularity container for AMOEBAE took the following amount of time: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"
+echo $ELAPSED
+

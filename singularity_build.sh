@@ -6,6 +6,9 @@
 # singularity.recipe file. Also, this requires the use of the sudo command, so
 # you won't be able to run this on linux without being an administrator.
 
+# Start timing this script.
+SECONDS=0
+
 singularity_build_in_vm () {
     # Spin up a Vagrant VM.
     vagrant up && \
@@ -62,3 +65,10 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     echo "AMOEBAE has not been tested on Windows, please contact the developer."
     exit 1
 fi
+
+#######################################################
+# Report how much time it took for this script to run.
+echo ""
+ELAPSED="Building a Singularity container for AMOEBAE took the following amount of time: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"
+echo $ELAPSED
+
