@@ -167,11 +167,13 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
                 sudo apt-get install virtualbox \
                 && printf "\nDone installing virtualbox."
 
-                fi
+            fi
 
             # Install Vagrant on Linux.
             sudo apt-get install vagrant && \
+            vagrant plugin install vagrant-disksize && \
             printf "\nDone installing vagrant."
+
 
         fi
 
