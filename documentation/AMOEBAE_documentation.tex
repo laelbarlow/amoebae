@@ -108,7 +108,7 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
     open-source (see \autoref*{license_section}) and available on GitHub
     (\url{https://github.com/laelbarlow/amoebae}). 
 
-\subsection{Why AMOEBAE?}
+\subsection{Why use AMOEBAE?}
 
     Webservices such as those provided by NCBI
     (\url{https://blast.ncbi.nlm.nih.gov/Blast.cgi}) \citep{camacho2009}
@@ -256,18 +256,21 @@ These are the main depencencies of AMOEBAE:
 %Python 3.7, so Python 3.6 will be installed in the virtual environment.
 
 Follow the steps below to set up AMOEBAE on your personal computer. This setup
-process will take approximately 1 hour to complete, however, most of the
-process is automated, so only about 20 minutes or less is required for the
-steps that require manual input.  Instructions for setting up AMOBEAE on a
-remote server will soon be added as well.
+process should take approximately 20 minutes to complete. Instructions for
+setting up AMOBEAE on a remote server will soon be added as well.
 
 \begin{enumerate}
 
-\item Ensure that Git is installed on your computer This program may already be
-    installed by default on your operating system. If you have a newer version
-        of macOS it may prompt you to install Git. Documentation for Git is
-        available here: \url{https://git-scm.com/doc}. You can check which
-        version you have by running the command below.
+\item Ensure that Git is installed on your computer If you do not already have
+    git installed, then your computer will prompt you with instructions for how
+        to install it when you type git into the command line. If you have a
+        newer version of macOS it may prompt you to install developer tools,
+        which may take up a considerable amount of storage space. Documentation
+        for Git is available here: \url{https://git-scm.com/doc}. You can check
+        which version you have (or whether it is installed at all) by running
+        the command below. Please note: Here "\texttt{>{}>{}>}" is
+        used to indicate that the following text in the line is to be entered
+        in you terminal command prompt. 
 
 \begin{lstlisting}
 >>> git --version
@@ -277,103 +280,171 @@ remote server will soon be added as well.
     from GitHub, instead of cloning the repository, then AMOEBAE cannot record
         specifically what version of the code you use, and will not run
         properly. Make sure to use the appropriate directory path (the path
-        shown is just an example).  Please note: Here "\texttt{>{}>{}>}" is
-        used to indicate that the following text in the line is to be entered
-        in you terminal command prompt.
+        shown is just an example). Also, replace the path shown below with
+        the path to the directory on your system where you wish to put the main
+        AMOEBAE directory.
 
 \begin{lstlisting}
->>> cd /path/to/directory/where/you/keep/scripts
+>>> cd /path/to/directory/where/you/keep/files
 >>> git clone https://github.com/laelbarlow/amoebae.git
 \end{lstlisting}
 
-%\item Add the directory to your \$PATH variable for access via the command line
-%(as well as the misc\_scripts directory, if you wish to access those files). Do
-%this by appending a customized version of the following line to your
-%        .bash\_profile file.
-
-%\textbf{Warning:} make sure to use '\texttt{>{}>}' rather than '\texttt{>}'
-%otherwise you will overwrite any existing lines in your .bash\_profile file.
-%
-%\begin{lstlisting}
-%>>> cd 
-%>>> echo 'export PATH=/path/to/directory/where/you/keep/scripts/amoebae:$PATH' >> .bash_profile
-%\end{lstlisting}
-
-%\begin{lstlisting}
-%export PATH=/path/to/directory/where/you/keep/scripts/amoebae:$PATH
-%\end{lstlisting}
-
-
-\item Run the AMOEBAE code in a ... using the run\_env.sh script. This generates a Docker
-    container from the Docker image built in the preceding step. 
+\item Set up AMOEBAE. This performs several steps including checking for
+    whether singularity is installed and attempting to use VirtualBox and
+        Vagrant to run Singularity in a pre-built Ubuntu virtual machine with
+        Singularity installed. This is because Singularity does not run on
+        MacOS (or Windows), and installation of Singularity on Linux is
+        complex, as several dependencies are required. This script downloads
+        a pre-built singularity container, which was built using the
+        singularity.recipe file, and provided on the Singularity Library
+        (\url{https://cloud.sylabs.io/library/_container/5e8ca8fff0f8eb90a8a7b60d}).
 
 \begin{lstlisting}
->>> bash run_env.sh
+>>> cd amoebae
+>>> bash setup.sh
+\end{lstlisting}
+
+
+\item If you are setting up AMOEBAE on a high performance computing cluster,
+    then you will not be able to install Singularity yourself, and may need to
+        use specific procedures to load Singularity prior to use.
+
+
+\end{enumerate}
+
+\subsection{Running AMOEBAE using Jupyter notebooks}
+\label{jupyter_section}
+
+
+\begin{enumerate}
+
+\item After setting up AMOEBAE according to the instructions above, the easiest
+    way to start running analyses using AMOEBAE is via the tutorials, which are in the
+        form of Jupyter notebooks (\url{https://jupyter.org/}).  These Jupyter
+        notebooks can be run using the installation of Jupyter in the
+        Singularity container, and can be accessed using your browser (on a
+        personal computer). To start a Jupyter server, run the bash script as
+        indicated below (assuming your current working directory is the main
+        amoebae directory that you cloned with Git).
+
+\begin{lstlisting}
+>>> bash singularity_jupyter.sh
 \end{lstlisting}
 
 
 \item Copy and past the resulting URL (the one at the bottom of the output)
     into the address bar of your web browser (either Firefox, Chrome, or Safari
-    will work). This should launch a Jupyter sesssion with an interface where
-    you can navigate within the amoebae directory from inside the Docker
-    container.  For the purposes of the operating system running in the Docker
-    container, the amoebae directory is an external volume, like an external
-    hard drive. Documentation on Jupyter is available here:
+    will work). This will open Jupyter to the notebooks subdirectory, which
+        contains several tutorial and example notebooks (.ipynb files). These
+        files are the files on your regular (host) filesystem, as the amoebae
+        directory is synced with the Singularity container. Thus changes to
+        files will persist after you shut down the Jupyter server and the
+        Singularity container. Documentation on Jupyter is available here:
     \url{https://jupyter-notebook.readthedocs.io/en/stable/}. 
 
 
+\item Click on one of the tutorial files (.ipynb). These Jupyter notebooks
+    include information on how to use them once opened. The first tutorial
+        (amoebae\_tutorial\_1.ipynb) provides a simple example of similarity
+        searching with BLASTP using a Jupyter notebook. The second tutorial
+        (amoebae\_tutorial\_2.ipynb) provides an example using most of the
+        similarity searching functionality that AMOEBAE provides. 
 
-\item Click on the "notebooks" directory to open it. Then open one of the
-    tutorial files (.ipynb). These Jupyter notebooks include information on how
-    to use them once opened.
-
-
-\item If you wish to save the output displayed within the notebook(s) after
-    running, then it may be useful to save a copy of the notebook or save it in
-    HTML or PDF format.
-
-
-\item To shut down the Jupyter session, click the logout button in the jupyter
-    browser tabs, and then go to the terminal window that you used to startup
-    the Docker container, and press CTRL-C to kill the Jupyter kernel. This
+\item To shut down the Jupyter server, click the logout button in the jupyter
+    browser tab(s), and then go to the terminal window that you used to startup
+    the Jupyter server, and press CTRL-C to kill the Jupyter kernel. This
     will close the Jupyter notebooks, but the analysis output files will
     remain, because they are saved to your amoebae/notebooks folder which is on
     your host machine and accessed from within the container.
 
 
+\item Working with the Jupyter notebooks interactively in this manner on
+    high-performance computing clusters is likely possible, but inconvenient,
+        and procedures will vary. Also, running the tutorial notebooks would
+        require access to the internet from compute nodes (as opposed to login
+        nodes) which may not be supported. Therefore, it is recommended that
+        you run the tutorials on a personal laptop/desktop computer if
+        possible. To run your own notebooks on a cluster, you will need to
+        write a job submission script that will be specific to the cluster, the
+        job schedule it uses, and your account details. Please refer to
+        documentation provided by your system administrators for this. For an
+        example script that writes a script for running a notebook as a job to
+        a SLURM job scheduler see
+        \url{https://github.com/laelbarlow/amoebae/blob/master/notebooks/write_notebook_slurm_script.sh}.
+        
+
+\end{enumerate}
+
+
+\subsection{Running AMOEBAE via the command line}
+\label{shell_section}
+
+\begin{enumerate}
+
+\item The easiest way to access AMOEBAE dependencies via the command line is to
+    use the bash script provided. If you are running singularity in a virtual
+        machine (\textit{e.g.}, on MacOS), then only one shell session may be
+        opened at once (and these cannot be opened at the same time as the
+        singularity\_jupyter.sh script is running Singularity in a virtual
+        machine). Running the script as indicated below will open a shell
+        session in the Singularity container, with the amoebae directory being
+        the only one accessible. Also, the amoebae executable script is added
+        to the \$PATH in the container, so you can run amoebae commands from
+        any directory.
+
+\begin{lstlisting}
+>>> bash singularity_shell.sh
+\end{lstlisting}
+
+\item You may find it useful to explore and test the environment using the
+    following commands.
+
+\begin{itemize}
+
+\item Print the paths included in the \$PATH variable in the container.
+\begin{lstlisting}
+>>> tr ':' '\n' <<< "$PATH"
+\end{lstlisting}
+
+\item Check the location of the amoebae executable being run from within
+    the container.
+\begin{lstlisting}
+>>> command -v amoebae
+\end{lstlisting}
+
+\item Check that the amoebae executable script can be run (print the help
+    message).
+\begin{lstlisting}
+>>> amoebae -h
+\end{lstlisting}
+
+\item Check that all modules can be imported in all python files in the
+    AMOEBAE code.
+\begin{lstlisting}
+>>> amoebae check_imports
+\end{lstlisting}
+
+\item Check that key dependencies such as BLASTP can be accessed (they are
+    installed in the Singularity container).
+\begin{lstlisting}
+>>> amoebae check_depend
+\end{lstlisting}
+
+\end{itemize}
+
+\item Again, running AMOEBAE commands on high-performance computing clusters
+    will require you to write custom job submission scripts. Please refer to
+        documentation provided by your system administrator(s) regarding
+        details specific to your cluster, including the job scheduler used.
+        Also, refer to the Singularity documentation for formulating
+        Singularity commands (\url{https://sylabs.io/docs/}).
+
+% *** Write section on how to write scripts to run ameobae code on HPC clusters
+% (without using Jupyter)...
+
 \end{enumerate}
 
 \section{Command reference}
-
-%\item Enter the following command in a terminal window, which should display a
-%list of commands that you can use with amoebae:
-%
-%\begin{lstlisting}
-%>>> amoebae -h
-%\end{lstlisting}
-%
-%You can access further information about each listed command with the -h option
-%as follows, and it is recommended that you do this before using each command:
-%
-%\begin{lstlisting}
-%>>> amoebae <commandnamehere> -h
-%\end{lstlisting}
-%
-%To verify that dependencies such as NCBI BLAST are installed, see what is
-%printed to standard output upon running the 'check\_depend' command:
-%
-%\begin{lstlisting}
-%>>> amoebae check_depend
-%\end{lstlisting}
-%
-%To verify that modules and python packages such as gffutils can be imported
-%successfully by AMOEBAE scripts, use the 'check\_imports' command: 
-%
-%\begin{lstlisting}
-%>>> amoebae check_imports
-%\end{lstlisting}
-
-%Import what is printed when amoebae -h is called...
 
 Documentation for each AMOEBAE command and the various options may be accessed
 from the command line via the "-h" options. The following command reference
@@ -386,7 +457,13 @@ option.
 
 \section{Miscellaneous scripts}
 
-see amoebae/misc\_scripts...
+Several scripts of less general applicablity than the amoebae commands descibed
+above are included in the AMOEBAE toolkit. See the amoebae/misc\_scripts
+directory
+(\url{https://github.com/laelbarlow/amoebae/tree/master/misc_scripts}). Most
+scripts have information regarding usage in the files themselves. More detailed
+information regarding some of these scripts may be added to this documentation
+in the future.
 
 %\section{Recommendations regarding similarity searching analysis design}
 % (Incorporate into the tutorials)

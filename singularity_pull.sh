@@ -1,6 +1,8 @@
 #/bin/bash
 
-# This script pulls a pre-built singularity container image from the library.
+# This script pulls the latest pre-built singularity container image from the
+# singularity library
+# (https://cloud.sylabs.io/library/_container/5e8ca8fff0f8eb90a8a7b60d).
 # If this is run on MacOS, then it spins up a Vagrant virtual machine running
 # Ubuntu (because singularity only runs on Linux).
 
