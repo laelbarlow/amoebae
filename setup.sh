@@ -169,9 +169,14 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 
             fi
 
+            # Upgrade apt.
+            sudo apt upgrade && \
+            # Download vagrant.
+            curl -O https://releases.hashicorp.com/vagrant/2.1.0/vagrant_2.1.0_x86_64.deb
             # Install Vagrant on Linux.
-            sudo apt-get install vagrant && \
-            vagrant plugin install vagrant-disksize && \
+            sudo apt install ./vagrant_2.1.0_x86_64.deb && \
+            # Install plugin for setting disk size in Vagrantfile.
+            #vagrant plugin install vagrant-disksize && \
             printf "\nDone installing vagrant."
 
 
