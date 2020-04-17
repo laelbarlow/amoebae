@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_afa_to_nex.py module.
+"""PyTest tests for the afa_to_nex.py module.
 """
-from test_afa_to_nex.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from afa_to_nex import *
 
 
 

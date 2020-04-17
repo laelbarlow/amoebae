@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_dacksify_pos_hmmer_hits.py module.
+"""PyTest tests for the dacksify_pos_hmmer_hits.py module.
 """
-from test_dacksify_pos_hmmer_hits.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from dacksify_pos_hmmer_hits import *
 
 
 

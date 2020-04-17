@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_eml.py module.
+"""PyTest tests for the eml.py module.
 """
-from test_eml.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from eml import *
 
 
 

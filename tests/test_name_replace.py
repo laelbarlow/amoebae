@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_name_replace.py module.
+"""PyTest tests for the name_replace.py module.
 """
-from test_name_replace.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from name_replace import *
 
 
 

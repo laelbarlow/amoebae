@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_srchresfile.py module.
+"""PyTest tests for the srchresfile.py module.
 """
-from test_srchresfile.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from srchresfile import *
 
 
 

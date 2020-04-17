@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_align_to_profile_iter.py module.
+"""PyTest tests for the align_to_profile_iter.py module.
 """
-from test_align_to_profile_iter.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from align_to_profile_iter import *
 
 
 

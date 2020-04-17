@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_column_header_lists.py module.
+"""PyTest tests for the column_header_lists.py module.
 """
-from test_column_header_lists.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from column_header_lists import *
 
 

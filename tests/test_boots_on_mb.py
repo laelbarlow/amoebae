@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_boots_on_mb.py module.
+"""PyTest tests for the boots_on_mb.py module.
 """
-from test_boots_on_mb.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from boots_on_mb import *
 
 
 

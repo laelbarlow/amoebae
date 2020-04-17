@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_phylo_clas.py module.
+"""PyTest tests for the phylo_clas.py module.
 """
-from test_phylo_clas.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from phylo_clas import *
 
 
 

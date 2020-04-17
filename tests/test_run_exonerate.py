@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_run_exonerate.py module.
+"""PyTest tests for the run_exonerate.py module.
 """
-from test_run_exonerate.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from run_exonerate import *
 
 
 

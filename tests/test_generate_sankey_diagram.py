@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_generate_sankey_diagram.py module.
+"""PyTest tests for the generate_sankey_diagram.py module.
 """
-from test_generate_sankey_diagram.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from generate_sankey_diagram import *
 
 
 

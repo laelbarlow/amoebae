@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_amoebae_m.py module.
+"""PyTest tests for the amoebae_m.py module.
 """
-from test_amoebae_m.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from amoebae_m import *
 
 
 

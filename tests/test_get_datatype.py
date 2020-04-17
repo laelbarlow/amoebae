@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_get_datatype.py module.
+"""PyTest tests for the get_datatype.py module.
 """
-from test_get_datatype.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from get_datatype import *
 
 
 

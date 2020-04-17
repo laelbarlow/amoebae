@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""PyTest tests for the test_select_seqs.py module.
+"""PyTest tests for the select_seqs.py module.
 """
-from test_select_seqs.py import *
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+
+from select_seqs import *
 
 
 
