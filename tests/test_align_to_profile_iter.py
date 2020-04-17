@@ -5,17 +5,19 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from align_to_profile_iter import *
+from align_to_profile_iter import \
+split_fasta, \
+align_iteratively, \
+do_align_iteratively
 
 
-
-def test_split_fasta():
+def test_split_fasta():  # ***Incomplete test
     """Test the split_fasta function in the align_to_profile_iter.py file.
     """
     ##########################
     # Arrange.
-    infilepath = 'infilepath'
-    temp_subdirname = 'temp_subdirname'
+    infilepath = "infilepath"
+    temp_subdirname = "temp_subdirname"
 
     ##########################
     # Act.
@@ -28,14 +30,14 @@ def test_split_fasta():
 
 
 
-def test_align_iteratively():
+def test_align_iteratively():  # ***Incomplete test
     """Test the align_iteratively function in the align_to_profile_iter.py file.
     """
     ##########################
     # Arrange.
-    inalignfilepath = 'inalignfilepath'
-    temp_subdirname = 'temp_subdirname'
-    outfilepath = 'outfilepath'
+    inalignfilepath = "inalignfilepath"
+    temp_subdirname = "temp_subdirname"
+    outfilepath = "outfilepath"
 
     ##########################
     # Act.
@@ -49,14 +51,14 @@ def test_align_iteratively():
 
 
 
-def test_do_align_iteratively():
+def test_do_align_iteratively():  # ***Incomplete test
     """Test the do_align_iteratively function in the align_to_profile_iter.py file.
     """
     ##########################
     # Arrange.
-    innexpath = 'innexpath'
-    infapath = 'infapath'
-    outnexpath = 'outnexpath=None'
+    innexpath = "innexpath"
+    infapath = "infapath"
+    outnexpath = "outnexpath=None"
 
     ##########################
     # Act.

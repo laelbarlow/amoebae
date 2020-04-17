@@ -5,17 +5,31 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from select_seqs import *
+from select_seqs import \
+get_clade_name_from_model2, \
+get_nodes_from_actual_tree_obj, \
+get_nodes_of_interest, \
+get_list_of_leaf_names_for_node, \
+get_taxonomic_info, \
+define_nodestyles_dict_for_colourcoding, \
+define_textface_for_labeling_stem, \
+get_corresponding_node, \
+optimize_sequence_selection, \
+get_ml_tree_branch_lengths, \
+get_branch_length_info, \
+reduce_alignment, \
+recursively_remove_seqs, \
+recursively_add_seqs, \
+optimize_sequence_selection2
 
 
-
-def test_get_clade_name_from_model2():
+def test_get_clade_name_from_model2():  # ***Incomplete test
     """Test the get_clade_name_from_model2 function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    type_seq_name = 'type_seq_name'
-    type_seqs_dict = 'type_seqs_dict'
+    type_seq_name = "type_seq_name"
+    type_seqs_dict = "type_seqs_dict"
 
     ##########################
     # Act.
@@ -28,13 +42,13 @@ def test_get_clade_name_from_model2():
 
 
 
-def test_get_nodes_from_actual_tree_obj():
+def test_get_nodes_from_actual_tree_obj():  # ***Incomplete test
     """Test the get_nodes_from_actual_tree_obj function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    t3 = 't3'
-    nodes_of_interest = 'nodes_of_interest'
+    t3 = "t3"
+    nodes_of_interest = "nodes_of_interest"
 
     ##########################
     # Act.
@@ -47,13 +61,13 @@ def test_get_nodes_from_actual_tree_obj():
 
 
 
-def test_get_nodes_of_interest():
+def test_get_nodes_of_interest():  # ***Incomplete test
     """Test the get_nodes_of_interest function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    tree = 'tree'
-    type_seq_list = 'type_seq_list'
+    tree = "tree"
+    type_seq_list = "type_seq_list"
 
     ##########################
     # Act.
@@ -66,12 +80,12 @@ def test_get_nodes_of_interest():
 
 
 
-def test_get_list_of_leaf_names_for_node():
+def test_get_list_of_leaf_names_for_node():  # ***Incomplete test
     """Test the get_list_of_leaf_names_for_node function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    node = 'node'
+    node = "node"
 
     ##########################
     # Act.
@@ -83,12 +97,12 @@ def test_get_list_of_leaf_names_for_node():
 
 
 
-def test_get_taxonomic_info():
+def test_get_taxonomic_info():  # ***Incomplete test
     """Test the get_taxonomic_info function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    species_name = 'species_name'
+    species_name = "species_name"
 
     ##########################
     # Act.
@@ -100,7 +114,7 @@ def test_get_taxonomic_info():
 
 
 
-def test_define_nodestyles_dict_for_colourcoding():
+def test_define_nodestyles_dict_for_colourcoding():  # ***Incomplete test
     """Test the define_nodestyles_dict_for_colourcoding function in the select_seqs.py file.
     """
     ##########################
@@ -117,12 +131,12 @@ def test_define_nodestyles_dict_for_colourcoding():
 
 
 
-def test_define_textface_for_labeling_stem():
+def test_define_textface_for_labeling_stem():  # ***Incomplete test
     """Test the define_textface_for_labeling_stem function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    clade_name = 'clade_name'
+    clade_name = "clade_name"
 
     ##########################
     # Act.
@@ -134,13 +148,13 @@ def test_define_textface_for_labeling_stem():
 
 
 
-def test_get_corresponding_node():
+def test_get_corresponding_node():  # ***Incomplete test
     """Test the get_corresponding_node function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    node = 'node'
-    tree = 'tree'
+    node = "node"
+    tree = "tree"
 
     ##########################
     # Act.
@@ -153,14 +167,14 @@ def test_get_corresponding_node():
 
 
 
-def test_optimize_sequence_selection():
+def test_optimize_sequence_selection():  # ***Incomplete test
     """Test the optimize_sequence_selection function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    file_with_seqs = 'file_with_seqs'
-    model_name = 'model_name'
-    essential_taxa = 'essential_taxa'
+    file_with_seqs = "file_with_seqs"
+    model_name = "model_name"
+    essential_taxa = "essential_taxa"
 
     ##########################
     # Act.
@@ -174,15 +188,15 @@ def test_optimize_sequence_selection():
 
 
 
-def test_get_ml_tree_branch_lengths():
+def test_get_ml_tree_branch_lengths():  # ***Incomplete test
     """Test the get_ml_tree_branch_lengths function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    tree = 'tree'
-    alignment = 'alignment'
-    subs_model = 'subs_model'
-    outputdir = 'outputdir'
+    tree = "tree"
+    alignment = "alignment"
+    subs_model = "subs_model"
+    outputdir = "outputdir"
 
     ##########################
     # Act.
@@ -197,14 +211,14 @@ def test_get_ml_tree_branch_lengths():
 
 
 
-def test_get_branch_length_info():
+def test_get_branch_length_info():  # ***Incomplete test
     """Test the get_branch_length_info function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    t1 = 't1'
-    type_seqs_dict = 'type_seqs_dict'
-    outpath = 'outpath=None'
+    t1 = "t1"
+    type_seqs_dict = "type_seqs_dict"
+    outpath = "outpath=None"
 
     ##########################
     # Act.
@@ -218,14 +232,14 @@ def test_get_branch_length_info():
 
 
 
-def test_reduce_alignment():
+def test_reduce_alignment():  # ***Incomplete test
     """Test the reduce_alignment function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    alignment_file = 'alignment_file'
-    output_alignment_file = 'output_alignment_file'
-    removal_name_list = 'removal_name_list'
+    alignment_file = "alignment_file"
+    output_alignment_file = "output_alignment_file"
+    removal_name_list = "removal_name_list"
 
     ##########################
     # Act.
@@ -239,12 +253,12 @@ def test_reduce_alignment():
 
 
 
-def test_recursively_remove_seqs():
+def test_recursively_remove_seqs():  # ***Incomplete test
     """Test the recursively_remove_seqs function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    recursion_num = 'recursion_num'
+    recursion_num = "recursion_num"
 
     ##########################
     # Act.
@@ -256,12 +270,12 @@ def test_recursively_remove_seqs():
 
 
 
-def test_recursively_add_seqs():
+def test_recursively_add_seqs():  # ***Incomplete test
     """Test the recursively_add_seqs function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    recursion_num = 'recursion_num'
+    recursion_num = "recursion_num"
 
     ##########################
     # Act.
@@ -273,14 +287,14 @@ def test_recursively_add_seqs():
 
 
 
-def test_optimize_sequence_selection2():
+def test_optimize_sequence_selection2():  # ***Incomplete test
     """Test the optimize_sequence_selection2 function in the select_seqs.py file.
     """
     ##########################
     # Arrange.
-    file_with_seqs = 'file_with_seqs'
-    model_name = 'model_name'
-    essential_taxa = 'essential_taxa'
+    file_with_seqs = "file_with_seqs"
+    model_name = "model_name"
+    essential_taxa = "essential_taxa"
 
     ##########################
     # Act.

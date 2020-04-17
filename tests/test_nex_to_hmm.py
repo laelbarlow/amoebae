@@ -5,17 +5,18 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from nex_to_hmm import *
+from nex_to_hmm import \
+nex_to_hmm, \
+afa_to_hmm
 
 
-
-def test_nex_to_hmm():
+def test_nex_to_hmm():  # ***Incomplete test
     """Test the nex_to_hmm function in the nex_to_hmm.py file.
     """
     ##########################
     # Arrange.
-    infilepath = 'infilepath'
-    outfilepath = 'outfilepath=None'
+    infilepath = "infilepath"
+    outfilepath = "outfilepath=None"
 
     ##########################
     # Act.
@@ -28,13 +29,13 @@ def test_nex_to_hmm():
 
 
 
-def test_afa_to_hmm():
+def test_afa_to_hmm():  # ***Incomplete test
     """Test the afa_to_hmm function in the nex_to_hmm.py file.
     """
     ##########################
     # Arrange.
-    infilepath = 'infilepath'
-    outfilepath = 'outfilepath=None'
+    infilepath = "infilepath"
+    outfilepath = "outfilepath=None"
 
     ##########################
     # Act.

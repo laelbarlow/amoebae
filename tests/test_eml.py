@@ -5,17 +5,17 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from eml import *
+from eml import \
+send_eml
 
 
-
-def test_send_eml():
+def test_send_eml():  # ***Incomplete test
     """Test the send_eml function in the eml.py file.
     """
     ##########################
     # Arrange.
-    subject = 'subject'
-    body = 'body'
+    subject = "subject"
+    body = "body"
 
     ##########################
     # Act.

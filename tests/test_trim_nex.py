@@ -5,16 +5,17 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from trim_nex import *
+from trim_nex import \
+trim_alignment, \
+trim_nex
 
 
-
-def test_trim_alignment():
+def test_trim_alignment():  # ***Incomplete test
     """Test the trim_alignment function in the trim_nex.py file.
     """
     ##########################
     # Arrange.
-    alignment = 'alignment'
+    alignment = "alignment"
 
     ##########################
     # Act.
@@ -26,13 +27,13 @@ def test_trim_alignment():
 
 
 
-def test_trim_nex():
+def test_trim_nex():  # ***Incomplete test
     """Test the trim_nex function in the trim_nex.py file.
     """
     ##########################
     # Arrange.
-    infilepath = 'infilepath'
-    outfilename = 'outfilename'
+    infilepath = "infilepath"
+    outfilename = "outfilename"
 
     ##########################
     # Act.

@@ -5,16 +5,35 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from visualize_trees import *
+from visualize_trees import \
+plotImage, \
+get_first_leaf_from_species, \
+get_largest_subtree, \
+get_first_subtrees, \
+remove_nodes_that_are_subtrees_of_others, \
+determine_whether_first_subtrees_same_sp_overlap, \
+get_nodes_with_paralogues, \
+label_pdf, \
+add_borders_to_pdf_with_latex, \
+get_subs_model_from_iqtree_file, \
+get_subs_model_from_mb_file, \
+customize_node_styles_for_visualization, \
+customize_node_styles_for_paralogue_clades, \
+customize_node_styles_for_clades_to_remove, \
+lighten_color, \
+get_branch_support_from_node_name, \
+translate_int_node_names_to_support, \
+translate_int_node_support_to_prob, \
+visualize_tree, \
+visualize_tree_in_dir
 
 
-
-def test_plotImage():
+def test_plotImage():  # ***Incomplete test
     """Test the plotImage function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    image_file = 'image_file'
+    image_file = "image_file"
 
     ##########################
     # Act.
@@ -26,13 +45,13 @@ def test_plotImage():
 
 
 
-def test_get_first_leaf_from_species():
+def test_get_first_leaf_from_species():  # ***Incomplete test
     """Test the get_first_leaf_from_species function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    tree_obj = 'tree_obj'
-    species_start_string = 'species_start_string'
+    tree_obj = "tree_obj"
+    species_start_string = "species_start_string"
 
     ##########################
     # Act.
@@ -45,12 +64,12 @@ def test_get_first_leaf_from_species():
 
 
 
-def test_get_largest_subtree():
+def test_get_largest_subtree():  # ***Incomplete test
     """Test the get_largest_subtree function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    t = 't'
+    t = "t"
 
     ##########################
     # Act.
@@ -62,12 +81,12 @@ def test_get_largest_subtree():
 
 
 
-def test_get_first_subtrees():
+def test_get_first_subtrees():  # ***Incomplete test
     """Test the get_first_subtrees function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    t = 't'
+    t = "t"
 
     ##########################
     # Act.
@@ -79,12 +98,12 @@ def test_get_first_subtrees():
 
 
 
-def test_remove_nodes_that_are_subtrees_of_others():
+def test_remove_nodes_that_are_subtrees_of_others():  # ***Incomplete test
     """Test the remove_nodes_that_are_subtrees_of_others function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    nodes_with_paralogues = 'nodes_with_paralogues'
+    nodes_with_paralogues = "nodes_with_paralogues"
 
     ##########################
     # Act.
@@ -96,13 +115,13 @@ def test_remove_nodes_that_are_subtrees_of_others():
 
 
 
-def test_determine_whether_first_subtrees_same_sp_overlap():
+def test_determine_whether_first_subtrees_same_sp_overlap():  # ***Incomplete test
     """Test the determine_whether_first_subtrees_same_sp_overlap function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    i = 'i'
-    j = 'j'
+    i = "i"
+    j = "j"
 
     ##########################
     # Act.
@@ -115,12 +134,12 @@ def test_determine_whether_first_subtrees_same_sp_overlap():
 
 
 
-def test_get_nodes_with_paralogues():
+def test_get_nodes_with_paralogues():  # ***Incomplete test
     """Test the get_nodes_with_paralogues function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    t = 't'
+    t = "t"
 
     ##########################
     # Act.
@@ -132,16 +151,16 @@ def test_get_nodes_with_paralogues():
 
 
 
-def test_label_pdf():
+def test_label_pdf():  # ***Incomplete test
     """Test the label_pdf function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    in_tree_file = 'in_tree_file'
-    out_tree_file = 'out_tree_file'
-    method = 'method'
-    subs_model = 'subs_model'
-    timestamp = 'timestamp'
+    in_tree_file = "in_tree_file"
+    out_tree_file = "out_tree_file"
+    method = "method"
+    subs_model = "subs_model"
+    timestamp = "timestamp"
 
     ##########################
     # Act.
@@ -157,13 +176,13 @@ def test_label_pdf():
 
 
 
-def test_add_borders_to_pdf_with_latex():
+def test_add_borders_to_pdf_with_latex():  # ***Incomplete test
     """Test the add_borders_to_pdf_with_latex function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    in_tree_file = 'in_tree_file'
-    out_tree_file = 'out_tree_file'
+    in_tree_file = "in_tree_file"
+    out_tree_file = "out_tree_file"
 
     ##########################
     # Act.
@@ -176,12 +195,12 @@ def test_add_borders_to_pdf_with_latex():
 
 
 
-def test_get_subs_model_from_iqtree_file():
+def test_get_subs_model_from_iqtree_file():  # ***Incomplete test
     """Test the get_subs_model_from_iqtree_file function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    file_with_subs_model_name = 'file_with_subs_model_name'
+    file_with_subs_model_name = "file_with_subs_model_name"
 
     ##########################
     # Act.
@@ -193,12 +212,12 @@ def test_get_subs_model_from_iqtree_file():
 
 
 
-def test_get_subs_model_from_mb_file():
+def test_get_subs_model_from_mb_file():  # ***Incomplete test
     """Test the get_subs_model_from_mb_file function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    file_with_subs_model_name = 'file_with_subs_model_name'
+    file_with_subs_model_name = "file_with_subs_model_name"
 
     ##########################
     # Act.
@@ -210,12 +229,12 @@ def test_get_subs_model_from_mb_file():
 
 
 
-def test_customize_node_styles_for_visualization():
+def test_customize_node_styles_for_visualization():  # ***Incomplete test
     """Test the customize_node_styles_for_visualization function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    t = 't'
+    t = "t"
 
     ##########################
     # Act.
@@ -227,13 +246,13 @@ def test_customize_node_styles_for_visualization():
 
 
 
-def test_customize_node_styles_for_paralogue_clades():
+def test_customize_node_styles_for_paralogue_clades():  # ***Incomplete test
     """Test the customize_node_styles_for_paralogue_clades function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    t = 't'
-    nodes_with_paralogues = 'nodes_with_paralogues'
+    t = "t"
+    nodes_with_paralogues = "nodes_with_paralogues"
 
     ##########################
     # Act.
@@ -246,13 +265,13 @@ def test_customize_node_styles_for_paralogue_clades():
 
 
 
-def test_customize_node_styles_for_clades_to_remove():
+def test_customize_node_styles_for_clades_to_remove():  # ***Incomplete test
     """Test the customize_node_styles_for_clades_to_remove function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    t = 't'
-    highlight_for_removal = 'highlight_for_removal'
+    t = "t"
+    highlight_for_removal = "highlight_for_removal"
 
     ##########################
     # Act.
@@ -265,13 +284,13 @@ def test_customize_node_styles_for_clades_to_remove():
 
 
 
-def test_lighten_color():
+def test_lighten_color():  # ***Incomplete test
     """Test the lighten_color function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    color = 'color'
-    amount = 'amount=0.5'
+    color = "color"
+    amount = "amount=0.5"
 
     ##########################
     # Act.
@@ -284,12 +303,12 @@ def test_lighten_color():
 
 
 
-def test_get_branch_support_from_node_name():
+def test_get_branch_support_from_node_name():  # ***Incomplete test
     """Test the get_branch_support_from_node_name function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    node_name = 'node_name'
+    node_name = "node_name"
 
     ##########################
     # Act.
@@ -301,12 +320,12 @@ def test_get_branch_support_from_node_name():
 
 
 
-def test_translate_int_node_names_to_support():
+def test_translate_int_node_names_to_support():  # ***Incomplete test
     """Test the translate_int_node_names_to_support function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    t = 't'
+    t = "t"
 
     ##########################
     # Act.
@@ -318,12 +337,12 @@ def test_translate_int_node_names_to_support():
 
 
 
-def test_translate_int_node_support_to_prob():
+def test_translate_int_node_support_to_prob():  # ***Incomplete test
     """Test the translate_int_node_support_to_prob function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    t = 't'
+    t = "t"
 
     ##########################
     # Act.
@@ -335,12 +354,12 @@ def test_translate_int_node_support_to_prob():
 
 
 
-def test_visualize_tree():
+def test_visualize_tree():  # ***Incomplete test
     """Test the visualize_tree function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    method = 'method'
+    method = "method"
 
     ##########################
     # Act.
@@ -352,15 +371,15 @@ def test_visualize_tree():
 
 
 
-def test_visualize_tree_in_dir():
+def test_visualize_tree_in_dir():  # ***Incomplete test
     """Test the visualize_tree_in_dir function in the visualize_trees.py file.
     """
     ##########################
     # Arrange.
-    indp = 'indp'
-    method = 'method'
-    timestamp = 'timestamp'
-    taxa_to_root_on = 'taxa_to_root_on'
+    indp = "indp"
+    method = "method"
+    timestamp = "timestamp"
+    taxa_to_root_on = "taxa_to_root_on"
 
     ##########################
     # Act.

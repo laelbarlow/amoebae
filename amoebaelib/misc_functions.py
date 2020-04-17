@@ -22,7 +22,7 @@ import sys
 def launch(app, thing):
 	os.system("open -a " + app + " -g " + thing)
 	
-def query_yes_no(question, default="yes"):
+def query_yes_no(question, default='yes'):
     valid = {"yes":True,   "y":True,  "ye":True,
              "no":False,     "n":False}
     if default == None:

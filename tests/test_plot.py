@@ -5,17 +5,27 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from plot import *
+from plot import \
+get_text_label_matrix, \
+get_hit_count_matrix, \
+get_heat_matrix_from_count_matrix, \
+generate_heatmap_figure, \
+generate_stats_file, \
+get_sector_label, \
+get_complex_info_list, \
+modify_legend_lines, \
+modify_lines, \
+make_coulson_plot, \
+plot_amoebae_res
 
 
-
-def test_get_text_label_matrix():
+def test_get_text_label_matrix():  # ***Incomplete test
     """Test the get_text_label_matrix function in the plot.py file.
     """
     ##########################
     # Arrange.
-    odf = 'odf'
-    sequence_type = 'sequence_type'
+    odf = "odf"
+    sequence_type = "sequence_type"
 
     ##########################
     # Act.
@@ -28,13 +38,13 @@ def test_get_text_label_matrix():
 
 
 
-def test_get_hit_count_matrix():
+def test_get_hit_count_matrix():  # ***Incomplete test
     """Test the get_hit_count_matrix function in the plot.py file.
     """
     ##########################
     # Arrange.
-    odf = 'odf'
-    sequence_type = 'sequence_type'
+    odf = "odf"
+    sequence_type = "sequence_type"
 
     ##########################
     # Act.
@@ -47,12 +57,12 @@ def test_get_hit_count_matrix():
 
 
 
-def test_get_heat_matrix_from_count_matrix():
+def test_get_heat_matrix_from_count_matrix():  # ***Incomplete test
     """Test the get_heat_matrix_from_count_matrix function in the plot.py file.
     """
     ##########################
     # Arrange.
-    data_count = 'data_count'
+    data_count = "data_count"
 
     ##########################
     # Act.
@@ -64,15 +74,15 @@ def test_get_heat_matrix_from_count_matrix():
 
 
 
-def test_generate_heatmap_figure():
+def test_generate_heatmap_figure():  # ***Incomplete test
     """Test the generate_heatmap_figure function in the plot.py file.
     """
     ##########################
     # Arrange.
-    column_labels = 'column_labels'
-    row_labels = 'row_labels'
-    data_labels = 'data_labels'
-    data_count = 'data_count'
+    column_labels = "column_labels"
+    row_labels = "row_labels"
+    data_labels = "data_labels"
+    data_count = "data_count"
 
     ##########################
     # Act.
@@ -87,14 +97,14 @@ def test_generate_heatmap_figure():
 
 
 
-def test_generate_stats_file():
+def test_generate_stats_file():  # ***Incomplete test
     """Test the generate_stats_file function in the plot.py file.
     """
     ##########################
     # Arrange.
-    column_labels = 'column_labels'
-    row_labels = 'row_labels'
-    data_count = 'data_count'
+    column_labels = "column_labels"
+    row_labels = "row_labels"
+    data_count = "data_count"
 
     ##########################
     # Act.
@@ -108,13 +118,13 @@ def test_generate_stats_file():
 
 
 
-def test_get_sector_label():
+def test_get_sector_label():  # ***Incomplete test
     """Test the get_sector_label function in the plot.py file.
     """
     ##########################
     # Arrange.
-    pct = 'pct'
-    iterable = 'iterable'
+    pct = "pct"
+    iterable = "iterable"
 
     ##########################
     # Act.
@@ -127,13 +137,13 @@ def test_get_sector_label():
 
 
 
-def test_get_complex_info_list():
+def test_get_complex_info_list():  # ***Incomplete test
     """Test the get_complex_info_list function in the plot.py file.
     """
     ##########################
     # Arrange.
-    complex_info_file = 'complex_info_file'
-    column_labels_simple = 'column_labels_simple'
+    complex_info_file = "complex_info_file"
+    column_labels_simple = "column_labels_simple"
 
     ##########################
     # Act.
@@ -146,12 +156,12 @@ def test_get_complex_info_list():
 
 
 
-def test_modify_legend_lines():
+def test_modify_legend_lines():  # ***Incomplete test
     """Test the modify_legend_lines function in the plot.py file.
     """
     ##########################
     # Arrange.
-    wedges = 'wedges'
+    wedges = "wedges"
 
     ##########################
     # Act.
@@ -163,12 +173,12 @@ def test_modify_legend_lines():
 
 
 
-def test_modify_lines():
+def test_modify_lines():  # ***Incomplete test
     """Test the modify_lines function in the plot.py file.
     """
     ##########################
     # Arrange.
-    wedges = 'wedges'
+    wedges = "wedges"
 
     ##########################
     # Act.
@@ -180,12 +190,12 @@ def test_modify_lines():
 
 
 
-def test_make_coulson_plot():
+def test_make_coulson_plot():  # ***Incomplete test
     """Test the make_coulson_plot function in the plot.py file.
     """
     ##########################
     # Arrange.
-    column_labels_simple = 'column_labels_simple'
+    column_labels_simple = "column_labels_simple"
 
     ##########################
     # Act.
@@ -197,15 +207,15 @@ def test_make_coulson_plot():
 
 
 
-def test_plot_amoebae_res():
+def test_plot_amoebae_res():  # ***Incomplete test
     """Test the plot_amoebae_res function in the plot.py file.
     """
     ##########################
     # Arrange.
-    csv_file = 'csv_file'
-    complex_info = 'complex_info'
-    outpdfpath = 'outpdfpath'
-    csv_file2 = 'csv_file2=None'
+    csv_file = "csv_file"
+    complex_info = "complex_info"
+    outpdfpath = "outpdfpath"
+    csv_file2 = "csv_file2=None"
 
     ##########################
     # Act.

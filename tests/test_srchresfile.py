@@ -5,16 +5,17 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from srchresfile import *
+from srchresfile import \
+get_srch_file_info, \
+get_hmmer_hit_seq_coord
 
 
-
-def test_get_srch_file_info():
+def test_get_srch_file_info():  # ***Incomplete test
     """Test the get_srch_file_info function in the srchresfile.py file.
     """
     ##########################
     # Arrange.
-    search_result_path = 'search_result_path'
+    search_result_path = "search_result_path"
 
     ##########################
     # Act.
@@ -26,14 +27,14 @@ def test_get_srch_file_info():
 
 
 
-def test_get_hmmer_hit_seq_coord():
+def test_get_hmmer_hit_seq_coord():  # ***Incomplete test
     """Test the get_hmmer_hit_seq_coord function in the srchresfile.py file.
     """
     ##########################
     # Arrange.
-    searchio_hit_obj = 'searchio_hit_obj'
-    db_file = 'db_file'
-    extra = 'extra=0'
+    searchio_hit_obj = "searchio_hit_obj"
+    db_file = "db_file"
+    extra = "extra=0"
 
     ##########################
     # Act.

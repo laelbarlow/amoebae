@@ -5,16 +5,17 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from run_exonerate import *
+from run_exonerate import \
+get_subseq_from_nucl, \
+run_exonerate_as_subprocess
 
 
-
-def test_get_subseq_from_nucl():
+def test_get_subseq_from_nucl():  # ***Incomplete test
     """Test the get_subseq_from_nucl function in the run_exonerate.py file.
     """
     ##########################
     # Arrange.
-    subj_seq_id = 'subj_seq_id'
+    subj_seq_id = "subj_seq_id"
 
     ##########################
     # Act.
@@ -26,12 +27,12 @@ def test_get_subseq_from_nucl():
 
 
 
-def test_run_exonerate_as_subprocess():
+def test_run_exonerate_as_subprocess():  # ***Incomplete test
     """Test the run_exonerate_as_subprocess function in the run_exonerate.py file.
     """
     ##########################
     # Arrange.
-    query_prot_faa = 'query_prot_faa'
+    query_prot_faa = "query_prot_faa"
 
     ##########################
     # Act.

@@ -5,18 +5,33 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from phylo_clas import *
+from phylo_clas import \
+add_seq_to_alignment, \
+code_names_in_ali, \
+get_conversion_dict, \
+quote_tree, \
+code_tree, \
+uncode_tree, \
+uncode_tree_obj, \
+classify_seq_with_constrained_tree, \
+get_phylo_class_csv, \
+classify_seq_with_constrained_tree2, \
+get_clade_name_from_model, \
+get_phylo_class_logfile_path, \
+classify_one_seq_record, \
+place_one_seq_record, \
+write_phylo_class_to_csv, \
+get_all_alt_model_backbones
 
 
-
-def test_add_seq_to_alignment():
+def test_add_seq_to_alignment():  # ***Incomplete test
     """Test the add_seq_to_alignment function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    inseqobj = 'inseqobj'
-    innexpath = 'innexpath'
-    outdp = 'outdp'
+    inseqobj = "inseqobj"
+    innexpath = "innexpath"
+    outdp = "outdp"
 
     ##########################
     # Act.
@@ -30,15 +45,15 @@ def test_add_seq_to_alignment():
 
 
 
-def test_code_names_in_ali():
+def test_code_names_in_ali():  # ***Incomplete test
     """Test the code_names_in_ali function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    indp = 'indp'
-    inalifp = 'inalifp'
-    outalifp = 'outalifp'
-    outtablefp = 'outtablefp'
+    indp = "indp"
+    inalifp = "inalifp"
+    outalifp = "outalifp"
+    outtablefp = "outtablefp"
 
     ##########################
     # Act.
@@ -53,12 +68,12 @@ def test_code_names_in_ali():
 
 
 
-def test_get_conversion_dict():
+def test_get_conversion_dict():  # ***Incomplete test
     """Test the get_conversion_dict function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    tablefile = 'tablefile'
+    tablefile = "tablefile"
 
     ##########################
     # Act.
@@ -70,13 +85,13 @@ def test_get_conversion_dict():
 
 
 
-def test_quote_tree():
+def test_quote_tree():  # ***Incomplete test
     """Test the quote_tree function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    intree = 'intree'
-    table = 'table'
+    intree = "intree"
+    table = "table"
 
     ##########################
     # Act.
@@ -89,14 +104,14 @@ def test_quote_tree():
 
 
 
-def test_code_tree():
+def test_code_tree():  # ***Incomplete test
     """Test the code_tree function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    intreefp = 'intreefp'
-    outtreefp = 'outtreefp'
-    table = 'table'
+    intreefp = "intreefp"
+    outtreefp = "outtreefp"
+    table = "table"
 
     ##########################
     # Act.
@@ -110,14 +125,14 @@ def test_code_tree():
 
 
 
-def test_uncode_tree():
+def test_uncode_tree():  # ***Incomplete test
     """Test the uncode_tree function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    intreefp = 'intreefp'
-    outtreefp = 'outtreefp'
-    table = 'table'
+    intreefp = "intreefp"
+    outtreefp = "outtreefp"
+    table = "table"
 
     ##########################
     # Act.
@@ -131,13 +146,13 @@ def test_uncode_tree():
 
 
 
-def test_uncode_tree_obj():
+def test_uncode_tree_obj():  # ***Incomplete test
     """Test the uncode_tree_obj function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    intreeobj = 'intreeobj'
-    table = 'table'
+    intreeobj = "intreeobj"
+    table = "table"
 
     ##########################
     # Act.
@@ -150,16 +165,16 @@ def test_uncode_tree_obj():
 
 
 
-def test_classify_seq_with_constrained_tree():
+def test_classify_seq_with_constrained_tree():  # ***Incomplete test
     """Test the classify_seq_with_constrained_tree function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    alignment = 'alignment'
-    tree = 'tree'
-    subs_model = 'subs_model'
-    type_seqs = 'type_seqs'
-    fasta = 'fasta'
+    alignment = "alignment"
+    tree = "tree"
+    subs_model = "subs_model"
+    type_seqs = "type_seqs"
+    fasta = "fasta"
 
     ##########################
     # Act.
@@ -175,12 +190,12 @@ def test_classify_seq_with_constrained_tree():
 
 
 
-def test_get_phylo_class_csv():
+def test_get_phylo_class_csv():  # ***Incomplete test
     """Test the get_phylo_class_csv function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    outdirpath = 'outdirpath'
+    outdirpath = "outdirpath"
 
     ##########################
     # Act.
@@ -192,13 +207,13 @@ def test_get_phylo_class_csv():
 
 
 
-def test_classify_seq_with_constrained_tree2():
+def test_classify_seq_with_constrained_tree2():  # ***Incomplete test
     """Test the classify_seq_with_constrained_tree2 function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    file_with_seqs = 'file_with_seqs'
-    model = 'model=None'
+    file_with_seqs = "file_with_seqs"
+    model = "model=None"
 
     ##########################
     # Act.
@@ -211,13 +226,13 @@ def test_classify_seq_with_constrained_tree2():
 
 
 
-def test_get_clade_name_from_model():
+def test_get_clade_name_from_model():  # ***Incomplete test
     """Test the get_clade_name_from_model function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    type_seq_name = 'type_seq_name'
-    type_seqs = 'type_seqs'
+    type_seq_name = "type_seq_name"
+    type_seqs = "type_seqs"
 
     ##########################
     # Act.
@@ -230,12 +245,12 @@ def test_get_clade_name_from_model():
 
 
 
-def test_get_phylo_class_logfile_path():
+def test_get_phylo_class_logfile_path():  # ***Incomplete test
     """Test the get_phylo_class_logfile_path function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    phylo_class_outdir = 'phylo_class_outdir'
+    phylo_class_outdir = "phylo_class_outdir"
 
     ##########################
     # Act.
@@ -247,14 +262,14 @@ def test_get_phylo_class_logfile_path():
 
 
 
-def test_classify_one_seq_record():
+def test_classify_one_seq_record():  # ***Incomplete test
     """Test the classify_one_seq_record function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    ali_num = 'ali_num'
-    record = 'record'
-    model = 'model'
+    ali_num = "ali_num"
+    record = "record"
+    model = "model"
 
     ##########################
     # Act.
@@ -268,14 +283,14 @@ def test_classify_one_seq_record():
 
 
 
-def test_place_one_seq_record():
+def test_place_one_seq_record():  # ***Incomplete test
     """Test the place_one_seq_record function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    ali_num = 'ali_num'
-    record = 'record'
-    model = 'model'
+    ali_num = "ali_num"
+    record = "record"
+    model = "model"
 
     ##########################
     # Act.
@@ -289,13 +304,13 @@ def test_place_one_seq_record():
 
 
 
-def test_write_phylo_class_to_csv():
+def test_write_phylo_class_to_csv():  # ***Incomplete test
     """Test the write_phylo_class_to_csv function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    phylo_class_id = 'phylo_class_id'
-    outdir = 'outdir'
+    phylo_class_id = "phylo_class_id"
+    outdir = "outdir"
 
     ##########################
     # Act.
@@ -308,12 +323,12 @@ def test_write_phylo_class_to_csv():
 
 
 
-def test_get_all_alt_model_backbones():
+def test_get_all_alt_model_backbones():  # ***Incomplete test
     """Test the get_all_alt_model_backbones function in the phylo_clas.py file.
     """
     ##########################
     # Arrange.
-    model_name = 'model_name'
+    model_name = "model_name"
 
     ##########################
     # Act.

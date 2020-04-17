@@ -5,16 +5,21 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from add_to_db import *
+from add_to_db import \
+make_easel_index, \
+convert_headers, \
+make_blast_db, \
+get_corr_fasta_exten, \
+get_dbtype_from_file_exten, \
+update_csv
 
 
-
-def test_make_easel_index():
+def test_make_easel_index():  # ***Incomplete test
     """Test the make_easel_index function in the add_to_db.py file.
     """
     ##########################
     # Arrange.
-    outfp = 'outfp'
+    outfp = "outfp"
 
     ##########################
     # Act.
@@ -26,15 +31,15 @@ def test_make_easel_index():
 
 
 
-def test_convert_headers():
+def test_convert_headers():  # ***Incomplete test
     """Test the convert_headers function in the add_to_db.py file.
     """
     ##########################
     # Arrange.
-    infp = 'infp'
-    outfp = 'outfp'
-    split_char = 'split_char=' ''
-    split_pos = 'split_pos='0''
+    infp = "infp"
+    outfp = "outfp"
+    split_char = "split_char=' '"
+    split_pos = "split_pos='0'"
 
     ##########################
     # Act.
@@ -49,12 +54,12 @@ def test_convert_headers():
 
 
 
-def test_make_blast_db():
+def test_make_blast_db():  # ***Incomplete test
     """Test the make_blast_db function in the add_to_db.py file.
     """
     ##########################
     # Arrange.
-    infp = 'infp'
+    infp = "infp"
 
     ##########################
     # Act.
@@ -66,12 +71,12 @@ def test_make_blast_db():
 
 
 
-def test_get_corr_fasta_exten():
+def test_get_corr_fasta_exten():  # ***Incomplete test
     """Test the get_corr_fasta_exten function in the add_to_db.py file.
     """
     ##########################
     # Arrange.
-    infp = 'infp'
+    infp = "infp"
 
     ##########################
     # Act.
@@ -83,12 +88,12 @@ def test_get_corr_fasta_exten():
 
 
 
-def test_get_dbtype_from_file_exten():
+def test_get_dbtype_from_file_exten():  # ***Incomplete test
     """Test the get_dbtype_from_file_exten function in the add_to_db.py file.
     """
     ##########################
     # Arrange.
-    infp = 'infp'
+    infp = "infp"
 
     ##########################
     # Act.
@@ -100,13 +105,13 @@ def test_get_dbtype_from_file_exten():
 
 
 
-def test_update_csv():
+def test_update_csv():  # ***Incomplete test
     """Test the update_csv function in the add_to_db.py file.
     """
     ##########################
     # Arrange.
-    outfp = 'outfp'
-    csv_file = 'csv_file'
+    outfp = "outfp"
+    csv_file = "csv_file"
 
     ##########################
     # Act.

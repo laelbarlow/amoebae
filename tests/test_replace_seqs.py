@@ -5,17 +5,18 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from replace_seqs import *
+from replace_seqs import \
+afa_to_fa, \
+replace_seqs_in_alignment_with_seqs_from_fasta
 
 
-
-def test_afa_to_fa():
+def test_afa_to_fa():  # ***Incomplete test
     """Test the afa_to_fa function in the replace_seqs.py file.
     """
     ##########################
     # Arrange.
-    infilepath = 'infilepath'
-    outfilepath = 'outfilepath'
+    infilepath = "infilepath"
+    outfilepath = "outfilepath"
 
     ##########################
     # Act.
@@ -28,13 +29,13 @@ def test_afa_to_fa():
 
 
 
-def test_replace_seqs_in_alignment_with_seqs_from_fasta():
+def test_replace_seqs_in_alignment_with_seqs_from_fasta():  # ***Incomplete test
     """Test the replace_seqs_in_alignment_with_seqs_from_fasta function in the replace_seqs.py file.
     """
     ##########################
     # Arrange.
-    alignment = 'alignment'
-    fasta = 'fasta=None'
+    alignment = "alignment"
+    fasta = "fasta=None"
 
     ##########################
     # Act.

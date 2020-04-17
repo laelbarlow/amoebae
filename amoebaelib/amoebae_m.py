@@ -20,6 +20,7 @@ define more specialized functions).
 #import argparse
 import sys
 import os
+sys.path.append(os.path.dirname(sys.path[0]))
 import subprocess
 import re
 import settings

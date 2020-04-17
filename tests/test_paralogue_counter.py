@@ -5,16 +5,41 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from paralogue_counter import *
+from paralogue_counter import \
+remove_irrelevant_data_from_alignment, \
+check_for_redundant_seq_names, \
+rank_seqs_by_hmm, \
+get_sig_overlap, \
+get_percent_identity, \
+add_seq_to_alignment2, \
+modify_seq_descr_for_tree, \
+add_seq_to_alignment3, \
+get_sequence_comparison_dict, \
+get_all_comparison_output_filepath, \
+find_redun_model_recursively, \
+count_paralogues, \
+get_seq_obj_x, \
+get_seq_obj_x2, \
+get_cur_ali_num, \
+count_paralogues2, \
+get_overlapping_genes_from_gff3, \
+two_proteins_same_gene_in_gff3, \
+cds_record_matches_prot_id, \
+two_proteins_same_gene_in_gff3_2, \
+two_proteins_same_gene_in_gff3_3, \
+annot_id_matches_prot_id, \
+get_relevant_annot_sql_file, \
+count_paralogues3, \
+add_alignment_column, \
+add_model_column
 
 
-
-def test_remove_irrelevant_data_from_alignment():
+def test_remove_irrelevant_data_from_alignment():  # ***Incomplete test
     """Test the remove_irrelevant_data_from_alignment function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    ali_plus_top_seq_plus_1 = 'ali_plus_top_seq_plus_1'
+    ali_plus_top_seq_plus_1 = "ali_plus_top_seq_plus_1"
 
     ##########################
     # Act.
@@ -26,12 +51,12 @@ def test_remove_irrelevant_data_from_alignment():
 
 
 
-def test_check_for_redundant_seq_names():
+def test_check_for_redundant_seq_names():  # ***Incomplete test
     """Test the check_for_redundant_seq_names function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    alignment = 'alignment'
+    alignment = "alignment"
 
     ##########################
     # Act.
@@ -43,13 +68,13 @@ def test_check_for_redundant_seq_names():
 
 
 
-def test_rank_seqs_by_hmm():
+def test_rank_seqs_by_hmm():  # ***Incomplete test
     """Test the rank_seqs_by_hmm function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    inali = 'inali'
-    inseqs = 'inseqs'
+    inali = "inali"
+    inseqs = "inseqs"
 
     ##########################
     # Act.
@@ -62,12 +87,12 @@ def test_rank_seqs_by_hmm():
 
 
 
-def test_get_sig_overlap():
+def test_get_sig_overlap():  # ***Incomplete test
     """Test the get_sig_overlap function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    inali = 'inali'
+    inali = "inali"
 
     ##########################
     # Act.
@@ -79,12 +104,12 @@ def test_get_sig_overlap():
 
 
 
-def test_get_percent_identity():
+def test_get_percent_identity():  # ***Incomplete test
     """Test the get_percent_identity function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    inali = 'inali'
+    inali = "inali"
 
     ##########################
     # Act.
@@ -96,14 +121,14 @@ def test_get_percent_identity():
 
 
 
-def test_add_seq_to_alignment2():
+def test_add_seq_to_alignment2():  # ***Incomplete test
     """Test the add_seq_to_alignment2 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    inseqobj = 'inseqobj'
-    innexpath = 'innexpath'
-    outnexpath = 'outnexpath'
+    inseqobj = "inseqobj"
+    innexpath = "innexpath"
+    outnexpath = "outnexpath"
 
     ##########################
     # Act.
@@ -117,12 +142,12 @@ def test_add_seq_to_alignment2():
 
 
 
-def test_modify_seq_descr_for_tree():
+def test_modify_seq_descr_for_tree():  # ***Incomplete test
     """Test the modify_seq_descr_for_tree function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    inseqobj = 'inseqobj'
+    inseqobj = "inseqobj"
 
     ##########################
     # Act.
@@ -134,14 +159,14 @@ def test_modify_seq_descr_for_tree():
 
 
 
-def test_add_seq_to_alignment3():
+def test_add_seq_to_alignment3():  # ***Incomplete test
     """Test the add_seq_to_alignment3 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    inseqobj = 'inseqobj'
-    innexpath = 'innexpath'
-    outnexpath = 'outnexpath'
+    inseqobj = "inseqobj"
+    innexpath = "innexpath"
+    outnexpath = "outnexpath"
 
     ##########################
     # Act.
@@ -155,13 +180,13 @@ def test_add_seq_to_alignment3():
 
 
 
-def test_get_sequence_comparison_dict():
+def test_get_sequence_comparison_dict():  # ***Incomplete test
     """Test the get_sequence_comparison_dict function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    inali = 'inali'
-    score_df = 'score_df'
+    inali = "inali"
+    score_df = "score_df"
 
     ##########################
     # Act.
@@ -174,12 +199,12 @@ def test_get_sequence_comparison_dict():
 
 
 
-def test_get_all_comparison_output_filepath():
+def test_get_all_comparison_output_filepath():  # ***Incomplete test
     """Test the get_all_comparison_output_filepath function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    outdir = 'outdir'
+    outdir = "outdir"
 
     ##########################
     # Act.
@@ -191,12 +216,12 @@ def test_get_all_comparison_output_filepath():
 
 
 
-def test_find_redun_model_recursively():
+def test_find_redun_model_recursively():  # ***Incomplete test
     """Test the find_redun_model_recursively function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    outdir = 'outdir'
+    outdir = "outdir"
 
     ##########################
     # Act.
@@ -208,15 +233,15 @@ def test_find_redun_model_recursively():
 
 
 
-def test_count_paralogues():
+def test_count_paralogues():  # ***Incomplete test
     """Test the count_paralogues function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    alignment = 'alignment'
-    fasta = 'fasta'
-    fwdeval = 'fwdeval'
-    identity = 'identity'
+    alignment = "alignment"
+    fasta = "fasta"
+    fwdeval = "fwdeval"
+    identity = "identity"
 
     ##########################
     # Act.
@@ -231,13 +256,13 @@ def test_count_paralogues():
 
 
 
-def test_get_seq_obj_x():
+def test_get_seq_obj_x():  # ***Incomplete test
     """Test the get_seq_obj_x function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    acc_list = 'acc_list'
-    fastadir = 'fastadir'
+    acc_list = "acc_list"
+    fastadir = "fastadir"
 
     ##########################
     # Act.
@@ -250,12 +275,12 @@ def test_get_seq_obj_x():
 
 
 
-def test_get_seq_obj_x2():
+def test_get_seq_obj_x2():  # ***Incomplete test
     """Test the get_seq_obj_x2 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    acc_list = 'acc_list'
+    acc_list = "acc_list"
 
     ##########################
     # Act.
@@ -267,12 +292,12 @@ def test_get_seq_obj_x2():
 
 
 
-def test_get_cur_ali_num():
+def test_get_cur_ali_num():  # ***Incomplete test
     """Test the get_cur_ali_num function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    alignmentdir = 'alignmentdir'
+    alignmentdir = "alignmentdir"
 
     ##########################
     # Act.
@@ -284,16 +309,16 @@ def test_get_cur_ali_num():
 
 
 
-def test_count_paralogues2():
+def test_count_paralogues2():  # ***Incomplete test
     """Test the count_paralogues2 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    csv_file = 'csv_file'
-    alignmentdir = 'alignmentdir'
-    fastadir = 'fastadir'
-    fwdeval = 'fwdeval'
-    metric_name = 'metric_name'
+    csv_file = "csv_file"
+    alignmentdir = "alignmentdir"
+    fastadir = "fastadir"
+    fwdeval = "fwdeval"
+    metric_name = "metric_name"
 
     ##########################
     # Act.
@@ -309,12 +334,12 @@ def test_count_paralogues2():
 
 
 
-def test_get_overlapping_genes_from_gff3():
+def test_get_overlapping_genes_from_gff3():  # ***Incomplete test
     """Test the get_overlapping_genes_from_gff3 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    sql_database = 'sql_database'
+    sql_database = "sql_database"
 
     ##########################
     # Act.
@@ -326,14 +351,14 @@ def test_get_overlapping_genes_from_gff3():
 
 
 
-def test_two_proteins_same_gene_in_gff3():
+def test_two_proteins_same_gene_in_gff3():  # ***Incomplete test
     """Test the two_proteins_same_gene_in_gff3 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    sql_database = 'sql_database'
-    prot_id_1 = 'prot_id_1'
-    prot_id_2 = 'prot_id_2'
+    sql_database = "sql_database"
+    prot_id_1 = "prot_id_1"
+    prot_id_2 = "prot_id_2"
 
     ##########################
     # Act.
@@ -347,13 +372,13 @@ def test_two_proteins_same_gene_in_gff3():
 
 
 
-def test_cds_record_matches_prot_id():
+def test_cds_record_matches_prot_id():  # ***Incomplete test
     """Test the cds_record_matches_prot_id function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    cds_obj = 'cds_obj'
-    prot_id = 'prot_id'
+    cds_obj = "cds_obj"
+    prot_id = "prot_id"
 
     ##########################
     # Act.
@@ -366,14 +391,14 @@ def test_cds_record_matches_prot_id():
 
 
 
-def test_two_proteins_same_gene_in_gff3_2():
+def test_two_proteins_same_gene_in_gff3_2():  # ***Incomplete test
     """Test the two_proteins_same_gene_in_gff3_2 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    sql_database = 'sql_database'
-    prot_id_1 = 'prot_id_1'
-    prot_id_2 = 'prot_id_2'
+    sql_database = "sql_database"
+    prot_id_1 = "prot_id_1"
+    prot_id_2 = "prot_id_2"
 
     ##########################
     # Act.
@@ -387,14 +412,14 @@ def test_two_proteins_same_gene_in_gff3_2():
 
 
 
-def test_two_proteins_same_gene_in_gff3_3():
+def test_two_proteins_same_gene_in_gff3_3():  # ***Incomplete test
     """Test the two_proteins_same_gene_in_gff3_3 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    sql_database = 'sql_database'
-    prot_id_1 = 'prot_id_1'
-    prot_id_2 = 'prot_id_2'
+    sql_database = "sql_database"
+    prot_id_1 = "prot_id_1"
+    prot_id_2 = "prot_id_2"
 
     ##########################
     # Act.
@@ -408,12 +433,12 @@ def test_two_proteins_same_gene_in_gff3_3():
 
 
 
-def test_annot_id_matches_prot_id():
+def test_annot_id_matches_prot_id():  # ***Incomplete test
     """Test the annot_id_matches_prot_id function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    annot_id = 'annot_id'
+    annot_id = "annot_id"
 
     ##########################
     # Act.
@@ -425,12 +450,12 @@ def test_annot_id_matches_prot_id():
 
 
 
-def test_get_relevant_annot_sql_file():
+def test_get_relevant_annot_sql_file():  # ***Incomplete test
     """Test the get_relevant_annot_sql_file function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    sequence_filename = 'sequence_filename'
+    sequence_filename = "sequence_filename"
 
     ##########################
     # Act.
@@ -442,12 +467,12 @@ def test_get_relevant_annot_sql_file():
 
 
 
-def test_count_paralogues3():
+def test_count_paralogues3():  # ***Incomplete test
     """Test the count_paralogues3 function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    csv_file = 'csv_file'
+    csv_file = "csv_file"
 
     ##########################
     # Act.
@@ -459,13 +484,13 @@ def test_count_paralogues3():
 
 
 
-def test_add_alignment_column():
+def test_add_alignment_column():  # ***Incomplete test
     """Test the add_alignment_column function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    incsv = 'incsv'
-    outcsv = 'outcsv'
+    incsv = "incsv"
+    outcsv = "outcsv"
 
     ##########################
     # Act.
@@ -478,13 +503,13 @@ def test_add_alignment_column():
 
 
 
-def test_add_model_column():
+def test_add_model_column():  # ***Incomplete test
     """Test the add_model_column function in the paralogue_counter.py file.
     """
     ##########################
     # Arrange.
-    incsv = 'incsv'
-    outcsv = 'outcsv'
+    incsv = "incsv"
+    outcsv = "outcsv"
 
     ##########################
     # Act.

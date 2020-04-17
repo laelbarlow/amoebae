@@ -5,16 +5,22 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from name_replace import *
+from name_replace import \
+generate_code_name, \
+write_afa_with_code_names, \
+write_nex_with_code_names, \
+get_conversion_dict_from_table, \
+write_newick_tree_with_uncoded_names, \
+write_newick_tree_with_coded_names, \
+codenames_nex
 
 
-
-def test_generate_code_name():
+def test_generate_code_name():  # ***Incomplete test
     """Test the generate_code_name function in the name_replace.py file.
     """
     ##########################
     # Arrange.
-    number = 'number'
+    number = "number"
 
     ##########################
     # Act.
@@ -26,14 +32,14 @@ def test_generate_code_name():
 
 
 
-def test_write_afa_with_code_names():
+def test_write_afa_with_code_names():  # ***Incomplete test
     """Test the write_afa_with_code_names function in the name_replace.py file.
     """
     ##########################
     # Arrange.
-    infile = 'infile'
-    outfile = 'outfile'
-    tablefile = 'tablefile'
+    infile = "infile"
+    outfile = "outfile"
+    tablefile = "tablefile"
 
     ##########################
     # Act.
@@ -47,14 +53,14 @@ def test_write_afa_with_code_names():
 
 
 
-def test_write_nex_with_code_names():
+def test_write_nex_with_code_names():  # ***Incomplete test
     """Test the write_nex_with_code_names function in the name_replace.py file.
     """
     ##########################
     # Arrange.
-    infile = 'infile'
-    outfile = 'outfile'
-    tablefile = 'tablefile'
+    infile = "infile"
+    outfile = "outfile"
+    tablefile = "tablefile"
 
     ##########################
     # Act.
@@ -68,12 +74,12 @@ def test_write_nex_with_code_names():
 
 
 
-def test_get_conversion_dict_from_table():
+def test_get_conversion_dict_from_table():  # ***Incomplete test
     """Test the get_conversion_dict_from_table function in the name_replace.py file.
     """
     ##########################
     # Arrange.
-    tablefile = 'tablefile'
+    tablefile = "tablefile"
 
     ##########################
     # Act.
@@ -85,14 +91,14 @@ def test_get_conversion_dict_from_table():
 
 
 
-def test_write_newick_tree_with_uncoded_names():
+def test_write_newick_tree_with_uncoded_names():  # ***Incomplete test
     """Test the write_newick_tree_with_uncoded_names function in the name_replace.py file.
     """
     ##########################
     # Arrange.
-    infile = 'infile'
-    outfile = 'outfile'
-    tablefile = 'tablefile'
+    infile = "infile"
+    outfile = "outfile"
+    tablefile = "tablefile"
 
     ##########################
     # Act.
@@ -106,14 +112,14 @@ def test_write_newick_tree_with_uncoded_names():
 
 
 
-def test_write_newick_tree_with_coded_names():
+def test_write_newick_tree_with_coded_names():  # ***Incomplete test
     """Test the write_newick_tree_with_coded_names function in the name_replace.py file.
     """
     ##########################
     # Arrange.
-    infile = 'infile'
-    outfile = 'outfile'
-    tablefile = 'tablefile'
+    infile = "infile"
+    outfile = "outfile"
+    tablefile = "tablefile"
 
     ##########################
     # Act.
@@ -127,13 +133,13 @@ def test_write_newick_tree_with_coded_names():
 
 
 
-def test_codenames_nex():
+def test_codenames_nex():  # ***Incomplete test
     """Test the codenames_nex function in the name_replace.py file.
     """
     ##########################
     # Arrange.
-    infp = 'infp'
-    aamodelpr = 'aamodelpr=None'
+    infp = "infp"
+    aamodelpr = "aamodelpr=None"
 
     ##########################
     # Act.

@@ -5,16 +5,19 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from find_pos_hmmer_hits import *
+from find_pos_hmmer_hits import \
+get_red_acc_list, \
+write_pos_seqs, \
+get_csv_name, \
+find_pos_hmmer_hitsx
 
 
-
-def test_get_red_acc_list():
+def test_get_red_acc_list():  # ***Incomplete test
     """Test the get_red_acc_list function in the find_pos_hmmer_hits.py file.
     """
     ##########################
     # Arrange.
-    infilepath = 'infilepath'
+    infilepath = "infilepath"
 
     ##########################
     # Act.
@@ -26,15 +29,15 @@ def test_get_red_acc_list():
 
 
 
-def test_write_pos_seqs():
+def test_write_pos_seqs():  # ***Incomplete test
     """Test the write_pos_seqs function in the find_pos_hmmer_hits.py file.
     """
     ##########################
     # Arrange.
-    infilepath = 'infilepath'
-    dbdirpath = 'dbdirpath'
-    outfilepath = 'outfilepath'
-    prot_name = 'prot_name=None'
+    infilepath = "infilepath"
+    dbdirpath = "dbdirpath"
+    outfilepath = "outfilepath"
+    prot_name = "prot_name=None"
 
     ##########################
     # Act.
@@ -49,13 +52,13 @@ def test_write_pos_seqs():
 
 
 
-def test_get_csv_name():
+def test_get_csv_name():  # ***Incomplete test
     """Test the get_csv_name function in the find_pos_hmmer_hits.py file.
     """
     ##########################
     # Arrange.
-    infilepath = 'infilepath'
-    cur_time = 'cur_time'
+    infilepath = "infilepath"
+    cur_time = "cur_time"
 
     ##########################
     # Act.
@@ -68,15 +71,15 @@ def test_get_csv_name():
 
 
 
-def test_find_pos_hmmer_hitsx():
+def test_find_pos_hmmer_hitsx():  # ***Incomplete test
     """Test the find_pos_hmmer_hitsx function in the find_pos_hmmer_hits.py file.
     """
     ##########################
     # Arrange.
-    infilepath1 = 'infilepath1'
-    infilepath2 = 'infilepath2'
-    fwdeval = 'fwdeval'
-    reveval = 'reveval'
+    infilepath1 = "infilepath1"
+    infilepath2 = "infilepath2"
+    fwdeval = "fwdeval"
+    reveval = "reveval"
 
     ##########################
     # Act.

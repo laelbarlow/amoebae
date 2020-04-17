@@ -5,11 +5,11 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from check_qt import *
+from check_qt import \
+run_qt
 
 
-
-def test_run_qt():
+def test_run_qt():  # ***Incomplete test
     """Test the run_qt function in the check_qt.py file.
     """
     ##########################

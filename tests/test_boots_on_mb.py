@@ -5,16 +5,19 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
 
-from boots_on_mb import *
+from boots_on_mb import \
+reformat_combined_supports, \
+combine_supports, \
+mbcontre_to_newick_w_probs, \
+contre_to_newick
 
 
-
-def test_reformat_combined_supports():
+def test_reformat_combined_supports():  # ***Incomplete test
     """Test the reformat_combined_supports function in the boots_on_mb.py file.
     """
     ##########################
     # Arrange.
-    tree_string = 'tree_string'
+    tree_string = "tree_string"
 
     ##########################
     # Act.
@@ -26,14 +29,14 @@ def test_reformat_combined_supports():
 
 
 
-def test_combine_supports():
+def test_combine_supports():  # ***Incomplete test
     """Test the combine_supports function in the boots_on_mb.py file.
     """
     ##########################
     # Arrange.
-    boot_newick = 'boot_newick'
-    prob_newick = 'prob_newick'
-    combined_figtree_newick = 'combined_figtree_newick'
+    boot_newick = "boot_newick"
+    prob_newick = "prob_newick"
+    combined_figtree_newick = "combined_figtree_newick"
 
     ##########################
     # Act.
@@ -47,13 +50,13 @@ def test_combine_supports():
 
 
 
-def test_mbcontre_to_newick_w_probs():
+def test_mbcontre_to_newick_w_probs():  # ***Incomplete test
     """Test the mbcontre_to_newick_w_probs function in the boots_on_mb.py file.
     """
     ##########################
     # Arrange.
-    intreepath = 'intreepath'
-    outtreepath = 'outtreepath'
+    intreepath = "intreepath"
+    outtreepath = "outtreepath"
 
     ##########################
     # Act.
@@ -66,13 +69,13 @@ def test_mbcontre_to_newick_w_probs():
 
 
 
-def test_contre_to_newick():
+def test_contre_to_newick():  # ***Incomplete test
     """Test the contre_to_newick function in the boots_on_mb.py file.
     """
     ##########################
     # Arrange.
-    intreepath = 'intreepath'
-    outtreepath = 'outtreepath'
+    intreepath = "intreepath"
+    outtreepath = "outtreepath"
 
     ##########################
     # Act.

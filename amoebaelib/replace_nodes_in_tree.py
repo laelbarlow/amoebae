@@ -37,7 +37,7 @@ def replace_nodes_of_interest_in_tree(t, nodes, replacement_nodes):
     for n, replacement_n in zip(nodes, replacement_nodes):
         t2n = get_corresponding_node(n, t2)
         # Replace t2n with replacement_n
-        ...XXX...
+        pass # ...........
 
 
     return t2
