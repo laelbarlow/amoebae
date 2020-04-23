@@ -1,18 +1,24 @@
 #/bin/bash
 
 # This script is for using an existing .sif file ("singularity.sif") to run
-# AMOEBAE code from a linux machine. If run on MacOS, this script will run
-# singularity within a virtual machine managed by Vagrant. 
+# code from a linux machine. If run on MacOS, this script will run singularity
+# within a virtual machine managed by Vagrant. 
 
+
+# Determine name of current working directory.
+repo_basename="$( basename $PWD)"
+
+# Define a function to run a singularity shell command within a virtual
+# machine.
 singularity_shell_in_vm () {
   # Spin up a Vagrant VM.
   vagrant up && \
   # Copy singularity container from the host to the VM.
   printf "\nCopying .sif file into virtual machine.\n" && \
-  vagrant ssh -c 'cp amoebae/singularity.sif singularity.sif' && \
+  vagrant ssh -c 'cp '$repo_basename'/singularity.sif singularity.sif' && \
   # Run the command to open a shell session.
   printf "\nStarting shell session in Singularity container.\n\n\t***Type exit to exit the session when you are done.\n\n" 
-  vagrant ssh -c 'cd amoebae && singularity shell -B /home/vagrant/amoebae:/opt/amoebae ../singularity.sif' && \
+  vagrant ssh -c 'cd '$repo_basename' && singularity shell -B /home/vagrant/'$repo_basename':/opt/'$repo_basename' ../singularity.sif' && \
   # Remove the copy of the .sif file.
   printf "\nRemoving copy of .sif file." && \
   vagrant ssh -c 'rm singularity.sif' && \
@@ -41,7 +47,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 
         # Open a shell session in the singularity container.
         singularity shell \
-            -B $PWD:/opt/amoebae \
+            -B $PWD:/opt/$repo_basename \
             singularity.sif         
 
     else
@@ -55,13 +61,13 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     printf "\nDetected Windows.\n"
     # Do something under 32 bits Windows NT platform
-    echo "AMOEBAE has not been tested on Windows, please contact the developer."
+    echo "This code has not been tested on Windows, please contact the developer."
     exit 1
 
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     printf "\nDetected Windows.\n"
     # Do something under 64 bits Windows NT platform
-    echo "AMOEBAE has not been tested on Windows, please contact the developer."
+    echo "This code has not been tested on Windows, please contact the developer."
     exit 1
 fi
 

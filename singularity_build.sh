@@ -9,16 +9,20 @@
 # Start timing this script.
 SECONDS=0
 
+# Determine name of current working directory.
+repo_basename="$( basename $PWD)"
+
+# Define function for building a singularity container within a virtual machine.
 singularity_build_in_vm () {
     # Spin up a Vagrant VM.
     vagrant up && \
     # Copy recipe file from the host to the VM.
-    vagrant ssh -c 'cp amoebae/singularity.recipe singularity.recipe' && \
+    vagrant ssh -c 'cp '$repo_basename'/singularity.recipe singularity.recipe' && \
     # Run the singularity build script.
     vagrant ssh -c 'sudo singularity build singularity.sif singularity.recipe' && \
     # Move the .sif file into the directory synced with the host. This will
     # overwrite any existing file with the same name in that directory.
-    vagrant ssh -c 'mv singularity.sif amoebae/singularity.sif' && \
+    vagrant ssh -c 'mv singularity.sif '$repo_basename'/singularity.sif' && \
     # Shut down VM.
     vagrant halt
     # Erase VM.
@@ -56,19 +60,19 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     printf "\nDetected Windows.\n"
     # Do something under 32 bits Windows NT platform
-    echo "AMOEBAE has not been tested on Windows, please contact the developer."
+    echo "This code has not been tested on Windows, please contact the developer."
     exit 1
 
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     printf "\nDetected Windows.\n"
     # Do something under 64 bits Windows NT platform
-    echo "AMOEBAE has not been tested on Windows, please contact the developer."
+    echo "This code has not been tested on Windows, please contact the developer."
     exit 1
 fi
 
 #######################################################
 # Report how much time it took for this script to run.
 echo ""
-ELAPSED="Building a Singularity container for AMOEBAE took the following amount of time: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"
+ELAPSED="Building a Singularity container took the following amount of time: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"
 echo $ELAPSED
 
