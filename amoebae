@@ -889,6 +889,11 @@ Miscellaneous commands:
         forward search hits to list in the summary spreadsheet.
         If zero, then reverse searches will be performed for all hits.''',
         default=0)
+        parser.add_argument('--max_length_diff', help='''Maximum number of
+        amino acid residues length difference allowed between the original
+        query and the forward hit sequence.  If zero, then reverse searches
+        will be performed for all hits.''',
+        default=0)
         args = parser.parse_args(sys.argv[2:])
 
         # Print a temporary warning.
@@ -930,7 +935,8 @@ Miscellaneous commands:
                           int(args.max_gap_between_tblastn_hsps), 
                           args.exonerate_score_threshold,
                           args.do_not_use_exonerate,
-                          args.max_hits_to_sum)
+                          args.max_hits_to_sum,
+                          args.max_length_diff)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nForward search results written/appended to

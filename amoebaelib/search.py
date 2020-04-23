@@ -336,7 +336,9 @@ def get_rows_for_fwd_srch_df(df,
                              max_gap_setting, 
                              exonerate_score_threshold,
                              do_not_use_exonerate,
-                             max_hits_to_sum):
+                             max_hits_to_sum,
+                             max_length_diff
+                             ):
     """Parses search result file and adds a corresponding row to an output
     pandas dataframe.
     """
@@ -524,11 +526,13 @@ def get_rows_for_fwd_srch_df(df,
                 new_row_df.loc[0]['Proximity (bp) to end of subject sequence (if searching in nucleotide sequences)']\
                 = str(proximity)
 
+                # Calculate difference in length between query and hit
+                # sequences.
+                length_diff = int(abs(query_len - cur_hit_len))
 
-                # Decide whether the E-value is low enough to meet the
-                # cutoff.
+                # Determine whether criteria have been met.
                 decis = '-'
-                if e_cur <= float(max_evalue):
+                if e_cur <= float(max_evalue) and length_diff <= int(max_length_diff):
                     decis = '+'
                 new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
@@ -612,10 +616,13 @@ def get_rows_for_fwd_srch_df(df,
                 new_row_df.loc[0]['Forward hit subsequence(s) that align(s) to query']\
                 = str(subseq_and_coord[0].seq)
 
-                # Decide whether the E-value is low enough to meet the
-                # cutoff.
+                # Calculate difference in length between query and hit
+                # sequences.
+                length_diff = int(abs(query_len - cur_hit_len))
+
+                # Determine whether search criteria have been met.
                 decis = '-'
-                if e_cur <= float(max_evalue):
+                if e_cur <= float(max_evalue) and length_diff <= int(max_length_diff):
                     decis = '+'
                 new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
@@ -641,7 +648,8 @@ def write_fwd_srch_res_to_csv(outdir,
                               max_gap_setting, 
                               exonerate_score_threshold,
                               do_not_use_exonerate,
-                              max_hits_to_sum):
+                              max_hits_to_sum,
+                              max_length_diff):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -729,7 +737,8 @@ def write_fwd_srch_res_to_csv(outdir,
                                                      max_gap_setting,
                                                      exonerate_score_threshold,
                                                      do_not_use_exonerate,
-                                                     max_hits_to_sum)
+                                                     max_hits_to_sum,
+                                                     max_length_diff)
 
                     # Append sub-dataframe to full dataframe.
                     df = df.append(subdf, ignore_index=True)
