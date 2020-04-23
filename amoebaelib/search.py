@@ -430,7 +430,7 @@ def get_rows_for_fwd_srch_df(df,
 
                 # Only process hits up to the maximum number specified.
                 if max_hits_to_sum != 0:
-                    if hit_num > int(max_hits_to_sum):
+                    if hit_num + 1 > int(max_hits_to_sum):
                         break # *******
 
                 # Get SearchIO Hit object from QueryResult object that
@@ -558,7 +558,7 @@ def get_rows_for_fwd_srch_df(df,
 
                 # Only process hits up to the maximum number specified.
                 if max_hits_to_sum != 0:
-                    if hit_num > int(max_hits_to_sum):
+                    if hit_num + 1 > int(max_hits_to_sum):
                         break # *******
 
 
