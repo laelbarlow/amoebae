@@ -61,8 +61,6 @@ def intersect(a, b):
     """ return the intersection of two lists """
     return list(set(a) & set(b))
 
-#from get_datatype import get_dbtype
-
 
 
 # Define functions to be used in amoebae.
