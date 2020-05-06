@@ -1438,7 +1438,9 @@ Miscellaneous commands:
             "Query title" column). Alternatively, you can run this command with
             the --add_ali_col option to automatically identify appropriate
             alignments among your aligned FASTA queries used for running HMMer
-            searches.''', 
+            searches. If no alignment (.afaa) file can be found, then the first
+            single sequence query file (.faa) that appears in the summary CSV
+            file will be used instead.''', 
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('csv_file', help='''Path to spreadsheet with
         interpreted search results outputted by the interp_srchs command.''')

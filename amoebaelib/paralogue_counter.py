@@ -1874,9 +1874,9 @@ def get_relevant_annot_sql_file(sequence_filename):
             # Define the annotation file name.
             annotation_file = possible_sql_filename
         # Temporary.
-        assert os.path.isfile(possible_file_path),\
-        """No SQL file matching the sequence file name
-        %s exists.""" % sequence_filename
+        #assert os.path.isfile(possible_file_path),\
+        #"""No SQL file matching the sequence file name
+        #%s exists.""" % sequence_filename
 
     return annotation_file
 
@@ -3110,7 +3110,26 @@ def add_alignment_column(incsv, outcsv):
                 if not query_file in query_title_alignment_dict[query_title]:
                     query_title_alignment_dict[query_title] = query_title_alignment_dict[query_title] + [query_file]
 
-    
+    # Check that an alignment file name was assigned to each query title.
+    titles_without_alignments = []
+    for query_title in list(set(complete_query_title_list)):
+        if query_title not in query_title_alignment_dict.keys():
+            titles_without_alignments.append(query_title)
+
+    # If no alignment file could be found for rows, then look for
+    # single-sequence queries to use as an "alignment" instead.
+    if len(titles_without_alignments) > 0:
+        for index, row in df.iterrows():
+            query_title = row[column_header_dict['query title']]
+            query_file = row[column_header_dict['query filename']]
+            if not query_title in query_title_alignment_dict.keys():
+                if query_file.endswith('.faa') or query_file.endswith('.fna'):
+                    query_title_alignment_dict[query_title] = [query_file]
+                    print("""\n\n\nWarning: Using single-sequences as
+                    initial alignments for aligning and comparing pairs of hit
+                    sequences retrieved by queries with the query title
+                    \"%s\".\n\n\n""" % query_title)
+
     # Check that an alignment file name was assigned to each query title.
     titles_without_alignments = []
     for query_title in list(set(complete_query_title_list)):
