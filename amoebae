@@ -891,9 +891,9 @@ Miscellaneous commands:
         default=0)
         parser.add_argument('--max_length_diff', help='''Maximum number of
         amino acid residues length difference allowed between the original
-        query and the forward hit sequence.  If zero, then reverse searches
-        will be performed for all hits.''',
-        default=0)
+        query and the forward hit sequence.  If -1, then a maximum length
+        cutoff will not be applied.''',
+        default=-1)
         args = parser.parse_args(sys.argv[2:])
 
         # Print a temporary warning.

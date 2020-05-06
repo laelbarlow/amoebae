@@ -530,7 +530,8 @@ def get_rows_for_fwd_srch_df(df,
 
                 # Determine whether criteria have been met.
                 decis = '-'
-                if e_cur <= float(max_evalue) and length_diff <= int(max_length_diff):
+                if e_cur <= float(max_evalue) and \
+                        (length_diff <= int(max_length_diff) or max_length_diff == -1):
                     decis = '+'
                 new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
@@ -620,7 +621,8 @@ def get_rows_for_fwd_srch_df(df,
 
                 # Determine whether search criteria have been met.
                 decis = '-'
-                if e_cur <= float(max_evalue) and length_diff <= int(max_length_diff):
+                if e_cur <= float(max_evalue) and \
+                        (length_diff <= int(max_length_diff) or max_length_diff == -1):
                     decis = '+'
                 new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
