@@ -587,7 +587,7 @@ Miscellaneous commands:
         parser.add_argument('--predict_redun_hit_selection', help="""Write a
         copy of the output spreadsheet with '+' in rows for hits that may be
         specific to each query title, due to not being retrieved as top hits by
-        queries associated with different query titles."""
+        queries associated with different query titles.""",
         action='store_true')
 
         args = parser.parse_args(sys.argv[2:])
