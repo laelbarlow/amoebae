@@ -584,6 +584,11 @@ Miscellaneous commands:
         parser.add_argument('--num_threads_similarity_searching',
                 help='''Number of threads to use for running searches.''',
                 default=4)
+        parser.add_argument('--predict_redun_hit_selection', help="""Write a
+        copy of the output spreadsheet with '+' in rows for hits that may be
+        specific to each query title, due to not being retrieved as top hits by
+        queries associated with different query titles."""
+        action='store_true')
 
         args = parser.parse_args(sys.argv[2:])
 
@@ -661,7 +666,8 @@ Miscellaneous commands:
                           args.blast_max_target_seqs,
                           args.hmmer_report_evalue_cutoff,
                           args.hmmer_report_score_cutoff,
-                          args.num_threads_similarity_searching)
+                          args.num_threads_similarity_searching,
+                          args.predict_redun_hit_selection)
 
         # Prompt manual annotation of spreadsheet to define positive
         # (redundant) hits.
