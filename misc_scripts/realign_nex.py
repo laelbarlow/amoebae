@@ -44,11 +44,12 @@ def realign_nex(infilepath, outdirpath=None, text_append='_realigned'):
 
     # Convert nex to afa.
     outafapath = os.path.join(outdirpath,
-            os.path.basename(infilepath).replace('.nex', '_temp.afa'))
+            os.path.basename(infilepath).rsplit('.', 1)[0] + '_temp.afaa')
     nex_to_afa(infilepath, outafapath)
 
     # Convert afa to fa, and remove afa.
-    outfapath = outafapath.replace('.afa', '.fa')
+    #outfapath = outafapath.replace('.afa', '.fa')
+    outfapath = outafapath.rsplit('.', 1)[0] + '.faa'
     afa_to_fa(outafapath, outfapath)
     os.remove(outafapath)
     
@@ -58,7 +59,7 @@ def realign_nex(infilepath, outdirpath=None, text_append='_realigned'):
     os.remove(outfapath)
 
     # Convert afa to nex.
-    outnexpath = outafapath.replace('_temp.afa', text_append + '.nex') 
+    outnexpath = outafapath.replace('_temp.afaa', text_append + '.nex') 
     afa_to_nex(outafapath, outnexpath) 
     os.remove(outafapath)
 
