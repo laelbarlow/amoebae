@@ -154,7 +154,6 @@ def get_csv_with_redun_hit_predictions(in_csv, out_csv):
 
 
 if __name__ == '__main__':
-    #generate_dict_from_redun_hit_csv(infilepath1)
     in_csv = infilepath1
     out_csv = in_csv.rsplit('.', 1)[0] + '_2.csv'
     get_csv_with_redun_hit_predictions(in_csv, out_csv)
