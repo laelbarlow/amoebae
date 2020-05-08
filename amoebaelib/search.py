@@ -55,7 +55,7 @@ determine_search_method, search_result_filepath, run_any_search,\
 run_all_searches, get_out_hmm_path, get_query_subdir
 from search_scaffolds import split_tblastn_hits_into_separate_genes,\
 get_hit_seq_record_and_coord, get_hit_seq_record_and_coord2, get_cluster_range
-from predict_redun_hit_selections import get_csv_with_redun_hit_predictions
+from predict_redun_hit_selection import get_csv_with_redun_hit_predictions
 
 
 def intersect(a, b):
