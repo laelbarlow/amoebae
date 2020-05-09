@@ -1546,6 +1546,8 @@ Miscellaneous commands:
         alignment), not including gaps, for the two sequences to be considered
         as potentially distinct hits.  This is only relevant if the
         overlap_required option is specified.""", default=0)
+        parser.add_argument('--plot_hit_exclusion', help="""Plot number of hits
+        excluded by the various criteria applied.""", action='store_true')
         parser.add_argument('--add_ali_col', help="""Add a column to the csv
         file listing which alignment file in the queries directory to use for
         comparing sequences. Aligned FASTA queries are selected that match the
@@ -1594,6 +1596,7 @@ Miscellaneous commands:
                                             args.min_percent_overlap,
                                             args.just_look_for_genes_in_gff3,
                                             args.ignore_gff3,
+                                            args.plot_hit_exclusion,
                                             outfp)
         else:
             # Write output file listing which alignment to use.

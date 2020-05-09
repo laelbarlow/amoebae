@@ -1902,6 +1902,7 @@ def count_paralogues3(csv_file,
                       overlap_minimum_percent_overlap,
                       just_look_for_genes_in_gff3,
                       ignore_gff3,
+                      plot_hit_exclusion,
                       outfp=None):
     """Identify hits in an amoebae search result summary CSV file which are
     redundant, or otherwise not likely to represent paralogous loci. Append
@@ -2248,7 +2249,7 @@ def count_paralogues3(csv_file,
                             # If there is an annotation file available, determine whether
                             # the hit is at the same locus in the nucleotide sequence as
                             # the peptide sequence hit.
-                            if annotation_file is not None:
+                            if annotation_file is not None and not ignore_gff3:
                                 # Check that the type is string.
                                 assert type(annotation_file).__name__ == 'str'
 
@@ -2259,6 +2260,10 @@ def count_paralogues3(csv_file,
                                 # Call function for determining whether the
                                 # proteins are encoded by the same gene.
                                 #print("""\t\tCall function for determining whether the proteins are encoded by the same gene.""")
+                                # *******This function is very very slow when
+                                # looking up the location of genes in the human
+                                # genome, for example, so need to make this more
+                                # efficient.
                                 same_gene =\
                                 two_proteins_same_gene_in_gff3_3(annotation_file_path,
                                         j[7], i[7])
@@ -2290,7 +2295,6 @@ def count_paralogues3(csv_file,
         # Record non-redundant count of potential positive protein hits.
         sankey_data_dict['Total in']['prot'] += len(prot_tuples2)
         nonredun_prot_tuples = nonredun_prot_tuples + prot_tuples2
-
 
         # Check for redundancy among the tblastn hits in their locations, and
         # remove all but the best hit for each locus.
@@ -2863,7 +2867,6 @@ def count_paralogues3(csv_file,
                 assert note != '-', """No note made for hit with ID %s and index %s""" % (i[1], str(i[0]))
 
 
-
     # Change column headers in dataframe so that this function can be called
     # multiple times with the same input spreadsheet to compare results when
     # using different parameters.
@@ -2900,148 +2903,149 @@ def count_paralogues3(csv_file,
         your GFF3 file is formatted correctly.""" % filename)
 
 
-    # Visualize all comparisons to evaluate whether metric adequately
-    # distinguished between sequences.
-    # ...
+    if plot_hit_exclusion:
+        # Visualize all comparisons to evaluate whether metric adequately
+        # distinguished between sequences.
+        # ...
 
-    # Generate a bar chart to show the relative number of nonredundant and
-    # positive protein and nucleotide sequence hits.
-    bar_chart_title = 'Total hits before and after applying criteria'
-    bar_chart_categories =  ['Protein', 'Nucleotide']
-    bar_chart_labels = ['Non-redundant', 'Final positive']
-    bar_chart_data = [[len(nonredun_prot_tuples), len(final_positive_prot_tuples)],
-                      [len(nonredun_nucl_tuples), len(final_positive_nucl_tuples)]]
-    bar_chart_output_filepath = os.path.join(outdir,
-            '0_bar_chart_of_hit_counts_before_and_after_criteria.pdf')
-    generate_bar_chart(bar_chart_title,
-                       bar_chart_categories,
-                       bar_chart_labels,
-                       bar_chart_data,
-                       bar_chart_output_filepath
-                       )
+        # Generate a bar chart to show the relative number of nonredundant and
+        # positive protein and nucleotide sequence hits.
+        bar_chart_title = 'Total hits before and after applying criteria'
+        bar_chart_categories =  ['Protein', 'Nucleotide']
+        bar_chart_labels = ['Non-redundant', 'Final positive']
+        bar_chart_data = [[len(nonredun_prot_tuples), len(final_positive_prot_tuples)],
+                          [len(nonredun_nucl_tuples), len(final_positive_nucl_tuples)]]
+        bar_chart_output_filepath = os.path.join(outdir,
+                '0_bar_chart_of_hit_counts_before_and_after_criteria.pdf')
+        generate_bar_chart(bar_chart_title,
+                           bar_chart_categories,
+                           bar_chart_labels,
+                           bar_chart_data,
+                           bar_chart_output_filepath
+                           )
 
-    # Make histograms of sequence features of positive hits.
+        # Make histograms of sequence features of positive hits.
 
-    # lists to graph:
-    #nonredun_prot_tuples = []
-    #nonredun_nucl_tuples = []
-    #final_positive_prot_tuples = []
-    #final_positive_nucl_tuples = []
+        # lists to graph:
+        #nonredun_prot_tuples = []
+        #nonredun_nucl_tuples = []
+        #final_positive_prot_tuples = []
+        #final_positive_nucl_tuples = []
 
-    # Make histogram of query cover of positive nucleotide sequence hits.
-    nucl_double_histogram_filename = os.path.join(outdir,
-            '0_histogram_of_percent_query_cover_of_nucl_hits.pdf')
-    percent_query_cover_of_nucl_hits_title = 'Percent query cover of nucleotide sequence hits'
-    percent_query_cover_of_nonredun_nucl_hits = [int(x[10]) for x in nonredun_nucl_tuples]
-    percent_query_cover_of_positive_nucl_hits = [int(x[10]) for x in final_positive_nucl_tuples]
+        # Make histogram of query cover of positive nucleotide sequence hits.
+        nucl_double_histogram_filename = os.path.join(outdir,
+                '0_histogram_of_percent_query_cover_of_nucl_hits.pdf')
+        percent_query_cover_of_nucl_hits_title = 'Percent query cover of nucleotide sequence hits'
+        percent_query_cover_of_nonredun_nucl_hits = [int(x[10]) for x in nonredun_nucl_tuples]
+        percent_query_cover_of_positive_nucl_hits = [int(x[10]) for x in final_positive_nucl_tuples]
 
-    generate_double_histogram(percent_query_cover_of_nucl_hits_title,
-                              percent_query_cover_of_nonredun_nucl_hits,
-                              'all',
-                              percent_query_cover_of_positive_nucl_hits,
-                              'positive',
-                              'auto', 
-                              nucl_double_histogram_filename
-                              )
+        generate_double_histogram(percent_query_cover_of_nucl_hits_title,
+                                  percent_query_cover_of_nonredun_nucl_hits,
+                                  'all',
+                                  percent_query_cover_of_positive_nucl_hits,
+                                  'positive',
+                                  'auto', 
+                                  nucl_double_histogram_filename
+                                  )
 
-    # Make histogram of query cover of protein sequence hits.
-    prot_double_histogram_filename = os.path.join(outdir,
-            '0_histogram_of_percent_query_cover_of_prot_hits.pdf')
-    percent_query_cover_of_prot_hits_title = 'Percent query cover of all non-redundant protein sequence hits'
-    percent_query_cover_of_nonredun_prot_hits = [int(x[10]) for x in nonredun_prot_tuples]
-    percent_query_cover_of_positive_prot_hits = [int(x[10]) for x in final_positive_prot_tuples]
+        # Make histogram of query cover of protein sequence hits.
+        prot_double_histogram_filename = os.path.join(outdir,
+                '0_histogram_of_percent_query_cover_of_prot_hits.pdf')
+        percent_query_cover_of_prot_hits_title = 'Percent query cover of all non-redundant protein sequence hits'
+        percent_query_cover_of_nonredun_prot_hits = [int(x[10]) for x in nonredun_prot_tuples]
+        percent_query_cover_of_positive_prot_hits = [int(x[10]) for x in final_positive_prot_tuples]
 
-    generate_double_histogram(percent_query_cover_of_prot_hits_title,
-                              percent_query_cover_of_nonredun_prot_hits,
-                              'all',
-                              percent_query_cover_of_positive_prot_hits,
-                              'positive',
-                              'auto',
-                              prot_double_histogram_filename
-                              )
-    #percent_query_cover_of_positive_prot_hits_title = 'Percent query cover of positive protein sequence hits'
-    #percent_query_cover_of_positive_prot_hits = [x[10] for x in prot_tuples3]
+        generate_double_histogram(percent_query_cover_of_prot_hits_title,
+                                  percent_query_cover_of_nonredun_prot_hits,
+                                  'all',
+                                  percent_query_cover_of_positive_prot_hits,
+                                  'positive',
+                                  'auto',
+                                  prot_double_histogram_filename
+                                  )
+        #percent_query_cover_of_positive_prot_hits_title = 'Percent query cover of positive protein sequence hits'
+        #percent_query_cover_of_positive_prot_hits = [x[10] for x in prot_tuples3]
 
 
 
-    # Make Sankey diagrams for protein and nucleotide hits separately.
-    #sankey_data_dict = {'Total in':         {'prot': 0, 'nucl': 0},
-    #                    'Location':         {'prot': 0, 'nucl': 0},
-    #                    'Internal stops':   {'prot': 0, 'nucl': 0},
-    #                    'Length':           {'prot': 0, 'nucl': 0},
-    #                    'Overlap':          {'prot': 0, 'nucl': 0},
-    #                    'Identity':         {'prot': 0, 'nucl': 0},
-    #                    'Total positive':   {'prot': 0, 'nucl': 0}
-    #                    }
-    #print(sankey_data_dict)
+        # Make Sankey diagrams for protein and nucleotide hits separately.
+        #sankey_data_dict = {'Total in':         {'prot': 0, 'nucl': 0},
+        #                    'Location':         {'prot': 0, 'nucl': 0},
+        #                    'Internal stops':   {'prot': 0, 'nucl': 0},
+        #                    'Length':           {'prot': 0, 'nucl': 0},
+        #                    'Overlap':          {'prot': 0, 'nucl': 0},
+        #                    'Identity':         {'prot': 0, 'nucl': 0},
+        #                    'Total positive':   {'prot': 0, 'nucl': 0}
+        #                    }
+        #print(sankey_data_dict)
 
-    # Define title for output figure.
-    title_prot = 'Sankey diagram of protein hits excluded by various criteria'
-    title_nucl = 'Sankey diagram of nucleotide hits excluded by various criteria'
+        # Define title for output figure.
+        title_prot = 'Sankey diagram of protein hits excluded by various criteria'
+        title_nucl = 'Sankey diagram of nucleotide hits excluded by various criteria'
 
-    # Define starting inflow unit count.
-    starting_inflow_unit_count_prot = sankey_data_dict['Total in']['prot']
-    starting_inflow_unit_count_nucl = sankey_data_dict['Total in']['nucl']
+        # Define starting inflow unit count.
+        starting_inflow_unit_count_prot = sankey_data_dict['Total in']['prot']
+        starting_inflow_unit_count_nucl = sankey_data_dict['Total in']['nucl']
 
-    # Define list of outflow proportions at each stage.
-    if starting_inflow_unit_count_prot == 0:
-        sankey_outflow_proportions_prot =\
-            [-0,
-             -0,
-             -0,
-             -0,
-             -0
-             ]
-    else:
-        sankey_outflow_proportions_prot =\
-            [-(sankey_data_dict['Location']['prot']/starting_inflow_unit_count_prot),
-             -(sankey_data_dict['Internal stops']['prot']/starting_inflow_unit_count_prot),
-             -(sankey_data_dict['Length']['prot']/starting_inflow_unit_count_prot),
-             -(sankey_data_dict['Overlap']['prot']/starting_inflow_unit_count_prot),
-             -(sankey_data_dict['Identity']['prot']/starting_inflow_unit_count_prot)
-            ]
-    
-    if starting_inflow_unit_count_nucl == 0:
-        sankey_outflow_proportions_nucl =\
-            [-0,
-             -0,
-             -0,
-             -0,
-             -0
-             ]
-    else:
-        sankey_outflow_proportions_nucl =\
-            [-(sankey_data_dict['Location']['nucl']/starting_inflow_unit_count_nucl),
-             -(sankey_data_dict['Internal stops']['nucl']/starting_inflow_unit_count_nucl),
-             -(sankey_data_dict['Length']['nucl']/starting_inflow_unit_count_nucl),
-             -(sankey_data_dict['Overlap']['nucl']/starting_inflow_unit_count_nucl),
-             -(sankey_data_dict['Identity']['nucl']/starting_inflow_unit_count_nucl)
-            ]
+        # Define list of outflow proportions at each stage.
+        if starting_inflow_unit_count_prot == 0:
+            sankey_outflow_proportions_prot =\
+                [-0,
+                 -0,
+                 -0,
+                 -0,
+                 -0
+                 ]
+        else:
+            sankey_outflow_proportions_prot =\
+                [-(sankey_data_dict['Location']['prot']/starting_inflow_unit_count_prot),
+                 -(sankey_data_dict['Internal stops']['prot']/starting_inflow_unit_count_prot),
+                 -(sankey_data_dict['Length']['prot']/starting_inflow_unit_count_prot),
+                 -(sankey_data_dict['Overlap']['prot']/starting_inflow_unit_count_prot),
+                 -(sankey_data_dict['Identity']['prot']/starting_inflow_unit_count_prot)
+                ]
+        
+        if starting_inflow_unit_count_nucl == 0:
+            sankey_outflow_proportions_nucl =\
+                [-0,
+                 -0,
+                 -0,
+                 -0,
+                 -0
+                 ]
+        else:
+            sankey_outflow_proportions_nucl =\
+                [-(sankey_data_dict['Location']['nucl']/starting_inflow_unit_count_nucl),
+                 -(sankey_data_dict['Internal stops']['nucl']/starting_inflow_unit_count_nucl),
+                 -(sankey_data_dict['Length']['nucl']/starting_inflow_unit_count_nucl),
+                 -(sankey_data_dict['Overlap']['nucl']/starting_inflow_unit_count_nucl),
+                 -(sankey_data_dict['Identity']['nucl']/starting_inflow_unit_count_nucl)
+                ]
 
-    # Define list of labels for outflows.
-    sankey_outflow_labels = ['Location', 'Internal stops', 'Length', 'Overlap', '%Identity']
+        # Define list of labels for outflows.
+        sankey_outflow_labels = ['Location', 'Internal stops', 'Length', 'Overlap', '%Identity']
 
-    # Define output file path.
-    output_pdf_file_path_prot = os.path.join(outdir,
-                                             '0_test_sankey_diagram_prot.pdf')
-    assert not os.path.isfile(output_pdf_file_path_prot)
-    output_pdf_file_path_nucl = os.path.join(outdir,
-                                             '0_test_sankey_diagram_nucl.pdf')
-    assert not os.path.isfile(output_pdf_file_path_nucl)
+        # Define output file path.
+        output_pdf_file_path_prot = os.path.join(outdir,
+                                                 '0_test_sankey_diagram_prot.pdf')
+        assert not os.path.isfile(output_pdf_file_path_prot)
+        output_pdf_file_path_nucl = os.path.join(outdir,
+                                                 '0_test_sankey_diagram_nucl.pdf')
+        assert not os.path.isfile(output_pdf_file_path_nucl)
 
-    # Call function to generate sankey diagram.
-    generate_sankey(title_prot,
-                    starting_inflow_unit_count_prot,
-                    sankey_outflow_labels,
-                    sankey_outflow_proportions_prot,
-                    output_pdf_file_path_prot
-                    )
-    generate_sankey(title_nucl,
-                    starting_inflow_unit_count_nucl,
-                    sankey_outflow_labels,
-                    sankey_outflow_proportions_nucl,
-                    output_pdf_file_path_nucl
-                    )
+        # Call function to generate sankey diagram.
+        generate_sankey(title_prot,
+                        starting_inflow_unit_count_prot,
+                        sankey_outflow_labels,
+                        sankey_outflow_proportions_prot,
+                        output_pdf_file_path_prot
+                        )
+        generate_sankey(title_nucl,
+                        starting_inflow_unit_count_nucl,
+                        sankey_outflow_labels,
+                        sankey_outflow_proportions_nucl,
+                        output_pdf_file_path_nucl
+                        )
 
     # Return final output filepath for printing.
     return output_fp
