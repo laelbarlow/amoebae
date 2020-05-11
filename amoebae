@@ -1998,6 +1998,10 @@ Miscellaneous commands:
                 in a reverse search, for each sequence that meets the reverse
                 search criteria. (Provide the reverse search identifier, eg,
                 "rev_srch_20180924122402-1")''', default=None)
+        parser.add_argument('--split_to_query_fastas', help='''Write sequences
+        to separate files with filenames that can be easily parsed for loading
+        the the files as queries using the add_to_queries command.''',
+        action='store_true')
         args = parser.parse_args(sys.argv[2:])
 
         output_dir = None
@@ -2005,9 +2009,16 @@ Miscellaneous commands:
            #output_fasta = args.csv_file.rsplit('.', 1)[0] + '.fa' 
            output_dir = args.csv_file.rsplit('.', 1)[0]
 
-        amoebae_m.write_seqs_to_fasta(args.csv_file, output_dir,
-                args.abbrev, args.paralogue_names, args.only_descr, args.subseq, args.all_hits,
-                args.split_by_top_rev_srch_hit, args.split_by_query_title)
+        amoebae_m.write_seqs_to_fasta(args.csv_file, 
+                                      output_dir,
+                                      args.abbrev, 
+                                      args.paralogue_names, 
+                                      args.only_descr, 
+                                      args.subseq, 
+                                      args.all_hits,
+                                      args.split_by_top_rev_srch_hit, 
+                                      args.split_by_query_title,
+                                      args.split_to_query_fastas)
 
 
     def prune(self):

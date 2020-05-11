@@ -348,10 +348,16 @@ def get_species_for_db_filename(db_filename):
     return sp
 
 
-def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
-        paralogue_names=False, only_descr=False, subseq=False,
-        all_hits=False, split_by_top_rev_srch_hit=None,
-        split_by_query_title=None):
+def write_seqs_to_fasta(csv_file, 
+                        output_dir, 
+                        abbrev=False,
+                        paralogue_names=False, 
+                        only_descr=False, 
+                        subseq=False,
+                        all_hits=False, 
+                        split_by_top_rev_srch_hit=None,
+                        split_by_query_title=None,
+                        split_to_query_fastas=False):
     """Takes a csv file (output by amoebae) and writes listed sequences to a
     fasta file.
     """
@@ -487,7 +493,7 @@ def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
             seq_obj = get_seq_obj_from_srch_res_csv_info(acc, description,
                     seq, abbrev, paralogue_names)
 
-            if split_by_query_title:
+            if split_by_query_title or split_to_query_fastas:
                 # Determine what the query title is for this hit.
                 query_title = row['Query title']
 
@@ -507,10 +513,14 @@ def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
                     if query_title not in query_title_seq_obj_dict.keys():
                         query_title_seq_obj_dict[query_title] = [seq_obj]
                     else:
-                        query_title_seq_obj_dict[query_title] =\
-                        query_title_seq_obj_dict[query_title] + [seq_obj]
+                        # Don't want to write more than one sequence to each
+                        # file if splitting the hits into files to use as
+                        # queries.
+                        if not split_to_query_fastas:
+                            query_title_seq_obj_dict[query_title] =\
+                            query_title_seq_obj_dict[query_title] + [seq_obj]
 
-            if split_by_top_rev_srch_hit:
+            elif split_by_top_rev_srch_hit:
                 # Define sequence ID for top reverse search hit.
                 top_rev_hit_id = row[top_rev_hit_id_col]
 
@@ -558,8 +568,10 @@ def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
                 #specific_output_fasta_name =\
                 #seq_obj_list_key.strip().replace(' ', '_').replace('\"',\
                 #    '').replace('[', '').replace(']', '') + '_matches.fa' 
+
                 specific_output_fasta_name = re.sub('[^0-9a-zA-Z]+', '_',
                         seq_obj_list_key.strip().strip('\"')) + '_matches.fa'
+
                 #print(seq_obj_list_key)
                 #print(seq_obj_list_key.strip().strip('\"'))
                 #print(specific_output_fasta_name)
@@ -571,6 +583,18 @@ def write_seqs_to_fasta(csv_file, output_dir, abbrev=False,
                 # Write sequences to file.
                 with open(specific_output_fasta_path, 'w') as o:
                     SeqIO.write(rev_srch_top_hit_seq_obj_dict[seq_obj_list_key], o, 'fasta')
+
+    elif split_to_query_fastas:
+        # Note: Currently only writes one file for each query title...
+        for seq_obj_list_key in query_title_seq_obj_dict.keys():
+            species = 'SPECIES'
+            #species = 'Ddiscoideum'
+            seq_id = query_title_seq_obj_dict[seq_obj_list_key][0].id
+            specific_output_fasta_path = os.path.join(subdirpath,\
+                    seq_obj_list_key.strip() + '_' + species + '_' + seq_id + '.faa')
+            print(specific_output_fasta_path)
+            with open(specific_output_fasta_path, 'w') as o:
+                SeqIO.write(query_title_seq_obj_dict[seq_obj_list_key], o, 'fasta')
 
 
 def record_amoebae_info_in_log_file(commandline, outdir, start_time, end_time,
