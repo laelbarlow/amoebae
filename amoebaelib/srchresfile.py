@@ -101,9 +101,9 @@ class SrchResFile:
         else:
             pass # ...
 
-        assert self.num_hits >= 0, """Could not determine the number of
-        hits listed in the similarity search result file: %s"""\
-        % filepath
+        #assert self.num_hits >= 0, """Could not determine the number of
+        #hits listed in the similarity search result file: %s"""\
+        #% filepath
 
         # Get the query and database file paths.
         #self.query_file = None

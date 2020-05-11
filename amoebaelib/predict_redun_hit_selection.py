@@ -105,7 +105,8 @@ def parse_input_redun_hit_csv_line(l):
     sl = l.split(',')
     query_title = sl[0].strip('\"')
     hit_id = sl[9]
-    return (query_title, hit_id)
+    evalue = sl[6]
+    return (query_title, hit_id, evalue)
 
 
 def generate_dict_from_redun_hit_csv(in_csv):
@@ -118,11 +119,26 @@ def generate_dict_from_redun_hit_csv(in_csv):
         for i in infh:
             inum += 1
             if not inum == 1:
-                query_title, hit_id = parse_input_redun_hit_csv_line(i)
+                query_title, hit_id, evalue = parse_input_redun_hit_csv_line(i)
+                hit_plus_evalue = (hit_id, evalue)
                 if query_title not in out_dict.keys():
-                    out_dict[query_title] = [hit_id]
+                    out_dict[query_title] = [hit_plus_evalue]
                 else:
-                    out_dict[query_title] = out_dict[query_title] + [hit_id]
+                    out_dict[query_title] = out_dict[query_title] + [hit_plus_evalue]
+
+    # Sort all the lists (values) by ascending E-value, and remove the
+    # E-values.
+    for query_title in out_dict.keys():
+        #print(out_dict[query_title])
+        #print('\n\n')
+        out_dict[query_title] = sorted(out_dict[query_title], key=lambda x: float(x[1]))
+        #print(out_dict[query_title])
+        #print('\n\n')
+        out_dict[query_title] = [x[0] for x in out_dict[query_title]]
+        #print(out_dict[query_title])
+        #print('\n\n')
+
+    # Return the dict with just ordered lists of sequence IDs.
     return out_dict
 
 
@@ -143,7 +159,7 @@ def get_csv_with_redun_hit_predictions(in_csv, out_csv):
         for i in in_csvh:
             inum += 1
             if not inum == 1:
-                query_title, hit_id = parse_input_redun_hit_csv_line(i)
+                query_title, hit_id, evalue = parse_input_redun_hit_csv_line(i)
                 if hit_id in dict2[query_title]:
                     si = i.split(',')
                     o.write(','.join(si[:4] + ['+'] + si[5:]))

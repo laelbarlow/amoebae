@@ -216,6 +216,14 @@ def get_redun_hits_in_dbs(query_title,
                 srch_file_prog_vers = parsed_file_obj.version
                 srch_file_format = parsed_file_obj.format
 
+                # Ignore files that contain no results.
+                if parsed_file_obj.num_hits == 0:
+                    print('\n\nWarning: Search result file %s contains no results\n\n' \
+                          % search_result_path)
+                    break
+                else:
+                    pass
+
                 # Loop over hits (objects) in search result file.
                 hit_num = -1
                 top_hit_evalue = parsed_file_obj.hit_evalue(0)
