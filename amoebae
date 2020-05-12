@@ -581,6 +581,11 @@ Miscellaneous commands:
         E-value for reporting HMMer hits.''', default=0.05)
         parser.add_argument('--hmmer_report_score_cutoff', help='''Minimum
         sequence score for reporting HMMer hits.''', default=5)
+        parser.add_argument('--max_number_of_hits_to_summarize',
+                help='''Absolute maximum number of hits (BLAST, HMMer, etc) to
+                summarize in the output spreadsheet. This is important when
+                working with sequences with WD40 domains, for example.''',
+                default=50)
         parser.add_argument('--num_threads_similarity_searching',
                 help='''Number of threads to use for running searches.''',
                 default=4)
@@ -667,7 +672,8 @@ Miscellaneous commands:
                           args.hmmer_report_evalue_cutoff,
                           args.hmmer_report_score_cutoff,
                           args.num_threads_similarity_searching,
-                          args.predict_redun_hit_selection)
+                          args.predict_redun_hit_selection,
+                          args.max_number_of_hits_to_summarize)
 
         # Prompt manual annotation of spreadsheet to define positive
         # (redundant) hits.

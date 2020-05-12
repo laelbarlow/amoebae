@@ -142,7 +142,8 @@ def get_redun_hits_in_dbs(query_title,
                           hmmer_report_evalue_cutoff,
                           hmmer_report_score_cutoff,
                           num_threads_similarity_searching,
-                          predict_redun_hit_selection
+                          predict_redun_hit_selection,
+                          max_number_of_hits_to_summarize
                           ):
     """Finds all items (sequences or profiles) in each given database file
     (fasta or hmm databases) that may be positive hits for query title (e.g.,
@@ -230,6 +231,10 @@ def get_redun_hits_in_dbs(query_title,
                 top_hit_len = len(parsed_file_obj.hit_sequence(0))
                 for hit in SearchIO.read(search_result_path, srch_file_format): 
                     hit_num += 1
+
+                    # Stop when the maximum has been reached.
+                    if hit_num > max_number_of_hits_to_summarize - 1:
+                        break
 
                     # Get E-value difference between current hit and top hit
                     # top HSPs.
