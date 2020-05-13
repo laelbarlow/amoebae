@@ -1135,11 +1135,12 @@ def write_rev_srch_res_to_csv(rev_srch_id,
 
             redun_hit_list = None
             if redun_hit_csv is not None:
-                #redun_hit_list =\
-                #redun_hit_dict[query_title][query_file][db_file]
-                redun_hit_list =\
-                list(set(redun_hit_dict[query_title][db_file]))
-                row['Redundant hit list applied'] = redun_hit_list
+                if query_title in redun_hit_dict.keys():
+                    #redun_hit_list =\
+                    #redun_hit_dict[query_title][query_file][db_file]
+                    redun_hit_list =\
+                    list(set(redun_hit_dict[query_title][db_file]))
+                    row['Redundant hit list applied'] = redun_hit_list
 
             # Get corresponding query file path.
             query_subdir = get_query_subdir(outdir)
@@ -1189,6 +1190,8 @@ def write_rev_srch_res_to_csv(rev_srch_id,
                 else:
                     # The redun_hit_list is None when there is no redundant hit
                     # list CSV file input via the --redun_hit_csv option.
+                    # Or, there were no hits for the relevant query
+                    # (query_title) in that input CSV file.
 
                     #######################################
                     # ***This old code doesn't make sense and results in
@@ -1209,9 +1212,19 @@ def write_rev_srch_res_to_csv(rev_srch_id,
                     # search results.
                     first_neg_hit_rank = None
 
-                    # All reverse search hits should be considered redundant,
-                    # so all their accessions should be added to the list.
-                    redun_hit_list = parsed_file_obj.all_hit_ids()
+                    # Behavior depends on whether a redundant hit CSV file was
+                    # provided.
+                    if redun_hit_csv is None:
+
+                        # All reverse search hits should be considered redundant,
+                        # so all their accessions should be added to the list.
+                        redun_hit_list = parsed_file_obj.all_hit_ids()
+
+                    else:
+                        
+                        # No reverse search hits should be considered
+                        # redundant, so the accessions list should be empty.
+                        redun_hit_list = []
 
 
             #if len(query_res_obj) >= 1:
@@ -1348,21 +1361,28 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
     # determine which reverse search data needs to be found, and update the row
     # by adding this information.
     for index, row in df.iterrows():
-        decis = '+'
+        # Report +ve if at least one reverse search retrieved the original
+        # query.
+        decis = '-'
         for header in relev_col_headers:
-            if row[header] == '-':
-                decis = '-'
+            if row[header] == '+':
+                decis = '+'
                 break
+        
+        # Apply E-value criteria.
         if fwd_evalue_cutoff is not None:
             if decis == '+':
                 if float(row[fwd_evalue_header]) > float(fwd_evalue_cutoff):
                     decis = '-'
         if rev_evalue_cutoff is not None:
             if decis == '+':
+                found_rev_evalue_below_or_equal_to_max = False
                 for header in rev_evalue_headers:
-                    if float(row[header]) > float(rev_evalue_cutoff):
-                        decis = '-'
+                    if float(row[header]) <= float(rev_evalue_cutoff):
+                        found_rev_evalue_below_or_equal_to_max = True
                         break
+                if not found_rev_evalue_below_or_equal_to_max:
+                    decis = '-'
 
         # Check that a decision could be made.
         assert decis == '+' or decis == '-', """Could not determine whether the
@@ -1381,6 +1401,9 @@ def write_fwd_srch_interp_csv(csv_file, outfp, score_cutoff):
     interpretation of which forward search results are positive based on all
     the reverse search results performed.
     """
+    print("""Warning: Check which values (scores or E-values) are being used to
+    interpret results.""")
+
     # Read the csv file into a pandas dataframe.
     df = pd.read_csv(csv_file)
 
