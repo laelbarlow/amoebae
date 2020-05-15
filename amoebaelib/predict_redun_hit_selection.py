@@ -69,9 +69,10 @@ def compare_two_hit_id_lists(ids1, ids2):
     return (ids1a2, ids2a2)
 
 
-def process_query_title_hit_id_list_dict(in_dict):
-    """Take a dict with keys as query titles and values as lists of sequence
-    IDs"""
+def get_nonredun_dict_key_pairs(in_dict):
+    """Take a dict and return a list of all unique two-key combinations of keys
+    of the dict.
+    """
     # Don't modify the dict if there is only one key.
     if len(in_dict.keys()) == 1:
         return in_dict
@@ -87,13 +88,30 @@ def process_query_title_hit_id_list_dict(in_dict):
         if elem not in two_key_combos3:
             two_key_combos3.append(elem)
 
+    # Return list of uniqe combos.
+    return two_key_combos3
+
+
+def process_query_title_hit_id_list_dict(in_dict):
+    """Take a dict with keys as query titles and values as lists of sequence
+    IDs"""
+    # Don't modify the dict if there is only one key.
+    if len(in_dict.keys()) == 1:
+        return in_dict
+
+    # Copy the input dict.
+    in_dict2 = in_dict.copy()
+
+    # Get a list of lists of all unique combinations of keys in the input dict.
+    two_key_combos = get_nonredun_dict_key_pairs(in_dict2)
+
     # Check whether the number of combos is super big.
-    assert len(two_key_combos3) <= 500, """Attempting to iterate over more than
+    assert len(two_key_combos) <= 500, """Attempting to iterate over more than
     500 combinations of hit ID lists for different query titles. This is
     probably impractical."""
 
     # Iterate over all pairs of keys and generate a new dict.
-    for combo in two_key_combos3:
+    for combo in two_key_combos:
 
         # Retrieve lists from input dict.
         ids1 = in_dict2[combo[0]]

@@ -1321,6 +1321,10 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
     # Read the csv file into a pandas dataframe.
     df = pd.read_csv(csv_file)
 
+    # Start a dictionary to keep track of IDs for positive hits for all query
+    # titles.
+    query_title_pos_ids = {}
+
     # Compile a list of headers for columns that contain relevant +/-
     # information, and E-values.
     relev_col_headers = []
@@ -1392,8 +1396,33 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
         df.at[index, 'Collective interpretation of reverse search results'] =\
         decis
 
+        # Update dict.
+        if decis == '+':
+            query_title = row['Query title']
+            fwd_hit_id = row['Forward hit accession']
+            if query_title not in query_title_pos_ids.keys():
+                query_title_pos_ids[query_title] = [fwd_hit_id]
+            else:
+                query_title_pos_ids[query_title] =\
+                query_title_pos_ids[query_title] + [fwd_hit_id]
+
     # Write new dataframe to output csv file.
     df.to_csv(outfp, index=False)
+
+    # Check that no query titles have overlapping sets of positive hits.
+    unique_key_combos = get_nonredun_dict_key_pairs(query_title_pos_ids)
+    for combo in unique_key_combos:
+        qt1 = combo[0]
+        qt2 = combo[1]
+        overlapping_ids =\
+        list(set(query_title_pos_ids[qt1]).intersection(set(query_tile_pos_ids[qt2])))
+
+        # Print any overlapping IDs.
+        if len(overlapping_ids) > 0:
+            print('Warning: The following sequences were retrieved as positive hits for both query titles % and %:')
+            for i in overlapping_ids:
+                print('\t' + i)
+            print('\n')
 
 
 def write_fwd_srch_interp_csv(csv_file, outfp, score_cutoff):
@@ -1450,7 +1479,6 @@ def write_fwd_srch_interp_csv(csv_file, outfp, score_cutoff):
 
     # Write new dataframe to output csv file.
     df.to_csv(outfp, index=False)
-
 
 
 
