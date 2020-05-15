@@ -55,7 +55,7 @@ determine_search_method, search_result_filepath, run_any_search,\
 run_all_searches, get_out_hmm_path, get_query_subdir
 from search_scaffolds import split_tblastn_hits_into_separate_genes,\
 get_hit_seq_record_and_coord, get_hit_seq_record_and_coord2, get_cluster_range
-from predict_redun_hit_selection import get_csv_with_redun_hit_predictions
+from predict_redun_hit_selection import get_csv_with_redun_hit_predictions, get_nonredun_dict_key_pairs
 
 
 def intersect(a, b):
@@ -1313,6 +1313,85 @@ def write_rev_srch_res_to_csv(rev_srch_id,
     return final_outfp 
 
 
+def remove_redun_hits_from_within_pos_hit_list(l):
+    """Take a list of hit sequence ID-Evalue tuples and return a modified list
+    with redundant items removed. (if two items have the same ID, remove the
+    one with the higher E-value)
+    """
+    # Sort the list by ascending E-value.
+    l = sorted(l, key=lambda x: x[1])
+
+    # Compile a new list of sequences.
+    new_l = []
+    id_list = []
+    for i in l:
+        if i[0] not in id_list:
+            id_list.append(i[0])
+            new_l.append(i)
+
+    return new_l
+
+
+def remove_weaker_hits_from_dict_values(query_title_pos_hits, 
+                                        query_title_1,
+                                        query_title_2):
+    """Take a dictionary with query titles as keys and lists of sequence
+    ID-Evalue tuples as values. Return a modified dict with weaker hits
+    removed, where the same hit (ID) appears in lists (values) for both query
+    titles.
+    """
+    # Get relevant values from input dict.
+    l1 = query_title_pos_hits[query_title_1]
+    l2 = query_title_pos_hits[query_title_2]
+
+    # Remove redundant items from within each list (if two items have the same
+    # ID, remove the one with the higher E-value.
+    l1 = remove_redun_hits_from_within_pos_hit_list(l1)
+    l2 = remove_redun_hits_from_within_pos_hit_list(l2)
+
+    # Initiate lists to store IDs of items to remove from each list (value).
+    ids_to_remove_from_l1 = []
+    ids_to_remove_from_l2 = []
+    
+    # Iterate over items.
+    for i in l1:
+        for j in l2:
+            # Check if IDs are the same.
+            if i[0] == j[0]:
+                # Determine which hit is weaker (has a higher E-value).
+                if i[1] < j[1]:
+                    # The hit should be removed from the list for the second
+                    # query title.
+                    ids_to_remove_from_l2.append(j[0])
+                    print("""Removing hit with ID %s from the list of positive hits for queries with query title %s.""" \
+                            % (i[0], query_title_2))
+                elif i[1] > j[1]:
+                    # The hit should be removed from the list for the first
+                    # query title.
+                    ids_to_remove_from_l1.append(i[0])
+                    print("""Removing hit with ID %s from the list of positive hits for queries with query title %s.""" \
+                            % (i[0], query_title_1))
+                elif i[1] == j[1]:
+                    # Unclear what should be done, because the E-values are
+                    # equal. Maybe this should just print a warning.
+                    assert 2!=2, """Error: Hit with ID %s was retrieved by
+                    query titles %s and %s with the same E-value (%s).""" \
+                            % (i[0],
+                               query_title_1,
+                               query_title_2,
+                               str(i[1])
+                               )
+
+    # Modify the input dict. 
+    if len(ids_to_remove_from_l1) > 0:
+        l1 = [x for x in l1 if x[0] not in ids_to_remove_from_l1]
+    if len(ids_to_remove_from_l2) > 0:
+        l1 = [x for x in l1 if x[0] not in ids_to_remove_from_l1]
+
+    # Return the modified dict.
+    return query_title_pos_hits
+
+
 def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
     """Take a csv file and write a new one with an additional column with
     interpretation of which forward search results are positive based on all
@@ -1400,29 +1479,71 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
         if decis == '+':
             query_title = row['Query title']
             fwd_hit_id = row['Forward hit accession']
+            fwd_hit_evalue = row['Forward hit E-value (top HSP)']
             if query_title not in query_title_pos_ids.keys():
-                query_title_pos_ids[query_title] = [fwd_hit_id]
+                query_title_pos_ids[query_title] = [(fwd_hit_id, fwd_hit_evalue)]
             else:
                 query_title_pos_ids[query_title] =\
-                query_title_pos_ids[query_title] + [fwd_hit_id]
+                query_title_pos_ids[query_title] + [(fwd_hit_id, fwd_hit_evalue)]
 
     # Write new dataframe to output csv file.
     df.to_csv(outfp, index=False)
 
     # Check that no query titles have overlapping sets of positive hits.
+    query_title_combos_with_overlapping_pos_hits = []
     unique_key_combos = get_nonredun_dict_key_pairs(query_title_pos_ids)
     for combo in unique_key_combos:
         qt1 = combo[0]
         qt2 = combo[1]
         overlapping_ids =\
-        list(set(query_title_pos_ids[qt1]).intersection(set(query_tile_pos_ids[qt2])))
+        list(set([x[0] for x in
+            query_title_pos_ids[qt1]]).intersection(set([x[0] for x in\
+                query_title_pos_ids[qt2]])))
 
         # Print any overlapping IDs.
         if len(overlapping_ids) > 0:
-            print('Warning: The following sequences were retrieved as positive hits for both query titles % and %:')
+            print("""Warning: The following sequences were retrieved as 
+                     positive hits for both query titles %s and %s:""" % (qt1, qt2))
             for i in overlapping_ids:
                 print('\t' + i)
             print('\n')
+            query_title_combos_with_overlapping_pos_hits.append(combo)
+
+    # If some query titles have overlapping sets of positive hits, then update
+    # the interpretation of searches so that only the query title that
+    # retrieves the hit with the lowest E-value will be interpreted as
+    # retrieving the hit as a positive hit. This assumes that query titles do
+    # not represent overlapping sets of orthologues, for example a query to
+    # retrieve all SNAREs and a query to retrieve orthologues of one particular
+    # SNARE.
+    if len(query_title_combos_with_overlapping_pos_hits) > 0:
+
+        # Process the query_title_pos_ids dict such that values (lists of
+        # ID-Evalue tuples) are modified so only the query title with the
+        # lowest evalue retains positive hits that overlapped between query
+        # titles.
+        for combo in query_title_combos_with_overlapping_pos_hits:
+            # Call function on dict and query titles.
+            query_title_pos_ids =\
+            remove_weaker_hits_from_dict_values(query_title_pos_ids, 
+                                                combo[0],
+                                                combo[1])
+
+        # Apply changes to dataframe and re-write output CSV file.
+        # Iterate over rows.
+        for index, row in df.iterrows():
+            qt = row['Query title']
+            hit_id = row['Forward hit accession']
+            decis = row['Collective interpretation of reverse search results']
+            if decis == '+':
+                # Check whether it should be positive.
+                if not hit_id in [x[0] for x in query_title_pos_ids[qt]]:
+                    # Change decision to negative.
+                    df.loc[index]['Collective interpretation of reverse search results'] = '-'
+
+        # Re-write dataframe to output CSV file path.
+        print('\nRe-writing updated interpretation to output file.')
+        df.to_csv(outfp, index=False)
 
 
 def write_fwd_srch_interp_csv(csv_file, outfp, score_cutoff):
