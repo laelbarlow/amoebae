@@ -826,7 +826,11 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
             #if unique_positive_hit == 'Yes':
             # ***How to display accurate paralogue counts? Perhaps only if query title is
             # the only row index?
-            positive_or_not = row[column_header_dict['positive or not']]
+            #positive_or_not = row[column_header_dict['positive or not']]
+            unique_positive_hit = row[unique_positive_hit_decis_header]
+            positive_or_not = '-'
+            if unique_positive_hit == 'Yes' or unique_positive_hit == '+':
+                positive_or_not = '+'
             acc = row[column_header_dict['accession']]
             fwd_evalue = row[column_header_dict['evalue']]
             fwd_score = row[column_header_dict['score']]
