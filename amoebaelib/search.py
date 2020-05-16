@@ -1318,6 +1318,9 @@ def remove_redun_hits_from_within_pos_hit_list(l):
     with redundant items removed. (if two items have the same ID, remove the
     one with the higher E-value)
     """
+    # Check that the E-values are floats.
+    assert isinstance(l[0][1], float)
+
     # Sort the list by ascending E-value.
     l = sorted(l, key=lambda x: x[1])
 
@@ -1385,8 +1388,10 @@ def remove_weaker_hits_from_dict_values(query_title_pos_hits,
     # Modify the input dict. 
     if len(ids_to_remove_from_l1) > 0:
         l1 = [x for x in l1 if x[0] not in ids_to_remove_from_l1]
+        query_title_pos_hits[query_title_1] = l1
     if len(ids_to_remove_from_l2) > 0:
-        l1 = [x for x in l1 if x[0] not in ids_to_remove_from_l1]
+        l2 = [x for x in l2 if x[0] not in ids_to_remove_from_l2]
+        query_title_pos_hits[query_title_2] = l2
 
     # Return the modified dict.
     return query_title_pos_hits
@@ -1479,7 +1484,7 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
         if decis == '+':
             query_title = row['Query title']
             fwd_hit_id = row['Forward hit accession']
-            fwd_hit_evalue = row['Forward hit E-value (top HSP)']
+            fwd_hit_evalue = float(row['Forward hit E-value (top HSP)'])
             if query_title not in query_title_pos_ids.keys():
                 query_title_pos_ids[query_title] = [(fwd_hit_id, fwd_hit_evalue)]
             else:
@@ -1539,7 +1544,8 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
                 # Check whether it should be positive.
                 if not hit_id in [x[0] for x in query_title_pos_ids[qt]]:
                     # Change decision to negative.
-                    df.loc[index]['Collective interpretation of reverse search results'] = '-'
+                    df.at[index, 'Collective interpretation of reverse search results'] =\
+                    '-'
 
         # Re-write dataframe to output CSV file path.
         print('\nRe-writing updated interpretation to output file.')
