@@ -115,8 +115,8 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
     provide a means to investigate the evolution of one or a few genes via
     similarity searching, and automated pipelines such as orthoMCL
     \citep{li2003} attempt to rapidly perform orthology prediction for all
-    genes in several genomes. AMOEBAE addresses the problem mid-scale analyses
-    which are too cumbersome to be done via webservices and yet requiring a
+    genes in several genomes. AMOEBAE addresses mid-scale analyses
+    which are too cumbersome to be done via webservices and yet require a
     level of detail and flexibility not offered by automated pipelines. AMOEBAE
     may be useful for analyzing the distribution of orthologues of up to
     perhaps 30 genes/proteins among a sampling of no more than approximately
@@ -133,12 +133,12 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
     %it is entirely the users responsibility to select appropriate criteria and
     %interpret the results critically. 
 
+
 \subsection{Key features}
 
-
 The core functionality is to run sequence similarity searches with multiple
-    algorithms, multiple queries, and multiple databases simultaneously in
-    parallel and to facilitate efficient and highly customizable implementation
+    algorithms, multiple queries, and multiple databases simultaneously
+    and to allow highly customizable implementation
     of reciprocal-best-hit search strategies. The output includes detailed
     summaries of results in the form of a spreadsheet and plots.
     
@@ -150,6 +150,19 @@ The core functionality is to run sequence similarity searches with multiple
     against information in genome annotation files, and systematic use of
     Exonerate \citep{slater2005} where possible for obtaining better exon
     predictions.  
+
+
+\subsection{A word of caution}
+
+AMOEBAE is not optimized for ease of use, but is meant to be highly
+configurable. The many options available to AMOEBAE users inevitably provide
+many opportunities for errors in specifying search criteria, and errors in
+interpreting output files.  Some prior experience with similarity searching and
+with running software using the command line is essential for using AMOEBAE,
+and experience writing scripts in Bash and Python would be highly advantageous. 
+Moreover, AMOEBAE is still under active development, so some features may not
+yet be thoroughly tested.
+
 
 \subsection{User support}
 
@@ -191,10 +204,10 @@ to Lael D. Barlow.
 
 We acknowledge the support of the Natural Sciences and Engineering Research Council of Canada (NSERC).
 
-Cette recherche a été financée par le Conseil de recherches en sciences naturelles et en génie du Canada (CRSNG).
+Cette recherche a \'et\'e financ\'ee par le Conseil de recherches en sciences naturelles et en g\'enie du Canada (CRSNG).
 
 Also, help with testing AMOEBAE has been kindly provided by Raegan T. Larson,
-Shweta V. Pipalya, Kira More, and Kristína Záhonová.
+Shweta V. Pipalya, Kira More, and Krist\'ina Z\'ahonov\'a.
 
 \subsection{License}
 \label{license_section}
@@ -359,14 +372,14 @@ setting up AMOEBAE on a remote server will soon be added as well.
 
 
 \item Working with the Jupyter notebooks interactively in this manner on
-    high-performance computing clusters is likely possible, but inconvenient,
+    high-performance computing clusters is likely possible but inconvenient,
         and procedures will vary. Also, running the tutorial notebooks would
         require access to the internet from compute nodes (as opposed to login
         nodes) which may not be supported. Therefore, it is recommended that
         you run the tutorials on a personal laptop/desktop computer if
         possible. To run your own notebooks on a cluster, you will need to
         write a job submission script that will be specific to the cluster, the
-        job schedule it uses, and your account details. Please refer to
+        job scheduler it uses, and your account details. Please refer to
         documentation provided by your system administrators for this. For an
         example script that writes a script for running a notebook as a job to
         a SLURM job scheduler see

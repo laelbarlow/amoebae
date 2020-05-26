@@ -242,10 +242,14 @@ def generate_stats_file(column_labels, row_labels, data_count,
         o.write('\n')
 
 
-def get_sector_label(pct, iterable):
+def get_sector_label(pct, iterable, remove_ones=False):
     """Get sector label from iterable list. For constructing coulson plots.
     """
-    return next(iterable)
+    sector_label = next(iterable)
+    if remove_ones:
+        if str(sector_label) == '1':
+            sector_label = ''
+    return sector_label
 
 
 def get_complex_info_list(complex_info_file, column_labels_simple):
@@ -420,20 +424,19 @@ def make_coulson_plot(column_labels_simple,
                     # Make an iterable out of the list.
                     paralogue_counts = iter(paralogue_counts_list)
 
-
                     # Define colors for sectors based on paralogue counts.
                     cols = []
                     for x in paralogue_counts_list:
                         if x > 0:
-                            # Gray if at least one paralogue found.
+                            # Coloured fill if at least one paralogue found.
                             cols.append('xkcd:cobalt')
                         else:
-                            # White if no paralogues found.
+                            # White fill if no paralogues found.
                             cols.append('white')
 
                     # Define which function to use to add appropriate paralogue counts as
                     # labels for each sector.
-                    autopct_funct = lambda pct: get_sector_label(pct, paralogue_counts)
+                    autopct_funct = lambda pct: get_sector_label(pct, paralogue_counts, remove_ones=True)
 
                     # Set variables for species/row titles.
                     species_font_size = 15
@@ -946,6 +949,7 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         #if not args.confidence_heat_map:
         data_heat = get_heat_matrix_from_count_matrix(data_count)
         data_heat_simple = get_heat_matrix_from_count_matrix(data_count_simple)
+
 
         #elif args.confidence_heat_map:
         #    pass
