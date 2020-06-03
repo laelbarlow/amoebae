@@ -58,17 +58,16 @@ if [ "$(uname)" == "Darwin" ]; then
 
         # Install Virtualbox (and Homebrew, if necessary).
         printf "\nInstalling dependencies of Vagrant."
-            if test "$(command -v virtualbox)"; then
-                if test "$(command -v brew)"; then
-                /bin/bash -c "$(curl -fsSL \
-                https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" \
-                && printf "\nDone installing homebrew."
-                fi
+        if test "$(command -v brew)"; then
+        /bin/bash -c "$(curl -fsSL \
+        https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" \
+        && printf "\nDone installing homebrew."
+        fi
 
-            brew cask install virtualbox \
-            && printf "\nDone installing virtualbox."
-
-            fi
+        if test "$(command -v virtualbox)"; then
+        brew cask install virtualbox \
+        && printf "\nDone installing virtualbox."
+        fi
 
         # Install Vagrant on MacOS.
         brew cask install vagrant && \
