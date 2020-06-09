@@ -170,7 +170,7 @@ def get_corr_fasta_exten(infp):
     # Automatically determine what the dbtype is.
     dbtype = get_dbtype(infp)
     assert dbtype == 'prot' or dbtype == 'nucl', """Error: Could not determine
-    data type in file " + f + " using get_datatype module."""
+    data type in file """ + f + """ using get_datatype module."""
 
     # Determine appropriate filename extension to use.
     exten = None
