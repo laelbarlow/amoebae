@@ -213,6 +213,10 @@ conda install -c bioconda snakemake
 # Install graphics package for visualizing snakemake pipelines.
 apt-get install -y graphviz
 
+# Install python packages for making https requests.
+conda install -c anaconda certifi
+conda install -c anaconda requests
+
 ## Install entrezpy for downloading sequences from NCBI.
 #conda install -c bioconda entrezpy # Does not work as advertised.
 
