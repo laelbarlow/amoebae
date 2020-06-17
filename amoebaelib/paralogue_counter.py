@@ -1858,6 +1858,15 @@ def get_relevant_annot_sql_file(sequence_filename):
                 if type(annotation_file).__name__ == 'float':
                     annotation_file = None
 
+                # If a filename was found, check that it exists at the expected
+                # path.
+                if annotation_file is not None:
+                    annotation_file_path = os.path.join(settings.dbdirpath,
+                            annotation_file)
+                    assert os.path.isfile(annotation_file_path), """No file exists
+                    at path %s as indicated in the genome info file %s.""" % \
+                    (annotation_file_path, settings.db_info_csv)
+
     # If there is no annotation file listed, then
     # see whether there is a gff file with the same
     # filename (excluding extension) as the sequence
