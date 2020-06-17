@@ -109,6 +109,8 @@ Miscellaneous commands:
                      useable.
    check_imports     Check that all the import statements used in the AMOEBAE
                      repository run without error.
+   regen_genome_info Write a new genome info spreadsheet file using filenames
+                     from the Genomes directory.
 
 ''')
         parser.add_argument('command', help='''Specify one of the functionalities
@@ -119,15 +121,15 @@ Miscellaneous commands:
 
         # Help for commands under development:
         """
+   interp_phylo      Interpret results of phylogenetic analyses.
    phylo_class       Determine whether sequences can be classified into one of
                      several pre-defined orthogroups using an
                      established backbone phylogeny by either topology testing with
                      IQtree or simply placing it in the tree with an ML search.
-   sum_phylo_class   Add phylo_class results to summary spreadsheet.
-   interp_phylo      Interpret results of phylogenetic analyses.
    srch_ali_space    Iteratively modify an alignment/tree and assess measures
                      of support for branches of interest to find alignments
                      that support a given topology.
+   sum_phylo_class   Add phylo_class results to summary spreadsheet.
 """
 
         if not hasattr(self, args.command):
@@ -230,14 +232,68 @@ Miscellaneous commands:
 
         # Print message to prompt user to add the path to the main data
         # directory to their settings.py file.
-        print("""
-        
-        To allow AMOEBAE scripts to locate your new data directory, change the
-        value of the root_amoebae_data_dir variable in the settings.py file to
-        the full path to the directory:
+        #print("""
+        #
+        #To allow AMOEBAE scripts to locate your new data directory, change the
+        #value of the root_amoebae_data_dir variable in the settings.py file to
+        #the full path to the directory:
 
-        %s
-        """ % args.new_dir_path)
+        #%s
+        #""" % args.new_dir_path)
+
+
+    def regen_genome_info(self):
+        parser = argparse.ArgumentParser(
+            description="""Write a new genome info spreadsheet
+            (0_genome_info.csv) file using filenames from the Genomes
+            directory.""",
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        parser.add_argument('data_dir_path', help='''Specify the full path to
+        an existing AMOEBAE data directory, which contains a 'Genomes'
+        subdirectory. The new genome info file will be added to this
+        subdirectory.''')
+        args = parser.parse_args(sys.argv[2:])
+
+        # Import modules.
+        from add_to_db import update_csv
+
+        # Check that input directory exists.
+        assert os.path.exists(args.data_dir_path), """The path you specified
+        does not exist, try a different path."""
+
+        # Define path to new genome info file.
+        genome_dir_path = os.path.join(args.data_dir_path, 'Genomes')
+        genome_info_path = os.path.join(genome_dir_path, '0_genome_info.csv')
+
+        # Check whether a genome info file already exists in the Genomes
+        # directory.
+        assert not os.path.isfile(genome_info_path)
+
+        # Copy the template genome info file to the path.
+        path_to_template_dir = os.path.join(sys.path[0],
+        os.path.join('templates', 'template_data_storage_directory')) 
+
+        path_to_template_genome_info = os.path.join(os.path.join(path_to_template_dir,
+        'Genomes'), '0_genome_info.csv')
+
+        shutil.copyfile(path_to_template_genome_info, genome_info_path)
+
+        # Glob relevant filepaths and add relevant info to the dataframe.
+        relev_file_paths = \
+                glob.glob(os.path.join(genome_dir_path, '*.faa')) + \
+                glob.glob(os.path.join(genome_dir_path, '*.fna')) + \
+                glob.glob(os.path.join(genome_dir_path, '*.sql')) + \
+                glob.glob(os.path.join(genome_dir_path, '*.hmmdb'))
+
+        # Sort all relevant filepaths alphabetically.
+        relev_file_paths.sort()
+
+        # Write updated dataframe to the path.
+        for f in relev_file_paths:
+            update_csv(f, genome_info_path)
+
+        # Print message.
+        print('\nNew genome info file: ' + genome_info_path + '\n')
 
 
     def add_to_dbs(self):
