@@ -1409,7 +1409,11 @@ def remove_weaker_hits_from_dict_values(query_title_pos_hits,
     return query_title_pos_hits
 
 
-def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
+def write_interp_csv(csv_file,
+                     outfp,
+                     fwd_evalue_cutoff,
+                     rev_evalue_cutoff,
+                     no_overlapping_hits=False):
     """Take a csv file and write a new one with an additional column with
     interpretation of which forward search results are positive based on all
     the reverse search results performed.
@@ -1506,6 +1510,24 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
     # Write new dataframe to output csv file.
     df.to_csv(outfp, index=False)
 
+    if no_overlapping_hits:
+        # Check that no query titles have overlapping sets of positive hits, if
+        # there are, then update the dataframe.
+        eliminate_overlapping_positive_hits_from_df(df, query_title_pos_ids)
+
+        # Re-write dataframe to output CSV file path.
+        print('\nRe-writing updated interpretation to output file.')
+        df.to_csv(outfp, index=False)
+
+
+def eliminate_overlapping_positive_hits_from_df(df, query_title_pos_ids):
+    """Take a dataframe listing similarity search results (the last column is
+    the collective interpetation of forward/reverse searches) and a dict with
+    query titles as keys and positive hit IDs as values. Modify the dataframe
+    to eliminate all overlapping positive hits among query titles, except for
+    the query title with the query that retrieved the sequence with the lowest
+    E-value.
+    """
     # Check that no query titles have overlapping sets of positive hits.
     query_title_combos_with_overlapping_pos_hits = []
     unique_key_combos = get_nonredun_dict_key_pairs(query_title_pos_ids)
@@ -1559,12 +1581,11 @@ def write_interp_csv(csv_file, outfp, fwd_evalue_cutoff, rev_evalue_cutoff):
                     df.at[index, 'Collective interpretation of reverse search results'] =\
                     '-'
 
-        # Re-write dataframe to output CSV file path.
-        print('\nRe-writing updated interpretation to output file.')
-        df.to_csv(outfp, index=False)
 
-
-def write_fwd_srch_interp_csv(csv_file, outfp, score_cutoff):
+def write_fwd_srch_interp_csv(csv_file,
+                              outfp,
+                              score_cutoff,
+                              no_overlapping_hits=False):
     """Take a csv file and write a new one with an additional column with
     interpretation of which forward search results are positive based on all
     the reverse search results performed.
@@ -1619,6 +1640,14 @@ def write_fwd_srch_interp_csv(csv_file, outfp, score_cutoff):
     # Write new dataframe to output csv file.
     df.to_csv(outfp, index=False)
 
+    if no_overlapping_hits:
+        # Check that no query titles have overlapping sets of positive hits, if
+        # there are, then update the dataframe.
+        eliminate_overlapping_positive_hits_from_df(df, query_title_pos_ids)
+
+        # Re-write dataframe to output CSV file path.
+        print('\nRe-writing updated interpretation to output file.')
+        df.to_csv(outfp, index=False)
 
 
 def write_redun_hit_interp_csv(csv_file, outfp):

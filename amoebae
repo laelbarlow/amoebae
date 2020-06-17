@@ -1357,9 +1357,15 @@ Miscellaneous commands:
         parser.add_argument('--hmmer_cutoff', help='''Specify a score that hits
                 must exceed to be included.''', default=20)
         # Is this option obsolete?
-        parser.add_argument('--redun_hits', help='''Interpret which hits are
-                redundant in output of get_redun_hits command.''',
-                action='store_true')
+        #parser.add_argument('--redun_hits', help='''Interpret which hits are
+        #        redundant in output of get_redun_hits command.''',
+        #        action='store_true')
+        parser.add_argument('--no_overlapping_hits', help='''If more than one
+                query (query title) retrieves a given sequence as a positive
+                hit based on the search criteria, make the sequence a negative
+                hit for all queries (query titles), except for the one that
+                retrieved the sequence with the lowest (strongest) E-value.''',
+        action='store_true')
         parser.add_argument('--out_csv_path', help='''Optionally specify an
                 output file path, so that this command can be piped together
                 with others.''')
@@ -1380,19 +1386,22 @@ Miscellaneous commands:
         else:
             outfp = args.out_csv_path
 
-        if not args.redun_hits:
-            if args.fwd_only:
-                # Write output file with interpetation column appended.
-                search.write_fwd_srch_interp_csv(args.csv_file,
-                        outfp, args.hmmer_cutoff, args.fwd_evalue_cutoff)
-            else:
-                # Write output file with interpetation column appended.
-                search.write_interp_csv(args.csv_file, outfp,
-                        args.fwd_evalue_cutoff, args.rev_evalue_cutoff)
+        #if not args.redun_hits:
 
+        if args.fwd_only:
+            # Write output file with interpetation column appended.
+            search.write_fwd_srch_interp_csv(args.csv_file,
+                    outfp, args.hmmer_cutoff, args.fwd_evalue_cutoff,
+                    args.no_overlapping_hits)
         else:
             # Write output file with interpetation column appended.
-            search.write_redun_hit_interp_csv(args.csv_file, outfp)
+            search.write_interp_csv(args.csv_file, outfp,
+                    args.fwd_evalue_cutoff, args.rev_evalue_cutoff,
+                    args.no_overlapping_hits)
+
+        #else:
+        #    # Write output file with interpetation column appended.
+        #    search.write_redun_hit_interp_csv(args.csv_file, outfp)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nInterpretations written/appended to
