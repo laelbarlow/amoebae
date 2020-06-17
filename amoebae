@@ -1364,7 +1364,13 @@ Miscellaneous commands:
                 query (query title) retrieves a given sequence as a positive
                 hit based on the search criteria, make the sequence a negative
                 hit for all queries (query titles), except for the one that
-                retrieved the sequence with the lowest (strongest) E-value.''',
+                retrieved the sequence with the lowest (strongest) E-value.
+                Warning: Do not use this option if you are searching sequences
+                that include genomic sequences that may include more than one
+                genomic locus per sequence. False-negative
+                results could occur in this case, because different queries for
+                non-orthologous genes could retrieve subsequences in the same
+                subject sequence.''',
         action='store_true')
         parser.add_argument('--out_csv_path', help='''Optionally specify an
                 output file path, so that this command can be piped together
@@ -1389,10 +1395,15 @@ Miscellaneous commands:
         #if not args.redun_hits:
 
         if args.fwd_only:
+            # Check for conflicting options.
+            assert not args.no_overlapping_hits, """The --no_overlapping_hits
+            option is not currently compatible with the --fwd_only option."""
+
             # Write output file with interpetation column appended.
             search.write_fwd_srch_interp_csv(args.csv_file,
-                    outfp, args.hmmer_cutoff, args.fwd_evalue_cutoff,
-                    args.no_overlapping_hits)
+                                             outfp, 
+                                             args.hmmer_cutoff
+                                             )
         else:
             # Write output file with interpetation column appended.
             search.write_interp_csv(args.csv_file, outfp,

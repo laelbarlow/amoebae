@@ -1584,8 +1584,7 @@ def eliminate_overlapping_positive_hits_from_df(df, query_title_pos_ids):
 
 def write_fwd_srch_interp_csv(csv_file,
                               outfp,
-                              score_cutoff,
-                              no_overlapping_hits=False):
+                              score_cutoff):
     """Take a csv file and write a new one with an additional column with
     interpretation of which forward search results are positive based on all
     the reverse search results performed.
@@ -1639,15 +1638,6 @@ def write_fwd_srch_interp_csv(csv_file,
 
     # Write new dataframe to output csv file.
     df.to_csv(outfp, index=False)
-
-    if no_overlapping_hits:
-        # Check that no query titles have overlapping sets of positive hits, if
-        # there are, then update the dataframe.
-        eliminate_overlapping_positive_hits_from_df(df, query_title_pos_ids)
-
-        # Re-write dataframe to output CSV file path.
-        print('\nRe-writing updated interpretation to output file.')
-        df.to_csv(outfp, index=False)
 
 
 def write_redun_hit_interp_csv(csv_file, outfp):
