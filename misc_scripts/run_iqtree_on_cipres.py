@@ -215,7 +215,13 @@ def submit_raxml_job_to_cipres_1(infile_path, timestamp, cra_user, password,
     manage_any_cipres_job(infile_path, submission_info, cra_user, password, key)
 
 
-def submit_iqtree_job_to_cipres_1(url, cra_user, password, key, timestamp, infile_path):
+def submit_iqtree_job_to_cipres_1(url,
+                                  cra_user,
+                                  password,
+                                  key,
+                                  timestamp,
+                                  infile_path,
+                                  model='TESTNEW'):
     """Take a phylip file and run a basic phylogenetic analysis with IQtree on
     CIPRES.
     """
@@ -280,8 +286,12 @@ def submit_iqtree_job_to_cipres_1(url, cra_user, password, key, timestamp, infil
                     '-F',
                     'vparam.num_replicates_=' + '1000', # (Integer) - Specify number of replicates (1000 or less); no default.
                     '-F',
-                    'vparam.sequence_type_=' + 'AA' # Specify sequence type (-st); DNA; AA; BIN; MORPH; CODON; NT2AA (default = DNA).
+                    'vparam.sequence_type_=' + 'AA', # Specify sequence type (-st); DNA; AA; BIN; MORPH; CODON; NT2AA (default = DNA).
+                    '-F',
+                    'vparam.freetextmodel_=' + model
                     ]
+                    #'-F',
+                    #'vparam.specify_addlmodels_' + 'LG4X,LG4M,C10,C20,C30,C40,C50,C60'
 
     # Upload file. 
     print('\nUploading file, and initiating job\n')
@@ -304,20 +314,32 @@ if __name__ == '__main__':
     
     # Get input alignment file path from command line.
     command_line_list = sys.argv
-    infp = str(command_line_list[1])
     
     # Get login info.
     url = 'https://cipresrest.sdsc.edu/cipresrest/v1'
     password = getpass.getpass('Password for CIPRES: ')
 
     #################################################
-    # Define these variables manually:
+    # Customize these variables manually:
     cra_user = 'laelbarlow'
     application_name = 'archaeplastid_trees-1D575AEF608B49A1A8070479BADD492F'
     #################################################
 
+    # Get input alignment file path and model, if specified, from command line.
+    commands = command_line_list[1:]
+    infp = commands[0]
+    model = 'TESTNEW'
+    if len(commands) > 1:
+        model = commands[1]
+
     # Call function to run the tree on CIPRES. 
-    submit_iqtree_job_to_cipres_1(url, cra_user, password, application_name, timestamp, infp)
+    submit_iqtree_job_to_cipres_1(url,
+                                  cra_user,
+                                  password,
+                                  application_name,
+                                  timestamp,
+                                  infp,
+                                  model)
 
 
 

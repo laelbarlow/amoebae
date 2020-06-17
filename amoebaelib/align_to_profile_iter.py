@@ -13,15 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # 
-"""Script for iteratively aligning sequences from a fasta file one-by-one with
+"""Module for iteratively aligning sequences from a fasta file one-by-one with
 an existing alignment using MUSCLE's -profile option.
 
 ********** Ideally, the fastas should be added to the alignment in decreasing order of
 how well they align to the HMM (based on score).
-
-Usage:
-    align_to_profile_iter.py <nex starting alignment> <fasta file with seqs to
-    align to nex alignment>
 """
 
 import sys

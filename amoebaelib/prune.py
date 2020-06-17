@@ -380,7 +380,9 @@ def write_reduced_alignment(alignment_file,
     delete_extra_mesquite_lines(alignment_file)
 
     coded_seqs_to_not_remove_from_dataset = []
-    with open(alignment_file) as infh, open(output_alignment_file, 'w') as o:
+    with open(alignment_file) as infh,\
+         open(output_alignment_file, 'w') as o,\
+         open(output_alignment_file.rsplit('.', 1)[0] + '.phy', 'w') as o2:
         # Parse input nexus alignment.
         alignment = AlignIO.read(infh, 'nexus')
 
@@ -535,6 +537,9 @@ def write_reduced_alignment(alignment_file,
         # Write reduced alignment.
         #print('Writing modified alignment file:\n\t%s' % o.name)
         AlignIO.write(alignment3, o, 'nexus')
+
+        # Write in phylip format as well.
+        AlignIO.write(alignment3, o2, 'phylip')
 
 
 def manually_select_nodes_and_remove_seqs(input_tree_one, alignment_file,

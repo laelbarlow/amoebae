@@ -416,6 +416,9 @@ def get_rows_for_fwd_srch_df(df,
     new_row_df.loc[0]['Subject database file'] = d
     new_row_df.loc[0]['Forward search method'] = srch_file_prog + ' ' + srch_file_prog_vers
 
+    # Get version of exonerate that may be used.
+    exonerate_version = subprocess.getoutput('exonerate -v').split('\n')[0].rsplit(' ', 1)[-1]
+
 
     if num_hits == 0:
         # No hits to record.
@@ -431,6 +434,11 @@ def get_rows_for_fwd_srch_df(df,
         # genes. To account for this, the code below allows these to be
         # recorded as separate hits in the forward search summary.
         if parsed_file_obj.program == 'tblastn':
+            # Set value in column to indicate that TBLASTN was used to predict
+            # exon boundaries (this may be update later if exonerate is used
+            # instead.
+            new_row_df.loc[0]['Exon boundary prediction method'] = srch_file_prog + ' ' + srch_file_prog_vers
+
             # Get list of lists of HSPs corresponding to each potential gene in
             # the subject sequences.
             max_gap = max_gap_setting
@@ -496,6 +504,10 @@ def get_rows_for_fwd_srch_df(df,
                         # exonerate could not identify any sequence to
                         # translate (given the specified parameters).
                         continue
+                    else:
+                        # Exonerate was used successfully.
+                        new_row_df.loc[0]['Exon boundary prediction method'] =\
+                        'exonerate ' + exonerate_version
 
                 # Define hit sequence object.
                 hit_seq = hit_seq_record_and_coord[0] 
