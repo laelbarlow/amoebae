@@ -32,7 +32,8 @@ CMDLIST="mkdatadir
          replace_seqs      
          csv_to_fasta      
          check_depend      
-         check_imports"     
+         check_imports
+         regen_genome_info"     
 
 
 for CMD in $CMDLIST;

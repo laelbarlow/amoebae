@@ -14,10 +14,10 @@
 # limitations under the License.
 # 
 
-# Script for setting up AMOEBAE to run in a Docker container after cloning the
-# git repository. This is a bash script so it does not depend on python3 being
-# installed (for a setup.py script to work) and it does not depend on developer
-# tools being installed on MacOS (for make to work).
+# Script for setting up AMOEBAE to run in a singularity container after cloning
+# the git repository. This is a bash script so it does not depend on python3
+# being installed (for a setup.py script to work) and it does not depend on
+# developer tools being installed on MacOS (for make to work).
 
 
 # Start timing this script.
