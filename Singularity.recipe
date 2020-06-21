@@ -220,6 +220,9 @@ conda install -c anaconda requests
 ## Install entrezpy for downloading sequences from NCBI.
 #conda install -c bioconda entrezpy # Does not work as advertised.
 
+# Install Vim for text editing.
+apt-get install -y vim
+
 ## Add amoebae repository directory to path so that amoebae scripts can be run
 ## from the docker container.
 #PATH="$PATH:/opt/amoebae"
