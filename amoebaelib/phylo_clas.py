@@ -834,7 +834,7 @@ def classify_seq_with_constrained_tree2(file_with_seqs, model=None,
                     outdirpath1, summary_csv_fp, summary_header_line)
     else:
         # Parse csv file.
-        df = pd.read_csv(file_with_seqs)
+        df = pd.read_csv(file_with_seqs, encoding='utf-8')
 
         # Get column header for column with Yes/No data.
         yes_no_col = None
@@ -926,7 +926,7 @@ class ModelInfoFromCSV:
         subs_model = None
         tree_topologyfp = None
         type_seqsfp = None
-        df = pd.read_csv(settings.model_info_csv)
+        df = pd.read_csv(settings.model_info_csv, encoding='utf-8')
         found_model_with_name = False
         for index, row in df.iterrows():
             if row['Model name'] == model_name:
@@ -1778,7 +1778,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
 
     # Get data from input file.
     print('\tReading input csv file into a pandas dataframe.')
-    df = pd.read_csv(csv_file, index_col=False)
+    df = pd.read_csv(csv_file, index_col=False, encoding='utf-8')
 
     # Manage parsing and summarization of the intermediate summary file
     # differently depending on whether the --place command was used or not.
@@ -1832,7 +1832,8 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
                 print('Summarizing results for sequence with accession ' + acc)
                 
                 # Parse summary file.
-                dff = pd.read_csv(full_summary_csv_path, index_col=False)
+                dff = pd.read_csv(full_summary_csv_path, index_col=False,
+                        encoding='utf-8')
 
                 # Get info from corresponding rows in full phylo_class summary csv file.
                 info_found = False
@@ -1959,7 +1960,8 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
                 acc = row['Forward hit accession']
                 
                 # Parse summary file.
-                dff = pd.read_csv(full_summary_csv_path, index_col=False)
+                dff = pd.read_csv(full_summary_csv_path, index_col=False,
+                        encoding='utf-8')
 
                 # Get info from corresponding rows in full phylo_class summary csv file.
                 info_found = False

@@ -705,7 +705,7 @@ def write_fwd_srch_res_to_csv(outdir,
 
 
     # Get data from input file.
-    df = pd.read_csv(csv_file) #, index_col=0)
+    df = pd.read_csv(csv_file, encoding='utf-8') #, index_col=0)
 
     # Check that the headers match up the main spreadsheet and
     # the row to be appended.
@@ -831,7 +831,7 @@ def get_rev_queries(csv_file, query_subdir, aasubseq, nafullseq):
     reverse search queries, write them to output files in a given directory.
     """
     # Read spreadsheet with forward search results.
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, encoding='utf-8')
 
     # Loop over forward search hits, and select appropriate ones to write to
     # query files.
@@ -980,7 +980,7 @@ def get_redun_hit_dict(redun_hit_csv):
     databases.
     """
     # Load csv as a pandas dataframe.
-    df = pd.read_csv(redun_hit_csv)
+    df = pd.read_csv(redun_hit_csv, encoding='utf-8')
 
     # Construct dictionary.
     redun_hit_dict = {}
@@ -1063,7 +1063,7 @@ def write_rev_srch_res_to_csv(rev_srch_id,
 
     # Get data from input file.
     print('\tReading input csv file into a pandas dataframe.')
-    df = pd.read_csv(csv_file) #, index_col=0)
+    df = pd.read_csv(csv_file, encoding='utf-8') #, index_col=0)
 
     ## Check that the headers match up the main spreadsheet and
     ## the row to be appended.
@@ -1419,7 +1419,7 @@ def write_interp_csv(csv_file,
     the reverse search results performed.
     """
     # Read the csv file into a pandas dataframe.
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, encoding='utf-8')
 
     # Start a dictionary to keep track of IDs for positive hits for all query
     # titles.
@@ -1593,7 +1593,7 @@ def write_fwd_srch_interp_csv(csv_file,
     interpret results.""")
 
     # Read the csv file into a pandas dataframe.
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, encoding='utf-8')
 
     ## Compile a list of headers for columns that contain relevant +/-
     ## information.
@@ -1650,7 +1650,7 @@ def write_redun_hit_interp_csv(csv_file, outfp):
     non-overlapping/non-nested sets of related proteins.
     """
     # Read the csv file into a pandas dataframe.
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, encoding='utf-8')
 
     ## Compile a list of headers for columns that contain relevant +/-
     ## information.

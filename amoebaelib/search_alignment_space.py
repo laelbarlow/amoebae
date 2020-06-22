@@ -1121,7 +1121,7 @@ def get_taxonomic_info(species_name):
     info_csv = settings.db_info_csv
 
     # Parse info file with pandas.
-    df = pd.read_csv(info_csv)
+    df = pd.read_csv(info_csv, encoding='utf-8')
 
     # Iterate through rows until one is found with the same species name.
     taxonomic_info_obj = None

@@ -665,7 +665,7 @@ def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,
         # a pandas dataframe. 
 
         # Get data from input file.
-        indf = pd.read_csv(csv_file_x)
+        indf = pd.read_csv(csv_file_x, encoding='utf-8')
 
         # construct an additional dataframe with each datapoint being a list of
         # relevant information.

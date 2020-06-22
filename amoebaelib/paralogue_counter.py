@@ -1198,7 +1198,7 @@ def count_paralogues2(csv_file, alignmentdir, fastadir, fwdeval, metric_name,
 
 
     # Use pandas to parse the input csv (spreadsheet) file.
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, encoding='utf-8')
 
     # Define a dictionary of relevant column labels (so I can change the title
     # that it looks for without changing the name that that tile is referred to
@@ -1847,7 +1847,7 @@ def get_relevant_annot_sql_file(sequence_filename):
     # Determine whether there is a relevant annotation file to
     # check in.
     annotation_file = None
-    with open(settings.db_info_csv) as infh:
+    with open(settings.db_info_csv, encoding='utf-8') as infh:
         dfx = pd.read_csv(infh)
         for index, row in dfx.iterrows():
             if row['Filename'] == sequence_filename:
@@ -1989,7 +1989,7 @@ def count_paralogues3(csv_file,
 
     # Use pandas to parse the input csv (spreadsheet) file.
     print('Reading input csv file into a pandas dataframe.')
-    df = pd.read_csv(csv_file, low_memory=False)
+    df = pd.read_csv(csv_file, low_memory=False, encoding='utf-8')
 
     # Define a dictionary of relevant column labels (so I can change the title
     # that it looks for without changing the name that that tile is referred to
@@ -3087,7 +3087,7 @@ def add_alignment_column(incsv, outcsv):
                           'subseq descr': 'Forward hit description of subsequence(s) that align(s) to query'
                           }
     # Use pandas to parse the input csv (spreadsheet) file.
-    df = pd.read_csv(incsv)
+    df = pd.read_csv(incsv, encoding='utf-8')
 
     # Loop over rows and construct dict with query titles as keys and
     # corresponding alignment to use for sequence comparison as values.
@@ -3224,7 +3224,7 @@ def add_model_column(incsv, outcsv):
                           'subseq descr': 'Forward hit description of subsequence(s) that align(s) to query'
                           }
     # Use pandas to parse the input csv (spreadsheet) file.
-    df = pd.read_csv(incsv)
+    df = pd.read_csv(incsv, encoding='utf-8')
 
     # Loop over rows and construct dict.
     complete_query_title_list = []

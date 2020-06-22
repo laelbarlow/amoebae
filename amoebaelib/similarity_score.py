@@ -40,7 +40,7 @@ def get_score_dataframe_from_file(infp):
     """Take a filepath for a csv file with a scoring matrix, and return a
     pandas dataframe with the data it contains.
     """
-    return pd.read_csv(infp, index_col=0)
+    return pd.read_csv(infp, index_col=0, encoding='utf-8')
 
 
 def get_similarity_scores(aas1, aas2):

@@ -258,7 +258,7 @@ def get_query_title_from_csv(query_filename):
     directory csv specified in the settings module, and return that.
     """
     # Parse query info csv file.
-    df = pd.read_csv(settings.query_info_csv)
+    df = pd.read_csv(settings.query_info_csv, encoding='utf-8')
 
     # Return query title.
     df.set_index('Filename', inplace=True)
@@ -270,7 +270,7 @@ def get_query_taxon_from_csv(query_filename):
     directory csv specified in the settings module, and return that.
     """
     # Parse query info csv file.
-    df = pd.read_csv(settings.query_info_csv)
+    df = pd.read_csv(settings.query_info_csv, encoding='utf-8')
 
     # Return query title.
     df.set_index('Filename', inplace=True)
@@ -283,7 +283,7 @@ def get_species_from_db_csv(taxon):
     database directory information csv file specified in the settings module
     return that.
     """
-    df = pd.read_csv(settings.db_info_csv)
+    df = pd.read_csv(settings.db_info_csv, ecoding='utf-8')
     # Species name to return is not applicable by default.
     sp = '-'
     for f in list(df['Filename']):
@@ -306,7 +306,7 @@ def get_db_filename_for_query_from_db_csv(taxon):
     # Check whether the given "taxon" name exists in the database info csv.
     try:
         # Try loading the dataframe.
-        df = pd.read_csv(settings.db_info_csv)
+        df = pd.read_csv(settings.db_info_csv, encoding='utf-8')
     except:
         # Print an error message.
         print("""Error: Could not load contents of csv file as pandas dataframe:\n\n
@@ -331,7 +331,7 @@ def get_species_for_db_filename(db_filename):
     """Takes a database filename, and returns the species name that appears in
     the database info csv file (may be '-' if not applicable).
     """
-    df = pd.read_csv(settings.db_info_csv)
+    df = pd.read_csv(settings.db_info_csv, encoding='utf-8')
     df.set_index('Filename', inplace=True)
     sp = df.loc[db_filename]['Species (if applicable)']
 
@@ -369,7 +369,7 @@ def write_seqs_to_fasta(csv_file,
 
     # Read csv file into a pandas dataframe.
     #df = pd.read_csv(csv_file, low_memory=False)
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, encoding='utf-8')
 
     # Do it differently depending on if all hits are to be included or not.
     seq_objs = []

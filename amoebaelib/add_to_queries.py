@@ -167,7 +167,7 @@ def update_query_csv(csv_file, mod_query_path, datatype):
             o.write(','.join(headers)) # + '\n')
 
     # Load dataframe from csv file.
-    df = pd.read_csv(csv_file) #, index_col='Filename')
+    df = pd.read_csv(csv_file, encoding='utf-8') #, index_col='Filename')
 
     # Get current date.
     cur_date = time.strftime("%Y/%m/%d")
