@@ -223,17 +223,21 @@ conda install -c anaconda requests
 # Install Vim for text editing.
 apt-get install -y vim
 
-## Add amoebae repository directory to path so that amoebae scripts can be run
-## from the docker container.
-#PATH="$PATH:/opt/amoebae"
-#
-## Define the working directory that users will have when first logging into the
-## container via command line.
-#cd /home/amoebae_user
+# Make an internal clone of the amoebae github code repository so that the
+# singularity container can be used as a stand-alone component of a pipeline.
+cd /opt
+git clone https://github.com/laelbarlow/amoebae.git --depth 1 --single-branch --branch master
+mv amoebae internal_amoebae
+cd internal_amoebae
+cp settings.py.example settings.py
+chmod a+x amoebae
+chmod a+x misc_scripts/*.py
+cd /opt
+
+
 
 %environment
 export PATH="$PATH:/opt/conda/bin"
-#export PATH="$PATH:/opt/ncbi-blast-2.10.0+/bin"
 export PATH="$PATH:/opt/ncbi-blast-2.9.0+/bin"
 export PATH="$PATH:/opt/iqtree-1.6.12-Linux/bin"
 export PATH="$PATH:/opt/"
