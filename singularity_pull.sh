@@ -14,7 +14,7 @@ singularity_pull_in_vm () {
   vagrant up && \
   # Pull the latest container from the singularity library into the
   # singularity container.
-  vagrant ssh -c '/bin/bash singularity pull singularity.sif library://laelbarlow/default/amoebae:latest' && \
+  vagrant ssh -c 'singularity pull singularity.sif library://laelbarlow/default/amoebae:latest' && \
   # Move the .sif file into the directory synced with the host. This will
   # overwrite any existing file with the same name in that directory.
   vagrant ssh -c 'mv singularity.sif amoebae/singularity.sif' && \
