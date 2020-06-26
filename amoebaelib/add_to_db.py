@@ -219,11 +219,11 @@ def update_csv(outfp, csv_file):
     # Check whether file has a newline character at the end so a new line can
     # start correctly.
     newline = False
-    if open(csv_file, 'r').read()[-1] == '\n':
+    if open(csv_file, 'r', encoding='utf-8').read()[-1] == '\n':
         newline = True
 
     # Write to file.
-    with open(csv_file, 'a') as csvh:
+    with open(csv_file, 'a', encoding='utf-8') as csvh:
         x = '\n'
         if newline:
             x = ''
