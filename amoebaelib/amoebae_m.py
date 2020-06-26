@@ -283,7 +283,7 @@ def get_species_from_db_csv(taxon):
     database directory information csv file specified in the settings module
     return that.
     """
-    df = pd.read_csv(settings.db_info_csv, ecoding='utf-8')
+    df = pd.read_csv(settings.db_info_csv, encoding='utf-8')
     # Species name to return is not applicable by default.
     sp = '-'
     for f in list(df['Filename']):
