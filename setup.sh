@@ -74,6 +74,10 @@ if [ "$(uname)" == "Darwin" ]; then
         brew cask install vagrant-manager && \
         printf "\nDone installing vagrant.\n"
 
+        # Install vagrant disk-size plugin.
+        vagrant plugin install vagrant-disksize && \
+        printf "\nDone installing vagrant-disksize plugin.\n"
+
     fi
 
     # Look for an existing singularity .sif file.
