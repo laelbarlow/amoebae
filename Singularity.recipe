@@ -223,6 +223,9 @@ conda install -c anaconda requests
 # Install Vim for text editing.
 apt-get install -y vim
 
+# install PyTest.
+pip install -U pytest
+
 # Make an internal clone of the amoebae github code repository so that the
 # singularity container can be used as a stand-alone component of a pipeline.
 cd /opt

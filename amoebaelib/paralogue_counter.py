@@ -68,7 +68,7 @@ def remove_irrelevant_data_from_alignment(ali_plus_top_seq_plus_1):
     seq_len = alignment.get_alignment_length()
     columns = [alignment[:, col] for col in range(seq_len)] 
 
-    # Get a list of column indexes for columns that need to be remove.
+    # Get a list of column indexes for columns that need to be removed.
     col_to_remove = []
     col_index = -1
     for col in columns:
