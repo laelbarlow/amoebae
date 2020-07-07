@@ -4,6 +4,7 @@
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+from Bio import SearchIO
 
 from search_scaffolds import \
 check_if_two_hsp_ranges_overlap, \
@@ -39,8 +40,82 @@ parse_tblastn, \
 search_scaffolds
 
 
-def test_check_if_two_hsp_ranges_overlap():  # ***Incomplete test
+def test_bio_searchio_coordinates():
+    """Test whether the Biopython Bio.SearchIO module returns HSP range
+    coordinates as python string slices or as the actual positions of the first
+    and last residues in the HSP (of the subject sequence). This is important
+    for the search_scaffolds module, specifically the
+    check_if_hsps_overlapping function (which may be obsolete). 
+    """
+    ##########################
+    # Arrange.
+
+    # Example BLASTP input file is at this path:
+    #   data/blastp_query_1_database_1_output.xml
+    #
+    # The text format output for the same search is here:
+    #   data/blastp_query_1_database_1_output.txt
+
+    ##########################
+    # Act.
+
+    # Initiate variable to store a SearchIO HSP object.
+    hsp_1 = None
+
+    # Open a BLASTP output file (XML format).
+    with open('tests/data/blastp_query_1_database_1_output.xml') as infh:
+
+        # Parse the BLASTP output file using SearchIO (from Biopython).
+        search_results = SearchIO.parse(infh, 'blast-xml')
+
+        # Get the first HSP from the first hit in the first record.
+        for record in search_results:
+            for hit in record:
+                for hsp in hit:
+                    hsp_1 = hsp
+                    break
+                break
+            break
+
+    ##########################
+    # Assert.
+
+    # The top hit is the original query, which is 288 residues long. So, the
+    # first (only) HSP for the top/first hit should be the length of the
+    # original sequence from residue 1 to residue 288. Using the Python string
+    # slicing conventions (counting from zero, and not including the last
+    # number in the slice), the HSP coordinates would be (0, 288) which
+    # corresponds to residues 0 to 287 (still 288 residues). 
+    assert hsp_1.hit_range == (0, 288)
+
+
+def test_check_if_two_hsp_ranges_overlap():  
     """Test the check_if_two_hsp_ranges_overlap function in the search_scaffolds.py file.
+    """
+    ##########################
+    # Arrange.
+    input_value1 = [[1, 5], [3, 7]]
+    input_value2 = [[1, 5], [7, 9]]
+    input_value3 = [[1, 5], [1, 5]]
+    input_value4 = [[1, 5], [5, 7]]
+
+    ##########################
+    # Act.
+    result_value1 = check_if_two_hsp_ranges_overlap(input_value1)
+    result_value2 = check_if_two_hsp_ranges_overlap(input_value2)
+    result_value3 = check_if_two_hsp_ranges_overlap(input_value3)
+    result_value4 = check_if_two_hsp_ranges_overlap(input_value4)
+
+    ##########################
+    # Assert.
+    assert result_value1 == True
+    assert result_value2 == False
+    assert result_value3 == True
+    assert result_value4 == False
+
+
+def test_check_if_two_hsps_overlap(): # ***Incomplete test
+    """Test the check_if_two_hsps_overlap function in the search_scaffolds.py file.
     """
     ##########################
     # Arrange.
@@ -48,31 +123,11 @@ def test_check_if_two_hsp_ranges_overlap():  # ***Incomplete test
 
     ##########################
     # Act.
-    #x = check_if_two_hsp_ranges_overlap(lists)
+    #x = check_if_two_hsps_overlap(lists)
 
     ##########################
     # Assert.
     assert True == True # ***Temporary.
-
-
-
-def test_check_if_two_hsps_overlap():  # ***Incomplete test
-    """Test the check_if_two_hsps_overlap function in the search_scaffolds.py file.
-    """
-    ##########################
-    # Arrange.
-    hsp_obj1 = "hsp_obj1"
-    hsp_obj2 = "hsp_obj2"
-
-    ##########################
-    # Act.
-    #x = check_if_two_hsps_overlap(hsp_obj1,
-    #		hsp_obj2)
-
-    ##########################
-    # Assert.
-    assert True == True # ***Temporary.
-
 
 
 def test_check_if_hsps_overlapping():  # ***Incomplete test
@@ -286,21 +341,44 @@ def test_reduce_to_best_hsps():  # ***Incomplete test
 
 
 
-def test_find_missed_hsp_ranges():  # ***Incomplete test
+def test_find_missed_hsp_ranges():
     """Test the find_missed_hsp_ranges function in the search_scaffolds.py file.
     """
     ##########################
     # Arrange.
-    complete_ranges = "complete_ranges"
+    a1 =  [(1,10), (20,30), (40,50), (60,70), (80,90), (19,21), (29,41), (49,61), (69,71)]
+    b1 =  [        (20,30), (40,50), (60,70)         ]
+    c1 =  [   (19,21), (29,41), (49,61), (69,71)     ]
+
+    a2 =  [(1,10), (20,30), (40,50), (60,70), (80,90), (19,21), (29,41), (49,61), (69,71)]
+    b2 =  [        (20,30), (40,50), (60,70)         ]
+    c2 =  [   (19,21),          (49,61), (69,71)     ]
+
+    a3 =  [(1,10), (20,30), (40,50), (60,70), (80,90), (19,21), (29,41), (49,61), (69,71), (32,35)]
+    b3 =  [        (20,30), (40,50), (60,70)         ]
+    c3 =  [   (19,21), (29,41), (49,61), (69,71)     ]
+
+    a4 =  [(8466018, 8466147), (8466353, 8466488), (8466585, 8466801),
+            (8468034, 8468208), (8468456, 8468645), (8468717, 8468861),
+            (8469013, 8469343)]
+    b4 =  [(8466018, 8466147), (8466353, 8466488), (8466585, 8466801),
+                                (8468456, 8468645), (8468717, 8468861),
+            (8469013, 8469343)]
+    c4 =  [ ]
 
     ##########################
     # Act.
-    #x = find_missed_hsp_ranges(complete_ranges)
+    result_value1 = find_missed_hsp_ranges(a1,b1,c1)
+    result_value2 = find_missed_hsp_ranges(a2,b2,c2)
+    result_value3 = find_missed_hsp_ranges(a3,b3,c3)
+    result_value4 = find_missed_hsp_ranges(a4,b4,c4)
 
     ##########################
     # Assert.
-    assert True == True # ***Temporary.
-
+    assert result_value1 == False
+    assert result_value2 == True
+    assert result_value3 == True
+    assert result_value4 == True
 
 
 def test_get_best_proximate_hsps():  # ***Incomplete test

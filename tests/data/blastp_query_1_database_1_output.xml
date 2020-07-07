@@ -1,0 +1,1734 @@
+<?xml version="1.0"?>
+<!DOCTYPE BlastOutput PUBLIC "-//NCBI//NCBI BlastOutput/EN" "http://www.ncbi.nlm.nih.gov/dtd/NCBI_BlastOutput.dtd">
+<BlastOutput>
+  <BlastOutput_program>blastp</BlastOutput_program>
+  <BlastOutput_version>BLASTP 2.7.1+</BlastOutput_version>
+  <BlastOutput_reference>Stephen F. Altschul, Thomas L. Madden, Alejandro A. Sch&amp;auml;ffer, Jinghui Zhang, Zheng Zhang, Webb Miller, and David J. Lipman (1997), &quot;Gapped BLAST and PSI-BLAST: a new generation of protein database search programs&quot;, Nucleic Acids Res. 25:3389-3402.</BlastOutput_reference>
+  <BlastOutput_db>blastp_database_1.faa</BlastOutput_db>
+  <BlastOutput_query-ID>Query_1</BlastOutput_query-ID>
+  <BlastOutput_query-def>NP_004594.1 syntaxin-1A isoform 1 [Homo sapiens]</BlastOutput_query-def>
+  <BlastOutput_query-len>288</BlastOutput_query-len>
+  <BlastOutput_param>
+    <Parameters>
+      <Parameters_matrix>BLOSUM62</Parameters_matrix>
+      <Parameters_expect>10</Parameters_expect>
+      <Parameters_gap-open>11</Parameters_gap-open>
+      <Parameters_gap-extend>1</Parameters_gap-extend>
+      <Parameters_filter>F</Parameters_filter>
+    </Parameters>
+  </BlastOutput_param>
+<BlastOutput_iterations>
+<Iteration>
+  <Iteration_iter-num>1</Iteration_iter-num>
+  <Iteration_query-ID>Query_1</Iteration_query-ID>
+  <Iteration_query-def>NP_004594.1 syntaxin-1A isoform 1 [Homo sapiens]</Iteration_query-def>
+  <Iteration_query-len>288</Iteration_query-len>
+<Iteration_hits>
+<Hit>
+  <Hit_num>1</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|0</Hit_id>
+  <Hit_def>NP_004594.1 syntaxin-1A isoform 1 [Homo sapiens]</Hit_def>
+  <Hit_accession>0</Hit_accession>
+  <Hit_len>288</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>582.408</Hsp_bit-score>
+      <Hsp_score>1500</Hsp_score>
+      <Hsp_evalue>0</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>288</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>288</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>288</Hsp_identity>
+      <Hsp_positive>288</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>288</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVGGIFA</Hsp_qseq>
+      <Hsp_hseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVGGIFA</Hsp_hseq>
+      <Hsp_midline>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVGGIFA</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>2</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|1</Hit_id>
+  <Hit_def>NP_443106.1 syntaxin-1B [Homo sapiens]</Hit_def>
+  <Hit_accession>1</Hit_accession>
+  <Hit_len>288</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>493.041</Hsp_bit-score>
+      <Hsp_score>1268</Hsp_score>
+      <Hsp_evalue>0</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>288</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>287</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>240</Hsp_identity>
+      <Hsp_positive>270</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>288</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVGGIFA</Hsp_qseq>
+      <Hsp_hseq>MKDRTQELRSAKDSDDEEEV-VHVDRDHFMDEFFEQVEEIRGCIEKLSEDVEQVKKQHSAILAAPNPDEKTKQELEDLTADIKKTANKVRSKLKAIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMTEYNATQSKYRDRCKDRIQRQLEITGRTTTNEELEDMLESGKLAIFTDDIKMDSQMTKQALNEIETRHNEIIKLETSIRELHDMFVDMAMLVESQGEMIDRIEYNVEHSVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVVLGVVLASSIGGTLG</Hsp_hseq>
+      <Hsp_midline>MKDRTQELR+AKDSDD+++V V VDRD FMDEFFEQVEEIRG I+K++E+VE+VK++HSAILA+PNPDEKTK+ELE+L +DIKKTANKVRSKLK+IEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVM+EYNATQS YR+RCK RIQRQLEITGRTTT+EELEDMLESG  AIF   I MDS ++KQAL+EIETRH+EIIKLE SIRELHDMF+DMAMLVESQGEMIDRIEYNVEH+VDYVERAVSDTKKAVKYQSKARRKKIMIIICCV+LG+V+AS++GG   </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>3</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|2</Hit_id>
+  <Hit_def>XP_016878382.1 syntaxin-1B isoform X1 [Homo sapiens]</Hit_def>
+  <Hit_accession>2</Hit_accession>
+  <Hit_len>282</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>474.552</Hsp_bit-score>
+      <Hsp_score>1220</Hsp_score>
+      <Hsp_evalue>1.00971e-173</Hsp_evalue>
+      <Hsp_query-from>11</Hsp_query-from>
+      <Hsp_query-to>288</Hsp_query-to>
+      <Hsp_hit-from>5</Hsp_hit-from>
+      <Hsp_hit-to>281</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>231</Hsp_identity>
+      <Hsp_positive>260</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>278</Hsp_align-len>
+      <Hsp_qseq>AKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVGGIFA</Hsp_qseq>
+      <Hsp_hseq>AKDSDDEEEV-VHVDRDHFMDEFFEQVEEIRGCIEKLSEDVEQVKKQHSAILAAPNPDEKTKQELEDLTADIKKTANKVRSKLKAIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMTEYNATQSKYRDRCKDRIQRQLEITGRTTTNEELEDMLESGKLAIFTDDIKMDSQMTKQALNEIETRHNEIIKLETSIRELHDMFVDMAMLVESQGEMIDRIEYNVEHSVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVVLGVVLASSIGGTLG</Hsp_hseq>
+      <Hsp_midline>AKDSDD+++V V VDRD FMDEFFEQVEEIRG I+K++E+VE+VK++HSAILA+PNPDEKTK+ELE+L +DIKKTANKVRSKLK+IEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVM+EYNATQS YR+RCK RIQRQLEITGRTTT+EELEDMLESG  AIF   I MDS ++KQAL+EIETRH+EIIKLE SIRELHDMF+DMAMLVESQGEMIDRIEYNVEH+VDYVERAVSDTKKAVKYQSKARRKKIMIIICCV+LG+V+AS++GG   </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>4</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|3</Hit_id>
+  <Hit_def>NP_001159375.1 syntaxin-1A isoform 2 [Homo sapiens]</Hit_def>
+  <Hit_accession>3</Hit_accession>
+  <Hit_len>251</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>454.136</Hsp_bit-score>
+      <Hsp_score>1167</Hsp_score>
+      <Hsp_evalue>3.75986e-166</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>226</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>226</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>226</Hsp_identity>
+      <Hsp_positive>226</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>226</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQ</Hsp_qseq>
+      <Hsp_hseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQ</Hsp_hseq>
+      <Hsp_midline>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQ</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>5</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|4</Hit_id>
+  <Hit_def>XP_016868056.1 syntaxin-1A isoform X1 [Homo sapiens]</Hit_def>
+  <Hit_accession>4</Hit_accession>
+  <Hit_len>329</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>456.833</Hsp_bit-score>
+      <Hsp_score>1174</Hsp_score>
+      <Hsp_evalue>4.85393e-166</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>226</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>226</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>226</Hsp_identity>
+      <Hsp_positive>226</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>226</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQ</Hsp_qseq>
+      <Hsp_hseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQ</Hsp_hseq>
+      <Hsp_midline>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQ</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>6</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|5</Hit_id>
+  <Hit_def>NP_001971.2 syntaxin-2 isoform 1 [Homo sapiens]</Hit_def>
+  <Hit_accession>5</Hit_accession>
+  <Hit_len>287</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>376.711</Hsp_bit-score>
+      <Hsp_score>966</Hsp_score>
+      <Hsp_evalue>5.96497e-135</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>284</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>287</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>189</Hsp_identity>
+      <Hsp_positive>232</Hsp_positive>
+      <Hsp_gaps>5</Hsp_gaps>
+      <Hsp_align-len>288</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICC----VILGIVIASTVG</Hsp_qseq>
+      <Hsp_hseq>MRDRLPDL-TACRKNDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRKLMFIIICVIVLLVILGIILATTLS</Hsp_hseq>
+      <Hsp_midline>M+DR  +L TA   +DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARRK + IIIC     VILGI++A+T+ </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>7</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|6</Hit_id>
+  <Hit_def>NP_919337.1 syntaxin-2 isoform 2 [Homo sapiens]</Hit_def>
+  <Hit_accession>6</Hit_accession>
+  <Hit_len>288</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>372.474</Hsp_bit-score>
+      <Hsp_score>955</Hsp_score>
+      <Hsp_evalue>2.90589e-133</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>284</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>283</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>186</Hsp_identity>
+      <Hsp_positive>228</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>284</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVG</Hsp_qseq>
+      <Hsp_hseq>MRDRLPDL-TACRKNDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRKKWIIIAVSVVLVAIIALIIG</Hsp_hseq>
+      <Hsp_midline>M+DR  +L TA   +DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARRKK +II   V+L  +IA  +G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>8</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|7</Hit_id>
+  <Hit_def>XP_016874469.1 syntaxin-2 isoform X2 [Homo sapiens]</Hit_def>
+  <Hit_accession>7</Hit_accession>
+  <Hit_len>319</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>370.933</Hsp_bit-score>
+      <Hsp_score>951</Hsp_score>
+      <Hsp_evalue>3.52672e-132</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>284</Hsp_query-to>
+      <Hsp_hit-from>46</Hsp_hit-from>
+      <Hsp_hit-to>319</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>183</Hsp_identity>
+      <Hsp_positive>224</Hsp_positive>
+      <Hsp_gaps>4</Hsp_gaps>
+      <Hsp_align-len>274</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICC----VILGIVIASTVG</Hsp_qseq>
+      <Hsp_hseq>NDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRKLMFIIICVIVLLVILGIILATTLS</Hsp_hseq>
+      <Hsp_midline>+DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARRK + IIIC     VILGI++A+T+ </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>9</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|8</Hit_id>
+  <Hit_def>XP_016874467.1 syntaxin-2 isoform X1 [Homo sapiens]</Hit_def>
+  <Hit_accession>8</Hit_accession>
+  <Hit_len>320</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>366.696</Hsp_bit-score>
+      <Hsp_score>940</Hsp_score>
+      <Hsp_evalue>1.88881e-130</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>284</Hsp_query-to>
+      <Hsp_hit-from>46</Hsp_hit-from>
+      <Hsp_hit-to>315</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>180</Hsp_identity>
+      <Hsp_positive>220</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>270</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVG</Hsp_qseq>
+      <Hsp_hseq>NDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRKKWIIIAVSVVLVAIIALIIG</Hsp_hseq>
+      <Hsp_midline>+DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARRKK +II   V+L  +IA  +G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>10</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|9</Hit_id>
+  <Hit_def>NP_001337979.1 syntaxin-2 isoform 4 [Homo sapiens]</Hit_def>
+  <Hit_accession>9</Hit_accession>
+  <Hit_len>269</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>355.14</Hsp_bit-score>
+      <Hsp_score>910</Hsp_score>
+      <Hsp_evalue>9.63153e-127</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>263</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>262</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>177</Hsp_identity>
+      <Hsp_positive>215</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>263</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARR</Hsp_qseq>
+      <Hsp_hseq>MRDRLPDL-TACRKNDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARR</Hsp_hseq>
+      <Hsp_midline>M+DR  +L TA   +DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARR</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>11</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|10</Hit_id>
+  <Hit_def>NP_001337978.2 syntaxin-2 isoform 3 [Homo sapiens]</Hit_def>
+  <Hit_accession>10</Hit_accession>
+  <Hit_len>277</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>354.755</Hsp_bit-score>
+      <Hsp_score>909</Hsp_score>
+      <Hsp_evalue>1.74686e-126</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>265</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>264</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>177</Hsp_identity>
+      <Hsp_positive>217</Hsp_positive>
+      <Hsp_gaps>1</Hsp_gaps>
+      <Hsp_align-len>265</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKK</Hsp_qseq>
+      <Hsp_hseq>MRDRLPDL-TACRKNDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRQQ</Hsp_hseq>
+      <Hsp_midline>M+DR  +L TA   +DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARR++</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>12</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|11</Hit_id>
+  <Hit_def>XP_016874472.1 syntaxin-2 isoform X5 [Homo sapiens]</Hit_def>
+  <Hit_accession>11</Hit_accession>
+  <Hit_len>260</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>352.443</Hsp_bit-score>
+      <Hsp_score>903</Hsp_score>
+      <Hsp_evalue>7.07774e-126</Hsp_evalue>
+      <Hsp_query-from>30</Hsp_query-from>
+      <Hsp_query-to>284</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>255</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>173</Hsp_identity>
+      <Hsp_positive>210</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>255</Hsp_align-len>
+      <Hsp_qseq>MDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVG</Hsp_qseq>
+      <Hsp_hseq>MDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRKKWIIIAVSVVLVAIIALIIG</Hsp_hseq>
+      <Hsp_midline>MD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARRKK +II   V+L  +IA  +G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>13</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|12</Hit_id>
+  <Hit_def>XP_016874471.1 syntaxin-2 isoform X4 [Homo sapiens]</Hit_def>
+  <Hit_accession>12</Hit_accession>
+  <Hit_len>309</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>350.517</Hsp_bit-score>
+      <Hsp_score>898</Hsp_score>
+      <Hsp_evalue>2.44118e-124</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>265</Hsp_query-to>
+      <Hsp_hit-from>46</Hsp_hit-from>
+      <Hsp_hit-to>296</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>171</Hsp_identity>
+      <Hsp_positive>209</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>251</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKK</Hsp_qseq>
+      <Hsp_hseq>NDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRQQ</Hsp_hseq>
+      <Hsp_midline>+DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARR++</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>14</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|13</Hit_id>
+  <Hit_def>XP_016874470.1 syntaxin-2 isoform X3 [Homo sapiens]</Hit_def>
+  <Hit_accession>13</Hit_accession>
+  <Hit_len>317</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>350.132</Hsp_bit-score>
+      <Hsp_score>897</Hsp_score>
+      <Hsp_evalue>5.47787e-124</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>263</Hsp_query-to>
+      <Hsp_hit-from>46</Hsp_hit-from>
+      <Hsp_hit-to>294</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>171</Hsp_identity>
+      <Hsp_positive>207</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>249</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARR</Hsp_qseq>
+      <Hsp_hseq>NDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARR</Hsp_hseq>
+      <Hsp_midline>+DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARR</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>15</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|14</Hit_id>
+  <Hit_def>XP_005274255.1 syntaxin-3 isoform X4 [Homo sapiens]</Hit_def>
+  <Hit_accession>14</Hit_accession>
+  <Hit_len>287</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>344.354</Hsp_bit-score>
+      <Hsp_score>882</Hsp_score>
+      <Hsp_evalue>3.05933e-122</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>288</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>287</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>191</Hsp_identity>
+      <Hsp_positive>241</Hsp_positive>
+      <Hsp_gaps>5</Hsp_gaps>
+      <Hsp_align-len>290</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDD--VAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVGGIFA</Hsp_qseq>
+      <Hsp_hseq>MKDRLEQLKAKQLTQDDDTDAVEIAIDNTAFMDEFFSEIEETRLNIDKISEHVEEAKKLYSIILSAPIPEPKTKDDLEQLTTEIKKRANNVRNKLKSMEKHIEEDEV--RSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQGEMLDNIELNVMHTVDHVEKARDETKKAVKYQSQARKKKIMIMICCIILAIILASTIGSIFA</Hsp_hseq>
+      <Hsp_midline>MKDR ++L+  + + DDD   V + +D   FMDEFF ++EE R  IDKI+E+VEE K+ +S IL++P P+ KTK++LE+L ++IKK AN VR+KLKS+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+QGEM+D IE NV H VD+VE+A  +TKKAVKYQS+AR+KKIMI+ICC+IL I++AST+G IFA</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>16</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|15</Hit_id>
+  <Hit_def>NP_001171511.1 syntaxin-3 isoform 2 [Homo sapiens]</Hit_def>
+  <Hit_accession>15</Hit_accession>
+  <Hit_len>277</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>341.658</Hsp_bit-score>
+      <Hsp_score>875</Hsp_score>
+      <Hsp_evalue>2.89272e-121</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>275</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>274</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>176</Hsp_identity>
+      <Hsp_positive>222</Hsp_positive>
+      <Hsp_gaps>5</Hsp_gaps>
+      <Hsp_align-len>277</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDD--VAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVIL</Hsp_qseq>
+      <Hsp_hseq>MKDRLEQLKAKQLTQDDDTDAVEIAIDNTAFMDEFFSEIEETRLNIDKISEHVEEAKKLYSIILSAPIPEPKTKDDLEQLTTEIKKRANNVRNKLKSMEKHIEEDEV--RSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQGEMLDNIELNVMHTVDHVEKARDETKKAVKYQSQARKKLISLQTGVATL</Hsp_hseq>
+      <Hsp_midline>MKDR ++L+  + + DDD   V + +D   FMDEFF ++EE R  IDKI+E+VEE K+ +S IL++P P+ KTK++LE+L ++IKK AN VR+KLKS+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+QGEM+D IE NV H VD+VE+A  +TKKAVKYQS+AR+K I +      L</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>17</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|16</Hit_id>
+  <Hit_def>NP_004168.1 syntaxin-3 isoform 1 [Homo sapiens]</Hit_def>
+  <Hit_accession>16</Hit_accession>
+  <Hit_len>289</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>341.273</Hsp_bit-score>
+      <Hsp_score>874</Hsp_score>
+      <Hsp_evalue>6.19995e-121</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>264</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>263</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>174</Hsp_identity>
+      <Hsp_positive>219</Hsp_positive>
+      <Hsp_gaps>5</Hsp_gaps>
+      <Hsp_align-len>266</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDD--VAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRK</Hsp_qseq>
+      <Hsp_hseq>MKDRLEQLKAKQLTQDDDTDAVEIAIDNTAFMDEFFSEIEETRLNIDKISEHVEEAKKLYSIILSAPIPEPKTKDDLEQLTTEIKKRANNVRNKLKSMEKHIEEDEV--RSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQGEMLDNIELNVMHTVDHVEKARDETKKAVKYQSQARKK</Hsp_hseq>
+      <Hsp_midline>MKDR ++L+  + + DDD   V + +D   FMDEFF ++EE R  IDKI+E+VEE K+ +S IL++P P+ KTK++LE+L ++IKK AN VR+KLKS+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+QGEM+D IE NV H VD+VE+A  +TKKAVKYQS+AR+K</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>18</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|17</Hit_id>
+  <Hit_def>XP_016873681.1 syntaxin-3 isoform X2 [Homo sapiens]</Hit_def>
+  <Hit_accession>17</Hit_accession>
+  <Hit_len>279</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>338.961</Hsp_bit-score>
+      <Hsp_score>868</Hsp_score>
+      <Hsp_evalue>3.54757e-120</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>288</Hsp_query-to>
+      <Hsp_hit-from>9</Hsp_hit-from>
+      <Hsp_hit-to>279</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>186</Hsp_identity>
+      <Hsp_positive>231</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>274</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVILGIVIASTVGGIFA</Hsp_qseq>
+      <Hsp_hseq>DDTDAVEIAIDNTAFMDEFFSEIEETRLNIDKISEHVEEAKKLYSIILSAPIPEPKTKDDLEQLTTEIKKRANNVRNKLKSMEKHIEEDEV--RSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQGEMLDNIELNVMHTVDHVEKARDETKKAVKYQSQARKKKIMIMICCIILAIILASTIGSIFA</Hsp_hseq>
+      <Hsp_midline>DD D V + +D   FMDEFF ++EE R  IDKI+E+VEE K+ +S IL++P P+ KTK++LE+L ++IKK AN VR+KLKS+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+QGEM+D IE NV H VD+VE+A  +TKKAVKYQS+AR+KKIMI+ICC+IL I++AST+G IFA</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>19</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|18</Hit_id>
+  <Hit_def>XP_016873683.1 syntaxin-3 isoform X5 [Homo sapiens]</Hit_def>
+  <Hit_accession>18</Hit_accession>
+  <Hit_len>269</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>336.65</Hsp_bit-score>
+      <Hsp_score>862</Hsp_score>
+      <Hsp_evalue>2.26286e-119</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>266</Hsp_query-to>
+      <Hsp_hit-from>9</Hsp_hit-from>
+      <Hsp_hit-to>257</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>170</Hsp_identity>
+      <Hsp_positive>210</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>252</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKI</Hsp_qseq>
+      <Hsp_hseq>DDTDAVEIAIDNTAFMDEFFSEIEETRLNIDKISEHVEEAKKLYSIILSAPIPEPKTKDDLEQLTTEIKKRANNVRNKLKSMEKHIEEDEV--RSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQGEMLDNIELNVMHTVDHVEKARDETKKAVKYQSQARKKLI</Hsp_hseq>
+      <Hsp_midline>DD D V + +D   FMDEFF ++EE R  IDKI+E+VEE K+ +S IL++P P+ KTK++LE+L ++IKK AN VR+KLKS+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+QGEM+D IE NV H VD+VE+A  +TKKAVKYQS+AR+K I</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>20</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|19</Hit_id>
+  <Hit_def>XP_016873677.1 syntaxin-3 isoform X1 [Homo sapiens]</Hit_def>
+  <Hit_accession>19</Hit_accession>
+  <Hit_len>281</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>335.88</Hsp_bit-score>
+      <Hsp_score>860</Hsp_score>
+      <Hsp_evalue>6.95738e-119</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>264</Hsp_query-to>
+      <Hsp_hit-from>9</Hsp_hit-from>
+      <Hsp_hit-to>255</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>169</Hsp_identity>
+      <Hsp_positive>209</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>250</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRK</Hsp_qseq>
+      <Hsp_hseq>DDTDAVEIAIDNTAFMDEFFSEIEETRLNIDKISEHVEEAKKLYSIILSAPIPEPKTKDDLEQLTTEIKKRANNVRNKLKSMEKHIEEDEV--RSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQGEMLDNIELNVMHTVDHVEKARDETKKAVKYQSQARKK</Hsp_hseq>
+      <Hsp_midline>DD D V + +D   FMDEFF ++EE R  IDKI+E+VEE K+ +S IL++P P+ KTK++LE+L ++IKK AN VR+KLKS+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+QGEM+D IE NV H VD+VE+A  +TKKAVKYQS+AR+K</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>21</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|20</Hit_id>
+  <Hit_def>XP_005274257.1 syntaxin-3 isoform X7 [Homo sapiens]</Hit_def>
+  <Hit_accession>20</Hit_accession>
+  <Hit_len>252</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>287.73</Hsp_bit-score>
+      <Hsp_score>735</Hsp_score>
+      <Hsp_evalue>2.03636e-100</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>226</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>225</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>148</Hsp_identity>
+      <Hsp_positive>187</Hsp_positive>
+      <Hsp_gaps>5</Hsp_gaps>
+      <Hsp_align-len>228</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDD--VAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQ</Hsp_qseq>
+      <Hsp_hseq>MKDRLEQLKAKQLTQDDDTDAVEIAIDNTAFMDEFFSEIEETRLNIDKISEHVEEAKKLYSIILSAPIPEPKTKDDLEQLTTEIKKRANNVRNKLKSMEKHIEEDEV--RSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQ</Hsp_hseq>
+      <Hsp_midline>MKDR ++L+  + + DDD   V + +D   FMDEFF ++EE R  IDKI+E+VEE K+ +S IL++P P+ KTK++LE+L ++IKK AN VR+KLKS+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+Q</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>22</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|21</Hit_id>
+  <Hit_def>XP_016873684.1 syntaxin-3 isoform X6 [Homo sapiens]</Hit_def>
+  <Hit_accession>21</Hit_accession>
+  <Hit_len>244</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>282.337</Hsp_bit-score>
+      <Hsp_score>721</Hsp_score>
+      <Hsp_evalue>1.83427e-98</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>226</Hsp_query-to>
+      <Hsp_hit-from>9</Hsp_hit-from>
+      <Hsp_hit-to>217</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>143</Hsp_identity>
+      <Hsp_positive>177</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>212</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQ</Hsp_qseq>
+      <Hsp_hseq>DDTDAVEIAIDNTAFMDEFFSEIEETRLNIDKISEHVEEAKKLYSIILSAPIPEPKTKDDLEQLTTEIKKRANNVRNKLKSMEKHIEEDEV--RSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQ</Hsp_hseq>
+      <Hsp_midline>DD D V + +D   FMDEFF ++EE R  IDKI+E+VEE K+ +S IL++P P+ KTK++LE+L ++IKK AN VR+KLKS+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+Q</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>23</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|22</Hit_id>
+  <Hit_def>NP_001337980.1 syntaxin-2 isoform 5 [Homo sapiens]</Hit_def>
+  <Hit_accession>22</Hit_accession>
+  <Hit_len>213</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>268.47</Hsp_bit-score>
+      <Hsp_score>685</Hsp_score>
+      <Hsp_evalue>2.07952e-93</Hsp_evalue>
+      <Hsp_query-from>95</Hsp_query-from>
+      <Hsp_query-to>284</Hsp_query-to>
+      <Hsp_hit-from>20</Hsp_hit-from>
+      <Hsp_hit-to>213</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>132</Hsp_identity>
+      <Hsp_positive>160</Hsp_positive>
+      <Hsp_gaps>4</Hsp_gaps>
+      <Hsp_align-len>194</Hsp_align-len>
+      <Hsp_qseq>SIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICC----VILGIVIASTVG</Hsp_qseq>
+      <Hsp_hseq>AIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRKLMFIIICVIVLLVILGIILATTLS</Hsp_hseq>
+      <Hsp_midline>+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARRK + IIIC     VILGI++A+T+ </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>24</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|23</Hit_id>
+  <Hit_def>XP_011543523.1 syntaxin-3 isoform X8 [Homo sapiens]</Hit_def>
+  <Hit_accession>23</Hit_accession>
+  <Hit_len>192</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>247.284</Hsp_bit-score>
+      <Hsp_score>630</Hsp_score>
+      <Hsp_evalue>2.06235e-85</Hsp_evalue>
+      <Hsp_query-from>96</Hsp_query-from>
+      <Hsp_query-to>264</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>166</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>124</Hsp_identity>
+      <Hsp_positive>147</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>169</Hsp_align-len>
+      <Hsp_qseq>IEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRK</Hsp_qseq>
+      <Hsp_hseq>MEKHIEEDE--VRSSADLRIRKSQHSVLSRKFVEVMTKYNEAQVDFRERSKGRIQRQLEITGKKTTDEELEEMLESGNPAIFTSGII-DSQISKQALSEIEGRHKDIVRLESSIKELHDMFMDIAMLVENQGEMLDNIELNVMHTVDHVEKARDETKKAVKYQSQARKK</Hsp_hseq>
+      <Hsp_midline>+E+ IE++E   RSSADLRIRK+QHS LSRKFVEVM++YN  Q D+RER KGRIQRQLEITG+ TT EELE+MLESGNPAIF SGII DS ISKQALSEIE RH +I++LE+SI+ELHDMFMD+AMLVE+QGEM+D IE NV H VD+VE+A  +TKKAVKYQS+AR+K</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>25</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|24</Hit_id>
+  <Hit_def>NP_004595.2 syntaxin-4 isoform 3 [Homo sapiens]</Hit_def>
+  <Hit_accession>24</Hit_accession>
+  <Hit_len>297</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>237.654</Hsp_bit-score>
+      <Hsp_score>605</Hsp_score>
+      <Hsp_evalue>4.37503e-80</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>285</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>297</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>136</Hsp_identity>
+      <Hsp_positive>194</Hsp_positive>
+      <Hsp_gaps>14</Hsp_gaps>
+      <Hsp_align-len>298</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDD---VAVTVDRDRFM-----DEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTS-EELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIIC----CVILGIVIASTVGG</Hsp_qseq>
+      <Hsp_hseq>MRDRTHELRQGDDSSDEEDKERVALVVHPGTARLGSPDEEFFHKVRTIRQTIVKLGNKVQELEKQQVTILATPLPEESMKQELQNLRDEIKQLGREIRLQLKAIEPQKE-EADENYNSVNTRMRKTQHGVLSQQFVELINKCNSMQSEYREKNVERIRRQLKITNAGMVSDEELEQMLDSGQSEVFVSNILKDTQVTRQALNEISARHSEIQQLERSIRELHDIFTFLATEVEMQGEMINRIEKNILSSADYVERGQEHVKTALENQKKARKKKVLIAICVSITVVLLAVIIGVTVVG</Hsp_hseq>
+      <Hsp_midline>M+DRT ELR   DS D++D   VA+ V           +EFF +V  IR  I K+   V+E++++   ILA+P P+E  K+EL+ L  +IK+   ++R +LK+IE   E E   N +S + R+RKTQH  LS++FVE++++ N+ QS+YRE+   RI+RQL+IT     S EELE ML+SG   +F S I+ D+ +++QAL+EI  RHSEI +LE SIRELHD+F  +A  VE QGEMI+RIE N+  + DYVER     K A++ Q KAR+KK++I IC     V+L ++I  TV G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>26</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|25</Hit_id>
+  <Hit_def>NP_001337981.1 syntaxin-2 isoform 6 [Homo sapiens]</Hit_def>
+  <Hit_accession>25</Hit_accession>
+  <Hit_len>158</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>218.009</Hsp_bit-score>
+      <Hsp_score>554</Hsp_score>
+      <Hsp_evalue>2.10989e-74</Hsp_evalue>
+      <Hsp_query-from>131</Hsp_query-from>
+      <Hsp_query-to>284</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>158</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>107</Hsp_identity>
+      <Hsp_positive>130</Hsp_positive>
+      <Hsp_gaps>4</Hsp_gaps>
+      <Hsp_align-len>158</Hsp_align-len>
+      <Hsp_qseq>MSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICC----VILGIVIASTVG</Hsp_qseq>
+      <Hsp_hseq>MAEYNEAQTLFRERSKGRIQRQLEITGRTTTDDELEEMLESGKPSIFTSDIISDSQITRQALNEIESRHKDIMKLETSIRELHEMFMDMAMFVETQGEMINNIERNVMNATDYVEHAKEETKKAIKYQSKARRKLMFIIICVIVLLVILGIILATTLS</Hsp_hseq>
+      <Hsp_midline>M+EYN  Q+ +RER KGRIQRQLEITGRTTT +ELE+MLESG P+IF S II DS I++QAL+EIE+RH +I+KLE SIRELH+MFMDMAM VE+QGEMI+ IE NV +A DYVE A  +TKKA+KYQSKARRK + IIIC     VILGI++A+T+ </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>27</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|26</Hit_id>
+  <Hit_def>XP_005255578.1 syntaxin-4 isoform X1 [Homo sapiens]</Hit_def>
+  <Hit_accession>26</Hit_accession>
+  <Hit_len>293</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>217.624</Hsp_bit-score>
+      <Hsp_score>553</Hsp_score>
+      <Hsp_evalue>2.63578e-72</Hsp_evalue>
+      <Hsp_query-from>36</Hsp_query-from>
+      <Hsp_query-to>285</Hsp_query-to>
+      <Hsp_hit-from>40</Hsp_hit-from>
+      <Hsp_hit-to>293</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>120</Hsp_identity>
+      <Hsp_positive>172</Hsp_positive>
+      <Hsp_gaps>6</Hsp_gaps>
+      <Hsp_align-len>255</Hsp_align-len>
+      <Hsp_qseq>QVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTS-EELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIIC----CVILGIVIASTVGG</Hsp_qseq>
+      <Hsp_hseq>QVRTIRQTIVKLGNKVQELEKQQVTILATPLPEESMKQELQNLRDEIKQLGREIRLQLKAIEPQKE-EADENYNSVNTRMRKTQHGVLSQQFVELINKCNSMQSEYREKNVERIRRQLKITNAGMVSDEELEQMLDSGQSEVFVSNILKDTQVTRQALNEISARHSEIQQLERSIRELHDIFTFLATEVEMQGEMINRIEKNILSSADYVERGQEHVKTALENQKKARKKKVLIAICVSITVVLLAVIIGVTVVG</Hsp_hseq>
+      <Hsp_midline>QV  IR  I K+   V+E++++   ILA+P P+E  K+EL+ L  +IK+   ++R +LK+IE   E E   N +S + R+RKTQH  LS++FVE++++ N+ QS+YRE+   RI+RQL+IT     S EELE ML+SG   +F S I+ D+ +++QAL+EI  RHSEI +LE SIRELHD+F  +A  VE QGEMI+RIE N+  + DYVER     K A++ Q KAR+KK++I IC     V+L ++I  TV G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>28</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|27</Hit_id>
+  <Hit_def>NP_001259025.1 syntaxin-4 isoform 2 [Homo sapiens]</Hit_def>
+  <Hit_accession>27</Hit_accession>
+  <Hit_len>295</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>217.624</Hsp_bit-score>
+      <Hsp_score>553</Hsp_score>
+      <Hsp_evalue>3.08619e-72</Hsp_evalue>
+      <Hsp_query-from>36</Hsp_query-from>
+      <Hsp_query-to>285</Hsp_query-to>
+      <Hsp_hit-from>42</Hsp_hit-from>
+      <Hsp_hit-to>295</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>120</Hsp_identity>
+      <Hsp_positive>172</Hsp_positive>
+      <Hsp_gaps>6</Hsp_gaps>
+      <Hsp_align-len>255</Hsp_align-len>
+      <Hsp_qseq>QVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTS-EELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIIC----CVILGIVIASTVGG</Hsp_qseq>
+      <Hsp_hseq>QVRTIRQTIVKLGNKVQELEKQQVTILATPLPEESMKQELQNLRDEIKQLGREIRLQLKAIEPQKE-EADENYNSVNTRMRKTQHGVLSQQFVELINKCNSMQSEYREKNVERIRRQLKITNAGMVSDEELEQMLDSGQSEVFVSNILKDTQVTRQALNEISARHSEIQQLERSIRELHDIFTFLATEVEMQGEMINRIEKNILSSADYVERGQEHVKTALENQKKARKKKVLIAICVSITVVLLAVIIGVTVVG</Hsp_hseq>
+      <Hsp_midline>QV  IR  I K+   V+E++++   ILA+P P+E  K+EL+ L  +IK+   ++R +LK+IE   E E   N +S + R+RKTQH  LS++FVE++++ N+ QS+YRE+   RI+RQL+IT     S EELE ML+SG   +F S I+ D+ +++QAL+EI  RHSEI +LE SIRELHD+F  +A  VE QGEMI+RIE N+  + DYVER     K A++ Q KAR+KK++I IC     V+L ++I  TV G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>29</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|28</Hit_id>
+  <Hit_def>XP_016874477.1 syntaxin-2 isoform X7 [Homo sapiens]</Hit_def>
+  <Hit_accession>28</Hit_accession>
+  <Hit_len>167</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>201.06</Hsp_bit-score>
+      <Hsp_score>510</Hsp_score>
+      <Hsp_evalue>1.70605e-67</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>162</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>163</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>103</Hsp_identity>
+      <Hsp_positive>128</Hsp_positive>
+      <Hsp_gaps>3</Hsp_gaps>
+      <Hsp_align-len>164</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSDDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEIT--GRTTTS</Hsp_qseq>
+      <Hsp_hseq>MRDRLPDL-TACRKNDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKAIEQSFDQDESGNRTSVDLRIRRTQHSVLSRKFVEAMAEYNEAQTLFRERSKGRIQRQLEISFQGRTCAA</Hsp_hseq>
+      <Hsp_midline>M+DR  +L TA   +DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK+IEQS +Q+E  NR+S DLRIR+TQHS LSRKFVE M+EYN  Q+ +RER KGRIQRQLEI+  GRT  +</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>30</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|29</Hit_id>
+  <Hit_def>NP_001259024.1 syntaxin-4 isoform 1 [Homo sapiens]</Hit_def>
+  <Hit_accession>29</Hit_accession>
+  <Hit_len>219</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>191.815</Hsp_bit-score>
+      <Hsp_score>486</Hsp_score>
+      <Hsp_evalue>2.91643e-63</Hsp_evalue>
+      <Hsp_query-from>72</Hsp_query-from>
+      <Hsp_query-to>285</Hsp_query-to>
+      <Hsp_hit-from>2</Hsp_hit-from>
+      <Hsp_hit-to>219</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>106</Hsp_identity>
+      <Hsp_positive>150</Hsp_positive>
+      <Hsp_gaps>6</Hsp_gaps>
+      <Hsp_align-len>219</Hsp_align-len>
+      <Hsp_qseq>KEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTS-EELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIIC----CVILGIVIASTVGG</Hsp_qseq>
+      <Hsp_hseq>KQELQNLRDEIKQLGREIRLQLKAIEPQKE-EADENYNSVNTRMRKTQHGVLSQQFVELINKCNSMQSEYREKNVERIRRQLKITNAGMVSDEELEQMLDSGQSEVFVSNILKDTQVTRQALNEISARHSEIQQLERSIRELHDIFTFLATEVEMQGEMINRIEKNILSSADYVERGQEHVKTALENQKKARKKKVLIAICVSITVVLLAVIIGVTVVG</Hsp_hseq>
+      <Hsp_midline>K+EL+ L  +IK+   ++R +LK+IE   E E   N +S + R+RKTQH  LS++FVE++++ N+ QS+YRE+   RI+RQL+IT     S EELE ML+SG   +F S I+ D+ +++QAL+EI  RHSEI +LE SIRELHD+F  +A  VE QGEMI+RIE N+  + DYVER     K A++ Q KAR+KK++I IC     V+L ++I  TV G</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>31</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|30</Hit_id>
+  <Hit_def>NP_003755.2 syntaxin-11 [Homo sapiens]</Hit_def>
+  <Hit_accession>30</Hit_accession>
+  <Hit_len>287</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>146.362</Hsp_bit-score>
+      <Hsp_score>368</Hsp_score>
+      <Hsp_evalue>8.69588e-45</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>275</Hsp_query-to>
+      <Hsp_hit-from>1</Hsp_hit-from>
+      <Hsp_hit-to>286</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>87</Hsp_identity>
+      <Hsp_positive>155</Hsp_positive>
+      <Hsp_gaps>13</Hsp_gaps>
+      <Hsp_align-len>287</Hsp_align-len>
+      <Hsp_qseq>MKDRTQEL--------RTAKDSDDDDDVA---VTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRS-SADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVIL</Hsp_qseq>
+      <Hsp_hseq>MKDRLAELLDLSKQYDQQFPDGDDEFDSPHEDIVFETDHILESLYRDIRDIQDENQLLVADVKRLGKQNARFLTSMRRLSSIKRDTNSIAKAIKARGEVIHCKLRAMKELSEAAEAQHGPHSAVARISRAQYNALTLTFQRAMHDYNQAEMKQRDNCKIRIQRQLEIMGKEVSGDQIEDMFEQGKWDVFSENLLADVKGARAALNEIESRHRELLRLESRIRDVHELFLQMAVLVEKQADTLNVIELNVQKTVDYTGQAKAQVRKAVQYEEK-NPCRTLCCFCCPCL</Hsp_hseq>
+      <Hsp_midline>MKDR  EL        +   D DD+ D     +  + D  ++  +  + +I+     +  +V+ + ++++  L S       K +   +   IK     +  KL+++++  E  E  +   SA  RI + Q++ L+  F   M +YN  +   R+ CK RIQRQLEI G+  + +++EDM E G   +F+  ++ D   ++ AL+EIE+RH E+++LE+ IR++H++F+ MA+LVE Q + ++ IE NV+  VDY  +A +  +KAV+Y+ K    + +   CC  L</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>32</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|31</Hit_id>
+  <Hit_def>XP_011534515.1 syntaxin-11 isoform X1 [Homo sapiens]</Hit_def>
+  <Hit_accession>31</Hit_accession>
+  <Hit_len>313</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>145.976</Hsp_bit-score>
+      <Hsp_score>367</Hsp_score>
+      <Hsp_evalue>2.34789e-44</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>275</Hsp_query-to>
+      <Hsp_hit-from>27</Hsp_hit-from>
+      <Hsp_hit-to>312</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>87</Hsp_identity>
+      <Hsp_positive>155</Hsp_positive>
+      <Hsp_gaps>13</Hsp_gaps>
+      <Hsp_align-len>287</Hsp_align-len>
+      <Hsp_qseq>MKDRTQEL--------RTAKDSDDDDDVA---VTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRS-SADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIIICCVIL</Hsp_qseq>
+      <Hsp_hseq>MKDRLAELLDLSKQYDQQFPDGDDEFDSPHEDIVFETDHILESLYRDIRDIQDENQLLVADVKRLGKQNARFLTSMRRLSSIKRDTNSIAKAIKARGEVIHCKLRAMKELSEAAEAQHGPHSAVARISRAQYNALTLTFQRAMHDYNQAEMKQRDNCKIRIQRQLEIMGKEVSGDQIEDMFEQGKWDVFSENLLADVKGARAALNEIESRHRELLRLESRIRDVHELFLQMAVLVEKQADTLNVIELNVQKTVDYTGQAKAQVRKAVQYEEK-NPCRTLCCFCCPCL</Hsp_hseq>
+      <Hsp_midline>MKDR  EL        +   D DD+ D     +  + D  ++  +  + +I+     +  +V+ + ++++  L S       K +   +   IK     +  KL+++++  E  E  +   SA  RI + Q++ L+  F   M +YN  +   R+ CK RIQRQLEI G+  + +++EDM E G   +F+  ++ D   ++ AL+EIE+RH E+++LE+ IR++H++F+ MA+LVE Q + ++ IE NV+  VDY  +A +  +KAV+Y+ K    + +   CC  L</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>33</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|32</Hit_id>
+  <Hit_def>NP_001001850.1 syntaxin-19 [Homo sapiens]</Hit_def>
+  <Hit_accession>32</Hit_accession>
+  <Hit_len>294</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>132.88</Hsp_bit-score>
+      <Hsp_score>333</Hsp_score>
+      <Hsp_evalue>1.44727e-39</Hsp_evalue>
+      <Hsp_query-from>1</Hsp_query-from>
+      <Hsp_query-to>260</Hsp_query-to>
+      <Hsp_hit-from>8</Hsp_hit-from>
+      <Hsp_hit-to>277</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>85</Hsp_identity>
+      <Hsp_positive>151</Hsp_positive>
+      <Hsp_gaps>12</Hsp_gaps>
+      <Hsp_align-len>271</Hsp_align-len>
+      <Hsp_qseq>MKDRTQELRTAKDSD------DDDDV----AVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLN-RSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSK</Hsp_qseq>
+      <Hsp_hseq>LKQRTKEIELSRDSHVSTTETEEQGVFLQQAVIYEREPVAERHLHEIQKLQESINNLADNVQKFGQQQKSLVASMRRFSLLKRE-STITKEIKIQAEYINRSLNDLVKEVKKSEVENGPSSVVTRILKSQHAAMFRHFQQIMFIYNDTIAAKQEKCKTFILRQLEVAGKEMSEEDVNDMLHQGKWEVFNESLLTEINITKAQLSEIEQRHKELVNLENQIKDLRDLFIQISLLVEEQGESINNIEMTVNSTKEYVNNTKEKFGLAVKYKKR</Hsp_hseq>
+      <Hsp_midline>+K RT+E+  ++DS       ++  V    AV  +R+   +    ++++++  I+ +A+NV++  ++  +++AS       K E   +  +IK  A  +   L  + + +++ E  N  SS   RI K+QH+ + R F ++M  YN T +  +E+CK  I RQLE+ G+  + E++ DML  G   +F   ++ + +I+K  LSEIE RH E++ LEN I++L D+F+ +++LVE QGE I+ IE  V    +YV         AVKY+ +</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>34</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|33</Hit_id>
+  <Hit_def>XP_016874478.1 syntaxin-2 isoform X8 [Homo sapiens]</Hit_def>
+  <Hit_accession>33</Hit_accession>
+  <Hit_len>159</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>108.997</Hsp_bit-score>
+      <Hsp_score>271</Hsp_score>
+      <Hsp_evalue>8.65762e-32</Hsp_evalue>
+      <Hsp_query-from>15</Hsp_query-from>
+      <Hsp_query-to>105</Hsp_query-to>
+      <Hsp_hit-from>46</Hsp_hit-from>
+      <Hsp_hit-to>136</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>53</Hsp_identity>
+      <Hsp_positive>67</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>91</Hsp_align-len>
+      <Hsp_qseq>DDDDDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEG</Hsp_qseq>
+      <Hsp_hseq>NDDGDTVVVVEKDHFMDDFFHQVEEIRNSIDKITQYVEEVKKNHSIILSAPNPEGKIKEELEDLNKEIKKTANKIRAKLKGFRCVQKQREA</Hsp_hseq>
+      <Hsp_midline>+DD D  V V++D FMD+FF QVEEIR  IDKI + VEEVK+ HS IL++PNP+ K KEELE+L  +IKKTANK+R+KLK      +Q E </Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>35</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|34</Hit_id>
+  <Hit_def>NP_803173.1 syntaxin-12 [Homo sapiens]</Hit_def>
+  <Hit_accession>34</Hit_accession>
+  <Hit_len>276</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>67.0106</Hsp_bit-score>
+      <Hsp_score>162</Hsp_score>
+      <Hsp_evalue>2.06196e-15</Hsp_evalue>
+      <Hsp_query-from>30</Hsp_query-from>
+      <Hsp_query-to>270</Hsp_query-to>
+      <Hsp_hit-from>19</Hsp_hit-from>
+      <Hsp_hit-to>256</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>65</Hsp_identity>
+      <Hsp_positive>124</Hsp_positive>
+      <Hsp_gaps>33</Hsp_gaps>
+      <Hsp_align-len>256</Hsp_align-len>
+      <Hsp_qseq>MDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPDEKTKEELEELM---SDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQ---------SDYRERCKGRI---QRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAMLVESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQSKARRKKIMIII</Hsp_qseq>
+      <Hsp_hseq>LRDFSSIIQTCSGNIQRISQATAQIKNLMSQ-LGTKQDSSKLQENLQQLQHSTNQLAKETNELLKELGSL--------PLPLSTSEQRQQRLQKERLMNDFSAALNNFQAVQRRVSEKEKESIARARAGSRLSAEERQREEQLVSFDSHEEWNQMQSQEDEV---------AITEQDLELIKERETAIRQLEADILDVNQIFKDLAMMIHDQGDLIDSIEANVESSEVHVERATEQLQRAAYYQKKSRKKMCILVL</Hsp_hseq>
+      <Hsp_midline>+ +F   ++   G I +I++   ++K   S  L +     K +E L++L    + + K  N++  +L S+         L  S+++ R ++ Q   L   F   ++ + A Q         S  R R   R+   +RQ E    +  S E  + ++S    +         +I++Q L  I+ R + I +LE  I +++ +F D+AM++  QG++ID IE NVE +  +VERA    ++A  YQ K+R+K  ++++</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>36</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|45</Hit_id>
+  <Hit_def>XP_016867690.1 laminin subunit beta-1 isoform X1 [Homo sapiens]</Hit_def>
+  <Hit_accession>45</Hit_accession>
+  <Hit_len>1810</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>33.4982</Hsp_bit-score>
+      <Hsp_score>75</Hsp_score>
+      <Hsp_evalue>0.000444242</Hsp_evalue>
+      <Hsp_query-from>24</Hsp_query-from>
+      <Hsp_query-to>259</Hsp_query-to>
+      <Hsp_hit-from>1469</Hsp_hit-from>
+      <Hsp_hit-to>1690</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>48</Hsp_identity>
+      <Hsp_positive>90</Hsp_positive>
+      <Hsp_gaps>32</Hsp_gaps>
+      <Hsp_align-len>245</Hsp_align-len>
+      <Hsp_qseq>VDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPD----EKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADL-RIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAI-FASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAML---VESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQS</Hsp_qseq>
+      <Hsp_hseq>MDLDQDVLSALAEVEQLSKMVSEAKLRADEAKQSAEDILLKTNATKEKMDKSNEELRNLIKQIRNF--------------------LTQDSADLDSIEAVANEVLKMEMPSTPQQLQNLTEDIRERVESLSQVEVILQHSAADIARAEMLLEEAKRASKSATDVKVTADMVKEALEEAEKAQ---VAAEKAIKQADEDIQGTQNLLTSIESETAASEETLFNASQRISELERNVEELKRKAAQNS</Hsp_hseq>
+      <Hsp_midline>+D D+ +     +VE++   + +     +E K+    IL   N      +K+ EEL  L+  I+                      L + SADL  I    +  L  +      +      D RER +   Q ++ +          E +LE    A   A+ + + + + K+AL E E      +  E +I++  +       L   +ES+    +   +N    +  +ER V + K+     S</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>30.8018</Hsp_bit-score>
+      <Hsp_score>68</Hsp_score>
+      <Hsp_evalue>0.00358735</Hsp_evalue>
+      <Hsp_query-from>38</Hsp_query-from>
+      <Hsp_query-to>158</Hsp_query-to>
+      <Hsp_hit-from>1275</Hsp_hit-from>
+      <Hsp_hit-to>1408</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>61</Hsp_positive>
+      <Hsp_gaps>19</Hsp_gaps>
+      <Hsp_align-len>137</Hsp_align-len>
+      <Hsp_qseq>EEIRGFIDKIAENVEEVKRKHSAILASPNPDEKT----KEELEELMSDIKKTANK--------VRSKLKSI----EQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGR</Hsp_qseq>
+      <Hsp_hseq>EEAEKLIKDVTEMMAQVEVKLSDTTSQSNSTAKELDSLQTEAESLDNTVKELAEQLEFIKNSDIRGALDSITKYFQMSLEAEERVNASTTEPNSTVEQSALMRDRVEDVMME---RESQFKEKQEEQARLLDELAGK</Hsp_hseq>
+      <Hsp_midline>EE    I  + E + +V+ K S   +  N   K     + E E L + +K+ A +        +R  L SI    + S+E EE +N S+ +      Q + +  +  +VM E    +S ++E+ + + +   E+ G+</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>3</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.00449671</Hsp_evalue>
+      <Hsp_query-from>44</Hsp_query-from>
+      <Hsp_query-to>158</Hsp_query-to>
+      <Hsp_hit-from>1672</Hsp_hit-from>
+      <Hsp_hit-to>1776</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>28</Hsp_identity>
+      <Hsp_positive>62</Hsp_positive>
+      <Hsp_gaps>16</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>IDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNAT---QSDYRERCKGRIQRQLEITGR</Hsp_qseq>
+      <Hsp_hseq>ISELERNVEELKRK-----AAQNSGE--AEYIEKVVYTVKQSAEDVK---KTLDGELDEKY---KKVENLIAKKTEESADARRKAEMLQNEAKTLLAQANSKLQLLKDLERKYEDNQR</Hsp_hseq>
+      <Hsp_midline>I ++  NVEE+KRK     A+ N  E   E +E+++  +K++A  V+   K+++  ++++    +   +L  +KT+ S  +R+  E++     T   Q++ + +    ++R+ E   R</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>4</Hsp_num>
+      <Hsp_bit-score>26.5646</Hsp_bit-score>
+      <Hsp_score>57</Hsp_score>
+      <Hsp_evalue>0.0656084</Hsp_evalue>
+      <Hsp_query-from>18</Hsp_query-from>
+      <Hsp_query-to>100</Hsp_query-to>
+      <Hsp_hit-from>1708</Hsp_hit-from>
+      <Hsp_hit-to>1803</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>26</Hsp_identity>
+      <Hsp_positive>44</Hsp_positive>
+      <Hsp_gaps>23</Hsp_gaps>
+      <Hsp_align-len>101</Hsp_align-len>
+      <Hsp_qseq>DDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHS-------AILASPNPD-----------EKTKEELEELMSDIKKTANKVRSKLKSIEQSI</Hsp_qseq>
+      <Hsp_hseq>EDVKKTLDGE--LDEKYKKVENL---IAKKTEESADARRKAEMLQNEAKTLLAQANSKLQLLKDLERKYEDNQRYLEDKAQELARLEGEVRSLLKDISQKV</Hsp_hseq>
+      <Hsp_midline>+DV  T+D +  +DE +++VE +   I K  E   + +RK          +LA  N             E  +  LE+   ++ +   +VRS LK I Q +</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>5</Hsp_num>
+      <Hsp_bit-score>20.7866</Hsp_bit-score>
+      <Hsp_score>42</Hsp_score>
+      <Hsp_evalue>4.1925</Hsp_evalue>
+      <Hsp_query-from>185</Hsp_query-from>
+      <Hsp_query-to>212</Hsp_query-to>
+      <Hsp_hit-from>1299</Hsp_hit-from>
+      <Hsp_hit-to>1326</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>8</Hsp_identity>
+      <Hsp_positive>17</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>28</Hsp_align-len>
+      <Hsp_qseq>SSISKQALSEIETRHSEIIKLENSIREL</Hsp_qseq>
+      <Hsp_hseq>TSQSNSTAKELDSLQTEAESLDNTVKEL</Hsp_hseq>
+      <Hsp_midline>+S S     E+++  +E   L+N+++EL</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>37</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|35</Hit_id>
+  <Hit_def>XP_011528256.1 meiosis inhibitor protein 1 isoform X20 [Homo sapiens]</Hit_def>
+  <Hit_accession>35</Hit_accession>
+  <Hit_len>830</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>33.113</Hsp_bit-score>
+      <Hsp_score>74</Hsp_score>
+      <Hsp_evalue>0.000509263</Hsp_evalue>
+      <Hsp_query-from>111</Hsp_query-from>
+      <Hsp_query-to>210</Hsp_query-to>
+      <Hsp_hit-from>311</Hsp_hit-from>
+      <Hsp_hit-to>412</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>31</Hsp_identity>
+      <Hsp_positive>49</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>114</Hsp_align-len>
+      <Hsp_qseq>ADLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIR</Hsp_qseq>
+      <Hsp_hseq>PDLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLR</Hsp_hseq>
+      <Hsp_midline> DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>38</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|52</Hit_id>
+  <Hit_def>NP_002282.2 laminin subunit beta-1 precursor [Homo sapiens]</Hit_def>
+  <Hit_accession>52</Hit_accession>
+  <Hit_len>1786</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>33.113</Hsp_bit-score>
+      <Hsp_score>74</Hsp_score>
+      <Hsp_evalue>0.000602194</Hsp_evalue>
+      <Hsp_query-from>24</Hsp_query-from>
+      <Hsp_query-to>259</Hsp_query-to>
+      <Hsp_hit-from>1445</Hsp_hit-from>
+      <Hsp_hit-to>1666</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>48</Hsp_identity>
+      <Hsp_positive>90</Hsp_positive>
+      <Hsp_gaps>32</Hsp_gaps>
+      <Hsp_align-len>245</Hsp_align-len>
+      <Hsp_qseq>VDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHSAILASPNPD----EKTKEELEELMSDIKKTANKVRSKLKSIEQSIEQEEGLNRSSADL-RIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAI-FASGIIMDSSISKQALSEIETRHSEIIKLENSIRELHDMFMDMAML---VESQGEMIDRIEYNVEHAVDYVERAVSDTKKAVKYQS</Hsp_qseq>
+      <Hsp_hseq>MDLDQDVLSALAEVEQLSKMVSEAKLRADEAKQSAEDILLKTNATKEKMDKSNEELRNLIKQIRNF--------------------LTQDSADLDSIEAVANEVLKMEMPSTPQQLQNLTEDIRERVESLSQVEVILQHSAADIARAEMLLEEAKRASKSATDVKVTADMVKEALEEAEKAQ---VAAEKAIKQADEDIQGTQNLLTSIESETAASEETLFNASQRISELERNVEELKRKAAQNS</Hsp_hseq>
+      <Hsp_midline>+D D+ +     +VE++   + +     +E K+    IL   N      +K+ EEL  L+  I+                      L + SADL  I    +  L  +      +      D RER +   Q ++ +          E +LE    A   A+ + + + + K+AL E E      +  E +I++  +       L   +ES+    +   +N    +  +ER V + K+     S</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>2</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.00437794</Hsp_evalue>
+      <Hsp_query-from>38</Hsp_query-from>
+      <Hsp_query-to>158</Hsp_query-to>
+      <Hsp_hit-from>1251</Hsp_hit-from>
+      <Hsp_hit-to>1384</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>61</Hsp_positive>
+      <Hsp_gaps>19</Hsp_gaps>
+      <Hsp_align-len>137</Hsp_align-len>
+      <Hsp_qseq>EEIRGFIDKIAENVEEVKRKHSAILASPNPDEKT----KEELEELMSDIKKTANK--------VRSKLKSI----EQSIEQEEGLNRSSADLRIRKTQHSTLSRKFVEVMSEYNATQSDYRERCKGRIQRQLEITGR</Hsp_qseq>
+      <Hsp_hseq>EEAEKLIKDVTEMMAQVEVKLSDTTSQSNSTAKELDSLQTEAESLDNTVKELAEQLEFIKNSDIRGALDSITKYFQMSLEAEERVNASTTEPNSTVEQSALMRDRVEDVMME---RESQFKEKQEEQARLLDELAGK</Hsp_hseq>
+      <Hsp_midline>EE    I  + E + +V+ K S   +  N   K     + E E L + +K+ A +        +R  L SI    + S+E EE +N S+ +      Q + +  +  +VM E    +S ++E+ + + +   E+ G+</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>3</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.0052542</Hsp_evalue>
+      <Hsp_query-from>44</Hsp_query-from>
+      <Hsp_query-to>119</Hsp_query-to>
+      <Hsp_hit-from>1648</Hsp_hit-from>
+      <Hsp_hit-to>1720</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>24</Hsp_identity>
+      <Hsp_positive>39</Hsp_positive>
+      <Hsp_gaps>5</Hsp_gaps>
+      <Hsp_align-len>77</Hsp_align-len>
+      <Hsp_qseq>IDKIAENVEEVKRKHSAILASPNPDEKTKEELEELMSDIKKTAN-KVRSKLKSIEQSIEQEEGLNRSSADLRIRKTQ</Hsp_qseq>
+      <Hsp_hseq>ISELERNVEELKRKAAQNSGEAEYIEKVVYTVKQSAEDVKKTLDGELDEKYKKVENLIAKK---TEESADAR-RKAE</Hsp_hseq>
+      <Hsp_midline>I ++  NVEE+KRK +         EK    +++   D+KKT + ++  K K +E  I ++      SAD R RK +</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>4</Hsp_num>
+      <Hsp_bit-score>26.5646</Hsp_bit-score>
+      <Hsp_score>57</Hsp_score>
+      <Hsp_evalue>0.077299</Hsp_evalue>
+      <Hsp_query-from>18</Hsp_query-from>
+      <Hsp_query-to>100</Hsp_query-to>
+      <Hsp_hit-from>1684</Hsp_hit-from>
+      <Hsp_hit-to>1779</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>26</Hsp_identity>
+      <Hsp_positive>44</Hsp_positive>
+      <Hsp_gaps>23</Hsp_gaps>
+      <Hsp_align-len>101</Hsp_align-len>
+      <Hsp_qseq>DDVAVTVDRDRFMDEFFEQVEEIRGFIDKIAENVEEVKRKHS-------AILASPNPD-----------EKTKEELEELMSDIKKTANKVRSKLKSIEQSI</Hsp_qseq>
+      <Hsp_hseq>EDVKKTLDGE--LDEKYKKVENL---IAKKTEESADARRKAEMLQNEAKTLLAQANSKLQLLKDLERKYEDNQRYLEDKAQELARLEGEVRSLLKDISQKV</Hsp_hseq>
+      <Hsp_midline>+DV  T+D +  +DE +++VE +   I K  E   + +RK          +LA  N             E  +  LE+   ++ +   +VRS LK I Q +</Hsp_midline>
+    </Hsp>
+    <Hsp>
+      <Hsp_num>5</Hsp_num>
+      <Hsp_bit-score>20.7866</Hsp_bit-score>
+      <Hsp_score>42</Hsp_score>
+      <Hsp_evalue>4.45179</Hsp_evalue>
+      <Hsp_query-from>185</Hsp_query-from>
+      <Hsp_query-to>212</Hsp_query-to>
+      <Hsp_hit-from>1275</Hsp_hit-from>
+      <Hsp_hit-to>1302</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>8</Hsp_identity>
+      <Hsp_positive>17</Hsp_positive>
+      <Hsp_gaps>0</Hsp_gaps>
+      <Hsp_align-len>28</Hsp_align-len>
+      <Hsp_qseq>SSISKQALSEIETRHSEIIKLENSIREL</Hsp_qseq>
+      <Hsp_hseq>TSQSNSTAKELDSLQTEAESLDNTVKEL</Hsp_hseq>
+      <Hsp_midline>+S S     E+++  +E   L+N+++EL</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>39</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|36</Hit_id>
+  <Hit_def>XP_011528249.1 meiosis inhibitor protein 1 isoform X14 [Homo sapiens]</Hit_def>
+  <Hit_accession>36</Hit_accession>
+  <Hit_len>1115</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.8018</Hsp_bit-score>
+      <Hsp_score>68</Hsp_score>
+      <Hsp_evalue>0.00312472</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>597</Hsp_hit-from>
+      <Hsp_hit-to>702</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>40</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|37</Hit_id>
+  <Hit_def>XP_011528248.1 meiosis inhibitor protein 1 isoform X13 [Homo sapiens]</Hit_def>
+  <Hit_accession>37</Hit_accession>
+  <Hit_len>1145</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.8018</Hsp_bit-score>
+      <Hsp_score>68</Hsp_score>
+      <Hsp_evalue>0.00353819</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>627</Hsp_hit-from>
+      <Hsp_hit-to>732</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>41</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|38</Hit_id>
+  <Hit_def>XP_011528239.1 meiosis inhibitor protein 1 isoform X3 [Homo sapiens]</Hit_def>
+  <Hit_accession>38</Hit_accession>
+  <Hit_len>1254</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.00372326</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>42</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|39</Hit_id>
+  <Hit_def>XP_011528241.1 meiosis inhibitor protein 1 isoform X6 [Homo sapiens]</Hit_def>
+  <Hit_accession>39</Hit_accession>
+  <Hit_len>1245</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.00392066</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>43</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|40</Hit_id>
+  <Hit_def>XP_011528247.1 meiosis inhibitor protein 1 isoform X12 [Homo sapiens]</Hit_def>
+  <Hit_accession>40</Hit_accession>
+  <Hit_len>1289</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.00407037</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>44</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|41</Hit_id>
+  <Hit_def>XP_011528250.1 meiosis inhibitor protein 1 isoform X15 [Homo sapiens]</Hit_def>
+  <Hit_accession>41</Hit_accession>
+  <Hit_len>1086</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.00434039</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>568</Hsp_hit-from>
+      <Hsp_hit-to>673</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>45</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|42</Hit_id>
+  <Hit_def>XP_011528244.1 meiosis inhibitor protein 1 isoform X9 [Homo sapiens]</Hit_def>
+  <Hit_accession>42</Hit_accession>
+  <Hit_len>1225</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.00434674</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>707</Hsp_hit-from>
+      <Hsp_hit-to>812</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>46</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|43</Hit_id>
+  <Hit_def>XP_011528242.1 meiosis inhibitor protein 1 isoform X7 [Homo sapiens]</Hit_def>
+  <Hit_accession>43</Hit_accession>
+  <Hit_len>1239</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.0044657</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>47</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|44</Hit_id>
+  <Hit_def>XP_011528238.1 meiosis inhibitor protein 1 isoform X2 [Homo sapiens]</Hit_def>
+  <Hit_accession>44</Hit_accession>
+  <Hit_len>1269</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.4166</Hsp_bit-score>
+      <Hsp_score>67</Hsp_score>
+      <Hsp_evalue>0.00447393</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>48</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|46</Hit_id>
+  <Hit_def>XP_011528254.1 meiosis inhibitor protein 1 isoform X19 [Homo sapiens]</Hit_def>
+  <Hit_accession>46</Hit_accession>
+  <Hit_len>927</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.00466263</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>409</Hsp_hit-from>
+      <Hsp_hit-to>514</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>49</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|47</Hit_id>
+  <Hit_def>NP_689726.3 meiosis inhibitor protein 1 [Homo sapiens]</Hit_def>
+  <Hit_accession>47</Hit_accession>
+  <Hit_len>1274</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.00492474</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>50</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|48</Hit_id>
+  <Hit_def>XP_011528240.1 meiosis inhibitor protein 1 isoform X5 [Homo sapiens]</Hit_def>
+  <Hit_accession>48</Hit_accession>
+  <Hit_len>1250</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.00496061</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>732</Hsp_hit-from>
+      <Hsp_hit-to>837</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>51</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|49</Hit_id>
+  <Hit_def>XP_016884122.1 meiosis inhibitor protein 1 isoform X4 [Homo sapiens]</Hit_def>
+  <Hit_accession>49</Hit_accession>
+  <Hit_len>1254</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.00496182</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>52</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|50</Hit_id>
+  <Hit_def>XP_011528243.1 meiosis inhibitor protein 1 isoform X8 [Homo sapiens]</Hit_def>
+  <Hit_accession>50</Hit_accession>
+  <Hit_len>1230</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.0050414</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>53</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|51</Hit_id>
+  <Hit_def>XP_011528246.1 meiosis inhibitor protein 1 isoform X11 [Homo sapiens]</Hit_def>
+  <Hit_accession>51</Hit_accession>
+  <Hit_len>1188</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.00507145</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>54</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|53</Hit_id>
+  <Hit_def>XP_011528237.1 meiosis inhibitor protein 1 isoform X1 [Homo sapiens]</Hit_def>
+  <Hit_accession>53</Hit_accession>
+  <Hit_len>1277</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.00571065</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>759</Hsp_hit-from>
+      <Hsp_hit-to>864</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+<Hit>
+  <Hit_num>55</Hit_num>
+  <Hit_id>gnl|BL_ORD_ID|54</Hit_id>
+  <Hit_def>XP_024307932.1 meiosis inhibitor protein 1 isoform X18 [Homo sapiens]</Hit_def>
+  <Hit_accession>54</Hit_accession>
+  <Hit_len>955</Hit_len>
+  <Hit_hsps>
+    <Hsp>
+      <Hsp_num>1</Hsp_num>
+      <Hsp_bit-score>30.0314</Hsp_bit-score>
+      <Hsp_score>66</Hsp_score>
+      <Hsp_evalue>0.00596967</Hsp_evalue>
+      <Hsp_query-from>112</Hsp_query-from>
+      <Hsp_query-to>215</Hsp_query-to>
+      <Hsp_hit-from>771</Hsp_hit-from>
+      <Hsp_hit-to>876</Hsp_hit-to>
+      <Hsp_query-frame>0</Hsp_query-frame>
+      <Hsp_hit-frame>0</Hsp_hit-frame>
+      <Hsp_identity>32</Hsp_identity>
+      <Hsp_positive>51</Hsp_positive>
+      <Hsp_gaps>26</Hsp_gaps>
+      <Hsp_align-len>118</Hsp_align-len>
+      <Hsp_qseq>DLRIRKTQHSTLSRKFV---EVMSEYNATQSDYRERCKGRIQRQLEITGRTTTSEELEDMLESGNPAIFASGIIMDS---SISKQAL--------SEIETRHSEIIKLENSIRELHDM</Hsp_qseq>
+      <Hsp_hseq>DLQLVYTHHPLLLRFFLLYPELMSRY------------GHRVLELWFFWEESSYEELDDVTSAGQPALPASLVVLFQLLRSIPSILLILLDLIYSSPVDTAHKVLISLRTFLRRNEDI</Hsp_hseq>
+      <Hsp_midline>DL++  T H  L R F+   E+MS Y            G    +L      ++ EEL+D+  +G PA+ AS +++     SI    L        S ++T H  +I L   +R   D+</Hsp_midline>
+    </Hsp>
+  </Hit_hsps>
+</Hit>
+</Iteration_hits>
+  <Iteration_stat>
+    <Statistics>
+      <Statistics_db-num>55</Statistics_db-num>
+      <Statistics_db-len>34073</Statistics_db-len>
+      <Statistics_hsp-len>59</Statistics_hsp-len>
+      <Statistics_eff-space>7059612</Statistics_eff-space>
+      <Statistics_kappa>0.041</Statistics_kappa>
+      <Statistics_lambda>0.267</Statistics_lambda>
+      <Statistics_entropy>0.14</Statistics_entropy>
+    </Statistics>
+  </Iteration_stat>
+</Iteration>
+</BlastOutput_iterations>
+</BlastOutput>
+

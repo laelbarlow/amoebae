@@ -15,6 +15,24 @@ def test_srchresfile_class_methods(): # ***Incomplete test
     search result files.
     """
     pass
+
+
+def test_get_srch_file_info():  # ***Incomplete test
+    """Test the get_srch_file_info function in the srchresfile.py file.
+    """
+    ##########################
+    # Arrange.
+    search_result_path = "search_result_path"
+
+    ##########################
+    # Act.
+    #x = get_srch_file_info(search_result_path)
+
+    ##########################
+    # Assert.
+    assert True == True # ***Temporary.
+
+
 #command_line_list = sys.argv
 ##blastpfp = str(command_line_list[1])
 ##hmmsearchfp = str(command_line_list[1])
@@ -52,22 +70,6 @@ def test_srchresfile_class_methods(): # ***Incomplete test
 # query length?
 # fwd_hit_score?
 # query length?
-
-
-def test_get_srch_file_info():  # ***Incomplete test
-    """Test the get_srch_file_info function in the srchresfile.py file.
-    """
-    ##########################
-    # Arrange.
-    search_result_path = "search_result_path"
-
-    ##########################
-    # Act.
-    #x = get_srch_file_info(search_result_path)
-
-    ##########################
-    # Assert.
-    assert True == True # ***Temporary.
 
 
 

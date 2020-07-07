@@ -43,13 +43,18 @@ run_exonerate_as_subprocess
 def check_if_two_hsp_ranges_overlap(lists):
     """Takes two lists which contain the start and stop positions of two HSPs,
     and returns True if they overlap.
+
+    Note: This assumes that the SearchIO coordinates are provided using Python
+    string slicing conventions (this is suggested to be the case here:
+    https://biopython.org/DIST/docs/api/Bio.SearchIO-module.html).
+
     """
     x = set(range(lists[0][0], lists[0][1]))
     y = set(range(lists[1][0], lists[1][1]))
     intersect = x.intersection(y)
 
     overlap = False
-    if intersect != set():
+    if len(list(intersect)) > 0:
         overlap = True
 
     return overlap

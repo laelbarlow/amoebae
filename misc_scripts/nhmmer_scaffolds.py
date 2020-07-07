@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
     # Get concatenated sequence for aligning hits that may correspond to the
     # same gene.  nhmmer_scaffolds.get_nhmmer_hit_gene_region_seqs(hit_align_objs,
-            seq_filepath)
+    #        seq_filepath)
 
 
     # Get temporary three-frame translations to search with the protein HMM.
