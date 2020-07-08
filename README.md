@@ -12,15 +12,16 @@ Clone this git repository:
 
     git clone https://github.com/laelbarlow/amoebae.git
 
-Run the setup script (this will take about 5 minutes to complete). Also, this may
-prompt you to install singularity if you are running **Linux**. On **MacOS**
-this will install Vagrant for managing Linux virtual machines, if necessary:
+Run the setup script (this will take about 5 minutes to complete). On
+**MacOS**, and on **Linux** if Singularity is not installed, this will install
+Vagrant and VirtualBox for managing and running Linux virtual machines, if not
+already installed:
 
     cd amoebae
     /bin/bash setup.sh
 
-Now start up the virtual environment, and open one of the tutorial jupyter
-notebooks using the appropriate script for your operating system.
+Now open one of the tutorial jupyter notebooks using this script (this will
+only work on a personal computer, see main documentation for alternatives).
 
     /bin/bash singularity_jupyter.sh
 
@@ -36,9 +37,9 @@ notebooks using the appropriate script for your operating system.
 is a bioinformatics software toolkit primarily composed of scripts and modules
 written in the Python3 language. AMOEBAE performs certain tasks involved in
 identifying and classifying amino acid sequences. Specifically, AMOEBAE uses
-Python packages including Biopython, ETE3, pandas, and Matplotlib for setting
+Python packages including Biopython, ETE3, Pandas, and Matplotlib for setting
 up, running, and summarizing analyses of molecular evolution using
-bioinformatics software packages including MUSCLE, BLAST+, HMMER3, and IQ-Tree.
+bioinformatics software packages including MUSCLE, BLAST+, HMMER3, and IQ-TREE.
 Applications include identifying and classifying predicted genes in novel
 biological sequence data according to their evolutionary relationships with
 homologues. AMOEBAE is open-source, and all dependencies are freely available.
@@ -51,7 +52,7 @@ Barlow](https://scholar.google.com/citations?user=wohF-LAAAAAJ&hl=en&oi=ao) is t
 Instructions for automatically setting up a virtual environment
 with all the dependencies are included in the main documentation file
 here: [AMOEBAE_documentation.pdf](
-https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf). The whole process takes approximately 1 hour. 
+https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf). The whole process should take approximately 5 minutes (although more time may be necessary if you need to install Git or clear storage space). 
 
 See the main documentation file for an overview and setup instructions:
 [AMOEBAE_documentation.pdf](
@@ -68,15 +69,15 @@ documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/c
 ## Reporting problems
 
 Please use the [issue tracker](https://github.com/laelbarlow/amoebae/issues) on
-the GitHub webpage to report any problems you find in using this toolkit.
+the GitHub webpage to report any problems you find in using AMOEBAE.
 
 
 ## How to cite AMOEBAE
 
-Please cite the [GitHub webpage](https://github.com/laelbarlow/amoebae) (or alternative
-permanent repositories if relevant). Also, remember to cite other software
-packages which you may have also installed and used for your work via AMOEBAE
-scripts.
+Please cite the [AMOEBAE GitHub
+repository](https://github.com/laelbarlow/amoebae) (or alternative permanent
+repositories if relevant). Also, please remember to cite the software packages which
+are dependencies of AMOEBAE (see main documentation).
 
 ## Acknowledgments
 
