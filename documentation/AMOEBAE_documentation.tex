@@ -96,12 +96,12 @@ keepspaces=true
 
 Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
     software toolkit composed primarily of scripts written in the Python3
-    language.  AMOEBAE scripts use existing Python packages including Biopython
+    language. AMOEBAE scripts use existing Python packages including Biopython
     \citep{cock2009}, the Environment for Tree Exploration (ETE3)
-    \citep{huerta-cepas2016}, pandas, and Matplotlib \citep{hunter2007} for
+    \citep{huerta-cepas2016}, Pandas, and Matplotlib \citep{hunter2007} for
     setting up, running, and summarizing analyses of molecular evolution using
     bioinformatics software packages including MUSCLE \citep{edgar2004}, BLAST+
-    \citep{camacho2009}, HMMer3 \citep{eddy1998}, and IQ-Tree
+    \citep{camacho2009}, HMMer3 \citep{eddy1998}, and IQ-TREE
     \citep{nguyen2015}. Applications include identifying and classifying
     predicted peptide sequences according to their evolutionary relationships
     with homologues. All dependencies are freely available, and AMOEBAE code is
@@ -111,32 +111,25 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
 \subsection{Why use AMOEBAE?}
 
     Webservices such as those provided by NCBI
-    (\url{https://blast.ncbi.nlm.nih.gov/Blast.cgi}) \citep{camacho2009}
-    provide a means to investigate the evolution of one or a few genes via
-    similarity searching, and automated pipelines such as orthoMCL
-    \citep{li2003} attempt to rapidly perform orthology prediction for all
-    genes in several genomes. AMOEBAE addresses mid-scale analyses
-    which are too cumbersome to be done via webservices and yet require a
-    level of detail and flexibility not offered by automated pipelines. AMOEBAE
-    may be useful for analyzing the distribution of orthologues of up to
-    perhaps 30 genes/proteins among a sampling of no more than approximately
-    100 eukaryotic genomes.  However, you may need to carefully define the
-    scope of your analysis depending on what additional steps you may find
-    necessary beyond those that may be performed using AMOEBAE (30 queries and
-    100 genomes may in fact be unmanageable). AMOEBAE provides many options
-    which can be tailored to the specific genes/proteins being analyzed, and
-    allow analyses using complex sets of customized criteria to be reproduced
-    more practically. 
-
-    %Moreover, it should be clear that AMOEBAE identifies "positive" and
-    %"negative" results simply by applying criteria that the user specifies. So,
-    %it is entirely the users responsibility to select appropriate criteria and
-    %interpret the results critically. 
+    (\url{https://blast.ncbi.nlm.nih.gov/Blast.cgi}) \citep{camacho2009} and
+    EMBL-EBI (\url{https://www.ebi.ac.uk/Tools/hmmer/}) provide a means to
+    investigate the evolution of one or a few genes via similarity searching,
+    and large-scale analysis pipelines such as OrthoMCL \citep{li2003} and
+    OrthoFinder \citep{emms2019} attempt to rapidly perform orthology
+    prediction for all genes among several genomes. AMOEBAE addresses mid-scale
+    analyses which are too cumbersome to be done via webservices or simple
+    scripts and yet require a level of detail and flexibility not offered by
+    large-scale analysis pipelines. AMOEBAE may be useful for analyzing the
+    distribution of orthologues of up to perhaps 30 genes/proteins among a
+    sampling of no more than approximately 100 eukaryotic genomes. AMOEBAE
+    provides many options which can be tailored to the specific genes/proteins
+    being analyzed, and allow analyses using complex sets of customized
+    criteria to be reproduced more practically.
 
 
 \subsection{Key features}
 
-The core functionality is to run sequence similarity searches with multiple
+The core functionality of AMOEBAE is to run sequence similarity searches with multiple
     algorithms, multiple queries, and multiple databases simultaneously
     and to allow highly customizable implementation
     of reciprocal-best-hit search strategies. The output includes detailed
@@ -156,12 +149,21 @@ The core functionality is to run sequence similarity searches with multiple
 
 AMOEBAE is not optimized for ease of use, but is meant to be highly
 configurable. The many options available to AMOEBAE users inevitably provide
-many opportunities for errors in specifying search criteria, and errors in
-interpreting output files.  Some prior experience with similarity searching and
-with running software using the command line is essential for using AMOEBAE,
-and experience writing scripts in Bash and Python would be highly advantageous. 
-Moreover, AMOEBAE is still under active development, so some features may not
-yet be thoroughly tested.
+many opportunities for user errors in specifying search criteria, and user errors in
+interpreting results detailed in output files. Some prior experience with
+similarity searching and with running software using the command line are
+prerequisites for using AMOEBAE, and experience writing scripts in Bash (linux
+shell) and Python would be highly advantageous. Also, you may need to
+carefully define the scope of your analysis depending on what additional steps
+you may find necessary beyond those that may be performed using AMOEBAE (you
+may find that the maximum 30 queries and 100 genomes suggested above may in
+fact be unmanageable). Moreover, AMOEBAE is still under active development, so
+some features may not yet be thoroughly tested.
+
+%Moreover, it should be clear that AMOEBAE identifies "positive" and
+%"negative" results simply by applying criteria that the user specifies. So,
+%it is entirely the users responsibility to select appropriate criteria and
+%interpret the results critically.
 
 
 \subsection{User support}
@@ -170,7 +172,7 @@ For specific issues with the code, please use the issue tracker on the GitHub
     webpage here: \url{https://github.com/laelbarlow/amoebae/issues}. 
 
 If you have general questions regarding AMOEBAE, please email the author at
-    lael (at) ualberta.ca.
+    lael (at) ualberta (dot) ca.
 
 \subsection{Documentation}
 
@@ -179,7 +181,7 @@ of the various commands/scripts. For a tutorial which includes a working
 example of a similarity search analysis run using AMOEBAE, see the Jupyter
 Notebook: amoebae/notebooks/similarity\_search\_tutorial\_2.ipynb. For code
 documentation, please see the html file(s), which can be opened with your web
-browser: \url{amoebae/doc/code_documentation/html/index.html}.
+browser: \url{amoebae/documentation/code_documentation/html/index.html}.
 
 
 \subsection{How to cite AMOEBAE}
@@ -196,7 +198,7 @@ AMOEBAE, since AMOEBAE would not work without these (see
 
 \subsection{Acknowledgments}
 
-AMOEBAE was initially developed at the Dacks Laboratory at the University of
+AMOEBAE was initially developed in the Dacks Laboratory at the University of
 Alberta, and was supported by National Sciences and Engineering Council of
 Canada (NSERC) Discovery grants RES0021028, RES0043758, and RES0046091 awarded
 to Joel B. Dacks, as well as an NSERC Postgraduate Scholarship-Doctoral awarded
@@ -225,21 +227,21 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 \subsection{System requirements}
 
-Please note that the commands shown likely only work on macOS or Linux operating
+Please note that the commands shown likely only work on MacOS or Linux operating
 systems (you may have trouble running AMOEBAE directly on Windows). 
 
 
 \subsection{Dependencies}
 \label{dependencies_section}
 
-All dependencies are free and open-source, and can be automatically installed
-in a virtual environment (see \autoref*{setup_section}).
+All dependencies are free and open-source, and are automatically installed
+in a virtual environment for AMOEBAE scripts (see \autoref*{setup_section}).
 
-These are the main depencencies of AMOEBAE:
+The main depencencies of AMOEBAE include the following:
 
 \begin{itemize}
 
-\item Python3 (the Anaconda distribution works well).
+\item Python3.
 
 \item Biopython, a Python package for bioinformatics \citep{cock2009}.
 
@@ -268,22 +270,37 @@ These are the main depencencies of AMOEBAE:
 %Note that currently ETE3, a dependency of AMOEBAE does not work properly with
 %Python 3.7, so Python 3.6 will be installed in the virtual environment.
 
-Follow the steps below to set up AMOEBAE on your personal computer. This setup
-process should take approximately 20 minutes to complete. Additional instructions for
-setting up AMOEBAE on a remote server will soon be added as well.
+Follow the steps below to set up AMOEBAE on your personal computer, or on a
+linux cluster with Singularity (\url{https://sylabs.io/singularity/})
+pre-installed.  This setup process should take approximately 5 minutes to
+complete. 
+
 
 \begin{enumerate}
 
-\item Ensure that Git is installed on your computer If you do not already have
-    git installed, then your computer will prompt you with instructions for how
-        to install it when you type git into the command line. If you have a
-        newer version of macOS it may prompt you to install developer tools,
-        which may take up a considerable amount of storage space. Documentation
-        for Git is available here: \url{https://git-scm.com/doc}. You can check
-        which version you have (or whether it is installed at all) by running
-        the command below. Please note: Here "\texttt{>{}>{}>}" is
-        used to indicate that the following text in the line is to be entered
-        in you terminal command prompt. 
+\item If you are setting up AMOEBAE on a high performance computing cluster,
+    then you will probably not be able to install Singularity yourself, or may
+        need to use specific procedures to load Singularity prior to use.
+        Contact your system administrator(s) if Singularity is not installed,
+        and direct them to this webpage:
+        \url{https://sylabs.io/guides/3.5/admin-guide/}.
+
+\item If you are setting up AMOEBAE on a personal computer, ensure that you
+    have at least 30GB of empty storage space available (and keep in mind that
+        it is generally recommended that you leave at least 20\% of your
+        storage space empty for efficient performance). This is important for
+        running virtual machines.
+
+\item If using a personal computer, ensure that Git is installed on your
+    computer. If you do not already have git installed, then your computer will
+        prompt you with instructions for how to install it when you type git
+        into the command line. If you have a newer version of MacOS it may
+        prompt you to install developer tools, which may take up a considerable
+        amount of storage space. Documentation for Git is available here:
+        \url{https://git-scm.com/doc}. You can check which version you have (or
+        whether it is installed at all) by running the command below. Please
+        note: Here "\texttt{>{}>{}>}" is used to indicate that the following
+        text in the line is to be entered in you terminal command prompt. 
 
 \begin{lstlisting}
 >>> git --version
@@ -318,9 +335,6 @@ setting up AMOEBAE on a remote server will soon be added as well.
 \end{lstlisting}
 
 
-\item If you are setting up AMOEBAE on a high performance computing cluster,
-    then you will not be able to install Singularity yourself, and may need to
-        use specific procedures to load Singularity prior to use.
 
 
 \end{enumerate}
@@ -395,8 +409,9 @@ setting up AMOEBAE on a remote server will soon be added as well.
 \begin{enumerate}
 
 \item The easiest way to access AMOEBAE dependencies via the command line is to
-    use the bash script provided. If you are running singularity in a virtual
-        machine (\textit{e.g.}, on MacOS), then only one shell session may be
+    use the bash script provided. If you are running AMOEBAE on a personal
+        computer (running singularity in a virtual
+        machine), then, without customizing the code, only one shell session may be
         opened at once (and these cannot be opened at the same time as the
         singularity\_jupyter.sh script is running Singularity in a virtual
         machine). Running the script as indicated below will open a shell
