@@ -49,19 +49,18 @@ Barlow](https://scholar.google.com/citations?user=wohF-LAAAAAJ&hl=en&oi=ao) is t
 
 ## Documentation
 
-Instructions for automatically setting up a virtual environment
-with all the dependencies are included in the main documentation file
-here: [AMOEBAE_documentation.pdf](
-https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf). The whole process should take approximately 5 minutes (although more time may be necessary if you need to install Git or clear storage space). 
-
 See the main documentation file for an overview and setup instructions:
 [AMOEBAE_documentation.pdf](
 https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf).
-Once you have set up an environment for running AMOEBAE, see the tutorials
-which are in the form of Jupyter notebooks with code that runs analyses using
-example data: [AMOEBAE
+All the dependencies of AMOEBAE are provided pre-installed in a
+[Singularity](https://sylabs.io/docs/)
+container, so the setup process should only take approximately 5 minutes
+(although more time may be necessary if you need to install Git or clear
+storage space). Once you have set up AMOEBAE, see the tutorials which are in
+the form of Jupyter notebooks with code that runs analyses using example data:
+[AMOEBAE
 notebooks](https://github.com/laelbarlow/amoebae/tree/master/notebooks). For
-documentation on the AMOEBAE code library, please see the html file(s), which
+documentation on the AMOEBAE Python3 code library (modules), please see the html file(s), which
 can be opened with your web browser: [Code
 documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/code_documentation/html/index.html).
 
@@ -69,7 +68,7 @@ documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/c
 ## Reporting problems
 
 Please use the [issue tracker](https://github.com/laelbarlow/amoebae/issues) on
-the GitHub webpage to report any problems you find in using AMOEBAE.
+the GitHub webpage to report any problems you encounter while using AMOEBAE.
 
 
 ## How to cite AMOEBAE
