@@ -56,7 +56,8 @@ Vagrant.configure("2") do |config|
     #vb.gui = true
   
     # Customize the amount of memory on the VM:
-    #vb.memory = "1024"
+    #vb.memory = "1024" # Lower memory works for TBLASTN in small FASTA files.
+    vb.memory = "2048" # Necessary for TBLASTN in larger FASTA files.
     vb.cpus = 4
   end
   
