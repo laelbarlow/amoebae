@@ -19,7 +19,8 @@
 # Import necessary modules.
 import unittest
 from ete3 import Tree
-from get_alt_topos import get_total_num_topos_for_n_taxa,\
+from get_alt_topos import \
+    get_total_num_topos_for_n_taxa,\
     get_all_alt_topologies,\
     get_all_unique_unrooted_bifurcating_topologies_for_n_taxa,\
     trees, get_polytomy_for_treenode
