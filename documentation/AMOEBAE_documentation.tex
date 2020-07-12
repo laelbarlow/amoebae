@@ -109,19 +109,35 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
     (\url{https://github.com/laelbarlow/amoebae}). 
 
 \subsection{Why use AMOEBAE?}
+    
+    The general problem that AMOEBAE addresses is as follows. Numerous genomes
+    (and transcriptomes) are available for a wide diversity of species of
+    medical, economic, and ecological importance. Yet only a small minority of
+    these species are tractable models for genetic and cell biological
+    experimentation. Effective translation of genetic and cell biological
+    knowledge from model organisms to non-model organisms with sequenced
+    genomes is thus essential to maximize return on investment in scientific
+    research. This translation begins with comparative genomics analyses which
+    aim to compare genes in non-model organisms to characterized genes in model
+    organisms, within the over-arching framework of evolutionary theory.
+    Efficient methods are required to perform such analyses, yet some such
+    methods may not be suited to the scope of particular studies due to
+    their breadth and/or depth. 
 
-    Webservices such as those provided by NCBI
-    (\url{https://blast.ncbi.nlm.nih.gov/Blast.cgi}) \citep{camacho2009} and
-    EMBL-EBI (\url{https://www.ebi.ac.uk/Tools/hmmer/}) provide a means to
-    investigate the evolution of one or a few genes via similarity searching,
+    AMOEBAE is useful for certain mid-scale comparative genomics studies that
+    might otherwise require a much larger investment of repetitive
+    manual/visual manipulation of data. Webservices such as those provided by
+    NCBI (\url{https://blast.ncbi.nlm.nih.gov/Blast.cgi}) \citep{camacho2009}
+    and EMBL-EBI (\url{https://www.ebi.ac.uk/Tools/hmmer/}) provide a means to
+    readily investigate the evolution of one or a few genes via similarity searching,
     and large-scale analysis pipelines such as OrthoMCL \citep{li2003} and
     OrthoFinder \citep{emms2019} attempt to rapidly perform orthology
     prediction for all genes among several genomes. AMOEBAE addresses mid-scale
-    analyses which are too cumbersome to be done via webservices or simple
+    analyses which are too cumbersome to be performed via webservices or simple
     scripts and yet require a level of detail and flexibility not offered by
     large-scale analysis pipelines. AMOEBAE may be useful for analyzing the
     distribution of orthologues of up to perhaps 30 genes/proteins among a
-    sampling of no more than approximately 100 eukaryotic genomes. AMOEBAE
+    sampling of no more than approximately 50 eukaryotic genomes. AMOEBAE
     provides many options which can be tailored to the specific genes/proteins
     being analyzed, and allow analyses using complex sets of customized
     criteria to be reproduced more practically.
@@ -129,14 +145,14 @@ Analysis of MOlecular Evolution with BAtch Entry (AMOEBAE) is a bioinformatics
 
 \subsection{Key features}
 
-The core functionality of AMOEBAE is to run sequence similarity searches with multiple
-    algorithms, multiple queries, and multiple databases simultaneously
-    and to allow highly customizable implementation
-    of reciprocal-best-hit search strategies. The output includes detailed
+The core functionality of AMOEBAE is to run sequence similarity searches with
+    multiple algorithms, multiple queries, and multiple databases
+    simultaneously and to allow highly customizable implementation of
+    reciprocal-best-hit search strategies. The output includes detailed
     summaries of results in the form of a spreadsheet and plots.
     
     A particular advantage of AMOEBAE over other tools is the functionality for
-    parsing results of TBLASTN (searching in nucleotide sequences with peptide
+    parsing results of TBLASTN (which searches nucleotide sequences with peptide
     sequence queries) search results. This allows rapid identification of
     High-scoring Segment Pair (HSP) clusters at separate gene loci (identified
     according to user-defined criteria), automatic checking of those loci
@@ -144,6 +160,8 @@ The core functionality of AMOEBAE is to run sequence similarity searches with mu
     Exonerate \citep{slater2005} where possible for obtaining better exon
     predictions.  
 
+%\subsection{Organization}
+% Schematic of how to run with Singularity in a VM.
 
 \subsection{A word of caution}
 
@@ -156,7 +174,7 @@ prerequisites for using AMOEBAE, and experience writing scripts in Bash (linux
 shell) and Python would be highly advantageous. Also, you may need to
 carefully define the scope of your analysis depending on what additional steps
 you may find necessary beyond those that may be performed using AMOEBAE (you
-may find that the maximum 30 queries and 100 genomes suggested above may in
+may find that the maximum 30 queries and 50 genomes suggested above may in
 fact be unmanageable). Moreover, AMOEBAE is still under active development, so
 some features may not yet be thoroughly tested.
 
@@ -234,8 +252,9 @@ systems (you may have trouble running AMOEBAE directly on Windows).
 \subsection{Dependencies}
 \label{dependencies_section}
 
-All dependencies are free and open-source, and are automatically installed
-in a virtual environment for AMOEBAE scripts (see \autoref*{setup_section}).
+\textbf{You do not need to install these dependencies yourself.} All
+dependencies are free and open-source, and are automatically installed in a
+virtual environment for AMOEBAE scripts (see \autoref*{setup_section}).
 
 The main depencencies of AMOEBAE include the following:
 
@@ -271,8 +290,8 @@ The main depencencies of AMOEBAE include the following:
 %Python 3.7, so Python 3.6 will be installed in the virtual environment.
 
 Follow the steps below to set up AMOEBAE on your personal computer, or on a
-linux cluster with Singularity (\url{https://sylabs.io/singularity/})
-pre-installed.  This setup process should take approximately 5 minutes to
+Linux cluster with Singularity (\url{https://sylabs.io/singularity/})
+pre-installed. This setup process should take approximately 5 minutes to
 complete. 
 
 
@@ -293,10 +312,10 @@ complete.
 
 \item If using a personal computer, ensure that Git is installed on your
     computer. If you do not already have git installed, then your computer will
-        prompt you with instructions for how to install it when you type git
-        into the command line. If you have a newer version of MacOS it may
-        prompt you to install developer tools, which may take up a considerable
-        amount of storage space. Documentation for Git is available here:
+        prompt you to install it when you type git into the command line. If
+        you are using MacOS, the easiest way to install Git is by installing
+        Xcode via the App Store (this will use up a considerable amount of
+        storage space). Documentation for Git is available here:
         \url{https://git-scm.com/doc}. You can check which version you have (or
         whether it is installed at all) by running the command below. Please
         note: Here "\texttt{>{}>{}>}" is used to indicate that the following
