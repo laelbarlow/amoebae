@@ -3,7 +3,7 @@
 """
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib')) # Customize.
+sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 
 from nhmmer_scaffolds import \
 frameify_seq, \
@@ -22,23 +22,34 @@ get_three_frame_transl, \
 get_nhmmer_hit_gene_region_seqs
 
 
-def test_frameify_seq():  # ***Incomplete test
+def test_frameify_seq():
     """Test the frameify_seq function in the nhmmer_scaffolds.py file.
     """
     ##########################
     # Arrange.
-    inseq = "inseq"
-    hmmfrom = "hmmfrom"
+    inseq1 = 'ATGATGATG'
+    hmmfrom1 = '1'
+    expect1 = 'ATGATGATG'
+
+    inseq2 = 'TGATGATG'
+    hmmfrom2 = '2'
+    expect2 = 'ATGATG'
+
+    inseq3 = 'GATGATG'
+    hmmfrom3 = '3'
+    expect3 = 'ATGATG'
 
     ##########################
     # Act.
-    #x = frameify_seq(inseq,
-    #		hmmfrom)
+    result1 = frameify_seq(inseq1, hmmfrom1)
+    result2 = frameify_seq(inseq2, hmmfrom2)
+    result3 = frameify_seq(inseq3, hmmfrom3)
 
     ##########################
     # Assert.
-    assert True == True # ***Temporary.
-
+    assert result1 == expect1 
+    assert result2 == expect2
+    assert result3 == expect3
 
 
 def test_check_if_hits_overlapping():  # ***Incomplete test

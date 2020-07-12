@@ -28,57 +28,6 @@ import module_search_scaffolds
 
 class TestSearchScaffolds(unittest.TestCase):
 
-    def test_check_for_duplicate_ranges(self):
-        tuple_list1 = [(10,11),(10,11)]
-        tuple_list2 = [(0,11),(10,11)]
-        self.assertTrue(module_search_scaffolds.check_for_duplicate_ranges(tuple_list1))
-        self.assertFalse(module_search_scaffolds.check_for_duplicate_ranges(tuple_list2))
-
-
-    def test_sort_left_ranges(self):
-        range_list1 = [(1,10),(11,20)]
-        result1 = [(11,20),(1,10)]
-        self.assertEqual(module_search_scaffolds.sort_left_ranges(range_list1), result1)
-
-
-    def test_sort_right_ranges(self):
-        range_list1 = [(11,20),(1,10)]
-        result1 = [(1,10),(11,20)]
-        self.assertEqual(module_search_scaffolds.sort_right_ranges(range_list1), result1)
-
-
-    def test_reduce_left_ranges(self):
-        # Test for inclusion of ranges within maximum gap.
-        sorted_left_ranges = [(51,70),(31,40),(11,20)]
-        top_hsp_range = (81,100)
-        max_gap = 15
-        result1 = [(51,70),(31,40),(11,20)]        
-        self.assertEqual(module_search_scaffolds.reduce_left_ranges(sorted_left_ranges,
-            top_hsp_range, max_gap), result1)
-
-        # Test for exclusion of ranges outside maximum gap.
-        sorted_left_ranges = [(51,70),(31,40),(11,20)]
-        top_hsp_range = (81,100)
-        max_gap = 5
-        result1 = []
-        self.assertEqual(module_search_scaffolds.reduce_left_ranges(sorted_left_ranges,
-            top_hsp_range, max_gap), result1)
-
-        # Test for exclusion of overlapping ranges.
-        sorted_left_ranges = [(51,82),(31,52),(11,32)]
-        top_hsp_range = (81,100)
-        max_gap = 15
-        result1 = []
-        self.assertEqual(module_search_scaffolds.reduce_left_ranges(sorted_left_ranges,
-            top_hsp_range, max_gap), result1)
-
-        # Test for correct measurement of maximum gap length.
-        sorted_left_ranges = [(1,2)]
-        top_hsp_range = (3,4)
-        max_gap = 0
-        result1 = [(1,2)]
-        self.assertEqual(module_search_scaffolds.reduce_left_ranges(sorted_left_ranges,
-            top_hsp_range, max_gap), result1)
 
 
     def test_reduce_right_ranges(self):

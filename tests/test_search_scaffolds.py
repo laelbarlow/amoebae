@@ -183,96 +183,167 @@ def test_whether_fwd_strand():  # ***Incomplete test
 
 
 
-def test_check_for_duplicate_ranges():  # ***Incomplete test
+def test_check_for_duplicate_ranges():
     """Test the check_for_duplicate_ranges function in the search_scaffolds.py file.
     """
     ##########################
     # Arrange.
-    range_list = "range_list"
+    tuple_list1 = [(10,11),(10,11)]
+    tuple_list2 = [(0,11),(10,11)]
 
     ##########################
     # Act.
-    #x = check_for_duplicate_ranges(range_list)
+    result_1 = check_for_duplicate_ranges(tuple_list1)
+    result_2 = check_for_duplicate_ranges(tuple_list2)
 
     ##########################
     # Assert.
-    assert True == True # ***Temporary.
+    assert result_1 is True
+    assert result_2 is False
 
 
 
-def test_sort_left_ranges():  # ***Incomplete test
+def test_sort_left_ranges():
     """Test the sort_left_ranges function in the search_scaffolds.py file.
     """
     ##########################
     # Arrange.
-    left_ranges = "left_ranges"
+    range_list_1 = [(1,10),(11,20)]
+    expect_1 = [(11,20),(1,10)]
 
     ##########################
     # Act.
-    #x = sort_left_ranges(left_ranges)
+    result_1 = sort_left_ranges(range_list_1)
 
     ##########################
     # Assert.
-    assert True == True # ***Temporary.
+    assert result_1 == expect_1
 
 
 
-def test_reduce_left_ranges():  # ***Incomplete test
+def test_reduce_left_ranges():
     """Test the reduce_left_ranges function in the search_scaffolds.py file.
     """
     ##########################
     # Arrange.
-    sorted_left_ranges = "sorted_left_ranges"
-    top_hsp_range = "top_hsp_range"
-    max_gap = "max_gap"
+
+    # Test for inclusion of ranges within maximum gap.
+    sorted_left_ranges_1 = [(51,70),(31,40),(11,20)]
+    top_hsp_range_1 = (81,100)
+    max_gap_1 = 15
+    expect_1 = [(51,70),(31,40),(11,20)]        
+
+    # Test for exclusion of ranges outside maximum gap.
+    sorted_left_ranges_2 = [(51,70),(31,40),(11,20)]
+    top_hsp_range_2 = (81,100)
+    max_gap_2 = 5
+    expect_2 = []
+
+    # Test for exclusion of overlapping ranges.
+    sorted_left_ranges_3 = [(51,82),(31,52),(11,32)]
+    top_hsp_range_3 = (81,100)
+    max_gap_3 = 15
+    expect_3 = []
+
+    # Test for correct measurement of maximum gap length.
+    sorted_left_ranges_4 = [(1,2)]
+    top_hsp_range_4 = (3,4)
+    max_gap_4 = 0
+    expect_4 = [(1,2)]
 
     ##########################
     # Act.
-    #x = reduce_left_ranges(sorted_left_ranges,
-    #		top_hsp_range,
-    #		max_gap)
+    result_1 = reduce_left_ranges(sorted_left_ranges_1,
+                                  top_hsp_range_1,
+                                  max_gap_1)
+    result_2 = reduce_left_ranges(sorted_left_ranges_2,
+                                  top_hsp_range_2,
+                                  max_gap_2)
+    result_3 = reduce_left_ranges(sorted_left_ranges_3,
+                                  top_hsp_range_3,
+                                  max_gap_3)
+    result_4 = reduce_left_ranges(sorted_left_ranges_4,
+                                  top_hsp_range_4,
+                                  max_gap_4)
 
     ##########################
     # Assert.
-    assert True == True # ***Temporary.
+    assert result_1 == expect_1
+    assert result_2 == expect_2
+    assert result_3 == expect_3
+    assert result_4 == expect_4
 
 
 
-def test_sort_right_ranges():  # ***Incomplete test
+def test_sort_right_ranges():
     """Test the sort_right_ranges function in the search_scaffolds.py file.
     """
     ##########################
     # Arrange.
-    right_ranges = "right_ranges"
+    range_list_1 = [(11,20),(1,10)]
+    expect_1 = [(1,10),(11,20)]
 
     ##########################
     # Act.
-    #x = sort_right_ranges(right_ranges)
+    result_1 = sort_right_ranges(range_list_1)
 
     ##########################
     # Assert.
-    assert True == True # ***Temporary.
+    assert result_1 == expect_1
 
 
 
-def test_reduce_right_ranges():  # ***Incomplete test
+def test_reduce_right_ranges():
     """Test the reduce_right_ranges function in the search_scaffolds.py file.
     """
     ##########################
     # Arrange.
-    sorted_right_ranges = "sorted_right_ranges"
-    top_hsp_range = "top_hsp_range"
-    max_gap = "max_gap"
+
+    # Test for inclusion of ranges within maximum gap.
+    sorted_right_ranges_1 = [(21,30),(41,60),(71,90)]        
+    top_hsp_range_1 = (1,10)
+    max_gap_1 = 15
+    expect_1 = [(21,30),(41,60),(71,90)]        
+
+    # Test for exclusion of ranges outside maximum gap.
+    sorted_right_ranges_2 = [(21,30),(41,60),(71,90)]        
+    top_hsp_range_2 = (1,10)
+    max_gap_2 = 5
+    expect_2 = []
+
+    # Test for exclusion of overlapping ranges.
+    sorted_right_ranges_3 = [(21,42),(41,72),(71,90)]        
+    top_hsp_range_3 = (1,22)
+    max_gap_3 = 15
+    expect_3 = []
+
+    # Test for correct measurement of maximum gap length. 
+    sorted_right_ranges_4 = [(3,4)]        
+    top_hsp_range_4 = (1,2)
+    max_gap_4 = 0
+    expect_4 = [(3,4)]
 
     ##########################
     # Act.
-    #x = reduce_right_ranges(sorted_right_ranges,
-    #		top_hsp_range,
-    #		max_gap)
+    result_1 = reduce_right_ranges(sorted_right_ranges_1,
+                                   top_hsp_range_1,
+                                   max_gap_1)
+    result_2 = reduce_right_ranges(sorted_right_ranges_2,
+                                   top_hsp_range_2,
+                                   max_gap_2)
+    result_3 = reduce_right_ranges(sorted_right_ranges_3,
+                                   top_hsp_range_3,
+                                   max_gap_3)
+    result_4 = reduce_right_ranges(sorted_right_ranges_4,
+                                   top_hsp_range_4,
+                                   max_gap_4)
 
     ##########################
     # Assert.
-    assert True == True # ***Temporary.
+    assert result_1 == expect_1
+    assert result_2 == expect_2
+    assert result_3 == expect_3
+    assert result_4 == expect_4
 
 
 
