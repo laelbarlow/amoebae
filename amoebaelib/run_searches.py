@@ -257,6 +257,11 @@ def run_any_search(queryfile,
     # Run command.
     subprocess.call(run_command)
 
+    # Check that the output file is not empty.
+    assert os.path.getsize(outfile) != 0, """Error: Search output file is
+    empty. This may be due to low memory available on this system.\nEmpty file:
+    %s""" % outfile
+
     # Return string with command used to run search.
     #search_descr =  method + ' (' + version + ')' + ' run with command:\n\t' +\
     #        ' '.join(run_command) + '\n'
