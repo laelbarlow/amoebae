@@ -607,10 +607,10 @@ Miscellaneous commands:
             for each query separately.  Otherwise, there will be redundant
             information in the output spreadsheet(s).""",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.add_argument('srch_dir', help='''Path to directory that will
-                contain output directory as a subdirectory.''')
-        parser.add_argument('--csv_file', help='''Path to spreadsheet to append summary
-                of result to for manual annotation.''', default=None)
+        #parser.add_argument('srch_dir', help='''Path to directory that will
+        #        contain output directory as a subdirectory.''')
+        parser.add_argument('out_dir_path', help='''Path to directory to write
+                search results to.''', default=None)
         parser.add_argument('--query_name', help='''Query filename to use (not
                 full path).''', default=None)
         parser.add_argument('--query_list_file', help='''Path to file
@@ -627,8 +627,8 @@ Miscellaneous commands:
                 search query to which the same title is assigned, otherwise it
                 is taken from the query info spreadsheet specified in the
                 settings.py file ('query_info_csv').''', default=None)
-        parser.add_argument('--outdir', help='''Path to directory to write
-                search results to.''', default=None)
+        #parser.add_argument('--outdir', help='''Path to directory to write
+        #        search results to.''', default=None)
         parser.add_argument('--blast_report_evalue_cutoff', help='''Maximum
         E-value for reporting BLAST hits.''', default=0.05)
         parser.add_argument('--blast_max_target_seqs', help='''Maximum BLAST
@@ -650,6 +650,8 @@ Miscellaneous commands:
         specific to each query title, due to not being retrieved as top hits by
         queries associated with different query titles.""",
         action='store_true')
+        parser.add_argument('--csv_file', help='''Path to spreadsheet to append summary
+                of result to for manual annotation.''', default=None)
 
         args = parser.parse_args(sys.argv[2:])
 
@@ -701,20 +703,23 @@ Miscellaneous commands:
         file list."""
 
         # Define output directory path.
-        outdir = None
-        if args.outdir is not None:
-            outdir = args.outdir
-        else:
-            # Generate an output directory path.
-            outdir_basename = 'redun_hits_' + timestamp
-            outdir = os.path.join(args.srch_dir, outdir_basename)
-            os.mkdir(outdir)
+        #outdir = None
+        #if args.outdir is not None:
+        #    outdir = args.outdir
+        #else:
+        #    # Generate an output directory path.
+        #    outdir_basename = 'redun_hits_' + timestamp
+        #    outdir = os.path.join(args.srch_dir, outdir_basename)
+        #    os.mkdir(outdir)
+
+        # Make output directory.
+        os.mkdir(args.out_dir_path)
 
         # If the input csv spreadsheet does not exist, then write an initial file.
         csv_file = None
         if args.csv_file is None:
             # Define a path for the output spreadsheet file.
-            csv_file = os.path.join(outdir, '0_redun_hits_' + timestamp + '.csv')
+            csv_file = os.path.join(args.out_dir_path, '0_redun_hits_' + timestamp + '.csv')
         else:
             csv_file = args.csv_file
 
@@ -722,7 +727,11 @@ Miscellaneous commands:
         # delete intermediate files (search method is determined downstream
         # based on input filename extensions and settings).
         main_outfp = search.get_redun_hits_in_dbs(args.query_title,
-                query_file_list, db_file_list, csv_file, outdir, timestamp,
+                          query_file_list,
+                          db_file_list,
+                          csv_file,
+                          args.out_dir_path,
+                          timestamp,
                           args.blast_report_evalue_cutoff,
                           args.blast_max_target_seqs,
                           args.hmmer_report_evalue_cutoff,
@@ -742,7 +751,7 @@ Miscellaneous commands:
         # Define command line input.
         commandline = ' '.join(sys.argv)
         # Define output directory.
-        outdir = args.srch_dir
+        outdir = args.out_dir_path
         # Record info to log file.
         amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, main_outfp)
