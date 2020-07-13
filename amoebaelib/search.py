@@ -675,6 +675,7 @@ def get_rows_for_fwd_srch_df(df,
 
 
 def write_fwd_srch_res_to_csv(outdir,
+                              csv_out_path,
                               query_file_list,
                               db_file_list,
                               csv_file, 
@@ -698,8 +699,13 @@ def write_fwd_srch_res_to_csv(outdir,
     column_label_list = column_header_lists.fwd_column_label_list
 
     # Make an output spreadsheet file if it does not already exist.
-    if not os.path.isfile(csv_file):
-        ## Write header line to spreadsheet.
+    #if not os.path.isfile(csv_file):
+    initial_csv_is_temp = False
+    if csv_file == None:
+        initial_csv_is_temp = True
+        # Define default CSV path.
+        csv_file = csv_out_path.rsplit('.', 1)[0] + '_temp.csv'
+        # Write header line to spreadsheet.
         with open(csv_file, 'w') as csvh:
             csvh.write(','.join(column_label_list))
 
@@ -780,10 +786,14 @@ def write_fwd_srch_res_to_csv(outdir,
 
         # Write updated dataframe to output spreadsheet.
         print('Writing dataframe to csv file')
-        df.to_csv(csv_file + '_out.csv', index=False)
+        df.to_csv(csv_out_path, index=False)
+
+    # Remove initial CSV file, if it was empty.
+    if initial_csv_is_temp:
+        os.remove(csv_file)
 
     # Return main output path.
-    return csv_file 
+    return csv_out_path 
 
 
 #def get_query_subdir(outdir):

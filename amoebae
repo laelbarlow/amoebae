@@ -936,10 +936,14 @@ Miscellaneous commands:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('fwd_srch_out', help='''Path to directory where
                 forward search results were written.''')
-        parser.add_argument('csv_file', help='''Path to summary spreadsheet
-                (CSV) file, which may already contain search summaries, or may
-                not exist yet.''')
+        parser.add_argument('csv_out_path', help='''Path to output summary
+                spreadsheet (CSV) file.''')
         # Optional arguments.
+        parser.add_argument('--csv_file', help='''Path to summary spreadsheet
+                (CSV) file, which already contains search summaries. If such a
+                file is specified, then the output CSV file will contain the
+                columns from this CSV file with additional columns summarizing
+                additional forward search results.''')
         parser.add_argument('--max_evalue', help='''Maximum E-value threshold
                 for reporting forward search hits.''', default=0.0005)
         parser.add_argument('--max_gap_between_tblastn_hsps', help='''Maximum
@@ -1004,6 +1008,7 @@ Miscellaneous commands:
         # to csv spreadsheet.
         final_outfp = search.write_fwd_srch_res_to_csv(\
                           args.fwd_srch_out,
+                          args.csv_out_path,
                           query_file_list, 
                           db_file_list, 
                           args.csv_file, 
@@ -1024,7 +1029,7 @@ Miscellaneous commands:
         # Define command line input.
         commandline = ' '.join(sys.argv)
         # Define output directory.
-        outdir = os.path.dirname(args.csv_file)
+        outdir = os.path.dirname(args.csv_out_path)
         # Record info to log file.
         amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, final_outfp)
