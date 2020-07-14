@@ -478,6 +478,8 @@ Miscellaneous commands:
         "QUERYTITLE_HSAPIENS_SEQUENCEID.fa". However, the relevant information
         can be revised in the "Queries/0_query_info.csv" file afterward if
         necessary.''')
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
         args = parser.parse_args(sys.argv[2:])
 
         # Import command-specific modules.
@@ -492,7 +494,7 @@ Miscellaneous commands:
         fasta format."""
 
         # Define path to csv file.
-        csv_file = settings.query_info_csv
+        csv_file = DataPaths(args.main_data_dir).query_info_csv
         assert os.path.isfile(csv_file), """Could not identify query info
         spreadsheet file."""
 
@@ -527,7 +529,7 @@ Miscellaneous commands:
             datatype = get_dbtype(query_file)
 
             # Determine query directory path to write output to.
-            query_dir = settings.querydirpath
+            query_dir = DataPaths(args.main_data_dir).querydirpath
 
             # Define a modified query file path with extension.
             mod_query_path =\
@@ -551,13 +553,15 @@ Miscellaneous commands:
                 afa_to_hmm(mod_query_path, hmm_path)
 
             # Add corresponding line to query info spreadsheet.
-            add_to_queries.update_query_csv(csv_file, mod_query_path,
-                    datatype)
+            add_to_queries.update_query_csv(csv_file,
+                                            mod_query_path,
+                                            datatype,
+                                            args.main_data_dir)
 
     def list_queries(self):
         parser = argparse.ArgumentParser(
             description='''Print a list of all usable query files in the query
-            directory as defined in the settings file.''',
+            directory as defined in a given AMOEBAE data directory.''',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.parse_args(sys.argv[2:])
 

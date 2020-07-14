@@ -277,7 +277,7 @@ def get_query_taxon_from_csv(query_filename):
     return df.loc[query_filename]['Query taxon (species if applicable)']
 
 
-def get_species_from_db_csv(taxon):
+def get_species_from_db_csv(taxon, main_data_dir):
     """Take a database name/species abbreviation from a taxon name extracted
     from a query filename. If there is a corresponding species name in the
     database directory information csv file specified in the DataPaths(main_data_dir) module
@@ -294,7 +294,7 @@ def get_species_from_db_csv(taxon):
     return sp
 
 
-def get_db_filename_for_query_from_db_csv(taxon):
+def get_db_filename_for_query_from_db_csv(taxon, main_data_dir):
     """Take a database name/species abbreviation or taxon name extracted from a
     query filename, and if there is a corresponding database file name in the
     database directory information csv file specified in the DataPaths(main_data_dir) module,

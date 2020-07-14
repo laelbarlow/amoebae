@@ -143,7 +143,7 @@ def fasta_seqs_all_same_len(query_file):
     else:
         return False
 
-def update_query_csv(csv_file, mod_query_path, datatype):
+def update_query_csv(csv_file, mod_query_path, datatype, main_data_dir):
     """Appends a line to the given spreadsheet with info about the given fasta
     file added to a directory.
     """
@@ -194,7 +194,7 @@ def update_query_csv(csv_file, mod_query_path, datatype):
         taxon = amoebae_m.get_query_taxon_from_filename(query_basename)
 
         # Get species based on taxon.
-        species = amoebae_m.get_species_from_db_csv(taxon)
+        species = amoebae_m.get_species_from_db_csv(taxon, main_data_dir)
     else:
         ## Print warning.
         #print("""Warning: Could not identify query title or database/taxon name
@@ -208,7 +208,8 @@ def update_query_csv(csv_file, mod_query_path, datatype):
     new_row = pd.DataFrame(columns=headers)
 
     # Get database filename.
-    db_filename = amoebae_m.get_db_filename_for_query_from_db_csv(taxon)
+    db_filename = amoebae_m.get_db_filename_for_query_from_db_csv(taxon,
+                                                                  main_data_dir)
 
     # Add info to new row.
     new_row.loc[0] = ['???'] * len(headers)
