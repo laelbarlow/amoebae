@@ -31,32 +31,39 @@ class DataPaths:
         # nucleotide scaffolds, etc.).
         self.dbdirpath =\
         os.path.join(root_amoebae_data_dir, 'Genomes')
-        assert os.path.isfile(self.dbdirpath)
+        assert os.path.isdir(self.dbdirpath), """Error: No directory at path:
+        %s""" % self.dbdirpath
         
         # Set path to csv file with information about the relevant genome data.
         self.db_info_csv =\
-        os.path.join(dbdirpath, '0_genome_info.csv')
-        assert os.path.isfile(self.db_info_csv)
+        os.path.join(self.dbdirpath, '0_genome_info.csv')
+        assert os.path.isfile(self.db_info_csv), """Error: No file at path:
+        %s""" % self.db_info_csv
         
         # Set path to directory containing query files (.faa, .afaa, etc.).
         self.querydirpath =\
         os.path.join(root_amoebae_data_dir, 'Queries')
-        assert os.path.isfile(self.querydirpath)
+        assert os.path.isdir(self.querydirpath), """Error: No directory at path:
+        %s""" % self.querydirpath
         
         # Set path to csv file with information about the relevant query files.
         self.query_info_csv =\
-        os.path.join(querydirpath, '0_query_info.csv')
-        assert os.path.isfile(self.query_info_csv)
+        os.path.join(self.querydirpath, '0_query_info.csv')
+        assert os.path.isfile(self.query_info_csv), """Error: No file at path:
+        %s""" % self.query_info_csv
         
         # Set path to directory containing reference tree (and alignment) files.
         self.model_dir_path =\
         os.path.join(root_amoebae_data_dir, 'Models')
-        assert os.path.isfile(self.model_dir_path)
+        assert os.path.isdir(self.model_dir_path), """Error: No directory at path:
+        %s""" % self.model_dir_path
         
         # Set path to csv file with information about reference tree (and alignment)
         # files.
         self.model_info_csv =\
-        os.path.join(model_dir_path, '0_models_info.csv')
-        assert os.path.isfile(self.model_info_csv)
+        os.path.join(self.model_dir_path, '0_models_info.csv')
+        assert os.path.isfile(self.model_info_csv), """Error: No file at path:
+        %s""" % self.model_info_csv
+
 
 
