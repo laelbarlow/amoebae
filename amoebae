@@ -25,7 +25,7 @@ import os
 sys.path.append(os.path.join(sys.path[0],'amoebaelib'))
 import subprocess
 import re
-import settings
+from datapaths import DataPaths
 import shutil
 import glob
 import time
@@ -309,6 +309,8 @@ Miscellaneous commands:
         parser.add_argument('new_file', help='''Can be a fasta file (prot or
         nucl) or HMM databases, generated using the hmmpress program in the
         HMMer software package. Or a GFF3 annotation file.''')
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
 
         # prefixing the argument with -- means it's optional
         parser.add_argument('--split_char', default=' ', help='''Character to
@@ -332,8 +334,8 @@ Miscellaneous commands:
         from hmmscan import determine_if_is_hmmdb
 
         # Define paths to database directory and genome info spreadsheet file.
-        db_dir = settings.dbdirpath
-        csv_file = settings.db_info_csv
+        db_dir = DataPaths(args.main_data_dir).dbdirpath
+        csv_file = DataPaths(args.main_data_dir).db_info_csv
 
         # Perform different procedures if the file is a fasta file vs. an HMM
         # database file, or a GFF file.
