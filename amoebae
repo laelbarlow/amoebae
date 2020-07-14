@@ -954,6 +954,8 @@ Miscellaneous commands:
                 forward search results were written.''')
         parser.add_argument('csv_out_path', help='''Path to output summary
                 spreadsheet (CSV) file.''')
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
         # Optional arguments.
         parser.add_argument('--csv_file', help='''Path to summary spreadsheet
                 (CSV) file, which already contains search summaries. If such a
@@ -1034,11 +1036,12 @@ Miscellaneous commands:
                           args.exonerate_score_threshold,
                           args.do_not_use_exonerate,
                           args.max_hits_to_sum,
-                          args.max_length_diff)
+                          args.max_length_diff,
+                          args.main_data_dir)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nForward search results written/appended to
-                spreadsheet:\n\n\t%s\n""" % args.csv_file)
+                spreadsheet:\n\n\t%s\n""" % args.csv_out_path)
 
         # Record end time.
         end_time = time.time()

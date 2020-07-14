@@ -334,12 +334,17 @@ class SrchResFile:
             dbdir_path = DataPaths(self.main_data_dir).dbdirpath
 
             # Get coordinates.
-            subseq_coord = get_hmmer_hit_seq_coord(searchio_hit_obj, self.db_file)
+            subseq_coord = get_hmmer_hit_seq_coord(searchio_hit_obj,
+                                                   self.db_file,
+                                                   self.main_data_dir)
 
             # Get sequence object.
             seq_id = self.hit_id(hit_rank) 
             db_path = os.path.join(dbdir_path, self.db_file)
-            subseq_obj = get_subseq_from_fasta_db(db_path, seq_id, subseq_coord)
+            subseq_obj = get_subseq_from_fasta_db(db_path,
+                                                  seq_id,
+                                                  subseq_coord,
+                                                  self.main_data_dir)
 
         else:
             pass # ...?
@@ -438,7 +443,10 @@ def get_srch_file_info(search_result_path):
     return [ident_prog, ident_vers, ident_fmt]
 
 
-def get_hmmer_hit_seq_coord(searchio_hit_obj, db_file, extra=0):
+def get_hmmer_hit_seq_coord(searchio_hit_obj,
+                            db_file,
+                            main_data_dir,
+                            extra=0):
     """Takes a Bio.SearchIO hmmer3-text hit object and returns specially
     formatted coordinates for the subsequence (top HSP) that match the query.
 
@@ -469,7 +477,9 @@ def get_hmmer_hit_seq_coord(searchio_hit_obj, db_file, extra=0):
         #seqlen = get_seq_len_from_db(searchio_hit_obj.id,\
         #        db_file)
         # Get sequence length from sequence in database.
-        seqlen = len(get_seqs_from_fasta_db(db_file, [searchio_hit_obj.id])[0])
+        seqlen = len(get_seqs_from_fasta_db(db_file,
+                                            [searchio_hit_obj.id],
+                                            main_data_dir)[0])
         nterm_margin = domainstart
         cterm_margin = seqlen - domainend
         nterm_extra = int(extra)

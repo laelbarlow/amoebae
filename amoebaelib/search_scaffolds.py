@@ -955,7 +955,8 @@ def get_hit_seq_record_and_coord2(search_result_path,
                                   db_filename,
                                   query_filename,
                                   genetic_code_number,
-                                  exonerate_score_threshold
+                                  exonerate_score_threshold,
+                                  main_data_dir
                                   ):
     """Given a list of SearchIO HSP objects (arguably representing a single
     gene), retrieve the corresponding region of the subject sequence, use
@@ -1031,6 +1032,7 @@ def get_hit_seq_record_and_coord2(search_result_path,
                                                start_of_5prime_hsp,
                                                end_of_3prime_hsp,
                                                subseq_fasta_path,
+                                               main_data_dir,
                                                additional_flanking_basepairs
                                                )
 

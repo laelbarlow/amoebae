@@ -166,7 +166,7 @@ def get_seqs_from_fasta_db(db_name, accs, main_data_dir, slow=False):
     return seq_objs
 
 
-def get_subseq_from_fasta_db(db_name, acc, subseq_coord):
+def get_subseq_from_fasta_db(db_name, acc, subseq_coord, main_data_dir):
     """Returns a SeqRecord object corresponding to the subsequence with the
     given coordinates in the sequence with the given accessions in the given
     database file. 
@@ -265,7 +265,7 @@ def get_query_title_from_csv(query_filename, main_data_dir):
     return df.loc[query_filename]['Query title']
 
 
-def get_query_taxon_from_csv(query_filename):
+def get_query_taxon_from_csv(query_filename, main_data_dir):
     """Take a query filename, look up corresponding query taxon in the query
     directory csv specified in the DataPaths(main_data_dir) module, and return that.
     """
@@ -327,7 +327,7 @@ def get_db_filename_for_query_from_db_csv(taxon, main_data_dir):
     return dbfn
 
 
-def get_species_for_db_filename(db_filename):
+def get_species_for_db_filename(db_filename, main_data_dir):
     """Takes a database filename, and returns the species name that appears in
     the database info csv file (may be '-' if not applicable).
     """

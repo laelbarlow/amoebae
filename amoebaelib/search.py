@@ -290,7 +290,7 @@ def get_redun_hits_in_dbs(query_title,
     return csv_file 
 
 
-def get_query_len(query_filename):
+def get_query_len(query_filename, main_data_dir):
     """Takes a query filename, gets the full path, get the query type, and
     returns the query length (assumes fasta, because even for HMMer searches
     the query listed will be .afaa).
@@ -361,19 +361,20 @@ def get_rows_for_fwd_srch_df(df,
                              exonerate_score_threshold,
                              do_not_use_exonerate,
                              max_hits_to_sum,
-                             max_length_diff
+                             max_length_diff,
+                             main_data_dir
                              ):
     """Parses search result file and adds a corresponding row to an output
     pandas dataframe.
     """
     # Parse given search output file.
-    parsed_file_obj = SrchResFile(search_result_path)
+    parsed_file_obj = SrchResFile(search_result_path, main_data_dir)
     srch_file_prog = parsed_file_obj.program
     srch_file_prog_vers = parsed_file_obj.version
     srch_file_format = parsed_file_obj.format
 
     # Extract some initial info.
-    query_len = get_query_len(q)
+    query_len = get_query_len(q, main_data_dir)
     query_res_obj = SearchIO.read(search_result_path,\
             srch_file_format)
 
@@ -390,7 +391,7 @@ def get_rows_for_fwd_srch_df(df,
         
     # Define a sub-dataframe to populate and return.
     subdf = pd.DataFrame(columns=column_label_list) # Define query title to use.
-    query_title = amoebae_m.get_query_title_from_csv(q)
+    query_title = amoebae_m.get_query_title_from_csv(q, main_data_dir)
 
     # Initiate dataframe for a new row to append to dataframe
     # for output.
@@ -401,21 +402,23 @@ def get_rows_for_fwd_srch_df(df,
     # Fill in info to row.
     new_row_df.loc[0]['Query title'] = query_title
     new_row_df.loc[0]['Query file'] = q
-    new_row_df.loc[0]['Query species (if applicable)'] = amoebae_m.get_query_taxon_from_csv(q)
+    new_row_df.loc[0]['Query species (if applicable)'] = \
+        amoebae_m.get_query_taxon_from_csv(q, main_data_dir)
 
     # Get "taxon" from query filename.
     #taxon = module_amoebae.get_query_taxon_from_filename(q)
-    taxon = amoebae_m.get_query_taxon_from_csv(q)
+    taxon = amoebae_m.get_query_taxon_from_csv(q, main_data_dir)
 
     # Use query "taxon" to look up the database, if any, that
     # the query came from (in the query info csv file).
-    new_row_df.loc[0]['Query database name'] = amoebae_m.get_db_filename_for_query_from_db_csv(taxon)
+    new_row_df.loc[0]['Query database name'] = \
+        amoebae_m.get_db_filename_for_query_from_db_csv(taxon, main_data_dir)
 
     new_row_df.loc[0]['Query accession (if applicable)'] = query_res_obj.id
     new_row_df.loc[0]['Query description'] = query_res_obj.description
     new_row_df.loc[0]['Query length'] = query_len
     new_row_df.loc[0]['Subject database species (if applicable)'] =\
-        amoebae_m.get_species_for_db_filename(d) ### PROBLEM?
+        amoebae_m.get_species_for_db_filename(d, main_data_dir) ### PROBLEM?
     new_row_df.loc[0]['Subject database file'] = d
     new_row_df.loc[0]['Forward search method'] = srch_file_prog + ' ' + srch_file_prog_vers
 
@@ -500,7 +503,8 @@ def get_rows_for_fwd_srch_df(df,
                                                   d,
                                                   q,
                                                   genetic_code_number,
-                                                  exonerate_score_threshold
+                                                  exonerate_score_threshold,
+                                                  main_data_dir
                                                   )
                     if hit_seq_record_and_coord == None:
                         # Do not include the cluster in the results, because
@@ -688,7 +692,8 @@ def write_fwd_srch_res_to_csv(outdir,
                               exonerate_score_threshold,
                               do_not_use_exonerate,
                               max_hits_to_sum,
-                              max_length_diff):
+                              max_length_diff,
+                              main_data_dir):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
@@ -762,7 +767,8 @@ def write_fwd_srch_res_to_csv(outdir,
                     # For certain formats the search method is required, so may
                     # need to figure out how to get that info later (see
                     # http://biopython.org/DIST/docs/api/Bio.SearchIO-module.html)
-                    parsed_file_obj = SrchResFile(search_result_path)
+                    parsed_file_obj = SrchResFile(search_result_path,
+                                                  main_data_dir)
                     srch_file_prog = parsed_file_obj.program
                     srch_file_prog_vers = parsed_file_obj.version
                     srch_file_format = parsed_file_obj.format
@@ -782,7 +788,8 @@ def write_fwd_srch_res_to_csv(outdir,
                                                      exonerate_score_threshold,
                                                      do_not_use_exonerate,
                                                      max_hits_to_sum,
-                                                     max_length_diff)
+                                                     max_length_diff,
+                                                     main_data_dir)
 
                     # Append sub-dataframe to full dataframe.
                     df = df.append(subdf, ignore_index=True)
@@ -1139,7 +1146,8 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             query_file = row['Query file']
 
             # Get species for db_file.
-            db_file_sp = amoebae_m.get_species_for_db_filename(db_file)
+            db_file_sp = amoebae_m.get_species_for_db_filename(db_file,
+                    main_data_dir)
             row['Reverse search species (if applicable)'] = db_file_sp
 
 
@@ -1185,7 +1193,8 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             # For certain formats the search method is required, so may
             # need to figure out how to get that info later (see
             # http://biopython.org/DIST/docs/api/Bio.SearchIO-module.html)
-            parsed_file_obj = SrchResFile(search_result_path)
+            parsed_file_obj = SrchResFile(search_result_path,
+                                          main_data_dir)
             srch_file_prog = parsed_file_obj.program
             srch_file_prog_vers = parsed_file_obj.version
             srch_file_format = parsed_file_obj.format
