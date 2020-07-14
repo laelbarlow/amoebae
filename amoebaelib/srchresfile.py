@@ -52,12 +52,14 @@ class SrchResFile:
     """Parses relevant information as needed from similarity search output
     file, which may be one of several types.
     """
-    def __init__(self, filepath):
+    def __init__(self, filepath, main_data_dir):
         # Check that the input file path exists.
         assert os.path.isfile(filepath), """Input filepath does not exist:
         %s""" % filepath
 
         self.filepath = filepath
+
+        self.main_data_dir = main_data_dir
 
         # Get basic info from file.
         info = get_srch_file_info(filepath)
@@ -127,7 +129,7 @@ class SrchResFile:
 
         # Define full path to database file.
         self.db_file_path = None
-        self.db_file_path = os.path.join(DataPaths(main_data_dir).dbdirpath, self.db_file)
+        self.db_file_path = os.path.join(DataPaths(self.main_data_dir).dbdirpath, self.db_file)
         # Check that it is a real file.
         assert os.path.isfile(self.db_file_path), """Path to database is not a file:
         %s""" % self.db_file_path
@@ -267,7 +269,7 @@ class SrchResFile:
         """Return a Seq object for full sequence of subject sequence.
         """
         # Get path for databases directory.
-        dbdir_path = DataPaths(main_data_dir).dbdirpath
+        dbdir_path = DataPaths(self.main_data_dir).dbdirpath
 
         # Get sequence object.
         seq_obj = None
@@ -275,7 +277,7 @@ class SrchResFile:
         db_path = os.path.join(dbdir_path, self.db_file)
         assert os.path.isfile(db_path), """Given path is not a file."""
         #seq_obj = get_seqs_from_fasta_db(db_path, [seq_id])[0]
-        seq_obj = get_seqs_from_fasta_db(self.db_file, [seq_id])[0]
+        seq_obj = get_seqs_from_fasta_db(self.db_file, [seq_id], self.main_data_dir)[0]
 
         # Check that it worked.
         assert seq_obj is not None, """Could not retrieve sequence for hit."""
@@ -329,7 +331,7 @@ class SrchResFile:
             # directly from the database file.
 
             # Get path for databases directory.
-            dbdir_path = DataPaths(main_data_dir).dbdirpath
+            dbdir_path = DataPaths(self.main_data_dir).dbdirpath
 
             # Get coordinates.
             subseq_coord = get_hmmer_hit_seq_coord(searchio_hit_obj, self.db_file)
@@ -395,7 +397,7 @@ def get_srch_file_info(search_result_path):
     # is of a certain format. See the SearchIO documentation here:
     # http://biopython.org/DIST/docs/api/Bio.SearchIO-module.html
     fmt_expr_dict = {'blast-xml': [re.compile(r'^<!DOCTYPE BlastOutput')],
-                     'hmmer3-tab': [re.compile(r'^# Option DataPaths(main_data_dir): hmmsearch --tblout')],
+                     'hmmer3-tab': [re.compile(r'^# Option settings: hmmsearch --tblout')],
                      'hmmer3-text': [re.compile(r'^# HMMER ')]
                      }
     

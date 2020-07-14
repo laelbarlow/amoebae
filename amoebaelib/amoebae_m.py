@@ -80,7 +80,7 @@ def get_dbtype_from_file_exten(infp):
     return dbtype
 
 
-def get_seqs_from_fasta_db(db_name, accs, slow=False):
+def get_seqs_from_fasta_db(db_name, accs, main_data_dir, slow=False):
     """Returns a list of SeqRecord objects corresponding to the given accessions
     in the given database file. 
     """
@@ -253,7 +253,7 @@ def get_query_title_from_filename(query_filename):
     return query_filename.split('_')[0]
 
 
-def get_query_title_from_csv(query_filename):
+def get_query_title_from_csv(query_filename, main_data_dir):
     """Take a query filename, look up corresponding query title in the query
     directory csv specified in the DataPaths(main_data_dir) module, and return that.
     """

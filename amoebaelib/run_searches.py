@@ -250,9 +250,9 @@ def run_any_search(queryfile,
     # Prepend program name with directory path if necesssary and specified in
     # the DataPaths(main_data_dir).py file (this is a work-around for a particular remote
     # server).
-    server_program_dirpath = DataPaths(main_data_dir).server_program_dirpath
-    run_command = [os.path.join(server_program_dirpath, run_command[0])] +\
-    run_command[1:]
+    #server_program_dirpath = DataPaths(main_data_dir).server_program_dirpath
+    #run_command = [os.path.join(server_program_dirpath, run_command[0])] +\
+    #run_command[1:]
 
     # Run command.
     subprocess.call(run_command)
@@ -277,6 +277,7 @@ def run_all_searches(query_file_list,
                      hmmer_report_evalue_cutoff,
                      hmmer_report_score_cutoff,
                      num_threads_similarity_searching,
+                     main_data_dir,
                      query_dir=None
                      ):
     """Search with every query file in a given list into every database file in

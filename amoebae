@@ -563,13 +563,15 @@ Miscellaneous commands:
             description='''Print a list of all usable query files in the query
             directory as defined in a given AMOEBAE data directory.''',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.parse_args(sys.argv[2:])
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
+        args = parser.parse_args(sys.argv[2:])
 
         # Get current time for timestamp.
         #timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
 
-        # Get path to query directory from settings.py file.
-        query_dir = settings.querydirpath
+        # Get path to query directory.
+        query_dir = DataPaths(args.main_data_dir).querydirpath
 
         # Get all files in query directory.
         all_files = glob.glob(os.path.join(query_dir, '*'))
@@ -619,6 +621,8 @@ Miscellaneous commands:
         #        contain output directory as a subdirectory.''')
         parser.add_argument('out_dir_path', help='''Path to directory to write
                 search results to.''', default=None)
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
         parser.add_argument('--query_name', help='''Query filename to use (not
                 full path).''', default=None)
         parser.add_argument('--query_list_file', help='''Path to file
@@ -746,7 +750,8 @@ Miscellaneous commands:
                           args.hmmer_report_score_cutoff,
                           args.num_threads_similarity_searching,
                           args.predict_redun_hit_selection,
-                          args.max_number_of_hits_to_summarize)
+                          args.max_number_of_hits_to_summarize,
+                          args.main_data_dir)
 
         # Prompt manual annotation of spreadsheet to define positive
         # (redundant) hits.

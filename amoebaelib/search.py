@@ -143,7 +143,8 @@ def get_redun_hits_in_dbs(query_title,
                           hmmer_report_score_cutoff,
                           num_threads_similarity_searching,
                           predict_redun_hit_selection,
-                          max_number_of_hits_to_summarize
+                          max_number_of_hits_to_summarize,
+                          main_data_dir
                           ):
     """Finds all items (sequences or profiles) in each given database file
     (fasta or hmm databases) that may be positive hits for query title (e.g.,
@@ -181,7 +182,8 @@ def get_redun_hits_in_dbs(query_title,
                      blast_max_target_seqs,
                      hmmer_report_evalue_cutoff,
                      hmmer_report_score_cutoff,
-                     num_threads_similarity_searching)
+                     num_threads_similarity_searching,
+                     main_data_dir)
 
     # Manage assignment of query title(s).
     find_query_titles = True
@@ -197,7 +199,8 @@ def get_redun_hits_in_dbs(query_title,
         for q in query_file_list:
             # Define query title to use.
             if find_query_titles:
-                query_title = amoebae_m.get_query_title_from_csv(q)
+                query_title = amoebae_m.get_query_title_from_csv(q,
+                                main_data_dir)
             # Loop over database file names.
             for d in db_file_list:
                 # Find relevant result file in output directory.
@@ -212,7 +215,7 @@ def get_redun_hits_in_dbs(query_title,
                 #srch_file_prog_vers = srch_file_prog_vers_fmt[1]
                 #srch_file_format = srch_file_prog_vers_fmt[2]
 
-                parsed_file_obj = SrchResFile(search_result_path)
+                parsed_file_obj = SrchResFile(search_result_path, main_data_dir)
                 srch_file_prog = parsed_file_obj.program
                 srch_file_prog_vers = parsed_file_obj.version
                 srch_file_format = parsed_file_obj.format
