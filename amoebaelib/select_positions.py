@@ -17,7 +17,7 @@
 """Contains functions for modifying alignment position/column selection for a
 given phylogenetic tree dataset.
 """
-import settings
+from datapaths import DataPaths
 import sys
 import os
 import numpy as np

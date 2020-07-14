@@ -16,7 +16,7 @@
 
 """Contains functions for adding contstraint commands to MrBayes input files.
 """
-import settings
+from datapaths import DataPaths
 import sys
 import os
 from Bio import AlignIO

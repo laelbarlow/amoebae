@@ -21,7 +21,7 @@ import sys
 import os
 import subprocess
 import re
-#import settings
+#from datapaths import DataPaths
 import shutil
 #import glob
 import time

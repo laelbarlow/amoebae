@@ -25,7 +25,7 @@ import re
 import subprocess
 import itertools
 from get_fas_from_db_dir import get_seq_obj_from_db_fasta
-import settings
+from datapaths import DataPaths
 from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
 

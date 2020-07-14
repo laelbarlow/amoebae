@@ -17,7 +17,7 @@
 """
 import sys
 import time
-import settings
+from datapaths import DataPaths
 import math
 import re
 import os

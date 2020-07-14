@@ -28,7 +28,7 @@ import copy
 import pandas as pd
 
 # Import amoebae modules.
-import settings
+from datapaths import DataPaths
 from afa_to_nex import nex_to_afa, afa_to_nex, determine_alphabet
 from add_to_db import make_blast_db
 from misc_functions import get_fa_record_text_from_obj

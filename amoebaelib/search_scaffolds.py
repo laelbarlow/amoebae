@@ -35,7 +35,7 @@ from Bio.Blast import Record
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import itertools
-import settings
+from datapaths import DataPaths
 from run_exonerate import ExonerateLocusResult, get_subseq_from_nucl,\
 run_exonerate_as_subprocess
 

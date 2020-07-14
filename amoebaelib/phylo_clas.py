@@ -16,7 +16,7 @@
 
 """Contains functions for classifying sequences using existing phylogenetic models.
 """
-import settings
+from datapaths import DataPaths
 import sys
 import os
 import shutil

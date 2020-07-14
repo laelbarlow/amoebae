@@ -19,7 +19,7 @@ import sys
 import os
 import argparse
 import time
-import settings
+from datapaths import DataPaths
 #from get_fas_from_db_dir import get_fas_from_db_dir # This is outdated!
 
 

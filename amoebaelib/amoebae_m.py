@@ -23,7 +23,7 @@ import os
 sys.path.append(os.path.dirname(sys.path[0]))
 import subprocess
 import re
-import settings
+from datapaths import DataPaths
 #import shutil
 import glob
 import time

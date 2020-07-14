@@ -22,7 +22,7 @@ have been enabled in the security settings.
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import settings
+from datapaths import DataPaths
 
 def send_eml(subject, body):
     """Sends an email using the from and to addresses and password defined in

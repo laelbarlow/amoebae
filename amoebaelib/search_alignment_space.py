@@ -17,7 +17,7 @@
 """Contains functions for searching for alignments that support given tree
 topologies (comparing alternative topologies).
 """
-import settings
+from datapaths import DataPaths
 import sys
 import os
 import numpy as np

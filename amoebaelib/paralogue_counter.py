@@ -29,7 +29,7 @@ from Bio.Alphabet import IUPAC, Gapped
 from Bio.SeqRecord import SeqRecord
 import time
 import pandas as pd
-import settings
+from datapaths import DataPaths
 import glob
 from similarity_score import get_similarity_score, get_score_dataframe_from_file
 import amoebae_m

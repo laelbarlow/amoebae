@@ -16,7 +16,7 @@
 """Module for functions for amoebae script that are for performing
 similarity searches, but do not require installation of pandas library.
 """
-import settings
+from datapaths import DataPaths
 import os
 import subprocess
 import datetime 

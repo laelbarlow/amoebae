@@ -26,7 +26,7 @@ from Bio.Seq import Seq
 import glob
 import subprocess
 sys.path.append(os.path.dirname(sys.path[0]))
-import settings
+from datapaths import DataPaths
 
 
 def determine_alphabet(filepath):

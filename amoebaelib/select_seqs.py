@@ -17,7 +17,7 @@
 """Contains functions for modifying sequence selection for a given phylogenetic
 tree.
 """
-import settings
+from datapaths import DataPaths
 import sys
 import os
 import numpy as np

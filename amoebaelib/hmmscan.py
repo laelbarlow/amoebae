@@ -36,7 +36,7 @@ import pandas as pd
 #from paralogue_counter import get_seq_obj_from_srch_res_csv_info
 from nex_to_hmm import nex_to_hmm
 
-#import settings
+#from datapaths import DataPaths
 
 # Define functions to be used in amoebae.
 

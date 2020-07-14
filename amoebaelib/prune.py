@@ -24,7 +24,7 @@ import subprocess
 import re
 import statistics
 import numpy as np
-#import settings
+#from datapaths import DataPaths
 #import shutil
 import glob
 #import time
