@@ -1032,6 +1032,7 @@ def get_evaldiff(evalue1, evalue2):
 
 def write_rev_srch_res_to_csv(rev_srch_id,
                               outdir,
+                              csv_out_path,
                               query_file_list,
                               db_file,
                               csv_file,
@@ -1328,7 +1329,8 @@ def write_rev_srch_res_to_csv(rev_srch_id,
     df.columns = list(df.columns[0:-len(new_column_label_list)]) + [x + ' (' + rev_srch_id + ')' for x in new_column_label_list]
 
     # Write joined to output path.
-    final_outfp = get_csv_with_rev_path(csv_file)
+    #final_outfp = get_csv_with_rev_path(csv_file)
+    final_outfp = csv_out_path
     df.to_csv(final_outfp, index=False)
 
     # Return main output path.

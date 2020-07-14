@@ -1279,10 +1279,14 @@ Miscellaneous commands:
                      file. Use information from redundant hit csv file to
                      interpret results.''',
                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.add_argument('csv_file', help='''Path to summary spreadsheet
-                (CSV) file, which may already contain reverse search summaries.''')
+        parser.add_argument('fwd_srch_csv', help='''Path to summary spreadsheet
+                (CSV) file, which contains forward search summaries and also
+                may already contain reverse search summaries.''')
         parser.add_argument('rev_srch_out', help='''Path to directory where
                 reverse search results were written.''')
+        parser.add_argument('csv_out_path', help='''Path output spreadsheet
+                (CSV) file with reverse search results appended to previous
+                results.''')
         parser.add_argument('--redun_hit_csv', help='''Path to spreadsheet
         (CSV) file, which specifies which hits are redundant positive hits for
         a given query (query title) in a given database. If this is not
@@ -1316,7 +1320,8 @@ Miscellaneous commands:
         timestamp = time.strftime("%Y%m%d%H%M%S")
 
         # Get timestamp of reverse search results.
-        rev_srch_timestamp = '_'.join(args.rev_srch_out.split('_')[-3:]) 
+        #rev_srch_timestamp = '_'.join(args.rev_srch_out.split('_')[-3:]) 
+        rev_srch_timestamp = timestamp
 
         # Get query_list_file and db_list_file paths.
         out_query_file =\
@@ -1369,22 +1374,31 @@ Miscellaneous commands:
             print('\nSummarizing results from reverse searches into ' +\
                     os.path.basename(db_file) + ' (database #' + str(db_num) +\
                     ')')
-            final_outfp = search.write_rev_srch_res_to_csv(rev_srch_timestamp + '-' + str(db_num), args.rev_srch_out,
-                    query_file_list, db_file, args.csv_file, args.redun_hit_csv,
-                    args.min_evaldiff, timestamp, args.aasubseq,
-                    args.max_rev_srchs)
+            final_outfp = search.write_rev_srch_res_to_csv(\
+                              rev_srch_timestamp + '-' + str(db_num),
+                              args.rev_srch_out,
+                              args.csv_out_path,
+                              query_file_list,
+                              db_file,
+                              args.fwd_srch_csv,
+                              args.redun_hit_csv,
+                              args.min_evaldiff,
+                              timestamp,
+                              args.aasubseq,
+                              args.max_rev_srchs)
 
         # Prompt manual inspection of spreadsheet.
-        print("""\n\nForward search results written/appended to
+        print("""\n\nReverse search results written/appended to
                 spreadsheet:\n\n\t%s\n""" %\
-                search.get_csv_with_rev_path(args.csv_file))
+                #search.get_csv_with_rev_path(args.fwd_srch_csv))
+                args.csv_out_path)
 
         # Record end time.
         end_time = time.time()
         # Define command line input.
         commandline = ' '.join(sys.argv)
         # Define output directory.
-        outdir = os.path.dirname(args.csv_file)
+        outdir = os.path.dirname(args.fwd_srch_csv)
         # Record info to log file.
         amoebae_m.record_amoebae_info_in_log_file(commandline, outdir,
                 start_time, end_time, timestamp, final_outfp)
