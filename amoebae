@@ -417,15 +417,17 @@ Miscellaneous commands:
     def list_dbs(self):
         parser = argparse.ArgumentParser(
             description='''Print a list of all usable query files in the query
-            directory as defined in the settings file.''',
+            directory as defined in a given AMOEBAE data directory.''',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.parse_args(sys.argv[2:])
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
+        args = parser.parse_args(sys.argv[2:])
 
         # Get current time for timestamp.
         #timestamp = time.strftime("%Y_%m_%d_%H_%M_%S")
 
         # Get path to query directory from settings.py file.
-        db_dir = settings.dbdirpath
+        db_dir = DataPaths(args.main_data_dir).dbdirpath
 
         # Get all files in query directory.
         all_files = glob.glob(os.path.join(db_dir, '*'))
