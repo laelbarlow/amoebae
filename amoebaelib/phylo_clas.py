@@ -877,7 +877,7 @@ def classify_seq_with_constrained_tree2(file_with_seqs, model=None,
                 db_file = row['Subject database species (if applicable)']
 
                 # Get name of model/tree to use from the Models directory
-                # (specified in the settings module).
+                # (specified in the DataPaths(main_data_dir) module).
                 model = row['Model/backbone tree name']
                 assert model != '-'
                 assert model is not None
@@ -926,20 +926,20 @@ class ModelInfoFromCSV:
         subs_model = None
         tree_topologyfp = None
         type_seqsfp = None
-        df = pd.read_csv(settings.model_info_csv, encoding='utf-8')
+        df = pd.read_csv(DataPaths(main_data_dir).model_info_csv, encoding='utf-8')
         found_model_with_name = False
         for index, row in df.iterrows():
             if row['Model name'] == model_name:
                 found_model_with_name = True
-                alignmentfp = os.path.join(settings.model_dir_path,
+                alignmentfp = os.path.join(DataPaths(main_data_dir).model_dir_path,
                         row['Alignment file'])
                 subs_model = row['Substitution model']
-                type_seqsfp = os.path.join(settings.model_dir_path, row['Type sequences and names of the clades that they define'])
-                tree_topologyfp = os.path.join(settings.model_dir_path,
+                type_seqsfp = os.path.join(DataPaths(main_data_dir).model_dir_path, row['Type sequences and names of the clades that they define'])
+                tree_topologyfp = os.path.join(DataPaths(main_data_dir).model_dir_path,
                         row['Tree topology file'])
                 break
         assert found_model_with_name, """Could not find a model named %s in
-        info spreadsheet %s.""" % (model_name, settings.model_info_csv)
+        info spreadsheet %s.""" % (model_name, DataPaths(main_data_dir).model_info_csv)
         assert alignmentfp is not None and alignmentfp != ''
         assert subs_model is not None and subs_model != ''
         assert tree_topologyfp is not None and tree_topologyfp != ''
@@ -1822,7 +1822,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
 
             # Prevent analyzing reverse searches when the forward hit rank is over
             # a certain number.
-            elif row['Forward hit rank'] > 1000: #settings.max_num_reverse_searches_per_database:
+            elif row['Forward hit rank'] > 1000: #DataPaths(main_data_dir).max_num_reverse_searches_per_database:
                 pass
 
             else:
@@ -1951,7 +1951,7 @@ def write_phylo_class_to_csv(phylo_class_id, outdir,
 
             # Prevent analyzing reverse searches when the forward hit rank is over
             # a certain number.
-            elif row['Forward hit rank'] > 1000: #settings.max_num_reverse_searches_per_database:
+            elif row['Forward hit rank'] > 1000: #DataPaths(main_data_dir).max_num_reverse_searches_per_database:
                 pass
 
             else:

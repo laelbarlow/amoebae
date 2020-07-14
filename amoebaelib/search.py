@@ -295,7 +295,7 @@ def get_query_len(query_filename):
     query_length = None
 
     # Get full path.
-    query_path = os.path.join(settings.querydirpath, query_filename)
+    query_path = os.path.join(DataPaths(main_data_dir).querydirpath, query_filename)
 
     # Get query length.
     query_length = None
@@ -382,8 +382,8 @@ def get_rows_for_fwd_srch_df(df,
     ## represent separate genes. ???
     ##hit_list = query_res_obj.hits
     #if query_res_obj.program == 'tblastn' and num_hits > 0:
-    #    query_res_obj = split_tblastn_hits_into_separate_genes(query_res_obj, settings.max_gap)
-    #    #hit_list = split_tblastn_hits_into_separate_genes(query_res_obj, settings.max_gap)
+    #    query_res_obj = split_tblastn_hits_into_separate_genes(query_res_obj, DataPaths(main_data_dir).max_gap)
+    #    #hit_list = split_tblastn_hits_into_separate_genes(query_res_obj, DataPaths(main_data_dir).max_gap)
         
     # Define a sub-dataframe to populate and return.
     subdf = pd.DataFrame(columns=column_label_list) # Define query title to use.
@@ -690,8 +690,8 @@ def write_fwd_srch_res_to_csv(outdir,
     amoebae) and append rows to input csv with information for interpreting
     the forward results. 
     """
-    # Get database info spreadsheet path from settings module.
-    db_info_csv = settings.db_info_csv
+    # Get database info spreadsheet path from DataPaths(main_data_dir) module.
+    db_info_csv = DataPaths(main_data_dir).db_info_csv
 
     # Define string for header line in output spreadsheet.
     # ***If this is changed, then make sure to change the corresponding code
@@ -1057,8 +1057,8 @@ def write_rev_srch_res_to_csv(rev_srch_id,
     assert os.path.isfile(csv_file)
     assert redun_hit_csv is None or os.path.isfile(redun_hit_csv)
 
-    # Get database info spreadsheet path from settings module.
-    db_info_csv = settings.db_info_csv
+    # Get database info spreadsheet path from DataPaths(main_data_dir) module.
+    db_info_csv = DataPaths(main_data_dir).db_info_csv
     assert os.path.isfile(db_info_csv)
 
     # Get same list of header titles that the sum_fwd_srch command makes (for

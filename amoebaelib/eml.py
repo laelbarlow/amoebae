@@ -17,7 +17,7 @@
 http://naelshiab.com/tutorial-send-email-python/
 
 This works for sending emails from gmail accounts for which "less secure apps"
-have been enabled in the security settings.  
+have been enabled in the security DataPaths(main_data_dir).  
 """
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -26,12 +26,12 @@ from datapaths import DataPaths
 
 def send_eml(subject, body):
     """Sends an email using the from and to addresses and password defined in
-    the settings.py file.
+    the DataPaths(main_data_dir).py file.
     """
     # Compose email.
-    fromaddr = settings.fromaddr
-    pswd = settings.pswd
-    toaddr = settings.toaddr
+    fromaddr = DataPaths(main_data_dir).fromaddr
+    pswd = DataPaths(main_data_dir).pswd
+    toaddr = DataPaths(main_data_dir).toaddr
 
     # Send email.
     msg = MIMEMultipart()

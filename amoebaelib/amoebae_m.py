@@ -84,8 +84,8 @@ def get_seqs_from_fasta_db(db_name, accs, slow=False):
     """Returns a list of SeqRecord objects corresponding to the given accessions
     in the given database file. 
     """
-    # Get database directory from settings module.
-    db_dir = settings.dbdirpath
+    # Get database directory from DataPaths(main_data_dir) module.
+    db_dir = DataPaths(main_data_dir).dbdirpath
 
     # Get database filepath.
     #db_path = os.path.join(db_dir, db_name)
@@ -174,8 +174,8 @@ def get_subseq_from_fasta_db(db_name, acc, subseq_coord):
     Note: the input subsequence coordinates ('subseq_coord') are the start and
     end residue numbers for the subsequence, not python-style slices.
     """
-    # Get database directory from settings module.
-    db_dir = settings.dbdirpath
+    # Get database directory from DataPaths(main_data_dir) module.
+    db_dir = DataPaths(main_data_dir).dbdirpath
 
     # Get database filepath.
     #db_path = os.path.join(db_dir, db_name)
@@ -255,10 +255,10 @@ def get_query_title_from_filename(query_filename):
 
 def get_query_title_from_csv(query_filename):
     """Take a query filename, look up corresponding query title in the query
-    directory csv specified in the settings module, and return that.
+    directory csv specified in the DataPaths(main_data_dir) module, and return that.
     """
     # Parse query info csv file.
-    df = pd.read_csv(settings.query_info_csv, encoding='utf-8')
+    df = pd.read_csv(DataPaths(main_data_dir).query_info_csv, encoding='utf-8')
 
     # Return query title.
     df.set_index('Filename', inplace=True)
@@ -267,10 +267,10 @@ def get_query_title_from_csv(query_filename):
 
 def get_query_taxon_from_csv(query_filename):
     """Take a query filename, look up corresponding query taxon in the query
-    directory csv specified in the settings module, and return that.
+    directory csv specified in the DataPaths(main_data_dir) module, and return that.
     """
     # Parse query info csv file.
-    df = pd.read_csv(settings.query_info_csv, encoding='utf-8')
+    df = pd.read_csv(DataPaths(main_data_dir).query_info_csv, encoding='utf-8')
 
     # Return query title.
     df.set_index('Filename', inplace=True)
@@ -280,10 +280,10 @@ def get_query_taxon_from_csv(query_filename):
 def get_species_from_db_csv(taxon):
     """Take a database name/species abbreviation from a taxon name extracted
     from a query filename. If there is a corresponding species name in the
-    database directory information csv file specified in the settings module
+    database directory information csv file specified in the DataPaths(main_data_dir) module
     return that.
     """
-    df = pd.read_csv(settings.db_info_csv, encoding='utf-8')
+    df = pd.read_csv(DataPaths(main_data_dir).db_info_csv, encoding='utf-8')
     # Species name to return is not applicable by default.
     sp = '-'
     for f in list(df['Filename']):
@@ -297,7 +297,7 @@ def get_species_from_db_csv(taxon):
 def get_db_filename_for_query_from_db_csv(taxon):
     """Take a database name/species abbreviation or taxon name extracted from a
     query filename, and if there is a corresponding database file name in the
-    database directory information csv file specified in the settings module,
+    database directory information csv file specified in the DataPaths(main_data_dir) module,
     then return that. Otherwise, just return 'N/A'.
     """
     # Define database file name as not applicable, by default.
@@ -306,12 +306,12 @@ def get_db_filename_for_query_from_db_csv(taxon):
     # Check whether the given "taxon" name exists in the database info csv.
     try:
         # Try loading the dataframe.
-        df = pd.read_csv(settings.db_info_csv, encoding='utf-8')
+        df = pd.read_csv(DataPaths(main_data_dir).db_info_csv, encoding='utf-8')
     except:
         # Print an error message.
         print("""Error: Could not load contents of csv file as pandas dataframe:\n\n
         \t%s\n\nCheck that the file was saved properly in comma separated value
-        format (UTF-8 encoding).""" % settings.db_info_csv)
+        format (UTF-8 encoding).""" % DataPaths(main_data_dir).db_info_csv)
 
         # Exit the script.
         print('Quitting script.')
@@ -331,18 +331,18 @@ def get_species_for_db_filename(db_filename):
     """Takes a database filename, and returns the species name that appears in
     the database info csv file (may be '-' if not applicable).
     """
-    df = pd.read_csv(settings.db_info_csv, encoding='utf-8')
+    df = pd.read_csv(DataPaths(main_data_dir).db_info_csv, encoding='utf-8')
     df.set_index('Filename', inplace=True)
     sp = df.loc[db_filename]['Species (if applicable)']
 
     #print('\nTrying to get species name from genome info csv file.')
-    #print('genome info file path: ' + settings.db_info_csv)
+    #print('genome info file path: ' + DataPaths(main_data_dir).db_info_csv)
     #print('db_filename: ' + db_filename)
     #print('value in species column: ' + sp)
 
     # Check that the value retrieved makes sense.
     assert type(sp) is str, """There is more than one entry (row) for the
-    filename %s in the file %s.""" % (db_filename, settings.db_info_csv)
+    filename %s in the file %s.""" % (db_filename, DataPaths(main_data_dir).db_info_csv)
 
     # Return the species name from the spreadsheet.
     return sp

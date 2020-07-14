@@ -365,13 +365,13 @@ if __name__ == '__main__':
     genetic_code = str(command_line_list[6])
 
     # Get filepath for specified query FASTA filename.
-    query_dir = settings.querydirpath
+    query_dir = DataPaths(main_data_dir).querydirpath
     query_faa_path = os.path.join(query_dir, query_faa)
     assert os.path.isfile(query_faa_path), """Specified query file path is
     not a file: %s""" % query_faa_path
 
     # Get filepath for specified subject FASTA filename.  
-    db_dir = settings.dbdirpath
+    db_dir = DataPaths(main_data_dir).dbdirpath
     target_fna_path = os.path.join(db_dir, target_fna_name)
     assert os.path.isfile(target_fna_path), """Specified database file path is
     not a file: %s""" % target_fna_path

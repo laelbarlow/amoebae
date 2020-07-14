@@ -84,8 +84,8 @@ def determine_search_method(query_exten, db_exten):
     Assuming blastp rather than phmmer for now.
     """
     # Import default methods, for cases where several could be used, from the
-    # settings module.
-    #faa_in_faa = settings.faa_in_faa # phmmer, blastp.
+    # DataPaths(main_data_dir) module.
+    #faa_in_faa = DataPaths(main_data_dir).faa_in_faa # phmmer, blastp.
 
     # Decide on method.
     method = None
@@ -174,7 +174,7 @@ def run_any_search(queryfile,
                    ):
     """Run similarity search.
 
-    Import info from settings.py to specify options for running external
+    Import info from DataPaths(main_data_dir).py to specify options for running external
     software? For example, number of threads.
 
     ***Need to refactor functions in the module_nhmmer_search module?
@@ -188,7 +188,7 @@ def run_any_search(queryfile,
     #version = 'version'
     #version = get_search_software_version(method)
 
-    # Get relevant settings.
+    # Get relevant DataPaths(main_data_dir).
     # Get cutoffs for recording hits.
     blast_evalcut = str(blast_report_evalue_cutoff)
     blast_max_target_seqs = str(blast_max_target_seqs)
@@ -208,7 +208,7 @@ def run_any_search(queryfile,
         # Set the genetic code.
         tblastn_ncbi_gen_code = None
         try:
-            tblastn_ncbi_gen_code = settings.tblastn_ncbi_gen_code
+            tblastn_ncbi_gen_code = DataPaths(main_data_dir).tblastn_ncbi_gen_code
         except:
             tblastn_ncbi_gen_code = '1'
 
@@ -248,9 +248,9 @@ def run_any_search(queryfile,
                 '-o', outfile, actual_queryfile, dbfile]
 
     # Prepend program name with directory path if necesssary and specified in
-    # the settings.py file (this is a work-around for a particular remote
+    # the DataPaths(main_data_dir).py file (this is a work-around for a particular remote
     # server).
-    server_program_dirpath = settings.server_program_dirpath
+    server_program_dirpath = DataPaths(main_data_dir).server_program_dirpath
     run_command = [os.path.join(server_program_dirpath, run_command[0])] +\
     run_command[1:]
 
@@ -285,10 +285,10 @@ def run_all_searches(query_file_list,
     # Current time.
     start_time = time.time()
 
-    # Get query and database directories from settings.
+    # Get query and database directories from DataPaths(main_data_dir).
     if query_dir == None:
-        query_dir = settings.querydirpath
-    db_dir = settings.dbdirpath
+        query_dir = DataPaths(main_data_dir).querydirpath
+    db_dir = DataPaths(main_data_dir).dbdirpath
 
     # Write a query file list file to output directory.
     out_query_file = get_out_query_list_path(outdir)

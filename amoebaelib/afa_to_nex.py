@@ -232,7 +232,7 @@ def align_one_fa(infilepath, outdirpath=None, program=None, aamatrix_path=None,
         outdirpath = os.path.dirname(infilepath)
     outfilename = os.path.basename(infilepath).rsplit('.', 1)[0] + '.afaa'
     outfilepath = os.path.join(outdirpath, outfilename)
-    # Align with muscle with default settings and aamatrix.
+    # Align with muscle with default DataPaths(main_data_dir) and aamatrix.
     align_fa(infilepath, outfilepath, aamatrix_path,\
             program)
 

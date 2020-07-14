@@ -993,13 +993,13 @@ def get_hit_seq_record_and_coord2(search_result_path,
 
 
     # Get full path to query FASTA file.
-    query_dir = settings.querydirpath
+    query_dir = DataPaths(main_data_dir).querydirpath
     query_faa = os.path.join(query_dir, query_filename)
     assert os.path.isfile(query_faa), """Specified query file path is
     not a file: %s""" % query_faa
 
     # Get full path to database FASTA file.
-    db_dir = settings.dbdirpath
+    db_dir = DataPaths(main_data_dir).dbdirpath
     target_fna_path = os.path.join(db_dir, db_filename)
     assert os.path.isfile(target_fna_path), """Specified database file path is
     not a file: %s""" % target_fna_path

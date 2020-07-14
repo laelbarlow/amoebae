@@ -261,7 +261,7 @@ def replace_seqs_in_alignment_with_seqs_from_fasta(alignment, fasta=None):
                 # Determine which databases could correspond to the species name,
                 # given information in the genome info spreadsheet.
                 db_names_with_species_name = []
-                with open(settings.db_info_csv, encoding='utf-8') as infh2:
+                with open(DataPaths(main_data_dir).db_info_csv, encoding='utf-8') as infh2:
                     dfx = pd.read_csv(infh2)
                     for index, row in dfx.iterrows():
                         if species_name.replace('_', ' ') in row['Species (if applicable)']:

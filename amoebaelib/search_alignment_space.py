@@ -1118,7 +1118,7 @@ def get_taxonomic_info(species_name):
     genomes folder, return taxonomic information from that csv file.
     """
     # Define path to info file.
-    info_csv = settings.db_info_csv
+    info_csv = DataPaths(main_data_dir).db_info_csv
 
     # Parse info file with pandas.
     df = pd.read_csv(info_csv, encoding='utf-8')

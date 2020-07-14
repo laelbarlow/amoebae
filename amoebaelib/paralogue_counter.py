@@ -896,7 +896,7 @@ def find_redun_model_recursively(outdir,
             #    # check in.
             #    annotation_file = None
             #    sequence_filename = extra_info_dict[acc][8]
-            #    with open(settings.db_info_csv) as infh:
+            #    with open(DataPaths(main_data_dir).db_info_csv) as infh:
             #        df = pd.read_csv(infh)
             #        for index, row in df.iterrows():
             #            if row['Filename'] == sequence_filename:
@@ -906,7 +906,7 @@ def find_redun_model_recursively(outdir,
             #    # the hit is at the same locus in the nucleotide sequence as
             #    # the peptide sequence hit.
             #    if annotation_file is not None:
-            #        annotation_file_path = os.path.join(settings.dbdirpath,
+            #        annotation_file_path = os.path.join(DataPaths(main_data_dir).dbdirpath,
             #                annotation_file)
 
             #        # Call function for getting IDs of overlapping genes.
@@ -1850,7 +1850,7 @@ def get_relevant_annot_sql_file(sequence_filename):
     # Determine whether there is a relevant annotation file to
     # check in.
     annotation_file = None
-    with open(settings.db_info_csv, encoding='utf-8') as infh:
+    with open(DataPaths(main_data_dir).db_info_csv, encoding='utf-8') as infh:
         dfx = pd.read_csv(infh)
         for index, row in dfx.iterrows():
             if row['Filename'] == sequence_filename:
@@ -1864,11 +1864,11 @@ def get_relevant_annot_sql_file(sequence_filename):
                 # If a filename was found, check that it exists at the expected
                 # path.
                 if annotation_file is not None:
-                    annotation_file_path = os.path.join(settings.dbdirpath,
+                    annotation_file_path = os.path.join(DataPaths(main_data_dir).dbdirpath,
                             annotation_file)
                     assert os.path.isfile(annotation_file_path), """No file exists
                     at path %s as indicated in the genome info file %s.""" % \
-                    (annotation_file_path, settings.db_info_csv)
+                    (annotation_file_path, DataPaths(main_data_dir).db_info_csv)
 
     # If there is no annotation file listed, then
     # see whether there is a gff file with the same
@@ -1879,7 +1879,7 @@ def get_relevant_annot_sql_file(sequence_filename):
         possible_sql_filename =\
         sequence_filename.rsplit('.', 1)[0] + ".sql"
         # Define the possible file path.
-        possible_file_path = os.path.join(settings.dbdirpath,
+        possible_file_path = os.path.join(DataPaths(main_data_dir).dbdirpath,
                 possible_sql_filename)
         # Check whether that path exists.
         if os.path.isfile(possible_file_path):
@@ -1947,7 +1947,7 @@ def count_paralogues3(csv_file,
     paralogue_count_id = 'paralogue_count_' + timestamp
 
     # Define directory to acces with alignments.
-    alignmentdir = settings.querydirpath
+    alignmentdir = DataPaths(main_data_dir).querydirpath
 
     # Define an output directory for the results (alignments and summary csv file).
     outdir = os.path.join(csv_file.rsplit('.', 1)[0]  + '_' + paralogue_count_id)
@@ -2149,10 +2149,10 @@ def count_paralogues3(csv_file,
                 ## (Should this be done at a later stage so that it can be
                 ## determined whether it is redundant with a protein model due
                 ## to location in the genome?)
-                #elif int(percent_len) < settings.minimum_percent_length_of_query_to_be_distinct_paralogue:
+                #elif int(percent_len) < DataPaths(main_data_dir).minimum_percent_length_of_query_to_be_distinct_paralogue:
                 #    df.at[index, 'Comparison with other positive hits in the same genome'] =\
                 #    '(Hit length is less than %s percent of query length, therefore too short to be a potential distinct paralogue)'\
-                #            % str(settings.minimum_percent_length_of_query_to_be_distinct_paralogue)
+                #            % str(DataPaths(main_data_dir).minimum_percent_length_of_query_to_be_distinct_paralogue)
                 ## Ignore hits that are below the absolute minimum length.
                 #...
 
@@ -2266,7 +2266,7 @@ def count_paralogues3(csv_file,
                                 assert type(annotation_file).__name__ == 'str'
 
                                 # Join the paths.
-                                annotation_file_path = os.path.join(settings.dbdirpath,
+                                annotation_file_path = os.path.join(DataPaths(main_data_dir).dbdirpath,
                                         annotation_file)
 
                                 # Call function for determining whether the
@@ -2429,7 +2429,7 @@ def count_paralogues3(csv_file,
                     assert type(annotation_file).__name__ == 'str'
 
                     # Join the paths.
-                    annotation_file_path = os.path.join(settings.dbdirpath,
+                    annotation_file_path = os.path.join(DataPaths(main_data_dir).dbdirpath,
                             annotation_file)
 
                     # Call function for getting IDs of overlapping genes.
