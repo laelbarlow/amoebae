@@ -836,10 +836,10 @@ Miscellaneous commands:
         #with open(bash_script_path, 'w') as o:
         #    o.write(content_template)
 
-        # Write output bash script for running searches.
-        with open(run_searches.get_out_bash_path(outdir), 'w') as o:
-            o.write(settings.bash_script_content)
-            o.write('run_fwd_srch.py' + ' ' + os.path.join(settings.remote_home_dir, os.path.basename(outdir)))
+        ## Write output bash script for running searches (OBSOLETE).
+        #with open(run_searches.get_out_bash_path(outdir), 'w') as o:
+        #    o.write(settings.bash_script_content)
+        #    o.write('run_fwd_srch.py' + ' ' + os.path.join(settings.remote_home_dir, os.path.basename(outdir)))
 
         # Make output bash script executable?...
 
@@ -875,6 +875,8 @@ Miscellaneous commands:
         #        (CSV) file, which may already contain search summaries.''')
         parser.add_argument('fwd_srch_dir', help='''Path to directory that will
                 contain forward search output files.''')
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
         parser.add_argument('--blast_report_evalue_cutoff', help='''Maximum
         E-value for reporting BLAST hits.''', default=0.05)
         parser.add_argument('--blast_max_target_seqs', help='''Maximum BLAST
@@ -924,12 +926,13 @@ Miscellaneous commands:
 
         # Run searches.
         search.run_all_searches(query_file_list, db_file_list,
-                args.fwd_srch_dir,
+                     args.fwd_srch_dir,
                      args.blast_report_evalue_cutoff,
                      args.blast_max_target_seqs,
                      args.hmmer_report_evalue_cutoff,
                      args.hmmer_report_score_cutoff,
-                     args.num_threads_similarity_searching)
+                     args.num_threads_similarity_searching,
+                     args.main_data_dir)
 
 
     def sum_fwd_srch(self):
