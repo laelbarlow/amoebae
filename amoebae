@@ -1066,6 +1066,8 @@ Miscellaneous commands:
         parser.add_argument('databases', help='''Database filename (in database
                 directory) or path to file with list of database filenames.
                 Note that filenames are needed, not file paths.''')
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
         # Optional arguments.
         parser.add_argument('--outdir', help='''Path to directory to put search
                 results into (so that this step can be piped together with
@@ -1089,7 +1091,7 @@ Miscellaneous commands:
         timestamp = time.strftime("%Y%m%d%H%M%S")
 
         # Get paths to database directory from settings.py file.
-        db_dir = settings.dbdirpath
+        db_dir = DataPaths(args.main_data_dir).dbdirpath
 
         # Check that csv file is in the right place.
         #assert args.srch_dir == os.path.dirname(args.csv_file), """Input csv
@@ -1154,10 +1156,10 @@ Miscellaneous commands:
                 o2.write(os.path.basename(y) + '\n')
 
 
-        # Write output bash script for running searches.
-        with open(run_searches.get_out_bash_path(outdir), 'w') as o:
-            o.write(settings.bash_script_content)
-            o.write('run_rev_srch.py' + ' ' + os.path.join(settings.remote_home_dir, os.path.basename(outdir)))
+        ## Write output bash script for running searches.
+        #with open(run_searches.get_out_bash_path(outdir), 'w') as o:
+        #    o.write(DataPaths(args.main_data_dir).bash_script_content)
+        #    o.write('run_rev_srch.py' + ' ' + os.path.join(settings.remote_home_dir, os.path.basename(outdir)))
 
         # Record end time.
         end_time = time.time()
@@ -1794,24 +1796,24 @@ Miscellaneous commands:
         file does not exist as specified in the settings module."""
 
         # Write input files to new path.
-        alignmentfp = os.path.join(settings.model_dir_path,
+        alignmentfp = os.path.join(DataPaths(args.main_data_dir).model_dir_path,
                 args.model_name + '_' + os.path.basename(args.alignment))
         assert not os.path.isfile(alignmentfp), """File already exists: %s""" % alignmentfp
         shutil.copyfile(args.alignment, alignmentfp)
 
-        topologyfp = os.path.join(settings.model_dir_path,
+        topologyfp = os.path.join(DataPaths(args.main_data_dir).model_dir_path,
                 args.model_name + '_' + os.path.basename(args.tree_topology))
         assert not os.path.isfile(topologyfp), """File already exists: %s""" % topologyfp
         shutil.copyfile(args.tree_topology, topologyfp)
 
-        type_seqsfp = os.path.join(settings.model_dir_path,
+        type_seqsfp = os.path.join(DataPaths(args.main_data_dir).model_dir_path,
                 args.model_name + '_' + os.path.basename(args.type_seqs))
         assert not os.path.isfile(type_seqsfp), """File already exists: %s""" % type_seqsfp
         shutil.copyfile(args.type_seqs, type_seqsfp)
 
         # Add corresponding line to spreadsheet.
         add_to_models.update_models_csv(args.model_name,
-                settings.model_info_csv, alignmentfp, topologyfp, args.subs_model,
+                DataPaths(args.main_data_dir).model_info_csv, alignmentfp, topologyfp, args.subs_model,
                 type_seqsfp, args.taxon)
 
 
