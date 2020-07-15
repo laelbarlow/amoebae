@@ -1050,7 +1050,8 @@ def write_rev_srch_res_to_csv(rev_srch_id,
                               min_evaldiff,
                               timestamp,
                               aasubseq,
-                              max_num_reverse_searches_per_database
+                              max_num_reverse_searches_per_database,
+                              main_data_dir
                               ):
     """Parse output of a forward search (from running the fwd_srch command of
     amoebae) and append rows to input csv with information for interpreting

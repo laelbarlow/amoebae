@@ -1311,6 +1311,8 @@ Miscellaneous commands:
         parser.add_argument('csv_out_path', help='''Path output spreadsheet
                 (CSV) file with reverse search results appended to previous
                 results.''')
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
         parser.add_argument('--redun_hit_csv', help='''Path to spreadsheet
         (CSV) file, which specifies which hits are redundant positive hits for
         a given query (query title) in a given database. If this is not
@@ -1409,7 +1411,8 @@ Miscellaneous commands:
                               args.min_evaldiff,
                               timestamp,
                               args.aasubseq,
-                              args.max_rev_srchs)
+                              args.max_rev_srchs,
+                              args.main_data_dir)
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nReverse search results written/appended to
