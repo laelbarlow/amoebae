@@ -1844,7 +1844,7 @@ def annot_id_matches_prot_id(annot_id,
     return ids_match
 
 
-def get_relevant_annot_sql_file(sequence_filename):
+def get_relevant_annot_sql_file(sequence_filename, main_data_dir):
     """...
     """
     # Determine whether there is a relevant annotation file to
@@ -1894,6 +1894,7 @@ def get_relevant_annot_sql_file(sequence_filename):
 
 
 def count_paralogues3(csv_file,
+                      main_data_dir,
                       #metric_name,
                       #metric_value_minimum,
                       max_percent_ident,
@@ -2256,7 +2257,9 @@ def count_paralogues3(csv_file,
                             # Determine whether there is a relevant annotation file to
                             # check in.
                             sequence_filename = j[8]
-                            annotation_file = get_relevant_annot_sql_file(sequence_filename)
+                            annotation_file =\
+                            get_relevant_annot_sql_file(sequence_filename,
+                                    main_data_dir)
 
                             # If there is an annotation file available, determine whether
                             # the hit is at the same locus in the nucleotide sequence as
@@ -2419,7 +2422,8 @@ def count_paralogues3(csv_file,
                 # Determine whether there is a relevant annotation file to
                 # check in.
                 sequence_filename = x[8]
-                annotation_file = get_relevant_annot_sql_file(sequence_filename)
+                annotation_file =\
+                get_relevant_annot_sql_file(sequence_filename, main_data_dir)
 
                 # If there is an annotation file available, determine whether
                 # the hit is at the same locus in the nucleotide sequence as

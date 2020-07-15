@@ -1587,6 +1587,8 @@ Miscellaneous commands:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('csv_file', help='''Path to spreadsheet with
         interpreted search results outputted by the interp_srchs command.''')
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
         parser.add_argument('--out_csv_path', help='''Optionally specify an
                 output file path, so that this command can be piped together
                 with others.''', default=None)
@@ -1713,6 +1715,7 @@ Miscellaneous commands:
         if not args.add_ali_col: 
             # Write output file with interpetation column appended.
             final_outfp = count_paralogues3(args.csv_file,
+                                            args.main_data_dir,
                                             #args.metric_name,
                                             #args.metric_value_minimum,
                                             args.max_percent_ident,
