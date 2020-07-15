@@ -1180,6 +1180,8 @@ Miscellaneous commands:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('rev_srch_dir', help='''Path to directory that will
                 contain output of searches.''')
+        parser.add_argument('main_data_dir', help='''Path to main data
+                directory (with Genomes, Queries, and Models subdirectories).''')
         parser.add_argument('--blast_report_evalue_cutoff', help='''Maximum
         E-value for reporting BLAST hits.''', default=0.05)
         parser.add_argument('--blast_max_target_seqs', help='''Maximum BLAST
@@ -1286,6 +1288,7 @@ Miscellaneous commands:
                      args.hmmer_report_evalue_cutoff,
                      args.hmmer_report_score_cutoff,
                      args.num_threads_similarity_searching,
+                     args.main_data_dir,
                      query_dir)
 
         # Report output.
