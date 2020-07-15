@@ -2,6 +2,10 @@
 <p align="center">
 <img src="images/AMOEBAE_logo10.png" width="600">
 </p>
+<p align="center">
+<img src="images/Beta_testing.png" width="600">
+</p>
+
 
 ## Quickstart
 
