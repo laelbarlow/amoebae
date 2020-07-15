@@ -14,85 +14,13 @@
 # limitations under the License.
 # 
 """This file contains definitions of variables used by scripts in the AMOEBAE
-toolkit. You will need to modify all paths to work on your machine.
+toolkit. 
 """
 import os
 
-#############################################################################
-# The following settings are required for AMOEBAE to find the data files that
-# you have curated.
-
-# Root directory of your root AMOEBAE data storage directory (this organization
-# is optional, but matches that of the template data directory and allows you
-# to avoid modifying the variables for paths to specific sub-directories and
-# files).
-root_amoebae_data_dir = "AMOEBAE_Data"
-
-
-# Set path to directory containing genome data (predicted peptide sequences,
-# nucleotide scaffolds, etc.).
-dbdirpath =\
-os.path.join(root_amoebae_data_dir, 'Genomes')
-
-# Set path to csv file with information about the relevant genome data.
-db_info_csv =\
-os.path.join(dbdirpath, '0_genome_info.csv')
-
-# Set path to directory containing query files (.faa, .afaa, etc.).
-querydirpath =\
-os.path.join(root_amoebae_data_dir, 'Queries')
-
-# Set path to csv file with information about the relevant query files.
-query_info_csv =\
-os.path.join(querydirpath, '0_query_info.csv')
-
-# Set path to directory containing reference tree (and alignment) files.
-model_dir_path =\
-os.path.join(root_amoebae_data_dir, 'Models')
-
-# Set path to csv file with information about reference tree (and alignment)
-# files.
-model_info_csv =\
-os.path.join(model_dir_path, '0_models_info.csv')
-
 
 #############################################################################
-# The following settings are required for AMOEBAE to write scripts to be run on
-# remote servers (which may not have all the dependencies of AMOEBAE
-# installed).
-
-# Set path to prepend to program calls on a remote server (normally should be
-# an empty string). 
-server_program_dirpath = ''
-
-# Define path to home directory on a remote server.
-remote_home_dir = '/home/lael'
-
-# Define contents for bash scripts:
-bash_script_content =\
-"""##!/bin/bash
-##This is a script for running commands on a server that uses the Torque job
-##scheduler via the 'qsub' command.
-
-##These commands set up the Grid Environment for your job:
-#PBS -N search
-#PBS -l nodes=1,walltime=100:00:00
-#PBS -q default
-##PBS -M your email here
-#PBS -m abe
-##Print the Host name of Node
-echo "Hostname is " $HOSTNAME
-##print the time and date
-##Print  working Directory
-pwd
-##Print Date
-date
-##Send command to Cluster nodes.
-"""
-
-
-#############################################################################
-# The following are miscelaneous settings.
+# The following are miscellaneous settings.
 
 # Set variables to be used for the align_fa.py script.
 blosum62_path = '~/Documents/Scripts/amoebae/amoebaelib/blosum62'
