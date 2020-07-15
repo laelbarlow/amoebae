@@ -25,7 +25,7 @@ import subprocess
 import glob
 import re
 from ete3 import Tree
-from DataPaths(main_data_dir) import raxmlname
+from settings import raxmlname
 from name_replace import write_newick_tree_with_uncoded_names
 
 
