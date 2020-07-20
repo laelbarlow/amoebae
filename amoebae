@@ -32,6 +32,9 @@ import time
 
 #import pandas as pd
 
+# Import the settings module.
+import settings
+
 # Import module specifically written for this script (command-specific modules
 # imported below).
 import amoebae_m
@@ -206,7 +209,6 @@ Miscellaneous commands:
         find_and_test_all_import_statements_in_amoebae()
 
 
-    # Incomplete function:
     def mkdatadir(self):
         parser = argparse.ArgumentParser(
             description="""Make a directory with subdirectories and CSV files for
@@ -214,9 +216,6 @@ Miscellaneous commands:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('new_dir_path', help='''Specify the full file path
                 that you want the new directory to have.''')
-        # now that we're inside a subcommand, ignore the first
-        # two argvs, ie the command (add_to_db) and the subcommand(s)
-        # (new_file).
         args = parser.parse_args(sys.argv[2:])
 
         # Define timestamp for directory.
@@ -230,16 +229,6 @@ Miscellaneous commands:
         os.path.join('templates', 'template_data_storage_directory')) 
         shutil.copytree(path_to_template_dir, args.new_dir_path)
 
-        # Print message to prompt user to add the path to the main data
-        # directory to their settings.py file.
-        #print("""
-        #
-        #To allow AMOEBAE scripts to locate your new data directory, change the
-        #value of the root_amoebae_data_dir variable in the settings.py file to
-        #the full path to the directory:
-
-        #%s
-        #""" % args.new_dir_path)
 
 
     def regen_genome_info(self):

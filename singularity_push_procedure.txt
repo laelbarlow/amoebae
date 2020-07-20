@@ -5,31 +5,32 @@ container library.
 Rationale: It's a better place to store built singularity containers than
 GitHub, due to the file size, and users can download them quickly. 
 
-1. Log into account at https://cloud.sylabs.io/home.
+1. On macOS, navigate to amoebae repository in Terminal.
 
-2. Navigate to amoebae containers.
-
-3. Click "Push A New Image".
-
-4. Generate new access token and save to clipboard.
-
-5. On macOS, navigate to amoebae repository in Terminal.
-
-6. Spin up a virtual machine running linux:
+2. Spin up a virtual machine running linux:
 
     vagrant up
 
-7. Log into the virtual machine:
+3. Log into the virtual machine:
 
     vagrant ssh
 
-8. Copy the (updated) singularity.sif file to the virtual machine:
+4. Copy the (updated) singularity.sif file to the virtual machine:
     
     cp amoebae/singularity.sif singularity.sif
 
-9. Enter this command to sign the image, and follow prompts:
+5. Enter this command to sign the image, and follow prompts:
 
     singularity sign singularity.sif
+
+6. Log into account at https://cloud.sylabs.io/home.
+
+7. Navigate to amoebae containers.
+
+8. Click "Push A New Image".
+
+9. Generate new access token and save to clipboard, and paste to the Terminal
+window.
 
 10. Enter this command to push the image to the Sylabs library:
 
