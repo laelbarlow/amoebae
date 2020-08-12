@@ -69,9 +69,11 @@ can be opened with your web browser: [Code
 documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/code_documentation/html/index.html).
 
 
-## Reporting problems
+## Contact info
 
-Please use the [issue tracker](https://github.com/laelbarlow/amoebae/issues) on
+For general inquiries, please contact the author at amoebae.software@gmail.com.
+
+Also, please use the [issue tracker](https://github.com/laelbarlow/amoebae/issues) on
 the GitHub webpage to report any problems you encounter while using AMOEBAE.
 
 
