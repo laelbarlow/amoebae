@@ -363,7 +363,8 @@ def write_seqs_to_fasta(csv_file,
     """
     # Define output subdirectories.
     #subdirpath = output_fasta.rsplit('.', 1)[0] + '_fasta_files'
-    subdirpath = output_dir + '_fasta_files'
+    #subdirpath = output_dir + '_fasta_files'
+    subdirpath = output_dir
     assert not os.path.isdir(subdirpath), """Output directory already
     exists: %s""" % subdirpath
 

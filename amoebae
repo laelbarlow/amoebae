@@ -2133,10 +2133,13 @@ Miscellaneous commands:
         action='store_true')
         args = parser.parse_args(sys.argv[2:])
 
+        # Define output directory path.
         output_dir = None
         if args.output_dir is None:
            #output_fasta = args.csv_file.rsplit('.', 1)[0] + '.fa' 
-           output_dir = args.csv_file.rsplit('.', 1)[0]
+           output_dir = args.csv_file.rsplit('.', 1)[0] + '_fasta_files'
+        else:
+            output_dir = args.output_dir
 
         amoebae_m.write_seqs_to_fasta(args.csv_file, 
                                       output_dir,
