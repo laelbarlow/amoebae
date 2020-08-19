@@ -2728,8 +2728,8 @@ Miscellaneous commands:
             input file.""")
         parser.add_argument('input_file_path', help='''Path to a multiple
         peptide sequence file in FASTA format.''')
-        parser.add_argument('--output_file_path', help='''Path to output
-        multiple sequence alignment file.''',
+        parser.add_argument('--output_dir_path', help='''Path to output
+        directory to contain multiple sequence alignment file(s).''',
         default=None)
         parser.add_argument('--output_format', help='''Multiple sequence
         alignment format for output file. Valid options are 'fasta' or
@@ -2774,7 +2774,7 @@ Miscellaneous commands:
 
         # Align the fasta file.
         main_out_path = align_one_fa(args.input_file_path,
-                                             args.output_file_path,
+                                             args.output_dir_path,
                                              program,
                                              aamatrix_path,
                                              conv_to_nexus_format)

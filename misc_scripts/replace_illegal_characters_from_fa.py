@@ -22,7 +22,6 @@ import shutil
 import time
 from afa_to_nex import afa_to_nex, nex_to_afa
 from afa_to_fa import afa_to_fa
-from afa_to_nex import align_one_fa
 from subprocess import call
 from parse_mod_num import update_mod_num_numeric
 
