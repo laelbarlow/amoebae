@@ -153,9 +153,9 @@ mv muscle3.8.31_i86linux64 muscle
 # a reproducibility issue.
 #apt-get -y install python3-pip
 pip install --upgrade pip
-pip install gffutils=0.10.1
-pip install PyPDF2=1.26.0
-pip install reportlab=3.5.48
+pip install gffutils==0.10.1
+pip install PyPDF2==1.26.0
+pip install reportlab==3.5.48
 
 # Install exonerate for exon prediction (at least better than TBLASTN).
 #RUN echo '***********************************' && \
