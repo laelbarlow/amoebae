@@ -73,13 +73,13 @@ conda install -y python=3.6.9
 # conda.
 apt-get install -y libgl1-mesa-dev
 # PyQt5 is necessary for ete3 to generate graphics.
-conda install -y pyqt
+conda install -y pyqt=5.9.2
 # Check that PyQt5 can actually be imported via python3.
 python3 -c "from PyQt5 import QtGui"
 
 # Install ete3 (the ete3 external tools are not available for install via conda
 # on linux).
-conda install -y -c etetoolkit ete3 ete_toolchain
+conda install -y -c etetoolkit ete3=3.1.1 ete_toolchain
 # Check that ete3 was installed correctly.
 ete3 build check
 # This raises a missing external tool "slr".
@@ -114,7 +114,7 @@ ete3 build check
 
 # Install biopython for parsing various bioinformatics software output files,
 # etc.
-conda install -y -c anaconda biopython
+conda install -y -c anaconda biopython=1.77
 
 # Install NCBI BLAST for similarity searching.
 #RUN conda install -c bioconda blast
@@ -153,9 +153,9 @@ mv muscle3.8.31_i86linux64 muscle
 # a reproducibility issue.
 #apt-get -y install python3-pip
 pip install --upgrade pip
-pip install gffutils
-pip install PyPDF2
-pip install reportlab
+pip install gffutils=0.10.1
+pip install PyPDF2=1.26.0
+pip install reportlab=3.5.48
 
 # Install exonerate for exon prediction (at least better than TBLASTN).
 #RUN echo '***********************************' && \
@@ -167,10 +167,10 @@ pip install reportlab
 #
 #ENV PATH "$PATH:/home/amoebae_user/software/exonerate-2.2.0-x86_64/bin"
 # Install via conda.
-conda install -y -c bioconda exonerate
+conda install -y -c bioconda exonerate=2.4.0
 
 # Install jupyter.
-conda install jupyter
+conda install jupyter=1.0.0
 
 # Install and enable relevant jupyter notebook extensions.
 # This includes the TableOfContents (toc2) extension for navigating large jupyter
@@ -197,10 +197,10 @@ pip install bibtexparser
 #conda update jupyter
 
 # Install pandas for working with spreadsheets, etc.
-conda install pandas
+conda install pandas=1.1.0
 
 # Install matplotlib for plotting.
-conda install -c conda-forge matplotlib
+conda install -c conda-forge matplotlib=3.3.1
 
 ## Install snakemake in an environment called "snakemake".
 ## To activate the snakemake environment, type "conda activate snakemake".
@@ -208,7 +208,7 @@ conda install -c conda-forge matplotlib
 #mamba create -c conda-forge -c bioconda -n snakemake snakemake
 
 # Install snakemake.
-conda install -c bioconda snakemake
+conda install -c bioconda snakemake=3.13.3
 
 # Install graphics package for visualizing snakemake pipelines.
 apt-get install -y graphviz
