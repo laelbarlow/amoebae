@@ -332,9 +332,6 @@ def make_coulson_plot(column_labels_simple,
                       complex_info_file):
     """Make a coulson plot.
     """
-    # Re-organize species order based on input file list order.
-    #????
-
     # Define basic input parameters.
     num_species = len(row_labels_simple)
 
@@ -486,9 +483,15 @@ def make_coulson_plot(column_labels_simple,
                             #print(species)
                             #print('\n\n\n')
                             italic_species = '$\it{' + species.split(' ')[0] + '}$' + ' ' + '$\it{' + species.split(' ')[1] + '}$'
+
                             # Add a title for the complex.
                             title = axs[i,j].set_title(italic_species,
-                                    fontsize=species_font_size)
+                                    fontsize=species_font_size,
+                                    y=1.0) # "y=1.0" is necessary to center the
+                            #row labels vertically with the rows of subplots,
+                            #because the set_position method does not seem to
+                            #work for this anymore.
+
                             #offset = np.array([-0.75, -0.6])
                             #title.set_position(title.get_position() + offset)
                             title.set_position(np.array([0.0, 0.0]) + offset)
@@ -588,7 +591,8 @@ def make_coulson_plot(column_labels_simple,
                             italic_species = '$\it{' + species.split(' ')[0] + '}$' + ' ' + '$\it{' + species.split(' ')[1] + '}$'
                             # Add a title for the complex.
                             title = axs[i,j].set_title(italic_species,
-                                    fontsize=species_font_size)
+                                    fontsize=species_font_size,
+                                    y=1.0)
                             #offset = np.array([-0.75, -0.6])
                             #title.set_position(title.get_position() + offset)
                             title.set_position(np.array([0.0, 0.0]) + offset)
