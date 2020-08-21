@@ -228,15 +228,51 @@ def update_query_csv(csv_file, mod_query_path, datatype, main_data_dir):
     assert not '???' in new_row.loc[0], """Could not add all the necessary info
     to the query info spreadsheet for query file:\n\t%s""" % mod_query_path
 
+    ## Get new row as text appropriate for a line in a CSV file.
+    #new_row_csv_text = get_csv_line_text_from_pd_row(new_row)
+
+    ## Append new line/row to CSV file.
+    #subprocess.call(['echo', new_row_csv_text, '>>', csv_file])
+
+
     # Append new row to dataframe.
     df = df.append(new_row, ignore_index=True)
 
-    # Re-order columns in output dataframe.
-    df = df[new_row.columns]
+    ## Re-order columns in output dataframe (unnecessary?).
+    #df = df[new_row.columns]
+
+    ## Reduce likelihood of writing to the same file at the same time from
+    ## different processes (***this is not an optimal solution!).
+    #time.sleep(random.randint(1,30))
 
     # Write updated dataframe to csv file.
     #df[1:].to_csv(csv_file) 
-    df.to_csv(csv_file, index=False) 
+    #df.to_csv(csv_file, index=False) 
+
+    temp_file = os.path.join(os.path.dirname(csv_file), query_basename + '_temp_row.csv')
+
+    # Write updated dataframe to temporary CSV file.
+    df.to_csv(temp_file, index=False) 
+
+    # Append the last line of the temporary CSV file to the main CSV file.
+    # (This should be more robust to writing from multiple processes).
+    with open(temp_file) as infh, open(csv_file, 'a') as o:
+        lines = infh.read().splitlines()
+        last_line = lines[-1]
+        o.write('\n' + last_line)
+
+    # Remove temporary CSV file.
+    os.remove(temp_file)
+
+
+    # Check that the CSV was actually updated with the information about this
+    # query file.
+    csv_text = None
+    with open(csv_file) as infh:
+        csv_text = infh.read()
+    assert query_basename in csv_text, """Error: Information about the
+    query with filename %s was not added to the CSV file at path %s.""" \
+            % (query_basename, csv_file)
 
     # Report activity:
     #print('Information added to spreadsheet %s:' % os.path.basename(csv_file))

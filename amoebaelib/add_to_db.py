@@ -236,3 +236,4 @@ def update_csv(outfp, csv_file):
                    + cur_date \
                    + '\n')
 
+
