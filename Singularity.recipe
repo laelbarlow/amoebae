@@ -29,13 +29,19 @@ From: debian:sha256.85e28e6a4e8934e427ab050f8d895a94029e8cf471d6e0bc9d8a9735f0a0
 # https://hub.docker.com/r/continuumio/anaconda3/dockerfile
 
 %environment
-#export LANG=C.UTF-8
-#export LC_ALL=C.UTF-8
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
-# Try to update the locale so snakemake works (the /etc/default/locale file is
-# empty)...
-echo -e 'LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8' > /etc/default/locale # Doesn't seem to work...
+##export LANG=C.UTF-8
+##export LC_ALL=C.UTF-8
+#export LANG="en_US.UTF-8"
+#export LC_ALL="en_US.UTF-8"
+## Try to update the locale so snakemake works (the /etc/default/locale file is
+## empty)...
+#echo -e 'LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8' > /etc/default/locale # Doesn't seem to work...
+
+echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+locale-gen en_US.UTF-8
+
 export PATH=/opt/conda/bin:$PATH
 
 %post
