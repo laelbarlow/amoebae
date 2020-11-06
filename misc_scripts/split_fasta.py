@@ -51,6 +51,8 @@ parser.add_argument('infp1', help='fasta file to be split.')
 
 args = parser.parse_args()
 
+
+
 def split_fasta(infilepath, subdirname):
     """Takes a fasta files and writes new fasta files in a subdirectory for
     each sequence in the fasta file.
@@ -130,6 +132,81 @@ def do_split_fasta2(infapath):
     # Split the input fasta file.
     split_fasta2(infapath, subdirname)
 
+
+def split_fasta3(infilepath, subdirname):
+    """Takes a fasta files and writes new fasta files in a subdirectory for
+    each sequence in the fasta file.
+    """
+
+    # Define dictionary with query titles as keys and uniprot IDs as values.
+    ne_query_titles = {}
+    #with open('query_title_id.csv', 'r', encoding='utf8') as infh:
+    with open('query_title_id.csv', 'r') as infh:
+        for i in infh:
+            s = i.split(',')
+            query_title = s[0].strip()
+            seq_id = s[1].strip()
+            ne_query_titles[query_title] = seq_id
+
+
+    print('\nSplitting fasta file: ' + infilepath + '\n')
+
+    for title in ne_query_titles.keys():
+        print('\n' + title)
+        query_title = None
+
+        # Loop through the sequences in the input fasta file
+        with open(infilepath) as i:
+            fasta_sequences = SeqIO.parse(i,'fasta')
+            num = 0
+            for seq in fasta_sequences:
+                num += 1
+                split_header = seq.description.split(' ', 1)
+                #acc = split_header[0]
+                #acc = seq.description
+                acc = seq.description.split('|')[1]
+                print('\t' + acc)
+                organism = seq.description.split(' ')[0].rsplit('_', 1)[1]
+                #dbname = split_header[1].split('_', 1)[0]
+                #protname = split_header[1].split('_', 1)[1]
+
+                if ne_query_titles[title] == acc:
+                    print('\t' + 'match')
+                    query_title = title
+
+                    #filename = dbname + '_' + acc[:25] + '_' + protname
+                    #filename = dbname + '_' + protname + '_' + acc[:25]
+                    #filename = 'QcSNARE2' + '_' + acc[:25].replace('|', '_').replace(' ', '_').replace('/', '_') + '_2'
+                    #filename = acc[:25].replace('|', '_').replace(' ', '_').replace('/', '_') + '_2'
+                    filename = query_title + '_' + acc + '_' + organism
+
+                    print('Writing file: ' + filename + '.fa')
+                    
+                    seqfilename = os.path.join(subdirname, filename + '.faa')
+                    with open(seqfilename, 'w') as seqf:
+                        SeqIO.write([seq],seqf,'fasta')
+
+                if query_title is not None:
+                    break
+
+        assert query_title is not None, """Error: No sequence found for
+        query title %s and ID %s.""" % (title, ne_query_titles[title])
+
+
+    
+def do_split_fasta3(infapath):
+    """Do the whole process
+    """
+    # Make a subdirectory for storing individual sequence files.
+    subdirname = infapath.rsplit('.', 1)[0] + '_queries'
+    os.mkdir(subdirname)
+
+    # Split the input fasta file.
+    split_fasta3(infapath, subdirname)
+
+
 if __name__ == '__main__':
+
     do_split_fasta(args.infp1)
     #do_split_fasta2(args.infp1)
+    #do_split_fasta3(args.infp1)

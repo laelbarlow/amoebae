@@ -93,10 +93,23 @@ class SrchResFile:
         else:
             pass # ...
 
+        # Define a list of SearchIO Hit objects.
+        self.hits = None
+        if not self.format == 'hhsearch':
+            self.hits = list(SearchIO.read(self.filepath, self.format))
+
+            # Handle hmmsearch results differently.
+            if self.format == 'hmmer3-tab':
+                # Re-order hits by ascending E-value of best 1 domain
+                # (otherwise sequences with multiple repetitive domains may be
+                # retrieved with lower E-values despite low sequence similarity
+                # of each of the constituent domains with the query HMM).
+                self.hits.sort(key=lambda x: x[0].evalue)
+
         # Determine number of hits in input file.
         self.num_hits = None
         if not self.format == 'hhsearch':
-            self.num_hits = len(SearchIO.read(filepath, self.format))
+            self.num_hits = len(self.hits)
             assert self.num_hits is not None, """Could not determine the number of
             hits listed in the similarity search result file: %s"""\
             % filepath
@@ -114,7 +127,7 @@ class SrchResFile:
         assert self.format != 'hmmer3-tab', """Does not work with tabular
         format."""
         if not self.format == 'hhsearch':
-            p = SearchIO.read(filepath, self.format)
+            p = self.hits
             self.db_file = os.path.basename(p.target)
 
         else:
@@ -135,13 +148,14 @@ class SrchResFile:
         %s""" % self.db_file_path
 
 
+
     def hit_id(self, hit_rank):
         """Return id (accession) (if present) for sequence/profile with a given
         rank in the results.
         """
         hit_id = None
         if not self.format == 'hhsearch':
-            hit_id = SearchIO.read(self.filepath, self.format)[hit_rank].id
+            hit_id = self.hits[hit_rank].id
 
         else:
             pass # ...
@@ -161,7 +175,7 @@ class SrchResFile:
         hit_ids = []
 
         if not self.format == 'hhsearch':
-            hit_ids = [x.id for x in SearchIO.read(self.filepath, self.format)]
+            hit_ids = [x.id for x in self.hits]
 
         else:
             pass # ...
@@ -175,11 +189,9 @@ class SrchResFile:
         """
         hit_descr = None
         if not self.format == 'hhsearch':
-            hit_descr = SearchIO.read(self.filepath,\
-                    self.format)[hit_rank].description
+            hit_descr = self.hits)[hit_rank].description
             if hit_descr == '':
-                hit_descr = SearchIO.read(self.filepath,\
-                        self.format)[hit_rank].id
+                hit_descr = self.hits)[hit_rank].id
 
         else:
             pass # ...
@@ -210,8 +222,7 @@ class SrchResFile:
                     break
 
         elif self.format == 'hmmer3-text':
-            hit_evalue = SearchIO.read(self.filepath,\
-                    self.format)[hit_rank].evalue
+            hit_evalue = self.hits)[hit_rank].evalue
 
         elif self.format == 'hhsearch':
             pass # ...
@@ -248,8 +259,7 @@ class SrchResFile:
                     break
 
         elif self.format == 'hmmer3-text':
-            hit_score = SearchIO.read(self.filepath,\
-                    self.format)[hit_rank].bitscore
+            hit_score = self.hits)[hit_rank].bitscore
 
         elif self.format == 'hhsearch':
             pass # ...
@@ -295,13 +305,12 @@ class SrchResFile:
 
         # Get hit object with SearchIO parser.
         searchio_hit_obj = None
-        with open(self.filepath) as infh:
-            hit_num = -1 
-            for hit in SearchIO.read(infh, self.format):
-                hit_num += 1
-                if hit_num == hit_rank:
-                    searchio_hit_obj = hit
-                    break
+        hit_num = -1 
+        for hit in self.hits:
+            hit_num += 1
+            if hit_num == hit_rank:
+                searchio_hit_obj = hit
+                break
 
         # Check that hit object was retreived.
         assert searchio_hit_obj != None, """Could not retrieve Bio.SearchIO
@@ -373,13 +382,12 @@ class SrchResFile:
         """
         first_nonredun_hit_rank = None
 
-        with open(self.filepath) as infh:
-            hit_num = -1 
-            for hit in SearchIO.read(infh, self.format):
-                hit_num += 1
-                if hit.id not in redun_hit_id_list:
-                    first_nonredun_hit_rank = hit_num
-                    break
+        hit_num = -1 
+        for hit in self.hits:
+            hit_num += 1
+            if hit.id not in redun_hit_id_list:
+                first_nonredun_hit_rank = hit_num
+                break
 
         # Return the rank.
         return first_nonredun_hit_rank
