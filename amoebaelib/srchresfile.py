@@ -84,6 +84,8 @@ class SrchResFile:
         assert self.format is not None, """Could not determine the name of
         the format type of the similarity search result file: %s"""\
         % filepath
+        assert self.format != 'hmmer3-tab', """Does not work with tabular
+        format."""
 
         # Check that the file contains only results for a search with a single
         # query.
@@ -96,15 +98,7 @@ class SrchResFile:
         # Define a list of SearchIO Hit objects.
         self.hits = None
         if not self.format == 'hhsearch':
-            self.hits = list(SearchIO.read(self.filepath, self.format))
-
-            # Handle hmmsearch results differently.
-            if self.format == 'hmmer3-tab':
-                # Re-order hits by ascending E-value of best 1 domain
-                # (otherwise sequences with multiple repetitive domains may be
-                # retrieved with lower E-values despite low sequence similarity
-                # of each of the constituent domains with the query HMM).
-                self.hits.sort(key=lambda x: x[0].evalue)
+            self.hits = SearchIO.read(self.filepath, self.format)
 
         # Determine number of hits in input file.
         self.num_hits = None
@@ -124,8 +118,6 @@ class SrchResFile:
         #self.query_file = None
         self.db_file = None
 
-        assert self.format != 'hmmer3-tab', """Does not work with tabular
-        format."""
         if not self.format == 'hhsearch':
             p = self.hits
             self.db_file = os.path.basename(p.target)
@@ -147,6 +139,14 @@ class SrchResFile:
         assert os.path.isfile(self.db_file_path), """Path to database is not a file:
         %s""" % self.db_file_path
 
+        # Handle hmmsearch results differently.
+        if self.format == 'hmmer3-text':
+            # Re-order hits by ascending E-value of best 1 domain
+            # (otherwise sequences with multiple repetitive domains may be
+            # retrieved with lower E-values despite low sequence similarity
+            # of each of the constituent domains with the query HMM).
+            self.hits = list(self.hits)
+            self.hits.sort(key=lambda x: x[0].evalue)
 
 
     def hit_id(self, hit_rank):
@@ -189,9 +189,9 @@ class SrchResFile:
         """
         hit_descr = None
         if not self.format == 'hhsearch':
-            hit_descr = self.hits)[hit_rank].description
+            hit_descr = self.hits[hit_rank].description
             if hit_descr == '':
-                hit_descr = self.hits)[hit_rank].id
+                hit_descr = self.hits[hit_rank].id
 
         else:
             pass # ...
@@ -222,7 +222,7 @@ class SrchResFile:
                     break
 
         elif self.format == 'hmmer3-text':
-            hit_evalue = self.hits)[hit_rank].evalue
+            hit_evalue = self.hits[hit_rank].evalue
 
         elif self.format == 'hhsearch':
             pass # ...
@@ -259,7 +259,7 @@ class SrchResFile:
                     break
 
         elif self.format == 'hmmer3-text':
-            hit_score = self.hits)[hit_rank].bitscore
+            hit_score = self.hits[hit_rank].bitscore
 
         elif self.format == 'hhsearch':
             pass # ...
