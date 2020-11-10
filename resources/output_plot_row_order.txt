@@ -1,0 +1,10 @@
+Arabidopsis_thaliana.faa
+Arabidopsis_thaliana.fna
+Trypanosoma_brucei.faa 
+Trypanosoma_brucei.fna 
+Dictyostelium_discoideum.faa
+Dictyostelium_discoideum.fna
+Allomyces_macrogynus.faa
+Allomyces_macrogynus.fna
+Saccharomyces_cerevisiae.faa
+Saccharomyces_cerevisiae.fna
