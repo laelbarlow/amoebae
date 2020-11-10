@@ -155,7 +155,7 @@ rm -rf $PYENVDIR
 #######################################################
 
 # Download singularity container.
-bash scripts/singularity_pull.sh
+#bash scripts/singularity_pull.sh
 
 
 #######################################################
