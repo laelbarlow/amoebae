@@ -5,46 +5,25 @@ channels:
     - etetoolkit
     - conda-forge
 dependencies:
-    #- python=3.6.9
-    #- mesa-libgl-cos6-x86_64=11.0.7
-    #- pyqt=5.9.2
-    #- ete3=3.1.1
-    #- ete_toolchain
-    #- biopython=1.77
-    #- blast=2.9.0
-    #- hmmer=3.3.1
-    #- muscle=3.8.1551
-    #- gffutils=0.10.1
-    #- pypdf2=1.26.0
-    #- reportlab=3.5.51
-    #- exonerate=2.4.0
-    #- texlive-core=20180414
-    #- pandoc=2.11.0.4
-    #- bibtexparser=1.0.1
-    #- pandas=1.1.0
-    #- matplotlib=3.3.1
-    #- graphviz=2.40.1
-    #- certifi
-    #- requests
     - python=3.6.9
-    - mesa-libgl-cos6-x86_64
-    - pyqt
-    - ete3
-    - ete_toolchain
+    - mesa-libgl-cos6-x86_64=11.0.7
+    - pyqt=5.9.2
+    - ete3=3.1.1
+    - ete_toolchain=3.0.0
     - biopython=1.77
     - blast=2.9.0
-    - hmmer
-    - muscle
-    - gffutils
-    - pypdf2
-    - reportlab
-    - exonerate
-    - texlive-core
-    - pandoc
-    - bibtexparser
-    - pandas
-    - matplotlib
-    - graphviz
+    - hmmer=3.3.1
+    - muscle=3.8.31
+    - gffutils=0.10.1
+    - pypdf2=1.26.0
+    - reportlab=3.5.51
+    - exonerate=2.4.0
+    - texlive-core=20180414
+    - pandoc=2.11
+    - bibtexparser=1.1.0
+    - pandas=1.1.3
+    - matplotlib=3.3.1
+    - graphviz=2.40.1
+    - snakemake-minimal=5.27.4
     - certifi
     - requests
-    - snakemake-minimal

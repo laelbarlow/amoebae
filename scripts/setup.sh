@@ -1,18 +1,4 @@
 #!/usr/bin/env bash
-# Copyright 2018 Lael D. Barlow
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#     http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# 
 
 # Script for setting up AMOEBAE to run in a singularity container after cloning
 # the git repository. This is a bash script so it does not depend on python3
@@ -22,21 +8,6 @@
 
 # Start timing this script.
 SECONDS=0
-
-
-#######################################################
-# Copy the example settings file.
-if [ ! -f "settings.py" ]; then
-    printf "\tWriting settings file.\n\n"
-    cp settings.py.example settings.py
-fi
-
-
-#######################################################
-# Make scripts executable.
-chmod a+x amoebae
-chmod a+x misc_scripts/*.py
-chmod a+x misc_scripts/*.sh
 
 
 #######################################################
@@ -206,15 +177,6 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     exit 1
 fi
 
-
-
-#######################################################
-# Run test code using pytest. This runs all the tests defined in files in the
-# tests subdirectory.
-#printf "\nTesting AMOEBAE source code using PyTest..." &&\
-#docker run --rm -it \
-#    -v ${PWD}:/opt/amoebae \
-#    $DI /bin/bash -c "pytest"
 
 
 #######################################################
