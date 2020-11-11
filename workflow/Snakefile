@@ -45,6 +45,22 @@ query_titles = list(set([x.split('_', 1)[0] for x in \
 # and parameter tuples as values.
 add_to_dbs_params = get_param_dict_for_add_to_dbs(database_csv)
 
+# Check that all local database and query files in resources directory are
+# listed in the relevant CSV files (this could indicate that the CSV files are
+# not complete).
+for f in glob.glob('resources/local_db_files/*'):
+    if f.endswith('.fna') or f.endwith('.faa') or f.endwith('.gff3'):
+        # Check that input file name is in the list from the CSV file.
+        assert os.path.basename(f) in add_to_dbs_params.keys(),\
+        """Error: File with filename %s is not listed in CSV file %s.""" % \
+        (os.path.basename(f), database_csv)
+for f in glob.glob('resources/local_query_files/*'):
+    if f.endswith('.faa') or f.endwith('.afaa'):
+        # Check that file is listed in input CSV file.
+        assert os.path.basename(f) in single_fasta_query_names_all,\
+        """Error: File with filename %s is not listed in CSV file %s.""" % \
+        (os.path.basename(f), query_csv)
+
 # Copy template data directory from the resources directory to the results
 # directory if it doesn't already exist.
 if not os.path.isdir('results/AMOEBAE_Data'):
@@ -54,6 +70,7 @@ if not os.path.isdir('results/AMOEBAE_Data'):
 # being submitted as jobs via the job scheduler.
 localrules: final_results, download_dbs, download_queries, \
 list_dbs_and_queries, help
+
 
 
 rule final_results:
@@ -125,7 +142,6 @@ rule add_to_dbs:
     ***Currently assumes output files have same extension as input files!
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         split_char_script = 'workflow/scripts/get_split_char_for_file.py',
         split_pos_script = 'workflow/scripts/get_split_pos_for_file.py',
@@ -141,31 +157,6 @@ rule add_to_dbs:
     conda:
         'envs/amoebae_env.yaml'
 
-    #run:
-    #    # Define parameters.
-    #    split_char =\
-    #    add_to_dbs_params[os.path.basename(input.input_file)][0]
-    #    split_pos =\
-    #    add_to_dbs_params[os.path.basename(input.input_file)][1]
-
-    #    # Run shell command.
-    #    #shell('singularity exec  '
-    #    #      '-B ' + cwd + ':/amoebae_workflow '
-    #    #      '{input.container} '
-    #    #          '/opt/internal_amoebae/amoebae '
-    #    #              'add_to_dbs '
-    #    #                  '/amoebae_workflow/{input.input_file} '
-    #    #                  '/amoebae_workflow/results/AMOEBAE_Data '
-    #    #                  '--split_char ' + split_char + ' '
-    #    #                  '--split_pos ' + split_pos
-    #    #     )
-    #    shell('{input.amoebae_script} '
-    #           'add_to_dbs '
-    #               '{input.input_file} '
-    #               '{input.data_dir} '
-    #               '--split_char ' + split_char + ' '
-    #               '--split_pos ' + split_pos
-    #         )
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
@@ -184,7 +175,6 @@ rule add_to_dbs_local:
     ***Currently assumes output files have same extension as input files!
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         data_dir = 'results/AMOEBAE_Data',
         split_char_script = 'workflow/scripts/get_split_char_for_file.py',
         split_pos_script = 'workflow/scripts/get_split_pos_for_file.py',
@@ -201,30 +191,6 @@ rule add_to_dbs_local:
         'envs/amoebae_env.yaml'
 
     shell:
-        ## Check that input file name is in the list from the CSV file.
-        #assert os.path.basename(input.input_file) in add_to_dbs_params.keys(),\
-        #"""Error: File with filename %s is not listed in CSV file %s.""" % \
-        #(os.path.basename(input.input_file), database_csv)
-        ## Define parameters.
-        #split_char =\
-        #add_to_dbs_params[os.path.basename(input.input_file)][0]
-        #split_pos =\
-        #add_to_dbs_params[os.path.basename(input.input_file)][1]
-        ## Run shell command.
-        ##shell('singularity exec  '
-        ##      '-B ' + cwd + ':/amoebae_workflow '
-        ##      '{input.container} '
-        ##          '/opt/internal_amoebae/amoebae '
-        ##              'add_to_dbs '
-        ##                  '/amoebae_workflow/{input.input_file} '
-        ##                  '/amoebae_workflow/results/AMOEBAE_Data '
-        ##                  '--split_char ' + split_char + ' '
-        ##                  '--split_pos ' + split_pos
-        ##     )
-        #     '--split_char '
-        #         '$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) '
-        #     '--split_pos '
-        #         '$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) '
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         '{input.amoebae_script} '
@@ -242,7 +208,6 @@ rule add_to_query_seqs:
     ***Currently assumes output files have same extension as input files!
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         data_dir = 'results/AMOEBAE_Data',
         amoebae_script = 'amoebae',
         input_file = 'results/temp_single_seq_queries/{query_file}.faa'
@@ -254,19 +219,6 @@ rule add_to_query_seqs:
         'envs/amoebae_env.yaml'
 
     shell:
-        ## Check that file is listed in input CSV file.
-        #assert os.path.basename(input.input_file) in single_fasta_query_names_all,\
-        #"""Error: File with filename %s is not listed in CSV file %s.""" % \
-        #(os.path.basename(input.input_file), query_csv)
-        ## Run shell command.
-        ##shell('singularity exec  ' + \
-        ##          '-B ' + cwd + ':/amoebae_workflow ' + \
-        ##          '{input.container} ' + \
-        ##              '/opt/internal_amoebae/amoebae ' + \
-        ##                  'add_to_queries ' + \
-        ##                      '/amoebae_workflow/{input.input_file} ' + \
-        ##                      '/amoebae_workflow/results/AMOEBAE_Data '
-        ##      )
         '{input.amoebae_script} '
         'add_to_queries '
             '{input.input_file} '
@@ -281,7 +233,6 @@ rule add_to_query_seqs_local:
     ***Currently assumes output files have same extension as input files!
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         data_dir = 'results/AMOEBAE_Data',
         amoebae_script = 'amoebae',
         input_file = 'resources/local_query_files/{query_file}.faa'
@@ -293,19 +244,6 @@ rule add_to_query_seqs_local:
         'envs/amoebae_env.yaml'
 
     shell:
-        ## Check that file is listed in input CSV file.
-        #assert os.path.basename(input.input_file) in single_fasta_query_names_all,\
-        #"""Error: File with filename %s is not listed in CSV file %s.""" % \
-        #(os.path.basename(input.input_file), query_csv)
-        ## Run shell command.
-        ##shell('singularity exec  ' + \
-        ##          '-B ' + cwd + ':/amoebae_workflow ' + \
-        ##          '{input.container} ' + \
-        ##              '/opt/internal_amoebae/amoebae ' + \
-        ##                  'add_to_queries ' + \
-        ##                      '/amoebae_workflow/{input.input_file} ' + \
-        ##                      '/amoebae_workflow/results/AMOEBAE_Data '
-        ##      )
         '{input.amoebae_script} '
         'add_to_queries '
             '{input.input_file} '
@@ -318,7 +256,6 @@ rule align_fasta:
     Align FASTA files used for HMM searching.
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         input_file = 'results/temp_multi_seq_queries/{file}.faa'
     
@@ -329,13 +266,6 @@ rule align_fasta:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'align_fa ' + \
-        #                '/amoebae_workflow/{input.input_file} ' + \
-        #                '--output_format fasta '
         '{input.amoebae_script} '
             'align_fa '
                 '{input.input_file} '
@@ -349,7 +279,6 @@ rule add_to_query_ali:
     ***Currently assumes output files have same extension as input files!
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         data_dir = 'results/AMOEBAE_Data',
         amoebae_script = 'amoebae',
         input_file = 'results/temp_multi_seq_queries/{query_file}.afaa'
@@ -361,23 +290,6 @@ rule add_to_query_ali:
         'envs/amoebae_env.yaml'
 
     shell:
-        ## Get filenames without extensions.
-        #multi_fasta_query_names_ncbi_without_ext = \
-        #    [x.rsplit('.', 1)[0] for x in multi_fasta_query_names_ncbi]
-        ## Check that file is listed in input CSV file.
-        #filename_without_ext = os.path.basename(input.input_file).rsplit('.', 1)[0]
-        #assert filename_without_ext in multi_fasta_query_names_ncbi_without_ext,\
-        #"""Error: File with filename %s is not listed in CSV file %s.""" % \
-        #(os.path.basename(input.input_file), query_csv)
-        ## Run shell command.
-        ##shell('singularity exec  ' + \
-        ##         '-B ' + cwd + ':/amoebae_workflow ' + \
-        ##         '{input.container} ' + \
-        ##             '/opt/internal_amoebae/amoebae ' + \
-        ##                 'add_to_queries ' + \
-        ##                     '/amoebae_workflow/{input.input_file} ' + \
-        ##                     '/amoebae_workflow/results/AMOEBAE_Data '
-        ##     )
         '{input.amoebae_script} '
            'add_to_queries '
                '{input.input_file} '
@@ -392,7 +304,6 @@ rule add_to_query_ali_local:
     ***Currently assumes output files have same extension as input files!
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         data_dir = 'results/AMOEBAE_Data',
         amoebae_script = 'amoebae',
         input_file = 'resources/local_query_files/{query_file}.afaa'
@@ -404,23 +315,6 @@ rule add_to_query_ali_local:
         'envs/amoebae_env.yaml'
 
     shell:
-        ## Get filenames without extensions.
-        #multi_fasta_query_names_local_without_ext = \
-        #    [x.rsplit('.', 1)[0] for x in multi_fasta_query_names_local]
-        ## Check that file is listed in input CSV file.
-        #filename_without_ext = os.path.basename(input.input_file).rsplit('.', 1)[0]
-        #assert filename_without_ext in multi_fasta_query_names_local_without_ext,\
-        #"""Error: File with filename %s is not listed in CSV file %s.""" % \
-        #(os.path.basename(input.input_file), query_csv)
-        ## Run shell command.
-        ##shell('singularity exec  ' + \
-        ##         '-B ' + cwd + ':/amoebae_workflow ' + \
-        ##         '{input.container} ' + \
-        ##             '/opt/internal_amoebae/amoebae ' + \
-        ##                 'add_to_queries ' + \
-        ##                     '/amoebae_workflow/{input.input_file} ' + \
-        ##                     '/amoebae_workflow/results/AMOEBAE_Data '
-        ##     )
         '{input.amoebae_script} '
            'add_to_queries '
                '{input.input_file} '
@@ -464,7 +358,6 @@ rule get_ref_seqs:
     interpreting results).
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         expand('results/AMOEBAE_Data/Genomes/{data_file}', data_file=database_names_all),
         expand('results/AMOEBAE_Data/Queries/{query_file}', query_file = \
             single_fasta_query_names_all + \
@@ -482,22 +375,6 @@ rule get_ref_seqs:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'get_redun_hits ' + \
-        #                '/amoebae_workflow/results/Ref_seqs_1 ' + \
-        #                '/amoebae_workflow/results/AMOEBAE_Data ' + \
-        #                '--db_list_file /amoebae_workflow/{input.db_list_file} ' + \
-        #                '--query_list_file /amoebae_workflow/{input.query_list_file} ' + \
-        #                '--csv_file ' + \
-        #                '/amoebae_workflow/results/Ref_seqs_1/0_ref_seqs.csv ' + \
-        #                '--predict_redun_hit_selection ' + \
-        #' && cp results/Ref_seqs_1/0_ref_seqs_auto_predictions.csv ' + \
-        #       'results/Ref_seqs_1_auto_predictions.csv' + \
-        #' && cp results/Ref_seqs_1_auto_predictions.csv ' + \
-        #       'results/Ref_seqs_1_manual_selections.csv '
         '{input.amoebae_script} '
             'get_redun_hits ' + \
                 'results/Ref_seqs_1 ' + \
@@ -519,8 +396,6 @@ rule setup_and_run_fwd_srch:
     Perform searches with given queries into given dbs.
     """
     input:
-        #ref_seq_manual_copy_csv = 'results/Ref_seqs_1_manual_selections.csv',
-        #container = 'workflow/envs/singularity.sif',
         expand('results/AMOEBAE_Data/Genomes/{data_file}', data_file=database_names_all),
         expand('results/AMOEBAE_Data/Queries/{query_file}', query_file = \
             single_fasta_query_names_all + \
@@ -536,23 +411,6 @@ rule setup_and_run_fwd_srch:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'setup_fwd_srch ' + \
-        #                '/amoebae_workflow/results ' + \
-        #                '/amoebae_workflow/{input.query_list_file} ' + \
-        #                '/amoebae_workflow/{input.db_list_file} ' + \
-        #                '--outdir /amoebae_workflow/{output.outdir} ' + \
-        #'&& ' + \
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'run_fwd_srch ' + \
-        #                '/amoebae_workflow/{output.outdir} ' + \
-        #                '/amoebae_workflow/results/AMOEBAE_Data '
         '{input.amoebae_script} ' + \
             'setup_fwd_srch ' + \
                 'results ' + \
@@ -572,7 +430,6 @@ rule sum_fwd_srch:
     to organize reverse searches).
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         fwd_srch_out = 'results/fwd_srchs_1' 
@@ -584,16 +441,6 @@ rule sum_fwd_srch:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'sum_fwd_srch ' + \
-        #                '/amoebae_workflow/{input.fwd_srch_out} ' + \
-        #                '/amoebae_workflow/{output.csv_out_path} ' + \
-        #                '/amoebae_workflow/{input.main_data_dir} ' + \
-        #                '--max_hits_to_sum 5 ' + \
-        #                '--max_gap_between_tblastn_hsps 1000 '
         'conda list && '
         '{input.amoebae_script} '
             'sum_fwd_srch ' + \
@@ -610,7 +457,6 @@ rule setup_and_run_rev_srch:
     with given forward search hits into given db.
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         reverse_srch_db_file = 'resources/reference_db_list.txt',
         amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
@@ -623,25 +469,6 @@ rule setup_and_run_rev_srch:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'setup_rev_srch ' + \
-        #                '/amoebae_workflow/results ' + \
-        #                '/amoebae_workflow/{input.fwd_srch_csv} ' + \
-        #                '/amoebae_workflow/{input.reverse_srch_db_file} ' + \
-        #                '/amoebae_workflow/{input.main_data_dir} ' + \
-        #                '--outdir  /amoebae_workflow/{output.out_dir} ' + \
-        #                '--aasubseq ' + \
-        #'&& ' + \
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'run_rev_srch ' + \
-        #                '/amoebae_workflow/{output.out_dir} ' + \
-        #                '/amoebae_workflow/{input.main_data_dir} '
         '{input.amoebae_script} '
             'setup_rev_srch ' + \
                 'results ' + \
@@ -662,7 +489,6 @@ rule sum_rev_srch:
     Append information about reverse searches to csv summary file.
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         rev_srch_dir = 'results/rev_srchs_1',
@@ -676,18 +502,6 @@ rule sum_rev_srch:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'sum_rev_srch ' + \
-        #                '/amoebae_workflow/{input.fwd_srch_csv} ' + \
-        #                '/amoebae_workflow/{input.rev_srch_dir} ' + \
-        #                '/amoebae_workflow/{output.csv_out_path} ' + \
-        #                '/amoebae_workflow/{input.main_data_dir} ' + \
-        #                '--redun_hit_csv /amoebae_workflow/{input.ref_seq_csv} ' + \
-        #                '--aasubseq ' + \
-        #                '--min_evaldiff 2 '
         '{input.amoebae_script} '
             'sum_rev_srch ' + \
                 '{input.fwd_srch_csv} ' + \
@@ -704,7 +518,6 @@ rule interp_srchs:
     Interpret search results based on summary.
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         rev_srch_csv = 'results/fwd_srchs_1_rev_srch_1.csv',
 
@@ -715,13 +528,6 @@ rule interp_srchs:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'interp_srchs ' + \
-        #                '/amoebae_workflow/{input.rev_srch_csv} ' + \
-        #                '--out_csv_path /amoebae_workflow/{output.interp_csv} '
         '{input.amoebae_script} '
             'interp_srchs ' + \
                 '{input.rev_srch_csv} ' + \
@@ -735,7 +541,6 @@ rule find_redun_seqs:
     on redundant loci predicted for the same species.
     """ 
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         interp_csv = 'results/fwd_srchs_1_rev_srch_1_interp.csv'
@@ -748,24 +553,6 @@ rule find_redun_seqs:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'find_redun_seqs ' + \
-        #                '/amoebae_workflow/{input.interp_csv} ' + \
-        #                '/amoebae_workflow/{input.main_data_dir} ' + \
-        #                '--out_csv_path /amoebae_workflow/{output.interp_csv_with_ali_col} ' + \
-        #                '--add_ali_col ' + \
-        #'&& ' + \
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'find_redun_seqs ' + \
-        #                '/amoebae_workflow/{output.interp_csv_with_ali_col} ' + \
-        #                '/amoebae_workflow/{input.main_data_dir} ' + \
-        #                '--out_csv_path /amoebae_workflow/{output.nonredun_seq_csv} '
         '{input.amoebae_script} '
             'find_redun_seqs ' + \
                 '{input.interp_csv} ' + \
@@ -785,7 +572,6 @@ rule plot_results:
     Plot search results.
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         coulson_org_csv = 'resources/coulson_plot_organization.csv',
         nonredun_seq_csv =\
@@ -799,15 +585,6 @@ rule plot_results:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'plot ' + \
-        #                '/amoebae_workflow/{input.nonredun_seq_csv} ' + \
-        #                '--complex_info /amoebae_workflow/{input.coulson_org_csv} ' + \
-        #                '--row_order /amoebae_workflow/{input.row_order} ' + \
-        #                '--out_pdf /amoebae_workflow/{output.main_plot_pdf} '
         '{input.amoebae_script} '
             'plot ' + \
                 '{input.nonredun_seq_csv} ' + \
@@ -822,7 +599,6 @@ rule get_positive_hit_fastas:
 
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         nonredun_seq_csv = 'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv'
 
@@ -833,14 +609,6 @@ rule get_positive_hit_fastas:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'csv_to_fasta ' + \
-        #                '/amoebae_workflow/{input.nonredun_seq_csv} ' + \
-        #                '--abbrev ' + \
-        #                '--split_by_query_title '
         '{input.amoebae_script} '
             'csv_to_fasta ' + \
                 '{input.nonredun_seq_csv} ' + \
@@ -854,7 +622,6 @@ rule get_fwd_hit_seqs:
 
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         fwd_hit_seq_csv = 'results/fwd_srchs_1.csv'
 
@@ -865,15 +632,6 @@ rule get_fwd_hit_seqs:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'csv_to_fasta ' + \
-        #                '/amoebae_workflow/{input.fwd_hit_seq_csv} ' + \
-        #                '--abbrev ' + \
-        #                '--split_by_query_title ' + \
-        #                '--all_hits '
         '{input.amoebae_script} '
             'csv_to_fasta ' + \
                 '{input.fwd_hit_seq_csv} ' + \
@@ -887,7 +645,6 @@ rule align_positive_hit_fastas:
     Generate FASTA files of positive hits from summary CSV file, and align with MUSCLE.
     """
     input:
-        #container = 'workflow/envs/singularity.sif',
         amoebae_script = 'amoebae',
         fasta_dir =\
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_files' 
@@ -900,18 +657,6 @@ rule align_positive_hit_fastas:
         'envs/amoebae_env.yaml'
 
     shell:
-        #'mkdir -p {output.ali_dir} && '
-        #'for X in {input.fasta_dir}/*.fa; '
-        #'do '
-        #'singularity exec  ' + \
-        #    '-B ' + cwd + ':/amoebae_workflow ' + \
-        #    '{input.container} ' + \
-        #        '/opt/internal_amoebae/amoebae ' + \
-        #            'align_fa ' + \
-        #                '/amoebae_workflow/{input.fasta_dir}/$( basename $X ) ' + \
-        #                '--output_dir_path /amoebae_workflow/{output.ali_dir} ' + \
-        #                '--output_format fasta '
-        #'; done '
         'mkdir -p {output.ali_dir} && '
         'for X in {input.fasta_dir}/*.fa; '
         'do '
