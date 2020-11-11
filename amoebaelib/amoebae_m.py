@@ -419,7 +419,9 @@ def write_seqs_to_fasta(csv_file,
         # Determine whether the forward hit sequence recorded in this row
         # should be included in the output file(s).
         use_this_fwd_hit = False
-        if yes_no_col is not None:
+        if row['Forward hit rank'] == 0:
+            pass
+        elif yes_no_col is not None:
             result = row[yes_no_col]
             if result == 'Yes' or result == '+': 
                 use_this_fwd_hit = True

@@ -31,7 +31,7 @@ dependencies:
     - pyqt
     - ete3
     - ete_toolchain
-    - biopython
+    - biopython=1.77
     - blast=2.9.0
     - hmmer
     - muscle
@@ -47,3 +47,4 @@ dependencies:
     - graphviz
     - certifi
     - requests
+    - snakemake-minimal
