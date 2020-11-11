@@ -25,15 +25,11 @@ import os
 sys.path.append(os.path.join(sys.path[0],'amoebaelib'))
 import subprocess
 import re
-from datapaths import DataPaths
 import shutil
 import glob
 import time
 
-#import pandas as pd
-
-# Import the settings module.
-import settings
+from datapaths import DataPaths
 
 # Import module specifically written for this script (command-specific modules
 # imported below).
