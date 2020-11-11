@@ -52,18 +52,6 @@ class DataPaths:
         assert os.path.isfile(self.query_info_csv), """Error: No file at path:
         %s""" % self.query_info_csv
         
-        # Set path to directory containing reference tree (and alignment) files.
-        self.model_dir_path =\
-        os.path.join(root_amoebae_data_dir, 'Models')
-        assert os.path.isdir(self.model_dir_path), """Error: No directory at path:
-        %s""" % self.model_dir_path
-        
-        # Set path to csv file with information about reference tree (and alignment)
-        # files.
-        self.model_info_csv =\
-        os.path.join(self.model_dir_path, '0_models_info.csv')
-        assert os.path.isfile(self.model_info_csv), """Error: No file at path:
-        %s""" % self.model_info_csv
 
 
 

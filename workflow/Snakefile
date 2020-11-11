@@ -6,6 +6,7 @@ SnakeMake workflow definition file for AMOEBAE workflow.
 
 import os
 import shutil
+import glob
 from snakemake.io import expand, glob_wildcards
 from scripts.get_filenames_from_csv import get_query_filenames_from_csv,\
     get_database_filenames_from_csv
@@ -49,13 +50,13 @@ add_to_dbs_params = get_param_dict_for_add_to_dbs(database_csv)
 # listed in the relevant CSV files (this could indicate that the CSV files are
 # not complete).
 for f in glob.glob('resources/local_db_files/*'):
-    if f.endswith('.fna') or f.endwith('.faa') or f.endwith('.gff3'):
+    if f.endswith('.fna') or f.endswith('.faa') or f.endswith('.gff3'):
         # Check that input file name is in the list from the CSV file.
         assert os.path.basename(f) in add_to_dbs_params.keys(),\
         """Error: File with filename %s is not listed in CSV file %s.""" % \
         (os.path.basename(f), database_csv)
 for f in glob.glob('resources/local_query_files/*'):
-    if f.endswith('.faa') or f.endwith('.afaa'):
+    if f.endswith('.faa') or f.endswith('.afaa'):
         # Check that file is listed in input CSV file.
         assert os.path.basename(f) in single_fasta_query_names_all,\
         """Error: File with filename %s is not listed in CSV file %s.""" % \
@@ -159,7 +160,7 @@ rule add_to_dbs:
 
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
-        'sp=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
+        'sp=$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) && '
         '{input.amoebae_script} '
          'add_to_dbs '
              '{input.input_file} '
