@@ -261,16 +261,6 @@ def get_redun_hits_in_dbs(query_title,
                     # Append line with relevant info to spreadsheet.
                     print()
                     print(query_title)
-                    print(q)
-                    print(d) 
-                    print(srch_file_prog + ' ' + srch_file_prog_vers)
-                    print('-')
-                    print(str(hit_num + 1))
-                    print(str(e_cur))
-                    print(str(evaldiff))
-                    print(str(percent_len))
-                    print('\"' + parsed_file_obj.hit_id(hit_num) + '\"')
-                    print(description)
                     print()
                     line_to_write = ','.join([query_title, 
                                       q,
