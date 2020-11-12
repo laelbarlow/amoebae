@@ -314,9 +314,15 @@ Miscellaneous commands:
             # Get new filename extension to use.
             exten = amoebae_m.get_corr_fasta_exten(args.new_file)
 
-            # Convert headers and write output to new path.
+            # Define output file path.
             new_file_new_exten = args.new_file.rsplit('.', 1)[0] + '.' + exten
             outfp = os.path.join(db_dir, os.path.basename(new_file_new_exten))
+            
+            # Check that output file path does not already exit.
+            assert not os.path.isfile(outfp1), """File already exists in
+            directory: %s""" % outfp1
+
+            # Convert headers and write output to new path.
             add_to_db.convert_headers(args.new_file, outfp, args.split_char,
                     args.split_pos, args.skip_header_reformat, args.auto_extract_accs)
 

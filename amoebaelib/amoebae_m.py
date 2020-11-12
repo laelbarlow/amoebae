@@ -266,8 +266,9 @@ def get_query_title_from_csv(query_filename, main_data_dir):
     query_title = df.loc[query_filename]['Query title']
 
     # Check that query title is a string.
-    assert isinstance(query_title, str), """Could not identify query title for
-    query file %s in CSV file %s.""" % (query_filename, query_info_csv_path) 
+    assert isinstance(query_title, str), """Could not properly identify query
+    title for query file %s in CSV file %s.""" % (query_filename,
+            query_info_csv_path) 
 
     # Return query title.
     return query_title
