@@ -258,11 +258,19 @@ def get_query_title_from_csv(query_filename, main_data_dir):
     directory csv specified in the DataPaths(main_data_dir) module, and return that.
     """
     # Parse query info csv file.
-    df = pd.read_csv(DataPaths(main_data_dir).query_info_csv, encoding='utf-8')
+    query_info_csv_path = DataPaths(main_data_dir).query_info_csv
+    df = pd.read_csv(query_info_csv_path, encoding='utf-8')
+
+    # Get query title.
+    df.set_index('Filename', inplace=True)
+    query_title = df.loc[query_filename]['Query title']
+
+    # Check that query title is a string.
+    assert isinstance(query_title, str), """Could not identify query title for
+    query file %s in CSV file %s.""" % (query_filename, query_info_csv_path) 
 
     # Return query title.
-    df.set_index('Filename', inplace=True)
-    return df.loc[query_filename]['Query title']
+    return query_title
 
 
 def get_query_taxon_from_csv(query_filename, main_data_dir):
