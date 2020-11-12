@@ -73,6 +73,11 @@ localrules: final_results, download_dbs, download_queries, \
 list_dbs_and_queries, help
 
 
+# Define global container image (if the --use-singularity option is used).
+container: "docker://continuumio/miniconda3:4.4.10"
+
+
+# Define rules for the workflow.
 
 rule final_results:
     """
