@@ -252,13 +252,26 @@ def get_redun_hits_in_dbs(query_title,
                     percent_len = round((cur_hit_len / top_hit_len) * 100)
 
                     # Get description.
-                    description = str(parsed_file_obj.hit_description(hit_num))
+                    description = parsed_file_obj.hit_description(hit_num)
                     if not description.startswith('\"'):
                         description = '\"' + description
                     if not description.endswith('\"'):
                         description = description + '\"'
 
                     # Append line with relevant info to spreadsheet.
+                    print()
+                    print(query_title)
+                    print(q)
+                    print(d) 
+                    print(srch_file_prog + ' ' + srch_file_prog_vers)
+                    print('-')
+                    print(str(hit_num + 1))
+                    print(str(e_cur))
+                    print(str(evaldiff))
+                    print(str(percent_len))
+                    print('\"' + parsed_file_obj.hit_id(hit_num) + '\"')
+                    print(description)
+                    print()
                     line_to_write = ','.join([query_title, 
                                       q,
                                       d, 
