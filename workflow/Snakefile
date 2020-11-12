@@ -74,7 +74,7 @@ list_dbs_and_queries, help
 
 
 # Define global container image (if the --use-singularity option is used).
-container: "docker://continuumio/miniconda3:4.7.12"
+container: "docker://continuumio/miniconda3:4.8.2"
 
 
 # Define rules for the workflow.
