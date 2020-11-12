@@ -204,6 +204,12 @@ def update_csv(outfp, csv_file):
     """Appends a line to the given spreadsheet with info about the given fasta
     file added to a directory.
     """
+    # Check whether the filename already exists in the CSV file.
+    assert not os.path.basename(outfp) in open(csv_file, 'r',
+    encoding='utf-8').read(), """File with filename %s is already listed in the
+    CSV file %s. You may need to restart the process of collecting database and
+    query files.""" % (os.path.basename(outfp), csv_file)
+
     # Determine data type from filename extension.
     dbtype = get_dbtype_from_file_exten(outfp)
 
