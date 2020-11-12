@@ -143,7 +143,7 @@ rule add_to_dbs:
     ***Currently assumes output files have same extension as input files!
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         split_char_script = 'workflow/scripts/get_split_char_for_file.py',
         split_pos_script = 'workflow/scripts/get_split_pos_for_file.py',
         data_dir = 'results/AMOEBAE_Data',
@@ -161,7 +161,7 @@ rule add_to_dbs:
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) && '
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
          'add_to_dbs '
              '{input.input_file} '
              '{input.data_dir} '
@@ -179,7 +179,7 @@ rule add_to_dbs_local:
         data_dir = 'results/AMOEBAE_Data',
         split_char_script = 'workflow/scripts/get_split_char_for_file.py',
         split_pos_script = 'workflow/scripts/get_split_pos_for_file.py',
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         input_file = 'resources/local_db_files/{file}'
 
     output:
@@ -194,7 +194,7 @@ rule add_to_dbs_local:
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'add_to_dbs '
                 '{input.input_file} '
                 '{input.data_dir} '
@@ -210,7 +210,7 @@ rule add_to_query_seqs:
     """
     input:
         data_dir = 'results/AMOEBAE_Data',
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         input_file = 'results/temp_single_seq_queries/{query_file}.faa'
 
     output:
@@ -220,7 +220,7 @@ rule add_to_query_seqs:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
         'add_to_queries '
             '{input.input_file} '
             '{input.data_dir} '
@@ -235,7 +235,7 @@ rule add_to_query_seqs_local:
     """
     input:
         data_dir = 'results/AMOEBAE_Data',
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         input_file = 'resources/local_query_files/{query_file}.faa'
 
     output:
@@ -245,7 +245,7 @@ rule add_to_query_seqs_local:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
         'add_to_queries '
             '{input.input_file} '
             '{input.data_dir} '
@@ -257,7 +257,7 @@ rule align_fasta:
     Align FASTA files used for HMM searching.
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         input_file = 'results/temp_multi_seq_queries/{file}.faa'
     
     output:
@@ -267,7 +267,7 @@ rule align_fasta:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'align_fa '
                 '{input.input_file} '
                 '--output_format fasta '
@@ -281,7 +281,7 @@ rule add_to_query_ali:
     """
     input:
         data_dir = 'results/AMOEBAE_Data',
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         input_file = 'results/temp_multi_seq_queries/{query_file}.afaa'
 
     output:
@@ -291,7 +291,7 @@ rule add_to_query_ali:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
            'add_to_queries '
                '{input.input_file} '
                '{input.data_dir} '
@@ -306,7 +306,7 @@ rule add_to_query_ali_local:
     """
     input:
         data_dir = 'results/AMOEBAE_Data',
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         input_file = 'resources/local_query_files/{query_file}.afaa'
 
     output:
@@ -316,7 +316,7 @@ rule add_to_query_ali_local:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
            'add_to_queries '
                '{input.input_file} '
                '{input.data_dir} '
@@ -363,7 +363,7 @@ rule get_ref_seqs:
         expand('results/AMOEBAE_Data/Queries/{query_file}', query_file = \
             single_fasta_query_names_all + \
             [x.rsplit('.', 1)[0] + '.afaa' for x in multi_fasta_query_names_all]),
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         db_list_file = 'resources/reference_db_list.txt',
         query_list_file = 'results/query_list.txt'
 
@@ -376,7 +376,7 @@ rule get_ref_seqs:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'get_redun_hits ' + \
                 'results/Ref_seqs_1 ' + \
                 'results/AMOEBAE_Data ' + \
@@ -401,7 +401,7 @@ rule setup_and_run_fwd_srch:
         expand('results/AMOEBAE_Data/Queries/{query_file}', query_file = \
             single_fasta_query_names_all + \
             [x.rsplit('.', 1)[0] + '.afaa' for x in multi_fasta_query_names_all]),
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         db_list_file = 'results/db_list.txt',
         query_list_file = 'results/query_list.txt'
 
@@ -412,14 +412,14 @@ rule setup_and_run_fwd_srch:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} ' + \
+        'python3 {input.amoebae_script} ' + \
             'setup_fwd_srch ' + \
                 'results ' + \
                 '{input.query_list_file} ' + \
                 '{input.db_list_file} ' + \
                 '--outdir {output.outdir} ' + \
         '&& ' + \
-        '{input.amoebae_script} ' + \
+        'python3 {input.amoebae_script} ' + \
             'run_fwd_srch ' + \
                 '{output.outdir} ' + \
                 'results/AMOEBAE_Data '
@@ -431,7 +431,7 @@ rule sum_fwd_srch:
     to organize reverse searches).
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         fwd_srch_out = 'results/fwd_srchs_1' 
 
@@ -443,7 +443,7 @@ rule sum_fwd_srch:
 
     shell:
         'conda list && '
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'sum_fwd_srch ' + \
                 '{input.fwd_srch_out} ' + \
                 '{output.csv_out_path} ' + \
@@ -459,7 +459,7 @@ rule setup_and_run_rev_srch:
     """
     input:
         reverse_srch_db_file = 'resources/reference_db_list.txt',
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         fwd_srch_csv = 'results/fwd_srchs_1.csv'
 
@@ -470,7 +470,7 @@ rule setup_and_run_rev_srch:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'setup_rev_srch ' + \
                 'results ' + \
                 '{input.fwd_srch_csv} ' + \
@@ -479,7 +479,7 @@ rule setup_and_run_rev_srch:
                 '--outdir  {output.out_dir} ' + \
                 '--aasubseq ' + \
         '&& ' + \
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'run_rev_srch ' + \
                 '{output.out_dir} ' + \
                 '{input.main_data_dir} '
@@ -490,7 +490,7 @@ rule sum_rev_srch:
     Append information about reverse searches to csv summary file.
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         rev_srch_dir = 'results/rev_srchs_1',
         fwd_srch_csv = 'results/fwd_srchs_1.csv',
@@ -503,7 +503,7 @@ rule sum_rev_srch:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'sum_rev_srch ' + \
                 '{input.fwd_srch_csv} ' + \
                 '{input.rev_srch_dir} ' + \
@@ -519,7 +519,7 @@ rule interp_srchs:
     Interpret search results based on summary.
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         rev_srch_csv = 'results/fwd_srchs_1_rev_srch_1.csv',
 
     output:
@@ -529,7 +529,7 @@ rule interp_srchs:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'interp_srchs ' + \
                 '{input.rev_srch_csv} ' + \
                 '--out_csv_path {output.interp_csv} '
@@ -542,7 +542,7 @@ rule find_redun_seqs:
     on redundant loci predicted for the same species.
     """ 
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         interp_csv = 'results/fwd_srchs_1_rev_srch_1_interp.csv'
 
@@ -554,14 +554,14 @@ rule find_redun_seqs:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'find_redun_seqs ' + \
                 '{input.interp_csv} ' + \
                 '{input.main_data_dir} ' + \
                 '--out_csv_path {output.interp_csv_with_ali_col} ' + \
                 '--add_ali_col ' + \
         '&& ' + \
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'find_redun_seqs ' + \
                 '{output.interp_csv_with_ali_col} ' + \
                 '{input.main_data_dir} ' + \
@@ -573,7 +573,7 @@ rule plot_results:
     Plot search results.
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         coulson_org_csv = 'resources/coulson_plot_organization.csv',
         nonredun_seq_csv =\
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
@@ -586,7 +586,7 @@ rule plot_results:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'plot ' + \
                 '{input.nonredun_seq_csv} ' + \
                 '--complex_info {input.coulson_org_csv} ' + \
@@ -600,7 +600,7 @@ rule get_positive_hit_fastas:
 
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         nonredun_seq_csv = 'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv'
 
     output:
@@ -610,7 +610,7 @@ rule get_positive_hit_fastas:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'csv_to_fasta ' + \
                 '{input.nonredun_seq_csv} ' + \
                 '--abbrev ' + \
@@ -623,7 +623,7 @@ rule get_fwd_hit_seqs:
 
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         fwd_hit_seq_csv = 'results/fwd_srchs_1.csv'
 
     output:
@@ -633,7 +633,7 @@ rule get_fwd_hit_seqs:
         'envs/amoebae_env.yaml'
 
     shell:
-        '{input.amoebae_script} '
+        'python3 {input.amoebae_script} '
             'csv_to_fasta ' + \
                 '{input.fwd_hit_seq_csv} ' + \
                 '--abbrev ' + \
@@ -646,7 +646,7 @@ rule align_positive_hit_fastas:
     Generate FASTA files of positive hits from summary CSV file, and align with MUSCLE.
     """
     input:
-        amoebae_script = 'python3 amoebae',
+        amoebae_script = 'amoebae',
         fasta_dir =\
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_files' 
 
@@ -661,7 +661,7 @@ rule align_positive_hit_fastas:
         'mkdir -p {output.ali_dir} && '
         'for X in {input.fasta_dir}/*.fa; '
         'do '
-        '{input.amoebae_script} ' + \
+        'python3 {input.amoebae_script} ' + \
             'align_fa ' + \
                 '{input.fasta_dir}/$( basename $X ) ' + \
                 '--output_dir_path {output.ali_dir} ' + \
