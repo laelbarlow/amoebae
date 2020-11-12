@@ -319,8 +319,8 @@ Miscellaneous commands:
             outfp = os.path.join(db_dir, os.path.basename(new_file_new_exten))
             
             # Check that output file path does not already exit.
-            assert not os.path.isfile(outfp1), """File already exists in
-            directory: %s""" % outfp1
+            assert not os.path.isfile(outfp), """File already exists in
+            directory: %s""" % outfp
 
             # Convert headers and write output to new path.
             add_to_db.convert_headers(args.new_file, outfp, args.split_char,
