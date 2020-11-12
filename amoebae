@@ -1815,18 +1815,20 @@ Miscellaneous commands:
         # Set amino acid scoring matrix path to use if mafft program called
         # (default is settings.blosum62_path).
         #print('Matrix: ' + settings.align_fa_matrix)
-        aamatrix_path = None
-        if settings.align_fa_matrix == 'blosum62':
-            aamatrix_path = settings.blosum62_path
-        elif settings.align_fa_matrix == 'cc140':
-            aamatrix_path = settings.cc140_path
-        else:
-            print('Error! matrix not specified.')
+        #aamatrix_path = None
+        #if settings.align_fa_matrix == 'blosum62':
+        #    aamatrix_path = settings.blosum62_path
+        #elif settings.align_fa_matrix == 'cc140':
+        #    aamatrix_path = settings.cc140_path
+        #else:
+        #    print('Error! matrix not specified.')
         #print('Matrix file: ' + aamatrix_path)
+        aamatrix_path = 'amoebaelib/blosum62'
 
         # Set alignment program to use (default is 'muscle', use 'altmafft' if
         # experimenting with different parameters).
-        program = settings.align_fa_program 
+        #program = settings.align_fa_program 
+        program = 'muscle'
         #print('Program: ' + program + '\n')
 
         # Determine what format the output file should be in.
