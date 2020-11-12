@@ -5,9 +5,6 @@ SHELL=/bin/bash
 install:
 	bash scripts/install.sh
 
-pull:
-	bash scripts/singularity_pull.sh
-
 dry_run:
 	bash scripts/dry_run.sh
 
