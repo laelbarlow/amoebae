@@ -28,3 +28,4 @@ dependencies:
     - snakemake
     - certifi
     - requests
+    - git
