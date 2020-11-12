@@ -26,5 +26,5 @@ dependencies:
     - graphviz=2.40.1
     - snakemake=5.5.4
     - git=2.23.0
-    #- certifi
-    #- requests
+    - certifi
+    - requests
