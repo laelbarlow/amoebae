@@ -17,7 +17,7 @@ if test "$(command -v module)"; then
     module load python/3.7
 
     # Load an appropriate version of Singularity.
-    module load singularity/3.5
+    module load singularity/3.6
 
 else
     # Print the versions.
