@@ -252,7 +252,7 @@ def get_redun_hits_in_dbs(query_title,
                     percent_len = round((cur_hit_len / top_hit_len) * 100)
 
                     # Get description.
-                    description = parsed_file_obj.hit_description(hit_num)
+                    description = str(parsed_file_obj.hit_description(hit_num))
                     if not description.startswith('\"'):
                         description = '\"' + description
                     if not description.endswith('\"'):
