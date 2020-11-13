@@ -8,11 +8,6 @@
 </p>
 
 
-<!---
-***Embedded video...
-
---->
-
 ## Introduction
 
 **A**nalysis of **MO**lecular **E**volution with **BA**tch **E**ntry (AMOEBAE)
@@ -21,10 +16,13 @@ potential orthologues) of genes of interest among a mid-size sampling of
 genomes. This workflow is designed to be run on high-performance computing
 (HPC) clusters and is executed via the
 [SnakeMake](https://snakemake.readthedocs.io/en/stable/) workflow management
-system. Code for steps in this workflow is written primarily in Python3,
-relying heavily on the Biopython library, and apply bioinformatics packages
-including BLAST+ and HMMER3 to input data files. AMOEBAE is open-source, and
-all dependencies are freely available.  [Lael D.
+system. Code for steps in this workflow is written primarily in
+[Python3](https://www.python.org/),
+relying heavily on the [Biopython](https://biopython.org/) library, and apply
+bioinformatics packages including
+[BLAST+](https://www.ncbi.nlm.nih.gov/books/NBK279690/) and
+[HMMER3](http://hmmer.org/) to input data files. AMOEBAE is open-source, and
+all dependencies are freely available. [Lael D.
 Barlow](https://scholar.google.com/citations?user=wohF-LAAAAAJ&hl=en&oi=ao) is
 the author.
 
@@ -71,8 +69,11 @@ job scheduler). This can also be run on Linux or MacOS personal computers, but
 this is not recommended due to requirements of storage (~30GB+) and
 computation time. 
 
-1. This workflow has minimal essential dependencies. Ensure these are installed on your
-   system: 
+1. This workflow has minimal essential dependencies. Note that **you do not
+   need to manually install any additional dependencies (software packages) or
+   make any virtual environments**, because this will be done automatically
+   (see below). Simply ensure that these essential dependencies are available
+   on your system:
     - Python version 3.
     - [Conda](https://docs.conda.io/en/latest/) **or**
       [Singularity](https://sylabs.io/guides/3.0/user-guide/installation.html)
@@ -84,11 +85,10 @@ computation time.
     cd amoebae
 ```
 
-3. Run this command to download input data and container files, and setup a
-   Python environment for running snakemake. This will also set up cluster
-   configuration files using [snakemake
+3. Run this command to setup a Python environment for running snakemake. This
+   will also set up cluster configuration files using [snakemake
    profiles](https://github.com/snakemake-profiles). When prompted to confirm
-   one or more details, choose default options. 
+   details, choose default options. 
     
 ```
     make install
