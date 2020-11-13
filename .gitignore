@@ -23,4 +23,6 @@ settings.py
 *.ist
 *help_output.tex
 *.sif
-
+pid_nohup.txt
+.snakemake
+results

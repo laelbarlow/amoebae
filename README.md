@@ -29,7 +29,7 @@ Barlow](https://scholar.google.com/citations?user=wohF-LAAAAAJ&hl=en&oi=ao) is
 the author.
 
 AMOEBAE is useful for certain mid-scale comparative genomics studies that
-might otherwise require a much larger investment of repetitive
+might otherwise require time-intensive and repetitive
 manual/visual manipulation of data. Webservices such as those provided by
 [NCBI](https://blast.ncbi.nlm.nih.gov/Blast.cgi)
 and [EMBL-EBI](https://www.ebi.ac.uk/Tools/hmmer/) provide a means to
@@ -37,11 +37,11 @@ readily investigate the evolution of one or a few genes via similarity searching
 and large-scale analysis workflows such as
 [OrthoMCL](https://orthomcl.org/orthomcl/) and
 [OrthoFinder](https://github.com/davidemms/OrthoFinder) attempt to rapidly perform orthology
-prediction for all genes among several genomes. AMOEBAE addresses mid-scale
+prediction for all genes among several genomes. AMOEBAE addresses 
 analyses which are too cumbersome to be performed via webservices or simple
 scripts and yet require a level of detail and flexibility not offered by
 large-scale analysis workflows. AMOEBAE may be useful for analyzing the
-distribution of homologues of up to perhaps 30 genes/proteins among a
+distribution of homologues of up to approximately 30 genes/proteins among a
 sampling of no more than approximately 100 eukaryotic genomes. 
 
 AMOEBAE serves this purpose by providing several unique features. The core
@@ -49,17 +49,18 @@ functionality of AMOEBAE is to run sequence similarity searches with multiple
 algorithms, multiple queries, and multiple databases simultaneously and to
 allow highly customizable implementation of reciprocal-best-hit search
 strategies. The output includes detailed summaries of results in the form of a
-spreadsheet and plots. A particular advantage of AMOEBAE over other tools is
-the functionality for parsing results of TBLASTN (which searches nucleotide
-sequences with peptide sequence queries) search results. This allows rapid
-identification of High-scoring Segment Pair (HSP) clusters at separate gene
-loci, automatic checking of those loci against information in genome annotation
-files, and systematic use of the
+spreadsheet and presence/absence plots. A particular advantage of AMOEBAE
+compared to other workflows is its functionality for parsing results of TBLASTN
+(which searches nucleotide sequences with peptide sequence queries) search
+results. This allows rapid identification of High-scoring Segment Pair (HSP)
+clusters at separate gene loci, automatic checking of those loci against
+information in genome annotation files, and systematic use of the
 [Exonerate](http://europepmc.org/article/MED/15713233) package where possible
 for obtaining better exon predictions. In addition, AMOEBAE provides many
-options which can be tailored to the specific genes/proteins being
-analyzed. Despite the complexity of this workflow, analyses performed using
-AMOEBAE can be reproduced via [SnakeMake](https://snakemake.readthedocs.io/en/stable/).
+    options which can be tailored to the specific genes/proteins being
+    analyzed. Despite the complexity of this workflow, analyses performed using
+    AMOEBAE can be reproduced via
+    [SnakeMake](https://snakemake.readthedocs.io/en/stable/).
 
 
 ## Installation
@@ -70,9 +71,9 @@ job scheduler). This can also be run on Linux or MacOS personal computers, but
 this is not recommended due to requirements of storage (~30GB+) and
 computation time. 
 
-1. This workflow has minimal dependencies. Ensure these are installed on your
+1. This workflow has minimal essential dependencies. Ensure these are installed on your
    system: 
-    - Python version 3
+    - Python version 3.
     - [Conda](https://docs.conda.io/en/latest/) **or**
       [Singularity](https://sylabs.io/guides/3.0/user-guide/installation.html)
       version 3.6+.
@@ -139,7 +140,7 @@ results. Snakemake is used to manage the workflow, but for ease of use [GNU
 Make](https://www.gnu.org/software/make/) is used to run Snakemake commands in
 Python virtual environments (see the Makefile file). Without customization,
 this workflow should take between 30 and 60 minutes to run, depending on
-resource availability on your cluster.  
+resource availability on your system.  
 
 To run the workflow without customization (using example data), follow these
 steps:
@@ -170,7 +171,7 @@ steps:
        results/Ref_seqs_1_manual_selections.csv
 ```
 
-3. Execute remainder of workflow.
+3. Execute remainder of the workflow.
 
 ```
     make run
@@ -186,9 +187,9 @@ steps:
 ```
 
 Here's an example coulson plot output by the workflow. Note that these results
-require careful interpretation. See the [main AMOEBAE
-documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf)
-and tutorials for discussion.
+require careful interpretation, and in most cases re-analysis with modified
+parameters will be necessary as well as follow up with additional methods such
+as phylogenetic analysis.
 
 <p align="center">
 <img src="images/example_coulson_plot.png" width="500">
@@ -297,7 +298,7 @@ the GitHub webpage to report any problems you encounter while using AMOEBAE.
 Please cite the [AMOEBAE GitHub
 repository](https://github.com/laelbarlow/amoebae) (or alternative permanent
 repositories if relevant). Also, please remember to cite the software packages which
-are dependencies of AMOEBAE (see main documentation).
+are dependencies of AMOEBAE.
 
 ## Acknowledgments
 

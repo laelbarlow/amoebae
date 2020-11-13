@@ -704,6 +704,5 @@ rule plot_workflow:
     shell: 
         'conda list && '
         'snakemake --cores 1 -p --rulegraph | dot -Tpdf > {output} && '
-        'snakemake --cores 1 -p --rulegraph | dot -Tpdf > images/example_workflow_diagram.pdf && '
         'snakemake --cores 1 -p --rulegraph | dot -Tpng > images/example_workflow_diagram.png '
 
