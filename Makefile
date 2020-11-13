@@ -29,7 +29,6 @@ killall:
 clean:
 	-rm nohup.out
 	-rm pid_nohup.txt
-	-rm slurm*
 
 clean_results:
 	rm -rf results/*

@@ -259,9 +259,6 @@ def get_redun_hits_in_dbs(query_title,
                         description = description + '\"'
 
                     # Append line with relevant info to spreadsheet.
-                    print()
-                    print(query_title)
-                    print()
                     line_to_write = ','.join([query_title, 
                                       q,
                                       d, 

@@ -17,5 +17,5 @@ confirm() {
 
 confirm rm -rf ~/env_amoebae_workflow_setup_py
 
-confirm rm -rf ../amoebae_example_workflow
+confirm rm -rf ../amoebae
 

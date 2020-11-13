@@ -18,7 +18,7 @@ elif pbs-config --version; then
     snakemake_profile="pbs-torque"
 
 else
-    echo Unable to detect job scheduler.
-    exit 1
+    echo Unable to detect a job scheduler.
+    #exit 1
 
 fi

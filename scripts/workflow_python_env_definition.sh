@@ -43,7 +43,7 @@ if test "$(command -v singularity)"; then
     echo ""
 else
     echo Unable to access Singularity.
-    exit 1
+    #exit 1
 fi
 
 # Define path to directory to contain python virtual environment files

@@ -69,6 +69,18 @@ documentation on the AMOEBAE Python3 code library (modules), please see the html
 can be opened with your web browser: [Code
 documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/code_documentation/html/index.html).
 
+## Recent changes
+
+### 2020 November 12
+
+The main amoebae repository (this repository) was updated for workflow
+management via [Snakemake](https://snakemake.readthedocs.io/en/stable/) and
+package management via [Conda](https://docs.conda.io/en/latest/). This has many
+advantages including simplifying the installation process considerably (see
+instructions above).  However, AMOEBAE may not run on clusters that do not have
+Conda installed (e.g., Compute Canada) without extensive customization (this
+issue will be addressed in future updates).
+
 
 ## Contact info
 
@@ -101,7 +113,7 @@ Cette recherche a été financée par le Conseil de recherches en sciences natur
 
 
 Also, help with testing AMOEBAE has been kindly provided by Raegan T. Larson,
-Shweta V. Pipalya, Kira More, and Kristína Záhonová.
+Shweta V. Pipalya, Kira More, Kristína Záhonová, and Emily K. Herman.
 
 
 ## License
