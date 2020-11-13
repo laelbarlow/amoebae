@@ -21,15 +21,6 @@ CMDLIST="mkdatadir
          interp_srchs      
          find_redun_seqs   
          plot              
-         add_to_models     
-         list_models       
-         get_alt_topos     
-         prune             
-         auto_prune        
-         reduce_tree       
-         constrain_mb      
-         visualize_tree    
-         replace_seqs      
          csv_to_fasta      
          check_depend      
          check_imports

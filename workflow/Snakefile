@@ -674,6 +674,17 @@ rule align_positive_hit_fastas:
         '; done '
 
 
+rule generate_doc_pdf:
+    """
+    Run script to generate documentation PDF file.
+    """
+    conda:
+        'envs/amoebae_env.yaml'
+
+    shell: 
+        'bash documentation/build_pdf.sh'
+
+
 rule plot_workflow:
     """
     Plot the snakemake workflow defined in the Snakefile file.

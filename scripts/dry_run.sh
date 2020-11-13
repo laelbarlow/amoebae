@@ -15,10 +15,6 @@ source scripts/determine_snakemake_env_options.sh
 # Activate python virtual environment.
 source scripts/workflow_python_env_definition.sh
 
-echo
-echo $profile_option
-echo
-
 # Run snakemake command.
 python3 --version && \
 snakemake --version && \
