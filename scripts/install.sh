@@ -153,12 +153,6 @@ rm -rf $PYENVDIR
 
 
 #######################################################
-
-# Download singularity container.
-#bash scripts/singularity_pull.sh
-
-
-#######################################################
 # Report how much time it took for this script to run.
 echo ""
 ELAPSED="Setting up this workflow took the following amount of time: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"
