@@ -7,7 +7,8 @@ if test "$(command -v conda)"; then
   env_options="--use-conda"
 
 elif test "$(command -v module)"; then
-  env_options="--use-envmodules"
+  #env_options="--use-envmodules"
+  env_options=""
 
 else
   env_options="--use-conda --use-singularity"

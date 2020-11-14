@@ -16,7 +16,9 @@ source scripts/determine_snakemake_env_options.sh
 source scripts/workflow_python_env_definition.sh
 
 # Run snakemake command.
+echo "Python version:" && \
 python3 --version && \
+echo "Snakemake version:" && \
 snakemake --version && \
 snakemake -n  --snakefile workflow/Snakefile && \
 snakemake plot_workflow -j 100 $env_options $profile_option $snakemake_profile \
