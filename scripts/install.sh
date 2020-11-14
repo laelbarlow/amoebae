@@ -93,7 +93,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         # replaces the default script with a script that loads modules and
         # activates a python virtual environment for every job).
         cp resources/example_slurm-jobscript.sh \
-        ~/.config/snakemake/slurm/slurm-jobscript.sh
+        ~/.config/snakemake/slurm_amoebae/slurm-jobscript.sh
 
 
     elif [ "$snakemake_profile" == "sge" ]; then
