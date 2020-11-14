@@ -109,10 +109,10 @@ else
     python3 -m venv $DIR 
     source $DIR/bin/activate
     pip install --upgrade pip
-    pip install workflow/env/amoebae_env_pip.txt
-    #pip install matplotlib==3.2.1
+    #pip install workflow/env/amoebae_env_pip.txt
+    pip install matplotlib==3.2.1
     pip install numpy==1.18.1
-    #pip install graphviz==0.13.2
+    pip install graphviz==0.13.2
     pip install requests
     pip install snakemake
   else

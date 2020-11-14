@@ -101,8 +101,9 @@ computation time.
 
    - Ignore this step if installing on a personal computer.
 
-   - For clusters using the SLURM job scheduler: Copy the example cluster config
-     file to the profile directory, and customize as necessary:
+   - For clusters using the [SLURM](https://slurm.schedmd.com/) job scheduler:
+     Copy the example cluster config file to the profile directory, and
+     customize as necessary:
 ```
     cp resources/example_slurm_cluster_config.yaml ~/.config/snakemake/slurm/cluster_config.yaml
     vim ~/.config/snakemake/slurm/cluster_config.yaml
