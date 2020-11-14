@@ -206,7 +206,7 @@ installed dependencies, simply run this command:
 
 ## Additional features
 
-- To enter snakemake commmands interactively, activate the Python virtual
+- To enter custom snakemake commmands, activate the Python virtual
   environment (in which snakemake is installed) using this command:
 ```
     source scripts/activate_python_env.sh

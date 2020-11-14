@@ -73,14 +73,14 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
             cd -
             # Now you can run snakemake as: snakemake --profile slurm ...
 
-            # Copy cluster_config.yaml example file from resources directory to
+            # Copy amoebae_cluster_config.yaml example file from resources directory to
             # profile files.
-            cp resources/example_slurm_cluster_config.yaml \
-            ~/.config/snakemake/slurm/cluster_config.yaml
+            cp resources/example_slurm_amoebae_cluster_config.yaml \
+            ~/.config/snakemake/slurm/amoebae_cluster_config.yaml
 
-            # Update value of the CLUSTER_CONFIG variable in the submission
-            # python file with the name of the cluster_config.yaml file.
-            sed -i 's/CLUSTER_CONFIG = \"\"/CLUSTER_CONFIG = \"cluster_config.yaml\"/g' \
+            # Update value of the amoebae_cluster_config variable in the submission
+            # python file with the name of the amoebae_cluster_config.yaml file.
+            sed -i 's/amoebae_cluster_config = \"\"/amoebae_cluster_config = \"amoebae_cluster_config.yaml\"/g' \
                 ~/.config/snakemake/slurm/slurm-submit.py 
         fi
 
