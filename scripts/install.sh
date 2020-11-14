@@ -66,23 +66,34 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         printf "\nSetting up config files for running SnakeMake with the SLURM job scheduler.\n\n"
         # Install configuration files for running on a SLURM cluster
         # (https://github.com/Snakemake-Profiles/slurm).
-        if [ ! -d ~/.config/snakemake/slurm ]; then
-            mkdir -p ~/.config/snakemake
-            cd ~/.config/snakemake
-            cookiecutter https://github.com/Snakemake-Profiles/slurm.git
-            cd -
-            # Now you can run snakemake as: snakemake --profile slurm ...
-        fi
+
+        # Removing existing directory, if present.
+        if [ -d ~/.config/snakemake/slurm_amoebae ]; then
+            rm -rf ~/.config/snakemake/slurm_amoebae 
+        fi 
+
+        mkdir -p ~/.config/snakemake
+        cd ~/.config/snakemake
+        cookiecutter https://github.com/Snakemake-Profiles/slurm.git slurm_amoebae
+        cd -
+        # Now you can run snakemake as: snakemake --profile slurm_amoebae ...
 
         # Copy amoebae_cluster_config.yaml example file from resources directory to
         # profile files.
         cp resources/example_slurm_cluster_config.yaml \
-        ~/.config/snakemake/slurm/amoebae_cluster_config.yaml
+        ~/.config/snakemake/slurm_amoebae/amoebae_cluster_config.yaml
 
         # Update value of the amoebae_cluster_config variable in the submission
         # python file with the name of the amoebae_cluster_config.yaml file.
         sed -i 's/cluster_config = \"\"/cluster_config = \"amoebae_cluster_config.yaml\"/g' \
-            ~/.config/snakemake/slurm/slurm-submit.py 
+            ~/.config/snakemake/slurm_amoebae/slurm-submit.py 
+
+        # Copy over slurm-jobscript.sh file in the profile directory (this
+        # replaces the default script with a script that loads modules and
+        # activates a python virtual environment for every job).
+        cp resources/example_slurm-jobscript.sh \
+        ~/.config/snakemake/slurm/slurm-jobscript.sh
+
 
     elif [ "$snakemake_profile" == "sge" ]; then
         printf "\nSetting up config files for running SnakeMake with the (SUN/Univa) Grid Engine job scheduler.\n\n"

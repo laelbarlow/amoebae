@@ -7,7 +7,7 @@ snakemake_profile=""
 
 if test "$(command -v sbatch)"; then
     echo SLURM job scheduler detected.
-    snakemake_profile="slurm"
+    snakemake_profile="slurm_amoebae"
 
 elif qstat -help; then
     printf "(SUN/Univa) Grid Engine job scheduler detected."
