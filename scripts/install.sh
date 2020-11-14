@@ -74,7 +74,8 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 
         mkdir -p ~/.config/snakemake
         cd ~/.config/snakemake
-        cookiecutter https://github.com/Snakemake-Profiles/slurm.git
+        cookiecutter https://github.com/Snakemake-Profiles/slurm.git \
+        profile_name="slurm_amoebae"
         cd -
         # Now you can run snakemake as: snakemake --profile slurm_amoebae ...
 
