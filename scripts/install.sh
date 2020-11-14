@@ -62,7 +62,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
  
     # Determine what job scheduler is in use, and set up the appropriate
     # SnakeMake profile.
-    if [ "$snakemake_profile" == "slurm" ]; then
+    if [ "$snakemake_profile" == "slurm_amoebae" ]; then
         printf "\nSetting up config files for running SnakeMake with the SLURM job scheduler.\n\n"
         # Install configuration files for running on a SLURM cluster
         # (https://github.com/Snakemake-Profiles/slurm).
