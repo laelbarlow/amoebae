@@ -21,7 +21,7 @@ if test "$(command -v module)"; then
 else
     # Print the version.
     echo ""
-    echo Using this version of Python:
+    echo Using this version of Python3:
     python3 --version
 
 fi
