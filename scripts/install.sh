@@ -72,17 +72,17 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
             cookiecutter https://github.com/Snakemake-Profiles/slurm.git
             cd -
             # Now you can run snakemake as: snakemake --profile slurm ...
-
-            # Copy amoebae_cluster_config.yaml example file from resources directory to
-            # profile files.
-            cp resources/example_slurm_amoebae_cluster_config.yaml \
-            ~/.config/snakemake/slurm/amoebae_cluster_config.yaml
-
-            # Update value of the amoebae_cluster_config variable in the submission
-            # python file with the name of the amoebae_cluster_config.yaml file.
-            sed -i 's/amoebae_cluster_config = \"\"/amoebae_cluster_config = \"amoebae_cluster_config.yaml\"/g' \
-                ~/.config/snakemake/slurm/slurm-submit.py 
         fi
+
+        # Copy amoebae_cluster_config.yaml example file from resources directory to
+        # profile files.
+        cp resources/example_slurm_amoebae_cluster_config.yaml \
+        ~/.config/snakemake/slurm/amoebae_cluster_config.yaml
+
+        # Update value of the amoebae_cluster_config variable in the submission
+        # python file with the name of the amoebae_cluster_config.yaml file.
+        sed -i 's/cluster_config = \"\"/cluster_config = \"amoebae_cluster_config.yaml\"/g' \
+            ~/.config/snakemake/slurm/slurm-submit.py 
 
     elif [ "$snakemake_profile" == "sge" ]; then
         printf "\nSetting up config files for running SnakeMake with the (SUN/Univa) Grid Engine job scheduler.\n\n"
