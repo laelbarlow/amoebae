@@ -7,47 +7,47 @@ __default__:
 
 
 add_to_dbs:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 1
   time: 10
 
 get_ref_seqs:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 2
   time: 20
 
 setup_and_run_fwd_srch:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 2
   time: 10 
 
 sum_fwd_srch:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 1
   time: 20
   
 setup_and_run_rev_srch:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 2
   time: 20
 
 sum_rev_srch:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 1
   time: 20
 
 find_redun_seqs:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 2
   time: 60
 
 plot_results:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 1
   time: 5
 
 align_positive_hit_fastas:
-  mem-per-cpu: 125000M
+  mem-per-cpu: 16000M
   ntasks: 1
   time: 5
 

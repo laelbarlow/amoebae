@@ -38,9 +38,10 @@ and large-scale analysis workflows such as
 prediction for all genes among several genomes. AMOEBAE addresses 
 analyses which are too cumbersome to be performed via webservices or simple
 scripts and yet require a level of detail and flexibility not offered by
-large-scale analysis workflows. AMOEBAE may be useful for analyzing the
+large-scale analysis workflows. AMOEBAE is useful for analyzing the
 distribution of homologues of up to approximately 30 genes/proteins among a
-sampling of no more than approximately 100 eukaryotic genomes. 
+sampling of no more than approximately 100 eukaryotic genomes, especially when
+follow-up with custom phylogenetic analysis is planned.
 
 AMOEBAE serves this purpose by providing several unique features. The core
 functionality of AMOEBAE is to run sequence similarity searches with multiple
