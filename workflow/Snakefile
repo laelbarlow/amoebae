@@ -12,9 +12,6 @@ from scripts.get_filenames_from_csv import get_query_filenames_from_csv,\
     get_database_filenames_from_csv
 from scripts.get_param_dict_for_add_to_dbs import get_param_dict_for_add_to_dbs
 
-# Get path to current working directory.
-cwd = os.getcwd()
-
 # Define path to CSV file listing genomes/proteomes/transcriptomes to use.
 database_csv = 'resources/genomes.csv'
 # Get a complete list of filenames for genomes/proteomes/transcriptome files.
@@ -73,8 +70,12 @@ localrules: final_results, download_dbs, download_queries, \
 list_dbs_and_queries, help
 
 
-# Define global container image (if the --use-singularity option is used).
+# Define global container image (for if the --use-singularity option is used).
 container: "docker://continuumio/miniconda3:4.8.2"
+
+# Define global environment modules (for if the --use-envmodules option is
+# used).
+global_envmodules = open('workflow/envs/amoebae_env_modules.txt', 'r').read().split('\n')
 
 
 # Define rules for the workflow.
@@ -163,6 +164,9 @@ rule add_to_dbs:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) && '
@@ -196,6 +200,9 @@ rule add_to_dbs_local:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
@@ -224,6 +231,9 @@ rule add_to_query_seqs:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} '
         'add_to_queries '
@@ -249,6 +259,9 @@ rule add_to_query_seqs_local:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} '
         'add_to_queries '
@@ -270,6 +283,9 @@ rule align_fasta:
         
     conda:
         'envs/amoebae_env.yaml'
+
+    envmodules:
+        global_envmodules
 
     shell:
         'python3 {input.amoebae_script} '
@@ -295,6 +311,9 @@ rule add_to_query_ali:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} '
            'add_to_queries '
@@ -319,6 +338,9 @@ rule add_to_query_ali_local:
 
     conda:
         'envs/amoebae_env.yaml'
+
+    envmodules:
+        global_envmodules
 
     shell:
         'python3 {input.amoebae_script} '
@@ -380,6 +402,9 @@ rule get_ref_seqs:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} '
             'get_redun_hits ' + \
@@ -416,6 +441,9 @@ rule setup_and_run_fwd_srch:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} ' + \
             'setup_fwd_srch ' + \
@@ -446,6 +474,9 @@ rule sum_fwd_srch:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'conda list && '
         'python3 {input.amoebae_script} '
@@ -473,6 +504,9 @@ rule setup_and_run_rev_srch:
 
     conda:
         'envs/amoebae_env.yaml'
+
+    envmodules:
+        global_envmodules
 
     shell:
         'python3 {input.amoebae_script} '
@@ -507,6 +541,9 @@ rule sum_rev_srch:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} '
             'sum_rev_srch ' + \
@@ -533,6 +570,9 @@ rule interp_srchs:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} '
             'interp_srchs ' + \
@@ -557,6 +597,9 @@ rule find_redun_seqs:
 
     conda:
         'envs/amoebae_env.yaml'
+
+    envmodules:
+        global_envmodules
 
     shell:
         'python3 {input.amoebae_script} '
@@ -590,6 +633,9 @@ rule plot_results:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} '
             'plot ' + \
@@ -614,6 +660,9 @@ rule get_positive_hit_fastas:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'python3 {input.amoebae_script} '
             'csv_to_fasta ' + \
@@ -636,6 +685,9 @@ rule get_fwd_hit_seqs:
 
     conda:
         'envs/amoebae_env.yaml'
+
+    envmodules:
+        global_envmodules
 
     shell:
         'python3 {input.amoebae_script} '
@@ -662,6 +714,9 @@ rule align_positive_hit_fastas:
     conda:
         'envs/amoebae_env.yaml'
 
+    envmodules:
+        global_envmodules
+
     shell:
         'mkdir -p {output.ali_dir} && '
         'for X in {input.fasta_dir}/*.fa; '
@@ -680,6 +735,9 @@ rule generate_doc_pdf:
     """
     conda:
         'envs/amoebae_env.yaml'
+
+    envmodules:
+        global_envmodules
 
     shell: 
         'bash documentation/build_pdf.sh'
@@ -700,6 +758,9 @@ rule plot_workflow:
 
     conda:
         'envs/amoebae_env.yaml'
+
+    envmodules:
+        global_envmodules
 
     shell: 
         'conda list && '
