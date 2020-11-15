@@ -478,7 +478,6 @@ rule sum_fwd_srch:
         global_envmodules
 
     shell:
-        'conda list && '
         'python3 {input.amoebae_script} '
             'sum_fwd_srch ' + \
                 '{input.fwd_srch_out} ' + \
@@ -763,7 +762,6 @@ rule plot_workflow:
         global_envmodules
 
     shell: 
-        #'conda list && '
         'snakemake --cores 1 -p --rulegraph | dot -Tpdf > {output} && '
         'snakemake --cores 1 -p --rulegraph | dot -Tpng > images/example_workflow_diagram.png '
 
