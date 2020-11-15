@@ -11,6 +11,11 @@ add_to_dbs:
   ntasks: 1
   time: 10
 
+add_to_queries:
+  mem-per-cpu: 16000M
+  ntasks: 1
+  time: 10
+
 get_ref_seqs:
   mem-per-cpu: 16000M
   ntasks: 2
