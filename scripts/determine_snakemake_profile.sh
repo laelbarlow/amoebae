@@ -11,11 +11,11 @@ if test "$(command -v sbatch)"; then
 
 elif qstat -help; then
     printf "(SUN/Univa) Grid Engine job scheduler detected."
-    snakemake_profile="sge"
+    snakemake_profile="sge_amoebae"
 
 elif pbs-config --version; then
     printf "PBS-TORQUE job scheduler detected."
-    snakemake_profile="pbs-torque"
+    snakemake_profile="pbs-torque_amoebae"
 
 else
     echo Unable to detect a job scheduler.

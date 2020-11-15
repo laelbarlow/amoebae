@@ -75,7 +75,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         mkdir -p ~/.config/snakemake
         cd ~/.config/snakemake
         cookiecutter https://github.com/Snakemake-Profiles/slurm.git \
-        profile_name="slurm_amoebae"
+            profile_name="slurm_amoebae"
         cd -
         # Now you can run snakemake as: snakemake --profile slurm_amoebae ...
 
@@ -95,45 +95,47 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         cp resources/example_slurm-jobscript.sh \
         ~/.config/snakemake/slurm_amoebae/slurm-jobscript.sh
 
-
-    elif [ "$snakemake_profile" == "sge" ]; then
+    elif [ "$snakemake_profile" == "sge_amoebae" ]; then
         printf "\nSetting up config files for running SnakeMake with the (SUN/Univa) Grid Engine job scheduler.\n\n"
 
         # Install configuration files for running on a cluster with the Grid
         # Engine scheduler.
-        if [ ! -d ~/.config/snakemake/sge ]; then
-            mkdir -p ~/.config/snakemake
-            cd ~/.config/snakemake
-            # Make profile directory using cookiecutter to install from GitHub.
-            cookiecutter https://github.com/Snakemake-Profiles/sge.git
-            # Make Python scripts in profile executable.
-            chmod a+x ~/.config/snakemake/sge/*.py
-            # Change back to previous directory.
-            cd -
-            # Now you can run snakemake as: snakemake --profile sge ...
 
-        fi
+        # Removing existing directory, if present.
+        if [ -d ~/.config/snakemake/sge_amoebae ]; then
+            rm -rf ~/.config/snakemake/sge_amoebae 
+        fi 
+
+        mkdir -p ~/.config/snakemake
+        cd ~/.config/snakemake
+        # Make profile directory using cookiecutter to install from GitHub.
+        cookiecutter https://github.com/Snakemake-Profiles/sge.git \
+            profile_name="sge_amoebae"
+        # Make Python scripts in profile executable.
+        chmod a+x ~/.config/snakemake/sge_amoebae/*.py
+        # Change back to previous directory.
+        cd -
+        # Now you can run snakemake as: snakemake --profile sge_amoebae ...
 
     elif [ "$snakemake_profile" == "pbs-torque" ]; then
         # Install configuration files for running on a cluster with the
         # PBS-TORQUE scheduler.
-        if [ ! -d ~/.config/snakemake/pbs-torque ]; then
-            printf "\nSetting up config files for running SnakeMake with the PBS-TORQUE job scheduler.\n\n"
 
-            mkdir -p ~/.config/snakemake
-            cd ~/.config/snakemake
-            # Make profile directory using cookiecutter to install from GitHub.
-            cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git
-            # Make Python scripts in profile executable.
-            chmod a+x ~/.config/snakemake/pbs-torque/*.py
-            # Change back to previous directory.
-            cd -
-            # Now you can run snakemake as: snakemake --profile sge ...
+        # Removing existing directory, if present.
+        if [ -d ~/.config/snakemake/pbs-torque_amoebae ]; then
+            rm -rf ~/.config/snakemake/pbs-torque_amoebae
+        fi 
 
-        else
-            printf "\nA profile already exists for running SnakeMake with the PBS-TORQUE job scheduler.\n\n"
-
-        fi
+        mkdir -p ~/.config/snakemake
+        cd ~/.config/snakemake
+        # Make profile directory using cookiecutter to install from GitHub.
+        cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git \
+            profile_name="pbs-torque_amoebae"
+        # Make Python scripts in profile executable.
+        chmod a+x ~/.config/snakemake/pbs-torque_amoebae/*.py
+        # Change back to previous directory.
+        cd -
+        # Now you can run snakemake as: snakemake --profile pbs-torque_amoebae ...
 
     else
         printf "\nUnable to automatically set up config files for submitting
