@@ -117,7 +117,7 @@ else
     reportlab==3.5.51 \
     pandoc==2.0a4 \
     pandas==1.1.3 \
-    matplotlib==3.3.1 \
+    matplotlib \
     graphviz==2.40.1 \
     snakemake==5.5.4
 
