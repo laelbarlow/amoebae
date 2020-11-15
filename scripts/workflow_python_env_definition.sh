@@ -108,13 +108,18 @@ else
     python3 -m venv $DIR 
     source $DIR/bin/activate
     pip install --upgrade pip
-    pip install matplotlib==3.2.1
-    pip install numpy==1.18.1
-    pip install pandas
-    pip install graphviz==0.13.2
     pip install requests
-    pip install snakemake
-    pip install biopython==1.77
+    pip install \
+    numpy==1.18.1 \
+    biopython=1.77 \
+    gffutils=0.10.1 \
+    pypdf2=1.26.0 \
+    reportlab=3.5.51 \
+    pandoc=2.11 \
+    pandas=1.1.3 \
+    matplotlib=3.3.1 \
+    graphviz=2.40.1 \
+    snakemake=5.5.4
 
   else
     # Otherwise, just activate the environment.
