@@ -109,6 +109,7 @@ else
     source $DIR/bin/activate
     pip install --upgrade pip
     pip install requests
+    pip install setuptools wheel
     pip install \
     numpy==1.18.1 \
     biopython==1.77 \
@@ -119,7 +120,7 @@ else
     pandas==1.1.3 \
     matplotlib \
     graphviz==0.14.2 \
-    snakemake==5.5.4
+    snakemake
 
   else
     # Otherwise, just activate the environment.
