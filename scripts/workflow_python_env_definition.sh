@@ -105,16 +105,17 @@ if test "$(command -v conda)"; then
 else
   # Install dependencies in virtual environment using pip.
   if [ ! -d "$DIR" ]; then
-    #virtualenv --no-download $DIR 
     python3 -m venv $DIR 
     source $DIR/bin/activate
     pip install --upgrade pip
-    #pip install workflow/env/amoebae_env_pip.txt
     pip install matplotlib==3.2.1
     pip install numpy==1.18.1
+    pip install pandas
     pip install graphviz==0.13.2
     pip install requests
     pip install snakemake
+
+    python3 -c "import pandas as pd"
   else
     # Otherwise, just activate the environment.
     source $DIR/bin/activate
