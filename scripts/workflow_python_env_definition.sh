@@ -108,8 +108,8 @@ else
     python3 -m venv $DIR 
     source $DIR/bin/activate
     pip install --upgrade pip
-    pip install requests
     pip install setuptools wheel
+    pip install requests
     pip install \
     numpy==1.18.1 \
     biopython==1.77 \
@@ -118,9 +118,9 @@ else
     reportlab==3.5.51 \
     pandoc==2.0a4 \
     pandas==1.1.3 \
-    matplotlib \
+    matplotlib==3.3.2 \
     graphviz==0.14.2 \
-    snakemake
+    snakemake==5.26.1
 
   else
     # Otherwise, just activate the environment.
