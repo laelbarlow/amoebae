@@ -114,8 +114,8 @@ else
     pip install graphviz==0.13.2
     pip install requests
     pip install snakemake
+    pip install biopython==1.77
 
-    python3 -c "import pandas as pd"
   else
     # Otherwise, just activate the environment.
     source $DIR/bin/activate
