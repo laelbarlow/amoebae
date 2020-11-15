@@ -118,7 +118,7 @@ else
     pandoc==2.0a4 \
     pandas==1.1.3 \
     matplotlib \
-    graphviz==2.40.1 \
+    graphviz==0.14.2 \
     snakemake==5.5.4
 
   else
