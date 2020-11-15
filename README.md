@@ -89,7 +89,7 @@ computation time.
 3. Run this command to setup a Python environment for running snakemake. This
    will also set up cluster configuration files using [snakemake
    profiles](https://github.com/snakemake-profiles). When prompted to confirm
-   details, choose default options. 
+   details, choose default options (press enter/return). 
     
 ```
     make install
