@@ -115,7 +115,7 @@ else
     gffutils==0.10.1 \
     pypdf2==1.26.0 \
     reportlab==3.5.51 \
-    pandoc==2.11 \
+    pandoc==2.0a4 \
     pandas==1.1.3 \
     matplotlib==3.3.1 \
     graphviz==2.40.1 \
