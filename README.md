@@ -112,7 +112,7 @@ computation time.
 ```
     vim ~/.config/snakemake/slurm_amoebae/amoebae_cluster_config.yaml
 ```
-   - For clusters using the [(SUN/Univa) Grid Engine job scheduler](https://aws-elb.univa.com/products/univa-grid-engine.php): Modify the cluster
+   - For clusters using the [(SUN/Univa) Grid Engine] job scheduler(https://aws-elb.univa.com/products/univa-grid-engine.php): Modify the cluster
      config file as necessary:
 ```
     vim ~/.config/snakemake/sge_amoebae/cluster.yaml
