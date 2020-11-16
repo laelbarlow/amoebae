@@ -75,19 +75,20 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         mkdir -p ~/.config/snakemake
         cd ~/.config/snakemake
         cookiecutter https://github.com/Snakemake-Profiles/slurm.git \
-            profile_name="slurm_amoebae"
+            profile_name="slurm_amoebae" \
+            cluster_config="cluster_config.yaml"
         cd -
         # Now you can run snakemake as: snakemake --profile slurm_amoebae ...
 
         # Copy amoebae_cluster_config.yaml example file from resources directory to
         # profile files.
         cp resources/example_slurm_cluster_config.yaml \
-        ~/.config/snakemake/slurm_amoebae/amoebae_cluster_config.yaml
+        ~/.config/snakemake/slurm_amoebae/cluster_config.yaml
 
-        # Update value of the amoebae_cluster_config variable in the submission
-        # python file with the name of the amoebae_cluster_config.yaml file.
-        sed -i 's/cluster_config = \"\"/cluster_config = \"amoebae_cluster_config.yaml\"/g' \
-            ~/.config/snakemake/slurm_amoebae/slurm-submit.py 
+        ## Update value of the cluster_config variable in the submission
+        ## python file with the name of the cluster_config.yaml file.
+        #sed -i 's/CLUSTER_CONFIG = \"\"/CLUSTER_CONFIG = \"cluster_config.yaml\"/g' \
+        #    ~/.config/snakemake/slurm_amoebae/slurm-submit.py 
 
         # Copy over slurm-jobscript.sh file in the profile directory (this
         # replaces the default script with a script that loads modules and
