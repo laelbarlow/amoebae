@@ -100,8 +100,10 @@ computation time.
 ```
 
 4. Edit the cluster settings configuration file as needed to run on your HPC
-   cluster (this will be specific to the job scheduler, etc.). See information
-   [here](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles).
+   cluster (this will be specific to the job scheduler, etc.). See [snakemake
+   profiles
+   documentation](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles)
+   for further information.
 
    - Ignore this step if installing on a personal computer.
 
@@ -110,14 +112,15 @@ computation time.
 ```
     vim ~/.config/snakemake/slurm_amoebae/amoebae_cluster_config.yaml
 ```
-   - For clusters using the (SUN/Univa) Grid Engine job scheduler: Modify the cluster
+   - For clusters using the [(SUN/Univa) Grid Engine job scheduler](https://aws-elb.univa.com/products/univa-grid-engine.php): Modify the cluster
      config file as necessary:
 ```
-    vim ~/.config/snakemake/sge/cluster.yaml
+    vim ~/.config/snakemake/sge_amoebae/cluster.yaml
 ```
 
-5. Verify the workflow definition, and generate a diagram of steps in the
-   workflow. This should write a PDF file to the results subdirectory.
+5. Execute one workflow step to verify the workflow definition and cluster
+   profile setup, and generate a diagram of steps in the workflow. This should
+   write a PDF file to the results subdirectory.
 
 ```
     make dry_run
@@ -278,7 +281,12 @@ This information is important for customizing rules in the
 
 ## Recent changes
 
-### 2020 November 12
+#### 2020 November 15
+
+AMOEBAE now runs on Compute Canada clusters (via the SLURM job scheduler) using
+environment modules and a Python venv virtual environment.
+
+#### 2020 November 12
 
 The main amoebae repository (this repository) was updated for workflow
 management via [Snakemake](https://snakemake.readthedocs.io/en/stable/) and
@@ -303,6 +311,7 @@ Please cite the [AMOEBAE GitHub
 repository](https://github.com/laelbarlow/amoebae) (or alternative permanent
 repositories if relevant). Also, please remember to cite the software packages which
 are dependencies of AMOEBAE.
+
 
 ## Acknowledgments
 
