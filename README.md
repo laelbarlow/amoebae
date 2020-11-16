@@ -280,18 +280,13 @@ This information is important for customizing rules in the
 
 #### 2020 November 15
 
-AMOEBAE now runs on Compute Canada clusters (via the SLURM job scheduler) using
-environment modules and a Python venv virtual environment.
-
-#### 2020 November 12
-
 The main amoebae repository (this repository) was updated for workflow
 management via [Snakemake](https://snakemake.readthedocs.io/en/stable/) and
 package management via [Conda](https://docs.conda.io/en/latest/). This has many
 advantages including simplifying the installation process considerably (see
-instructions above).  However, AMOEBAE may not run on clusters that do not have
-Conda installed (e.g., Compute Canada) without extensive customization (this
-issue will be addressed in future updates).
+instructions above). Also, AMOEBAE now runs on Compute Canada clusters (via the
+SLURM job scheduler) using environment modules and a Python venv virtual
+environment.
 
 
 ## Contact info
