@@ -1,10 +1,7 @@
 
 
 <p align="center">
-<img src="images/AMOEBAE_logo10.png" width="600">
-</p>
-<p align="center">
-<img src="images/Beta_testing.png" width="600">
+<img src="images/AMOEBAE_logo10.png" width="550">
 </p>
 
 
@@ -132,7 +129,7 @@ computation time.
 Here's a diagram of the steps in the overall workflow:
 
 <p align="center">
-<img src="images/example_workflow_diagram.png" width="400">
+<img src="images/example_workflow_diagram.png" width="500">
 </p>
 
 Several features make this workflow easy to run as a proof of principle while
