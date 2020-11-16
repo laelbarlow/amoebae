@@ -78,7 +78,11 @@ computation time.
     - Python version 3.
     - [Conda](https://docs.conda.io/en/latest/) **or**
       [Singularity](https://sylabs.io/guides/3.0/user-guide/installation.html)
-      version 3.6+.
+      version 3.6+ **or** [Environment
+      modules](http://modules.sourceforge.net/).
+        - **Note**: If environment modules are present, then currently these
+          will be used by default in combination with a Python
+          [venv](https://docs.python.org/3/library/venv.html) environment.
 
 2. Clone this repository into an appropriate directory.
 ```
