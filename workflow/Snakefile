@@ -205,7 +205,7 @@ rule add_to_dbs_local:
 
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
-        'sp=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
+        'sp=$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) && '
         'python3 {input.amoebae_script} '
             'add_to_dbs '
                 '{input.input_file} '
