@@ -53,7 +53,7 @@ fi
 if [ "$(uname)" == "Darwin" ]; then
     printf "\nDetected MacOS."
     # Do something under Mac OS X platform
-    echo "This software has not been tested on MacOS, as it has been designed to run on linux clusters."
+    echo "No further setup required."
     exit 1
 
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
@@ -118,9 +118,13 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         cd -
         # Now you can run snakemake as: snakemake --profile sge_amoebae ...
 
+
     elif [ "$snakemake_profile" == "pbs-torque" ]; then
         # Install configuration files for running on a cluster with the
         # PBS-TORQUE scheduler.
+
+        printf "\nSetting up config files for running SnakeMake with the
+        PBS-TORQUE job scheduler.\n\n"
 
         # Removing existing directory, if present.
         if [ -d ~/.config/snakemake/pbs-torque_amoebae ]; then
