@@ -54,7 +54,6 @@ if [ "$(uname)" == "Darwin" ]; then
     printf "\nDetected MacOS."
     # Do something under Mac OS X platform
     echo "No further setup required."
-    exit 1
 
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     printf "\nDetected Linux.\n\n"
