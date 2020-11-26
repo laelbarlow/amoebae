@@ -1,25 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>misc_functions module &#8212; amoebae 0.0 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="module_add_to_db module" href="module_add_to_db.html" />
-    <link rel="prev" title="get_nonredun_import_statements_for_amoebae module" href="get_nonredun_import_statements_for_amoebae.html" /> 
+    <link rel="next" title="nex_to_hmm module" href="nex_to_hmm.html" />
+    <link rel="prev" title="mask_nex module" href="mask_nex.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,12 +30,13 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="module_add_to_db.html" title="module_add_to_db module"
+          <a href="nex_to_hmm.html" title="nex_to_hmm module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="get_nonredun_import_statements_for_amoebae.html" title="get_nonredun_import_statements_for_amoebae module"
+          <a href="mask_nex.html" title="mask_nex module"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">misc_functions module</a></li> 
       </ul>
     </div>  
 
@@ -48,56 +48,55 @@
   <div class="section" id="module-misc_functions">
 <span id="misc-functions-module"></span><h1>misc_functions module<a class="headerlink" href="#module-misc_functions" title="Permalink to this headline">¶</a></h1>
 <p>Contains miscelaneous functions used in hmmer_tools scripts.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="misc_functions.get_abbrev_fa_record_text_from_obj">
-<code class="descclassname">misc_functions.</code><code class="descname">get_abbrev_fa_record_text_from_obj</code><span class="sig-paren">(</span><em>obj</em>, <em>db_name</em>, <em>prot_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/misc_functions.html#get_abbrev_fa_record_text_from_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#misc_functions.get_abbrev_fa_record_text_from_obj" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">misc_functions.</code><code class="sig-name descname">get_abbrev_fa_record_text_from_obj</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">db_name</span></em>, <em class="sig-param"><span class="n">prot_name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/misc_functions.html#get_abbrev_fa_record_text_from_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#misc_functions.get_abbrev_fa_record_text_from_obj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a Bio.SeqIO sequence object and returns the fasta record as a
 string (two lines for writing to a fasta format file).</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="misc_functions.get_fa_record_text_from_obj">
-<code class="descclassname">misc_functions.</code><code class="descname">get_fa_record_text_from_obj</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/misc_functions.html#get_fa_record_text_from_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#misc_functions.get_fa_record_text_from_obj" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">misc_functions.</code><code class="sig-name descname">get_fa_record_text_from_obj</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/misc_functions.html#get_fa_record_text_from_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#misc_functions.get_fa_record_text_from_obj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a Bio.SeqIO sequence object and returns the fasta record as a
 string (two lines for writing to a fasta format file).</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="misc_functions.launch">
-<code class="descclassname">misc_functions.</code><code class="descname">launch</code><span class="sig-paren">(</span><em>app</em>, <em>thing</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/misc_functions.html#launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#misc_functions.launch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">misc_functions.</code><code class="sig-name descname">launch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">app</span></em>, <em class="sig-param"><span class="n">thing</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/misc_functions.html#launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#misc_functions.launch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="misc_functions.query_yes_no">
-<code class="descclassname">misc_functions.</code><code class="descname">query_yes_no</code><span class="sig-paren">(</span><em>question</em>, <em>default='yes'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/misc_functions.html#query_yes_no"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#misc_functions.query_yes_no" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">misc_functions.</code><code class="sig-name descname">query_yes_no</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">question</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">'yes'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/misc_functions.html#query_yes_no"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#misc_functions.query_yes_no" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="get_nonredun_import_statements_for_amoebae.html"
-                        title="previous chapter">get_nonredun_import_statements_for_amoebae module</a></p>
+  <p class="topless"><a href="mask_nex.html"
+                        title="previous chapter">mask_nex module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="module_add_to_db.html"
-                        title="next chapter">module_add_to_db module</a></p>
+  <p class="topless"><a href="nex_to_hmm.html"
+                        title="next chapter">nex_to_hmm module</a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -112,17 +111,18 @@ string (two lines for writing to a fasta format file).</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="module_add_to_db.html" title="module_add_to_db module"
+          <a href="nex_to_hmm.html" title="nex_to_hmm module"
              >next</a> |</li>
         <li class="right" >
-          <a href="get_nonredun_import_statements_for_amoebae.html" title="get_nonredun_import_statements_for_amoebae module"
+          <a href="mask_nex.html" title="mask_nex module"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">amoebae 0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">misc_functions module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, Lael D. Barlow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
   </body>
 </html>
