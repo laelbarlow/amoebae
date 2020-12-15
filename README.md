@@ -107,7 +107,7 @@ computation time.
    - For clusters using the [SLURM](https://slurm.schedmd.com/) job scheduler:
      Customize the template cluster config file as necessary:
 ```
-    vim ~/.config/snakemake/slurm_amoebae/amoebae_cluster_config.yaml
+    vim ~/.config/snakemake/slurm_amoebae/cluster_config.yaml
 ```
    - For clusters using the [(SUN/Univa) Grid Engine] job scheduler(https://aws-elb.univa.com/products/univa-grid-engine.php): Modify the cluster
      config file as necessary:
