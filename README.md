@@ -235,20 +235,40 @@ analysis results and virtual environments, simply run this command.
 ## Customization
 
 - To search in a different set of genomes/proteomes/transcriptomes, modify the
-  resources/genomes.csv file by adding information about predicted peptide
+  `resources/genomes.csv` file by adding information about predicted peptide
   FASTA files (.faa), nucleotide FASTA files (.fna), or GFF3 annotation files
   (.gff3) of interest.
+    - In the "FASTA header delimiter" column, enter the text character that
+      separates sequence IDs from other elements of the FASTA header. In the
+      case of FASTA files from NCBI for example, this is usually a space
+      character.
+    - In the "Sequence ID position" column, enter the position of the sequence
+      ID in a list resulting from splitting the whole FASTA header on the
+      character defined in the "FASTA header delimiter" column. Importantly,
+      counting starts from zero, so if the sequence header starts with the
+      sequence ID (as in the case of most NCBI FASTA files), then the value in
+      this column should be "0".
+    - If the FASTA files are to be downloaded from a website, enter the URL in
+      the "Location" column. Otherwise, it will be assumed that the files have
+      been copied to the `resources/local_db_files` directory.
 - If you wish to search in any local FASTA files (instead of downloading
   directly from NCBI), copy those to the resources/local\_db\_files directory
   (in addition to listing them in the genomes.csv file).
-- To search with different query sequences, modify the resources/queries.csv
+- To search with different query sequences, modify the `resources/queries.csv`
   file.
+    - There are only two columns: "Filename" and "Sequence ID". There may be
+      multiple rows with the same filename, but different sequence IDs. In such
+      cases, the indicated sequences will be downloaded from NCBI and aligned
+      to make a sequence profile query for similarity searching.
+    - If the Sequence ID field is left blank in a row, then the filename will
+      be assumed to correspond to a file in the `resources/local_query_files`
+      directory.
 - If you wish to search using local query (FASTA) files, copy them to the
-  resources/local\_query\_files directory (in addition to listing their
+  `resources/local_query_files` directory (in addition to listing their
   filenames in the queries.csv file). 
 - If necessary, list a different database file to use for identifying reference
   sequences and running reverse searches against, by modifying the
-  resources/reference\_db\_list.txt file. Well-annotated reference genomes,
+  `resources/reference_db_list.txt` file. Well-annotated reference genomes,
   such as those of *Arabidopsis thaliana*, *Saccharomyces cerevisiae*, or *Homo
   sapiens* are most useful for this purpose.
 - If you have previous results yielded prior to customizing the workflow, clear
