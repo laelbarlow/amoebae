@@ -17,27 +17,12 @@
 """
 import sys
 import os
-#sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
-#from Bio import SeqIO
 import re
 import pylab
 import subprocess
 import numpy as np
 
 
-#command_line_list = sys.argv
-#infilep = str(command_line_list[1])
-#infasta = str(command_line_list[2])
-
-## Get values from column as list.
-#column_index = 9
-#values = []
-#with open(infilep) as infh:
-#    for i in infh:
-#        if not i.startswith('ID') and not i.startswith('\n'):
-#            spliti = i.split(',')
-#            value = spliti[column_index]
-#            values.append(value)
 
 def generate_histogram(title,
                        values,
