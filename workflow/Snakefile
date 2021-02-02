@@ -55,7 +55,7 @@ for f in glob.glob('resources/local_db_files/*'):
 for f in glob.glob('resources/local_query_files/*'):
     if f.endswith('.faa') or f.endswith('.afaa'):
         # Check that file is listed in input CSV file.
-        assert os.path.basename(f) in single_fasta_query_names_all,\
+        assert os.path.basename(f) in single_fasta_query_names_all + multi_fasta_query_names_all,\
         """Error: File with filename %s is not listed in CSV file %s.""" % \
         (os.path.basename(f), query_csv)
 
