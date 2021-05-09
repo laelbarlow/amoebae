@@ -59,35 +59,46 @@ for obtaining better exon predictions. In addition, AMOEBAE provides many
     [SnakeMake](https://snakemake.readthedocs.io/en/stable/).
 
 
+## Requirements 
+
+The following setup procedure should work on most Linux HPC clusters. This can
+also be run on Linux or MacOS personal computers, but this is generally not
+recommended due to requirements of storage (~30GB+) and computation time. 
+
+This workflow has minimal essential dependencies (see below for installation
+instructions):
+- Python version 3.
+- [Conda](https://docs.conda.io/en/latest/miniconda.html) **or**
+  [Singularity](https://sylabs.io/docs/)
+  version 3.6+.
+
 ## Installation
 
-The following setup procedure should work on most Linux HPC clusters (although
-some may require manual setup of cluster configuration profiles specific to the
-job scheduler). This can also be run on Linux or MacOS personal computers, but
-this is not recommended due to requirements of storage (~30GB+) and
-computation time. 
+These instructions are for setting up and running AMOEBAE via the
+[SnakeMake](https://snakemake.readthedocs.io/en/stable/) command-line
+interface, which provides the flexibility to run AMOEBAE in a wide variety of
+systems (further automation via custom scripts is possible, but will likely be
+very user-specific in design). 
 
-1. This workflow has minimal essential dependencies. Note that **you do not
-   need to manually install any additional dependencies (software packages) or
-   make any virtual environments**, because this will be done automatically
-   (see below). Simply ensure that these essential dependencies are available
-   on your system:
-    - Python version 3.
-    - [Conda](https://docs.conda.io/en/latest/) **or**
-      [Singularity](https://sylabs.io/guides/3.0/user-guide/installation.html)
-      version 3.6+ **or** [Environment
-      modules](http://modules.sourceforge.net/).
-        - **Note**: If environment modules are present, then currently these
-          will be used by default in combination with a Python
-          [venv](https://docs.python.org/3/library/venv.html) environment.
+1. If you do not already have the conda package and environment manager
+   installed, this may be easily installed using the latest version of
+   Miniconda3 from the [conda
+   website](https://docs.conda.io/en/latest/miniconda.html). Some HPC clusters
+   do not allow use of conda, but in such cases conda can still be used to
+       install software in [Singularity](https://sylabs.io/docs/) containers
+       (this process is automated by snakemake). If singularity is not already
+       installed on your system, you will need to request that you system
+       administrator install it for you. 
 
-2. Clone this repository into an appropriate directory.
-```
-    git clone https://github.com/laelbarlow/amoebae.git 
-    cd amoebae
-```
+2. If you do not already have the snakemake workflow manager installed then you
+   will need to install it. If you have conda installed, then you can follow
+   the [snakemake installation
+   instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
+   on the snakemake website. If conda cannot be installed, then snakemake can
+   be installed in a Python virtual environment as follows: ...
 
-3. Run this command to setup a Python environment for running snakemake. This
+
+Run this command to setup a Python environment for running snakemake. This
    will also set up cluster configuration files using [snakemake
    profiles](https://github.com/snakemake-profiles). When prompted to confirm
    details, choose default options (press enter/return). 
@@ -95,6 +106,13 @@ computation time.
 ```
     make install
 ```
+
+2. Clone this repository into an appropriate directory.
+```
+    git clone https://github.com/laelbarlow/amoebae.git 
+    cd amoebae
+```
+
 
 4. Edit the cluster settings configuration file as needed to run on your HPC
    cluster (this will be specific to the job scheduler, etc.). See [snakemake
