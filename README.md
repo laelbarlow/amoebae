@@ -58,6 +58,12 @@ for obtaining better exon predictions. In addition, AMOEBAE provides many
     AMOEBAE can be reproduced via
     [SnakeMake](https://snakemake.readthedocs.io/en/stable/).
 
+Here's a diagram of the steps in the overall workflow:
+
+<p align="center">
+<img src="images/example_workflow_diagram.png" width="500">
+</p>
+
 
 ## Requirements 
 
@@ -97,43 +103,56 @@ very user-specific in design).
    on the snakemake website. If conda cannot be installed, then snakemake can
    be installed in a Python virtual environment as follows: ...
 
+   In addition,
+   cookiecutter
 
-Run this command to setup a Python environment for running snakemake. This
-   will also set up cluster configuration files using [snakemake
-   profiles](https://github.com/snakemake-profiles). When prompted to confirm
-   details, choose default options (press enter/return). 
-    
+4. If running on an HPC cluster (recommended) then you will need to generate
+   cluster configuration files so that snakemake knows how to submit jobs
+   appropriately on your system. This is described in the [snakemake
+   documentation on
+   profiles](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles).
+   To set up a profile, select the appropriate template profile for your system
+   from the [snakemake profiles](https://github.com/snakemake-profiles/doc),
+   and follow the relevant setup instructions provided. This will write new
+   files to a new hidden directory in your filesystem. For example, if your HPC
+   cluster uses PBS-TORQUE, and you choose to name the new snakemake
+   profile "pbs-torque", then cluster configuration files will be written to a
+   directory with the path `~/.config/snakemake/pbs-torque`. For example:
 ```
-    make install
+mkdir -p ~/.config/snakemake
+cd ~/.config/snakemake
+cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git
+chmod a+x ~/.config/snakemake/pbs-torque/*.py
 ```
 
-2. Clone this repository into an appropriate directory.
+5. To edit the cluster configuration in the snakemake profile (if necessary),
+   edit the `cluster_config.yaml` or `cluster.yaml` file (depends on what type
+   of profile) using your favourite text editor. Details of the configuration
+   will depend on the job scheduler and resources available on your system, and
+   can be modified at any time.
+
+6. Clone the AMOEBAE repository into an appropriate directory.
 ```
     git clone https://github.com/laelbarlow/amoebae.git 
     cd amoebae
 ```
 
+7. Collect input FASTA files. 
 
-4. Edit the cluster settings configuration file as needed to run on your HPC
-   cluster (this will be specific to the job scheduler, etc.). See [snakemake
-   profiles
-   documentation](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles)
-   for further information.
 
-   - Ignore this step if installing on a personal computer.
-
-   - For clusters using the [SLURM](https://slurm.schedmd.com/) job scheduler:
-     Customize the template cluster config file as necessary:
+8. Do a dry-run to verify that all the necessary files are in place.
 ```
-    vim ~/.config/snakemake/slurm_amoebae/cluster_config.yaml
-```
-   - For clusters using the [(SUN/Univa) Grid Engine] job scheduler(https://aws-elb.univa.com/products/univa-grid-engine.php): Modify the cluster
-     config file as necessary:
-```
-    vim ~/.config/snakemake/sge_amoebae/cluster.yaml
+snakemake -n
 ```
 
-5. Execute one workflow step to verify the workflow definition and cluster
+9. Set up data.
+```
+snakemake get_ref_seqs -j 100 --use-conda --profile sge
+```
+
+
+
+7. Execute one workflow step to verify the workflow definition and cluster
    profile setup, and generate a diagram of steps in the workflow. This should
    write a PDF file to the results subdirectory.
 
@@ -141,14 +160,7 @@ Run this command to setup a Python environment for running snakemake. This
     make dry_run
 ```
 
-
 ## Running the workflow
-
-Here's a diagram of the steps in the overall workflow:
-
-<p align="center">
-<img src="images/example_workflow_diagram.png" width="500">
-</p>
 
 Several features make this workflow easy to run as a proof of principle while
 still allowing unlimited customization. Initial steps in the workflow involve
