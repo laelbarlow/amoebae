@@ -32,6 +32,9 @@ import pandas as pd
 import platform
 import collections
 
+# Temp.
+import matplotlib
+
 # Import modules from installed libraries/packages.
 from Bio import SeqIO
 from Bio import AlignIO
