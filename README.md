@@ -103,10 +103,19 @@ very user-specific in design).
    the [snakemake installation
    instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
    on the snakemake website. If conda cannot be installed, then snakemake can
-   be installed in a Python virtual environment as follows: ...
-
-   In addition,
-   cookiecutter
+   be installed in a Python virtual environment. You will need a few additional
+   dependencies, which can be installed at the same time, for example: 
+```
+mamba create -c conda-forge -c bioconda \
+    -n snakemake \
+        snakemake \
+        cookiecutter \
+        matplotlib \
+        numpy \
+        graphviz \
+        requests \
+        pulp \
+```
 
 4. If running on an HPC cluster (recommended) then you will need to generate
    cluster configuration files so that snakemake knows how to submit jobs
