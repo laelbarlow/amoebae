@@ -178,7 +178,7 @@ to prevent snakemake processes from being interrupted.
 
 1. Collect genome/proteome/transcriptome FASTA files to be searched:
     - If you want to use example files, skip this step.
-    - Otherwise, modify the `resources/genomes.csv` file by adding information
+    - Otherwise, modify the `config/genomes.csv` file by adding information
       about each predicted peptide FASTA files (.faa), nucleotide FASTA files
       (.fna), and/or GFF3 annotation files (.gff3) of interest.
         - In the "FASTA header delimiter" column, enter the text character that
@@ -203,7 +203,7 @@ to prevent snakemake processes from being interrupted.
 
 2. Collect query sequence FASTA files:
     - Again, if you want to use example files, skip this step.
-    - Otherwise, modify the `resources/queries.csv` file by adding information
+    - Otherwise, modify the `config/queries.csv` file by adding information
       about each query sequence.
         - There are only two columns: "Filename" and "Sequence ID". Any given
           filename may appear on multiple rows, but each row must contain a
@@ -226,22 +226,18 @@ to prevent snakemake processes from being interrupted.
 3. Specify an appropriate reference sequence file, or files, to query in
    reverse searches (this is the second set of searches in reciprocal-best-hit
    sequence similarity searching). 
-    - Again, if you want to use the example file (*Arabidopsis thaliana*
+    - Again, if you simply want to use the example file (*Arabidopsis thaliana*
       amino acid sequences), then skip this step.
-    - To use different files, 
+    - To use different files, modify the `config/reference_db_list.txt`
+      file, adding/removing filenames (one filename per line). Well-annotated
+      reference genomes, such as those of *Arabidopsis thaliana*,
+      *Saccharomyces cerevisiae*, or *Homo sapiens* are most useful for this
+      purpose.
 
-If necessary, list a different database file to use for identifying reference
-  sequences and running reverse searches against, by modifying the
-  `resources/reference_db_list.txt` file. Well-annotated reference genomes,
-  such as those of *Arabidopsis thaliana*, *Saccharomyces cerevisiae*, or *Homo
-  sapiens* are most useful for this purpose.
-
-9. Set up data.
+9. Set up files for running searches.
 ```
     snakemake get_ref_seqs -j 100 --use-conda --profile sge
 ```
-
-
 
 
 1. Execute initial workflow steps to download and format sequence data and
@@ -266,7 +262,7 @@ If necessary, list a different database file to use for identifying reference
        using the example data), you
        can simply copy the example file from the resources directory:
 ```
-    cp resources/example_Ref_seqs_1_manual_selections.csv \
+    cp config/example_Ref_seqs_1_manual_selections.csv \
        results/Ref_seqs_1_manual_selections.csv
 ```
 
@@ -330,7 +326,7 @@ analysis results and virtual environments, simply run this command.
 ## Customization
 
 - To search in a different set of genomes/proteomes/transcriptomes, modify the
-  `resources/genomes.csv` file by adding information about predicted peptide
+  `config/genomes.csv` file by adding information about predicted peptide
   FASTA files (.faa), nucleotide FASTA files (.fna), or GFF3 annotation files
   (.gff3) of interest.
     - In the "FASTA header delimiter" column, enter the text character that
@@ -349,7 +345,7 @@ analysis results and virtual environments, simply run this command.
 - If you wish to search in any local FASTA files (instead of downloading
   directly from NCBI), copy those to the resources/local\_db\_files directory
   (in addition to listing them in the genomes.csv file).
-- To search with different query sequences, modify the `resources/queries.csv`
+- To search with different query sequences, modify the `config/queries.csv`
   file.
     - There are only two columns: "Filename" and "Sequence ID". There may be
       multiple rows with the same filename, but different sequence IDs. In such
@@ -363,7 +359,7 @@ analysis results and virtual environments, simply run this command.
   filenames in the queries.csv file). 
 - If necessary, list a different database file to use for identifying reference
   sequences and running reverse searches against, by modifying the
-  `resources/reference_db_list.txt` file. Well-annotated reference genomes,
+  `config/reference_db_list.txt` file. Well-annotated reference genomes,
   such as those of *Arabidopsis thaliana*, *Saccharomyces cerevisiae*, or *Homo
   sapiens* are most useful for this purpose.
 - If you have previous results yielded prior to customizing the workflow, clear

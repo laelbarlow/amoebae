@@ -13,7 +13,7 @@ from scripts.get_filenames_from_csv import get_query_filenames_from_csv,\
 from scripts.get_param_dict_for_add_to_dbs import get_param_dict_for_add_to_dbs
 
 # Define path to CSV file listing genomes/proteomes/transcriptomes to use.
-database_csv = 'resources/genomes.csv'
+database_csv = 'config/genomes.csv'
 # Get a complete list of filenames for genomes/proteomes/transcriptome files.
 database_names_all = get_database_filenames_from_csv(database_csv, 'all')
 # Get a list of filenames for genomes/proteomes/transcriptome files to be
@@ -24,7 +24,7 @@ database_names_ncbi = get_database_filenames_from_csv(database_csv, 'ncbi')
 database_names_local = get_database_filenames_from_csv(database_csv, 'local')
 
 # Define path to CSV file listing queries to use.
-query_csv = 'resources/queries.csv'
+query_csv = 'config/queries.csv'
 # Get inclusive lists of query filenames for queries to be downloaded from NCBI.
 single_fasta_query_names_all, multi_fasta_query_names_all =\
 get_query_filenames_from_csv(query_csv, 'all')
@@ -356,8 +356,8 @@ rule list_dbs_and_queries:
     listing all filenames from each to the results directory. 
     """
     input:
-        'resources/genomes.csv',
-        'resources/queries.csv'
+        'config/genomes.csv',
+        'config/queries.csv'
 
     output:
         dbs = 'results/db_list.txt',
@@ -391,7 +391,7 @@ rule get_ref_seqs:
             single_fasta_query_names_all + \
             [x.rsplit('.', 1)[0] + '.afaa' for x in multi_fasta_query_names_all]),
         amoebae_script = 'amoebae',
-        db_list_file = 'resources/reference_db_list.txt',
+        db_list_file = 'config/reference_db_list.txt',
         query_list_file = 'results/query_list.txt'
 
     output:
@@ -493,7 +493,7 @@ rule setup_and_run_rev_srch:
     with given forward search hits into given db.
     """
     input:
-        reverse_srch_db_file = 'resources/reference_db_list.txt',
+        reverse_srch_db_file = 'config/reference_db_list.txt',
         amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         fwd_srch_csv = 'results/fwd_srchs_1.csv'
@@ -621,10 +621,10 @@ rule plot_results:
     """
     input:
         amoebae_script = 'amoebae',
-        coulson_org_csv = 'resources/coulson_plot_organization.csv',
+        coulson_org_csv = 'config/coulson_plot_organization.csv',
         nonredun_seq_csv =\
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
-        row_order = 'resources/output_plot_row_order.txt'
+        row_order = 'config/output_plot_row_order.txt'
 
     output:
         main_plot_pdf = 'results/plot.pdf'
