@@ -77,7 +77,7 @@ Here's a diagram of the steps in the overall workflow:
 
 The following setup procedure should work on most Linux HPC clusters. This can
 also be run on Linux or MacOS personal computers, but this is generally not
-recommended due to requirements of storage (~30GB+) and computation time. 
+recommended due to requirements of storage (~30GB or more) and computation time. 
 
 This workflow has minimal essential dependencies for installation, which are
 all widely used in the life sciences (see below for installation instructions):
@@ -113,7 +113,9 @@ Makefiles is possible, but will likely be very user-specific in design).
    instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
    on the snakemake website. If conda cannot be installed, then snakemake can
    be installed in a Python virtual environment. You will need a few additional
-   dependencies, which can be installed at the same time, for example: 
+   dependencies, which can be installed at the same time. For example, after
+   installing [mamba](https://github.com/mamba-org/mamba) using conda, you can
+   run the following command to create an environment for running snakemake: 
 ```
     mamba create -c conda-forge -c bioconda \
         -n snakemake \
@@ -149,9 +151,12 @@ Makefiles is possible, but will likely be very user-specific in design).
 
 4. To edit the cluster configuration in the snakemake profile (if necessary),
    edit the `cluster_config.yaml` or `cluster.yaml` file (depends on what type
-   of profile) using your favourite text editor. Details of the configuration
-   will depend on the job scheduler and resources available on your system, and
-   can be modified at any time.
+   of profile, and what you chose to name the files) using your favourite text
+   editor. Details of the configuration will depend on the job scheduler and
+   resources available on your system, and can be modified at any time. Your
+   system administrator will have provided job submission guidelines and
+   example job submission commands/scripts, and these may help guide you in
+   adapting the cluster configuration files to your system.
 
 5. Clone the AMOEBAE repository into an appropriate directory.
 ```
@@ -177,7 +182,12 @@ on an HPC cluster, it may be useful to use
 to prevent snakemake processes from being interrupted. 
 
 1. Collect genome/proteome/transcriptome FASTA files to be searched:
-    - If you want to use example files, skip this step.
+    - Copy the example genomes.csv file in the config subdirectory.
+```
+        cp config/example_genomes.csv config/genomes.csv
+```
+    - If you want to use example genome files, leave this copy as it
+      is, and proceed to the next step.
     - Otherwise, modify the `config/genomes.csv` file by adding information
       about each predicted peptide FASTA files (.faa), nucleotide FASTA files
       (.fna), and/or GFF3 annotation files (.gff3) of interest.
@@ -194,15 +204,20 @@ to prevent snakemake processes from being interrupted.
         - If the FASTA files are to be downloaded from a website, enter the URL in
           the "Location" column. Otherwise, it will be assumed that the files have
           been copied to the `resources/local_db_files` directory.
-    - Note: If you use a spreadsheet editor such as Excel, then make sure to
-      save the modified .csv file with UTF-8 encoding (plain text).
-    - If you wish to search in any local FASTA files (instead of downloading
-      directly from [NCBI](https://www.ncbi.nlm.nih.gov/)), copy those to the
-      `resources/local_db_files` directory (in addition to listing them in the
-      genomes.csv file).
+        - Note: If you use a spreadsheet editor such as Excel, then make sure to
+          save the modified .csv file with UTF-8 encoding (plain text).
+        - If you wish to search in any local FASTA files (instead of downloading
+          directly from [NCBI](https://www.ncbi.nlm.nih.gov/)), copy those to the
+          `resources/local_db_files` directory (in addition to listing them in the
+          genomes.csv file).
 
 2. Collect query sequence FASTA files:
-    - Again, if you want to use example files, skip this step.
+    - Copy the example queries.csv file in the config subdirectory.
+```
+        cp config/example_queries.csv config/queries.csv
+```
+    - If you want to use example query files, leave this copy as it is, and
+      proceed to the next step.
     - Otherwise, modify the `config/queries.csv` file by adding information
       about each query sequence.
         - There are only two columns: "Filename" and "Sequence ID". Any given
@@ -223,48 +238,53 @@ to prevent snakemake processes from being interrupted.
           to the `resources/local_query_files` directory (in addition to
           listing their filenames in the queries.csv file). 
 
-3. Specify an appropriate reference sequence file, or files, to query in
+3. Specify an appropriate reference sequence file, to query in
    reverse searches (this is the second set of searches in reciprocal-best-hit
    sequence similarity searching). 
+    - Copy the example file in the config subdirectory.
+```
+        cp config/example_reference_db_list.txt \
+           config/reference_db_list.txt
+```
     - Again, if you simply want to use the example file (*Arabidopsis thaliana*
-      amino acid sequences), then skip this step.
+      amino acid sequences), then proceed to the next step.
     - To use different files, modify the `config/reference_db_list.txt`
       file, adding/removing filenames (one filename per line). Well-annotated
       reference genomes, such as those of *Arabidopsis thaliana*,
-      *Saccharomyces cerevisiae*, or *Homo sapiens* are most useful for this
+      *Saccharomyces cerevisiae*, or *Homo sapiens* may be most useful for this
       purpose.
 
-9. Set up files for running searches.
+4. Execute initial workflow steps to download (if necessary) and format
+   sequence data and generate lists of potential reference orthologues (for
+   interpreting reverse searches). 
 ```
-    snakemake get_ref_seqs -j 100 --use-conda --profile sge
-```
-
-
-1. Execute initial workflow steps to download and format sequence data and
-   generate lists of potential reference orthologues. Here, and in subsequent
-   steps,
-   [nohup](https://www.gnu.org/software/coreutils/manual/html_node/nohup-invocation.html)
-   is used in the Makefile to prevent the process from being interrupted if you
-   log out or are disconnected. So, the standard output will be appended to the
-   nohup.out file, which can be viewed with cat (`cat nohup.out`) or tail
-   (`tail -f nohup.out`).
-
-```
-    make run_data_setup
+    snakemake get_ref_seqs -j 100 --use-conda --profile pbs-torque
 ```
 
-2. Open the reference sequence prediction file
-   (results/Ref\_seqs\_1\_manual\_selections.csv), and manually edit in a
-   spreadsheet editor (e.g., Microsoft Excel) to select relevant reference
-   orthologues for downstream analysis (see AMOEBAE documentation
-   [here](https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf)
-   for further information). Or, if you have not customized this workflow (are
-       using the example data), you
-       can simply copy the example file from the resources directory:
+2. Select relevant reference sequences for interpreting reverse search results.
+    - Copy the example file in the config subdirectory.
 ```
-    cp config/example_Ref_seqs_1_manual_selections.csv \
-       results/Ref_seqs_1_manual_selections.csv
+        cp config/example_Ref_seqs_1_manual_selections.csv \
+           config/Ref_seqs_1_manual_selections.csv
 ```
+    - The purpose of this `config/Ref_seqs_1_manual_selections.csv` file is to
+      identify all sequences in the reference genome which are expected to be
+      retrieved as top hits by sequences of interest from other genomes.  
+    - If you ran searches just with the example files, then you can use the
+      example reference sequence selection file by copying it in the `config`
+      subdirectory.
+    - Otherwise, copy the relevant file from the results subdirectory.
+```
+        cp results/Ref_seqs_1_manual_selections.csv \
+           config/Ref_seqs_1_manual_selections.csv
+```
+    - ...
+    Indicate with '+' or leave as '-'...
+
+    Open the reference sequence prediction file
+   (`results/Ref_seqs_1_manual_selections.csv`), and manually edit in a
+   spreadsheet editor (*e.g.*, Excel) to select relevant reference
+   orthologues for downstream analysis.
 
 3. Execute remainder of the workflow.
 
@@ -274,7 +294,8 @@ to prevent snakemake processes from being interrupted.
 
 4. View results summary files and positive hit sequence alignments at these
    paths (one way is to download with an SFTP client such as
-   [Cyberduck](https://cyberduck.io/download/)):
+   [Cyberduck](https://cyberduck.io/download/) or
+   [FileZilla](https://filezilla-project.org/)):
 ```
     results/plot_coulson_both.pdf
     results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv
@@ -290,121 +311,28 @@ as phylogenetic analysis.
 <img src="images/example_coulson_plot.png" width="500">
 </p>
 
-
-## Archiving a completed workflow
-
-To archive a completed workflow, including input files, output files, code, and
-installed dependencies, simply run this command:
+5. Generate a report of results in HTML format which can be opened in a web browser.
 ```
-    make archive
-```
-
-## Additional features
-
-- To enter custom snakemake commmands, activate the Python virtual
-  environment (in which snakemake is installed) using this command:
-```
-    source scripts/activate_python_env.sh
-```
-- To stop a workflow that is running, use this command. It will kill the
-  background process that Snakemake is running in. However, jobs already
-  submitted to the cluster (by Snakemake) will need to be cancelled manually.
-```
-    make killall
+    snakemake --cores 1 --report results/amoebae_report.html
 ```
 
 
-## Un-installation
+## Customizing parameters
 
-To remove all files and folders associated with this workflow, including
-analysis results and virtual environments, simply run this command.
-
-```
-    make uninstall
-```
-
-## Customization
-
-- To search in a different set of genomes/proteomes/transcriptomes, modify the
-  `config/genomes.csv` file by adding information about predicted peptide
-  FASTA files (.faa), nucleotide FASTA files (.fna), or GFF3 annotation files
-  (.gff3) of interest.
-    - In the "FASTA header delimiter" column, enter the text character that
-      separates sequence IDs from other elements of the FASTA header. In the
-      case of FASTA files from NCBI for example, this is usually a space
-      character.
-    - In the "Sequence ID position" column, enter the position of the sequence
-      ID in a list resulting from splitting the whole FASTA header on the
-      character defined in the "FASTA header delimiter" column. Importantly,
-      counting starts from zero, so if the sequence header starts with the
-      sequence ID (as in the case of most NCBI FASTA files), then the value in
-      this column should be "0".
-    - If the FASTA files are to be downloaded from a website, enter the URL in
-      the "Location" column. Otherwise, it will be assumed that the files have
-      been copied to the `resources/local_db_files` directory.
-- If you wish to search in any local FASTA files (instead of downloading
-  directly from NCBI), copy those to the resources/local\_db\_files directory
-  (in addition to listing them in the genomes.csv file).
-- To search with different query sequences, modify the `config/queries.csv`
-  file.
-    - There are only two columns: "Filename" and "Sequence ID". There may be
-      multiple rows with the same filename, but different sequence IDs. In such
-      cases, the indicated sequences will be downloaded from NCBI and aligned
-      to make a sequence profile query for similarity searching.
-    - If the Sequence ID field is left blank in a row, then the filename will
-      be assumed to correspond to a file in the `resources/local_query_files`
-      directory.
-- If you wish to search using local query (FASTA) files, copy them to the
-  `resources/local_query_files` directory (in addition to listing their
-  filenames in the queries.csv file). 
-- If necessary, list a different database file to use for identifying reference
-  sequences and running reverse searches against, by modifying the
-  `config/reference_db_list.txt` file. Well-annotated reference genomes,
-  such as those of *Arabidopsis thaliana*, *Saccharomyces cerevisiae*, or *Homo
-  sapiens* are most useful for this purpose.
-- If you have previous results yielded prior to customizing the workflow, clear
-  the results directory before proceeding:
-```
-    make clean_results
-```
-- Run the customized workflow as described above, ensuring you
-  manually/visually define the sets of reference homologues/orthologues to use
-  for interpreting reciprocal search results for searches with each query.
-- For more advanced customization, refer to the Snakemake documentation and
-  modify the Snakefile (snakemake workflow definition file): 
+For more advanced customization, refer to the Snakemake documentation and
+modify the Snakefile (snakemake workflow definition file): 
 ```
     vim workflow/Snakefile    
 ```
+For customizing shell commands in workflow rules (steps) that run the `amoebae`
+script, refer to the [AMOEBAE command-line interface
+documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf)
+for available options. 
 
 
-## Additional documentation
+## Questions and bug reporting
 
-Documentation for the AMOEBAE command line interface is provided here:
-[AMOEBAE_documentation.pdf](
-https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf).
-This information is important for customizing rules in the
-[Snakefile](https://github.com/laelbarlow/amoebae/blob/master/workflow/Snakefile)
-(workflow definition file) for your projects.
-
-
-## Recent changes
-
-#### 2020 November 15
-
-The main amoebae repository (this repository) was updated for workflow
-management via [Snakemake](https://snakemake.readthedocs.io/en/stable/) and
-package management via [Conda](https://docs.conda.io/en/latest/). This has many
-advantages including simplifying the installation process considerably (see
-instructions above). Also, AMOEBAE now runs on Compute Canada clusters (via the
-SLURM job scheduler) using environment modules and a Python venv virtual
-environment.
-
-
-## Contact info
-
-For general inquiries, please contact the author at amoebae.software@gmail.com.
-
-Also, please use the [issue tracker](https://github.com/laelbarlow/amoebae/issues) on
+Please use the [issue tracker](https://github.com/laelbarlow/amoebae/issues) on
 the GitHub webpage to report any problems you encounter while using AMOEBAE.
 
 
