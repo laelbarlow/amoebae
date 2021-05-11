@@ -58,6 +58,14 @@ for obtaining better exon predictions. In addition, AMOEBAE provides many
     AMOEBAE can be reproduced via
     [SnakeMake](https://snakemake.readthedocs.io/en/stable/).
 
+The output files include a plot of the number of identified
+homologues (potential orthologues) of several genes across several genomes, as
+well as a spreadsheet in CSV format providing a detailed summary of search
+results. 
+
+Unique feature: Allows/requires manual selection of valid reverse search hits
+for interpretation of results.
+
 Here's a diagram of the steps in the overall workflow:
 
 <p align="center">
@@ -71,32 +79,33 @@ The following setup procedure should work on most Linux HPC clusters. This can
 also be run on Linux or MacOS personal computers, but this is generally not
 recommended due to requirements of storage (~30GB+) and computation time. 
 
-This workflow has minimal essential dependencies (see below for installation
-instructions):
+This workflow has minimal essential dependencies for installation, which are
+all widely used in the life sciences (see below for installation instructions):
 - Python version 3.
 - [Conda](https://docs.conda.io/en/latest/miniconda.html) **or**
   [Singularity](https://sylabs.io/docs/)
   version 3.6+.
 
+
 ## Installation
 
 These instructions are for setting up and running AMOEBAE via the
 [SnakeMake](https://snakemake.readthedocs.io/en/stable/) command-line
-interface, which provides the flexibility to run AMOEBAE in a wide variety of
-systems (further automation via custom scripts is possible, but will likely be
-very user-specific in design). 
+interface, which is well-documented and provides the flexibility to run AMOEBAE
+in a wide variety of systems (further automations via custom scripts and
+Makefiles is possible, but will likely be very user-specific in design). 
 
 1. If you do not already have the conda package and environment manager
-   installed, this may be easily installed using the latest version of
-   Miniconda3 from the [conda
-   website](https://docs.conda.io/en/latest/miniconda.html). Some HPC clusters
-   do not allow use of conda, but in such cases conda can still be used to
-       install software in [Singularity](https://sylabs.io/docs/) containers
-       (this process is automated by snakemake). If singularity is not already
-       installed on your system, you will need to request that you system
-       administrator install it for you. Also, if you need to use singularity,
-       then you will need to add `--use-singularity` to most of the snakemake
-       commands described below.
+   installed, this may be installed using the latest version of Miniconda3 from
+   the [conda website](https://docs.conda.io/en/latest/miniconda.html). You may
+   need help from a system administrator to set this up properly on a HPC cluster.
+   Some HPC cluster administrators do not allow use of conda at all, but in
+   such cases conda can still be used to install software in
+   [Singularity](https://sylabs.io/docs/) containers (this process is automated
+   by snakemake). If singularity is not already installed on your system, you
+   will need to request that you system administrator install it for you. Also,
+   if you need to use singularity, then you will need to add
+   `--use-singularity` to most of the snakemake commands described below.
 
 2. If you do not already have the snakemake workflow manager installed then you
    will need to install it. If you have conda installed, then you can follow
@@ -106,18 +115,18 @@ very user-specific in design).
    be installed in a Python virtual environment. You will need a few additional
    dependencies, which can be installed at the same time, for example: 
 ```
-mamba create -c conda-forge -c bioconda \
-    -n snakemake \
-        snakemake \
-        cookiecutter \
-        matplotlib \
-        numpy \
-        graphviz \
-        requests \
-        pulp \
+    mamba create -c conda-forge -c bioconda \
+        -n snakemake \
+            snakemake \
+            cookiecutter \
+            matplotlib \
+            numpy \
+            graphviz \
+            requests \
+            pulp \
 ```
 
-4. If running on an HPC cluster (recommended) then you will need to generate
+3. If running on an HPC cluster (recommended) then you will need to generate
    cluster configuration files so that snakemake knows how to submit jobs
    appropriately on your system. This is described in the [snakemake
    documentation on
@@ -130,65 +139,110 @@ mamba create -c conda-forge -c bioconda \
    profile "pbs-torque", then cluster configuration files will be written to a
    directory with the path `~/.config/snakemake/pbs-torque`. For example:
 ```
-mkdir -p ~/.config/snakemake
-cd ~/.config/snakemake
-cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git
-chmod a+x ~/.config/snakemake/pbs-torque/*.py
+    conda activate snakemake
+    mkdir -p ~/.config/snakemake
+    cd ~/.config/snakemake
+    cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git
+    chmod a+x pbs-torque/*.py
+    cd -
 ```
 
-5. To edit the cluster configuration in the snakemake profile (if necessary),
+4. To edit the cluster configuration in the snakemake profile (if necessary),
    edit the `cluster_config.yaml` or `cluster.yaml` file (depends on what type
    of profile) using your favourite text editor. Details of the configuration
    will depend on the job scheduler and resources available on your system, and
    can be modified at any time.
 
-6. Clone the AMOEBAE repository into an appropriate directory.
+5. Clone the AMOEBAE repository into an appropriate directory.
 ```
     git clone https://github.com/laelbarlow/amoebae.git 
     cd amoebae
 ```
 
-7. Collect input FASTA files. 
-
-
-8. Do a dry-run to verify that all the necessary files are in place.
-```
-snakemake -n
-```
-
-9. Set up data.
-```
-snakemake get_ref_seqs -j 100 --use-conda --profile sge
-```
-
-
-
-7. Execute one workflow step to verify the workflow definition and cluster
-   profile setup, and generate a diagram of steps in the workflow. This should
-   write a PDF file to the results subdirectory.
+6. Execute one workflow step, plotting a diagram of the workflow, to verify the
+   workflow definition and cluster profile setup. This should write a PDF file
+   to the results subdirectory.
 
 ```
-    make dry_run
+    snakemake plot_workflow -j 100 --profile pbs-torque --use-conda
 ```
 
 ## Running the workflow
 
-Several features make this workflow easy to run as a proof of principle while
-still allowing unlimited customization. Initial steps in the workflow involve
-accessing sequence data from [National Center for Biotechnology Information
-(NCBI) databases](https://www.ncbi.nlm.nih.gov/). However, this is simply for
-convenience, and this workflow could be customized to take use any FASTA files
-as input. The output files include a plot of the number of identified
-homologues (potential orthologues) of several genes across several genomes, as
-well as a spreadsheet in CSV format providing a detailed summary of search
-results. Snakemake is used to manage the workflow, but for ease of use [GNU
-Make](https://www.gnu.org/software/make/) is used to run Snakemake commands in
-Python virtual environments (see the Makefile file). Without customization,
-this workflow should take between 30 and 60 minutes to run, depending on
-resource availability on your system.  
+With example (default) input files, this workflow should take between 30 and 60
+minutes to run, depending on resource availability on your system. If running
+on an HPC cluster, it may be useful to use
+[tmux](https://github.com/tmux/tmux/wiki) or
+[nohup](https://www.gnu.org/software/coreutils/manual/html_node/nohup-invocation.html)
+to prevent snakemake processes from being interrupted. 
 
-To run the workflow without customization (using example data), follow these
-steps:
+1. Collect genome/proteome/transcriptome FASTA files to be searched:
+    - If you want to use example files, skip this step.
+    - Otherwise, modify the `resources/genomes.csv` file by adding information
+      about each predicted peptide FASTA files (.faa), nucleotide FASTA files
+      (.fna), and/or GFF3 annotation files (.gff3) of interest.
+        - In the "FASTA header delimiter" column, enter the text character that
+          separates sequence IDs from other elements of the FASTA header. In the
+          case of FASTA files from NCBI for example, this is usually a space
+          character.
+        - In the "Sequence ID position" column, enter the position of the sequence
+          ID in a list resulting from splitting the whole FASTA header on the
+          character defined in the "FASTA header delimiter" column. Importantly,
+          counting starts from zero, so if the sequence header starts with the
+          sequence ID (as in the case of most NCBI FASTA files), then the value in
+          this column should be "0".
+        - If the FASTA files are to be downloaded from a website, enter the URL in
+          the "Location" column. Otherwise, it will be assumed that the files have
+          been copied to the `resources/local_db_files` directory.
+    - Note: If you use a spreadsheet editor such as Excel, then make sure to
+      save the modified .csv file with UTF-8 encoding (plain text).
+    - If you wish to search in any local FASTA files (instead of downloading
+      directly from [NCBI](https://www.ncbi.nlm.nih.gov/)), copy those to the
+      `resources/local_db_files` directory (in addition to listing them in the
+      genomes.csv file).
+
+2. Collect query sequence FASTA files:
+    - Again, if you want to use example files, skip this step.
+    - Otherwise, modify the `resources/queries.csv` file by adding information
+      about each query sequence.
+        - There are only two columns: "Filename" and "Sequence ID". Any given
+          filename may appear on multiple rows, but each row must contain a
+          unique sequence ID, *which must be a valid NCBI accession number*, or a blank
+          space in the "Sequence ID" column.
+        - If a single sequence ID is associated with a given filename, then a
+          single-sequence FASTA file will be generated by downloading the
+          corresponding sequence from NCBI.
+        - If multiple sequence IDs are listed for a given filename, then a
+          multiple-sequence FASTA file will be generated by downloading each of
+          the corresponding sequences from NCBI and writing them to a FASTA
+          file with the specified name.
+        - If no sequence IDs are provided for a given filename, then the filename will
+          be assumed to correspond to an existing local file in the
+          `resources/local_query_files` directory. 
+        - So, if you wish to search using local query (FASTA) files, copy them
+          to the `resources/local_query_files` directory (in addition to
+          listing their filenames in the queries.csv file). 
+
+3. Specify an appropriate reference sequence file, or files, to query in
+   reverse searches (this is the second set of searches in reciprocal-best-hit
+   sequence similarity searching). 
+    - Again, if you want to use the example file (*Arabidopsis thaliana*
+      amino acid sequences), then skip this step.
+    - To use different files, 
+
+If necessary, list a different database file to use for identifying reference
+  sequences and running reverse searches against, by modifying the
+  `resources/reference_db_list.txt` file. Well-annotated reference genomes,
+  such as those of *Arabidopsis thaliana*, *Saccharomyces cerevisiae*, or *Homo
+  sapiens* are most useful for this purpose.
+
+9. Set up data.
+```
+    snakemake get_ref_seqs -j 100 --use-conda --profile sge
+```
+
+
+
 
 1. Execute initial workflow steps to download and format sequence data and
    generate lists of potential reference orthologues. Here, and in subsequent
