@@ -164,14 +164,6 @@ Makefiles is possible, but will likely be very user-specific in design).
     cd amoebae
 ```
 
-6. Execute one workflow step, plotting a diagram of the workflow, to verify the
-   workflow definition and cluster profile setup. This should write a PDF file
-   to the results subdirectory.
-
-```
-    snakemake plot_workflow -j 100 --profile pbs-torque --use-conda
-```
-
 ## Running the workflow
 
 With example (default) input files, this workflow should take between 30 and 60
@@ -183,9 +175,9 @@ to prevent snakemake processes from being interrupted.
 
 1. Collect genome/proteome/transcriptome FASTA files to be searched:
     - Copy the example genomes.csv file in the config subdirectory.
-```
+        ```
         cp config/example_genomes.csv config/genomes.csv
-```
+        ```
     - If you want to use example genome files, leave this copy as it
       is, and proceed to the next step.
     - Otherwise, modify the `config/genomes.csv` file by adding information
@@ -204,8 +196,7 @@ to prevent snakemake processes from being interrupted.
         - If the FASTA files are to be downloaded from a website, enter the URL in
           the "Location" column. Otherwise, it will be assumed that the files have
           been copied to the `resources/local_db_files` directory.
-        - Note: If you use a spreadsheet editor such as Excel, then make sure to
-          save the modified .csv file with UTF-8 encoding (plain text).
+        - Note: If you use a spreadsheet editor such as Excel, then make sure to save the modified .csv file with UTF-8 encoding (plain text).
         - If you wish to search in any local FASTA files (instead of downloading
           directly from [NCBI](https://www.ncbi.nlm.nih.gov/)), copy those to the
           `resources/local_db_files` directory (in addition to listing them in the
@@ -213,9 +204,9 @@ to prevent snakemake processes from being interrupted.
 
 2. Collect query sequence FASTA files:
     - Copy the example queries.csv file in the config subdirectory.
-```
+        ```
         cp config/example_queries.csv config/queries.csv
-```
+        ```
     - If you want to use example query files, leave this copy as it is, and
       proceed to the next step.
     - Otherwise, modify the `config/queries.csv` file by adding information
@@ -242,10 +233,10 @@ to prevent snakemake processes from being interrupted.
    reverse searches (this is the second set of searches in reciprocal-best-hit
    sequence similarity searching). 
     - Copy the example file in the config subdirectory.
-```
+        ```
         cp config/example_reference_db_list.txt \
            config/reference_db_list.txt
-```
+        ```
     - Again, if you simply want to use the example file (*Arabidopsis thaliana*
       amino acid sequences), then proceed to the next step.
     - To use different files, modify the `config/reference_db_list.txt`
@@ -257,29 +248,33 @@ to prevent snakemake processes from being interrupted.
 4. Execute initial workflow steps to download (if necessary) and format
    sequence data and generate lists of potential reference orthologues (for
    interpreting reverse searches). 
-```
+    ```
     snakemake get_ref_seqs -j 100 --use-conda --profile pbs-torque
-```
+    ```
 
 2. Select relevant reference sequences for interpreting reverse search results.
-    - Copy the example file in the config subdirectory.
-```
-        cp config/example_Ref_seqs_1_manual_selections.csv \
-           config/Ref_seqs_1_manual_selections.csv
-```
-    - The purpose of this `config/Ref_seqs_1_manual_selections.csv` file is to
-      identify all sequences in the reference genome which are expected to be
-      retrieved as top hits by sequences of interest from other genomes.  
     - If you ran searches just with the example files, then you can use the
       example reference sequence selection file by copying it in the `config`
       subdirectory.
+        ```
+        cp config/example_Ref_seqs_1_manual_selections.csv \
+           config/Ref_seqs_1_manual_selections.csv
+        ```
     - Otherwise, copy the relevant file from the results subdirectory.
-```
+        ```
         cp results/Ref_seqs_1_manual_selections.csv \
            config/Ref_seqs_1_manual_selections.csv
-```
-    - ...
-    Indicate with '+' or leave as '-'...
+        ```
+    - The purpose of this `config/Ref_seqs_1_manual_selections.csv` file is to
+      identify all sequences in the reference genome which are expected to be
+      retrieved as top hits by sequences of interest from other genomes. Each
+      row in this file corresponds to a sequence in the reference genome
+      retrieved with one of the queries in a BLASTP sequence similarity search.
+      Each reference sequence is identified as either accepted or 
+      unaccepted as a top hit in reverse searches.
+    - If you are using example data, proceed to the next step. Otherwise,
+      modify values in the 5th column of the `config/Ref_seqs_1_manual_selections.csv` file.
+      In this column, '+' indicates inclusion of reference sequence '-'...
 
     Open the reference sequence prediction file
    (`results/Ref_seqs_1_manual_selections.csv`), and manually edit in a
