@@ -94,7 +94,9 @@ very user-specific in design).
        install software in [Singularity](https://sylabs.io/docs/) containers
        (this process is automated by snakemake). If singularity is not already
        installed on your system, you will need to request that you system
-       administrator install it for you. 
+       administrator install it for you. Also, if you need to use singularity,
+       then you will need to add `--use-singularity` to most of the snakemake
+       commands described below.
 
 2. If you do not already have the snakemake workflow manager installed then you
    will need to install it. If you have conda installed, then you can follow
