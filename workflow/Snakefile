@@ -35,6 +35,9 @@ get_query_filenames_from_csv(query_csv, 'ncbi')
 single_fasta_query_names_local, multi_fasta_query_names_local =\
 get_query_filenames_from_csv(query_csv, 'local')
 
+# Define path to report file.
+report: "report/workflow.rst"
+
 # Compile a nonredundant list of query titles.
 query_titles = list(set([x.split('_', 1)[0] for x in \
     single_fasta_query_names_all + multi_fasta_query_names_all]))
@@ -92,6 +95,7 @@ rule final_results:
         'results/Ref_seqs_1_manual_selections.csv',
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
         'results/plot.pdf',
+        'results/plot_coulson_both.pdf',
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files'
 
 
