@@ -242,11 +242,12 @@ to prevent snakemake processes from being interrupted.
         - So, if you wish to search using local query (FASTA) files, copy them
           to the `resources/local_query_files` directory (in addition to
           listing their filenames in the queries.csv file). 
-        - Importantly, query filenames must start with a query title, which
-          is just the name of the proteins you are searching for. For example,
-          "AP1beta" for the adaptor protein complex 1 beta subunit. Multiple
-          query files can have the same query title, allowing you to search for
-          the same proteins with multiple queries.
+        - Importantly, query filenames must start with a query title which is
+          followed by the first underscore. This query title is just the name
+          of the proteins you are searching for. For example, "AP1beta" for the
+          adaptor protein complex 1 beta subunit. Multiple query files can have
+          the same query title, allowing you to search for the same proteins
+          with multiple queries.
 
 3. Specify an appropriate reference sequence file, to query in
    reverse searches (this is the second set of searches in reciprocal-best-hit
