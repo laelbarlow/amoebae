@@ -1,1 +1,1 @@
-Coulson plot of identified sequences.
+Presence/absence plot of identified sequences.

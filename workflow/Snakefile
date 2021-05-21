@@ -628,7 +628,10 @@ rule plot_results:
 
     output:
         main_plot_pdf = report('results/plot.pdf',
-                          caption='../report/plot_results.rst',
+                          caption='./report/plot_results.rst',
+                          category="Plots"),
+        coulson_plot_pdf = report('results/plot_coulson_both.pdf',
+                          caption='./report/plot_results_coulson.rst',
                           category="Plots")
 
     conda:
