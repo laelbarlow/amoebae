@@ -627,7 +627,9 @@ rule plot_results:
         row_order = 'config/output_plot_row_order.txt'
 
     output:
-        main_plot_pdf = 'results/plot.pdf'
+        main_plot_pdf = report('results/plot.pdf',
+                          caption='../report/plot_results.rst',
+                          category="Plots")
 
     conda:
         'envs/amoebae_env.yaml'

@@ -52,7 +52,7 @@ results. This allows rapid identification of High-scoring Segment Pair (HSP)
 clusters at separate gene loci, automatic checking of those loci against
 information in genome annotation files, and systematic use of the
 [Exonerate](http://europepmc.org/article/MED/15713233) package where possible
-for obtaining better exon predictions. In addition, AMOEBAE provides many
+for obtaining exon predictions. In addition, AMOEBAE provides many
     options which can be tailored to the specific genes/proteins being
     analyzed. Despite the complexity of this workflow, analyses performed using
     AMOEBAE can be reproduced via
@@ -70,6 +70,12 @@ Here's a diagram of the steps in the overall workflow:
 
 <p align="center">
 <img src="images/example_workflow_diagram.png" width="500">
+</p>
+
+Here's an example coulson plot output by the workflow.
+
+<p align="center">
+<img src="images/example_coulson_plot.png" width="500">
 </p>
 
 
@@ -113,7 +119,15 @@ Makefiles is possible, but will likely be very user-specific in design).
    instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
    on the snakemake website. If conda cannot be installed, then snakemake can
    be installed in a Python virtual environment. You will need a few additional
-   dependencies, which can be installed at the same time. For example, after
+   dependencies: 
+    - cookiecutter
+    - matplotlib
+    - numpy
+    - graphviz
+    - requests
+    - pulp
+
+   These can be installed at the same time as snakemake. For example, after
    installing [mamba](https://github.com/mamba-org/mamba) using conda, you can
    run the following command to create an environment for running snakemake: 
 ```
@@ -273,40 +287,46 @@ to prevent snakemake processes from being interrupted.
       Each reference sequence is identified as either accepted or 
       unaccepted as a top hit in reverse searches.
     - If you are using example data, proceed to the next step. Otherwise,
-      modify values in the 5th column of the `config/Ref_seqs_1_manual_selections.csv` file.
-      In this column, '+' indicates inclusion of reference sequence '-'...
+      modify values in the 5th column of the
+      `config/Ref_seqs_1_manual_selections.csv` file. In this column, '+'
+      indicates inclusion of a sequence as a representative of the query used,
+      and '-' indicates that the sequence is too distantly related to the query
+      to be relevant.
 
-    Open the reference sequence prediction file
-   (`results/Ref_seqs_1_manual_selections.csv`), and manually edit in a
-   spreadsheet editor (*e.g.*, Excel) to select relevant reference
-   orthologues for downstream analysis.
+3. Configure the organization of output plots.
+    - ...
+        ```
+        cp config/example_coulson_plot_organization.csv \
+           config/coulson_plot_organization.csv
+        ```
+    - ...
+        ```
+        cp config/example_output_plot_row_order.txt \
+           config/output_plot_row_order.txt
+        ```
 
-3. Execute remainder of the workflow.
+4. Execute remainder of the workflow.
+    ```
+    snakemake -j 100 --use-conda --profile pbs-torque
+    ```
 
-```
-    make run
-```
-
-4. View results summary files and positive hit sequence alignments at these
-   paths (one way is to download with an SFTP client such as
-   [Cyberduck](https://cyberduck.io/download/) or
-   [FileZilla](https://filezilla-project.org/)):
+5. View results summary files and positive hit sequence alignments at these
+   paths. For convenience, you may wish to download these files using an SFTP
+   client such as [Cyberduck](https://cyberduck.io/download/) or
+   [FileZilla](https://filezilla-project.org/):
 ```
     results/plot_coulson_both.pdf
     results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv
     results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files
 ```
 
-Here's an example coulson plot output by the workflow. Note that these results
+
+Note that these results
 require careful interpretation, and in most cases re-analysis with modified
 parameters will be necessary as well as follow up with additional methods such
 as phylogenetic analysis.
 
-<p align="center">
-<img src="images/example_coulson_plot.png" width="500">
-</p>
-
-5. Generate a report of results in HTML format which can be opened in a web browser.
+6. Generate a report of results in HTML format which can be opened in a web browser.
 ```
     snakemake --cores 1 --report results/amoebae_report.html
 ```
