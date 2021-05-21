@@ -596,7 +596,10 @@ rule find_redun_seqs:
 
     output:
         interp_csv_with_ali_col = 'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col.csv',
-        nonredun_seq_csv = 'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv'
+        nonredun_seq_csv = \
+        report('results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
+               caption='./report/find_redun_seqs.rst',
+               category="Tables")
 
     conda:
         'envs/amoebae_env.yaml'
