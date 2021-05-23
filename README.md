@@ -113,34 +113,38 @@ Makefiles is possible, but will likely be very user-specific in design).
    if you need to use singularity, then you will need to add
    `--use-singularity` to most of the snakemake commands described below.
 
-2. If you do not already have the snakemake workflow manager installed then you
-   will need to install it. If you have conda installed, then you can follow
-   the [snakemake installation
+2. Install snakemake and a few other packages. If you do not already have the
+   snakemake workflow manager installed then you will need to install it. If
+   you have conda installed, then you can follow the [snakemake installation
    instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
    on the snakemake website. If conda cannot be installed, then snakemake can
    be installed in a Python virtual environment. You will need a few additional
-   dependencies: 
-    - cookiecutter
-    - matplotlib
-    - numpy
-    - graphviz
-    - requests
-    - pulp
+   dependencies: cookiecutter and graphviz.
 
    These can be installed at the same time as snakemake. For example, after
    installing [mamba](https://github.com/mamba-org/mamba) using conda, you can
    run the following command to create an environment for running snakemake: 
-```
-    mamba create -c conda-forge -c bioconda \
-        -n snakemake \
-            snakemake \
-            cookiecutter \
-            matplotlib \
-            numpy \
-            graphviz \
-            requests \
-            pulp \
-```
+   ```
+   mamba create -c conda-forge -c bioconda \
+       -n snakemake \
+           snakemake \
+           cookiecutter \
+           graphviz
+    ```
+
+   An alternative method, if you cannot run conda on your cluster, is to
+   install snakemake in a [Python virtual
+   environment](https://docs.python.org/3/library/venv.html).
+   ```
+   python3 -m venv ~/amoebae_python_env
+   source ~/amoebae_python_env/bin/activate
+   pip install --upgrade pip
+   pip install \
+       snakemake \
+       cookiecutter \
+       graphviz
+   ```
+
 
 3. If running on an HPC cluster (recommended) then you will need to generate
    cluster configuration files so that snakemake knows how to submit jobs
@@ -154,14 +158,14 @@ Makefiles is possible, but will likely be very user-specific in design).
    cluster uses PBS-TORQUE, and you choose to name the new snakemake
    profile "pbs-torque", then cluster configuration files will be written to a
    directory with the path `~/.config/snakemake/pbs-torque`. For example:
-```
-    conda activate snakemake
-    mkdir -p ~/.config/snakemake
-    cd ~/.config/snakemake
-    cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git
-    chmod a+x pbs-torque/*.py
-    cd -
-```
+   ```
+   conda activate snakemake
+   mkdir -p ~/.config/snakemake
+   cd ~/.config/snakemake
+   cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git
+   chmod a+x pbs-torque/*.py
+   cd -
+   ```
 
 4. To edit the cluster configuration in the snakemake profile (if necessary),
    edit the `cluster_config.yaml` or `cluster.yaml` file (depends on what type
@@ -173,10 +177,10 @@ Makefiles is possible, but will likely be very user-specific in design).
    adapting the cluster configuration files to your system.
 
 5. Clone the AMOEBAE repository into an appropriate directory.
-```
+    ```
     git clone https://github.com/laelbarlow/amoebae.git 
     cd amoebae
-```
+    ```
 
 ## Running the workflow
 
@@ -326,11 +330,11 @@ to prevent snakemake processes from being interrupted.
    paths. For convenience, you may wish to download these files using an SFTP
    client such as [Cyberduck](https://cyberduck.io/download/) or
    [FileZilla](https://filezilla-project.org/):
-```
+    ```
     results/plot_coulson_both.pdf
     results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv
     results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files
-```
+    ```
 
 
 Note that these results require careful interpretation, and in most cases
@@ -338,18 +342,18 @@ re-analysis with modified parameters will be necessary as well as follow up
 with additional methods such as phylogenetic analysis.
 
 6. Generate a report of results in HTML format which can be opened in a web browser.
-```
+    ```
     snakemake --cores 1 --report results/amoebae_report.html
-```
+    ```
 
 
 ## Customizing parameters
 
 For more advanced customization, refer to the Snakemake documentation and
 modify the Snakefile (snakemake workflow definition file): 
-```
+    ```
     vim workflow/Snakefile    
-```
+    ```
 For customizing shell commands in workflow rules (steps) that run the `amoebae`
 script, refer to the [AMOEBAE command-line interface
 documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf)
