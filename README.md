@@ -119,7 +119,8 @@ Makefiles is possible, but will likely be very user-specific in design).
    instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
    on the snakemake website. If conda cannot be installed, then snakemake can
    be installed in a Python virtual environment. You will need a few additional
-   dependencies: cookiecutter and graphviz.
+   dependencies: [cookiecutter](https://github.com/cookiecutter/cookiecutter)
+   and [graphviz](https://graphviz.org/).
 
    These can be installed at the same time as snakemake. For example, after
    installing [mamba](https://github.com/mamba-org/mamba) using conda, you can
