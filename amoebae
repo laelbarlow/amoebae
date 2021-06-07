@@ -675,7 +675,7 @@ Miscellaneous commands:
                           args.hmmer_report_score_cutoff,
                           args.num_threads_similarity_searching,
                           args.predict_redun_hit_selection,
-                          args.max_number_of_hits_to_summarize,
+                          int(args.max_number_of_hits_to_summarize),
                           args.main_data_dir)
 
         # Prompt manual annotation of spreadsheet to define positive
