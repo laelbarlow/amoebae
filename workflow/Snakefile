@@ -118,6 +118,8 @@ rule download_dbs:
         csv_file = database_csv
     output:
         expand('results/temp_databases/{data_file}', data_file = database_names_ncbi)
+    conda:
+        'envs/amoebae_env.yaml'
     shell:
         """
     	python3 {input.script} {input.csv_file} results/temp_databases
