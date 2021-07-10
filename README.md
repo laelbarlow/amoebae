@@ -179,7 +179,7 @@ Makefiles is possible, but will likely be very user-specific in design).
 
 5. Clone the AMOEBAE repository into an appropriate directory.
     ```
-    git clone https://github.com/laelbarlow/amoebae.git 
+    git clone --branch dev2 https://github.com/laelbarlow/amoebae.git
     cd amoebae
     ```
 
