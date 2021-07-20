@@ -1220,6 +1220,8 @@ def write_rev_srch_res_to_csv(rev_srch_id,
                     srch_file_format)
             if len(query_res_obj) >= 1:
                 top_hit_acc = parsed_file_obj.hit_id(0)
+                assert "BL_ORD_ID" not in top_hit_acc, \
+                       """Reverse search result file parsed incorrectly."""
                 first_neg_hit_rank = None
                 if redun_hit_list is not None: 
                     first_neg_hit_rank = parsed_file_obj.rank_of_first_nonredun_hit(redun_hit_list)
