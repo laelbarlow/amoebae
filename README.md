@@ -287,7 +287,7 @@ to prevent snakemake processes from being interrupted.
         ```
     - Otherwise, copy the relevant file from the results subdirectory.
         ```
-        cp results/Ref_seqs_1_manual_selections.csv \
+        cp results/Ref_seqs_1_auto_selections.csv \
            config/Ref_seqs_1_manual_selections.csv
         ```
     - The purpose of this `config/Ref_seqs_1_manual_selections.csv` file is to

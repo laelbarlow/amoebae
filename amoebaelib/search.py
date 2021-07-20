@@ -1280,6 +1280,7 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             if top_hit_acc is not None:
                 # Then there is at least one reverse search hit. 
                 # Fill in info for top hit.
+                row['Top reverse hit ID'] = top_hit_acc
                 row['Top reverse hit description'] = parsed_file_obj.hit_description(0)
                 row['Top reverse search hit E-value'] = parsed_file_obj.hit_evalue(0)
                 row['Top reverse search hit score'] = parsed_file_obj.hit_score(0)

@@ -92,7 +92,7 @@ rule final_results:
     """
     input:
         'results/workflow_diagram.pdf',
-        'results/Ref_seqs_1_manual_selections.csv',
+        'config/Ref_seqs_1_manual_selections.csv',
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
         'results/plot.pdf',
         'results/plot_coulson_both.pdf',
@@ -403,7 +403,7 @@ rule get_ref_seqs:
     output:
         ref_seq_dir = directory('results/Ref_seqs_1'),
         ref_seq_pred_csv_copy = 'results/Ref_seqs_1_auto_predictions.csv',
-        ref_seq_manual_copy_csv = 'results/Ref_seqs_1_manual_selections.csv'
+        #ref_seq_manual_copy_csv = 'results/Ref_seqs_1_manual_selections.csv'
 
     conda:
         'envs/amoebae_env.yaml'
@@ -422,9 +422,9 @@ rule get_ref_seqs:
                 'results/Ref_seqs_1/0_ref_seqs.csv ' + \
                 '--predict_redun_hit_selection ' + \
         ' && cp results/Ref_seqs_1/0_ref_seqs_auto_predictions.csv ' + \
-               'results/Ref_seqs_1_auto_predictions.csv' + \
-        ' && cp results/Ref_seqs_1_auto_predictions.csv ' + \
-               'results/Ref_seqs_1_manual_selections.csv '
+               'results/Ref_seqs_1_auto_predictions.csv'
+        #' && cp results/Ref_seqs_1_auto_predictions.csv ' + \
+        #       'results/Ref_seqs_1_manual_selections.csv '
 
 
 rule setup_and_run_fwd_srch:
@@ -538,7 +538,7 @@ rule sum_rev_srch:
         main_data_dir = 'results/AMOEBAE_Data',
         rev_srch_dir = 'results/rev_srchs_1',
         fwd_srch_csv = 'results/fwd_srchs_1.csv',
-        ref_seq_csv = 'results/Ref_seqs_1_manual_selections.csv'
+        ref_seq_csv = 'config/Ref_seqs_1_manual_selections.csv'
 
     output:
         csv_out_path = 'results/fwd_srchs_1_rev_srch_1.csv'
