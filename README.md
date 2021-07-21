@@ -190,7 +190,6 @@ Makefiles is possible, but will likely be very user-specific in design).
 5. Finally, clone the AMOEBAE code repository into an appropriate directory.
     ```
     git clone --branch dev2 https://github.com/laelbarlow/amoebae.git
-    cd amoebae
     ```
 
 ## Running the workflow
@@ -205,6 +204,7 @@ to prevent snakemake processes from being interrupted.
 1. Collect genome/proteome/transcriptome FASTA files to be searched:
     - Copy the example genomes.csv file in the config subdirectory.
         ```
+        cd amoebae
         cp config/example_genomes.csv config/genomes.csv
         ```
     - If you want to use example genome files, leave this copy as it
