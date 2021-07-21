@@ -133,7 +133,7 @@ Makefiles is possible, but will likely be very user-specific in design).
            graphviz
     ```
 
-   An alternative method, if you cannot run conda on your cluster, is to
+   An alternative method, if you cannot use conda on your system, is to
    install snakemake in a [Python virtual
    environment](https://docs.python.org/3/library/venv.html).
    ```
@@ -147,7 +147,7 @@ Makefiles is possible, but will likely be very user-specific in design).
    ```
 
 
-3. If running on an HPC cluster (recommended) then you will need to generate
+3. If running AMOEBAE on an HPC cluster (recommended) then you will need to generate
    cluster configuration files so that snakemake knows how to submit jobs
    appropriately on your system. This is described in the [snakemake
    documentation on
@@ -167,17 +167,27 @@ Makefiles is possible, but will likely be very user-specific in design).
    chmod a+x pbs-torque/*.py
    cd -
    ```
-
-4. To edit the cluster configuration in the snakemake profile (if necessary),
+   To edit the cluster configuration in the snakemake profile (if necessary),
    edit the `cluster_config.yaml` or `cluster.yaml` file (depends on what type
    of profile, and what you chose to name the files) using your favourite text
    editor. Details of the configuration will depend on the job scheduler and
    resources available on your system, and can be modified at any time. Your
    system administrator will have provided job submission guidelines and
    example job submission commands/scripts, and these may help guide you in
-   adapting the cluster configuration files to your system.
+   adapting the cluster configuration files to your system. To use a snakemake
+   profile, you will need to append an option to all snakemake commands to
+   indicate the name of the profile (for example, `--profile pbs-torque`). 
 
-5. Clone the AMOEBAE repository into an appropriate directory.
+4. If you are **not** running AMOEBAE on an HPC cluster, for example if you are
+   running it on a personal computer, then snakemake profiles will not be
+   necessary. In this case, simply activate your previously defined conda
+   environment for snakemake, and you will ready to run amoebae or other
+   snakemake workflows:
+   ```
+   conda activate snakemake
+   ```
+
+5. Finally, clone the AMOEBAE code repository into an appropriate directory.
     ```
     git clone --branch dev2 https://github.com/laelbarlow/amoebae.git
     cd amoebae
