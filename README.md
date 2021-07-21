@@ -167,6 +167,7 @@ Makefiles is possible, but will likely be very user-specific in design).
    chmod a+x pbs-torque/*.py
    cd -
    ```
+
    To edit the cluster configuration in the snakemake profile (if necessary),
    edit the `cluster_config.yaml` or `cluster.yaml` file (depends on what type
    of profile, and what you chose to name the files) using your favourite text
