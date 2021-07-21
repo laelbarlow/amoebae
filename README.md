@@ -285,7 +285,7 @@ to prevent snakemake processes from being interrupted.
    sequence data and generate lists of potential reference orthologues (for
    interpreting reverse searches). 
     ```
-    snakemake get_ref_seqs -j 100 --use-conda --profile pbs-torque
+    snakemake get_ref_seqs -j 100 --use-conda
     ```
 
 2. Select relevant reference sequences for interpreting reverse search results.
@@ -335,7 +335,7 @@ to prevent snakemake processes from being interrupted.
 
 4. Execute remainder of the workflow.
     ```
-    snakemake -j 100 --use-conda --profile pbs-torque
+    snakemake -j 100 --use-conda 
     ```
 
 5. View results summary files and positive hit sequence alignments at these
