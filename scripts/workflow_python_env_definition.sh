@@ -111,7 +111,7 @@ else
     pip install setuptools wheel
     pip install requests
     pip install \
-    numpy==1.18.1 \
+    numpy \
     biopython==1.77 \
     gffutils==0.10.1 \
     pypdf2==1.26.0 \
