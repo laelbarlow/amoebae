@@ -267,8 +267,8 @@ def get_query_title_from_csv(query_filename, main_data_dir):
 
     # Check that query title is a string.
     assert isinstance(query_title, str), """Could not properly identify query
-    title for query file %s in CSV file %s.""" % (query_filename,
-            query_info_csv_path) 
+    title for query file %s in CSV file %s. Please ensure that the query title
+    contains some alphabetic characters.""" % (query_filename, query_info_csv_path) 
 
     # Return query title.
     return query_title
