@@ -391,6 +391,11 @@ rule get_ref_seqs:
     Run searches with queries to find redundant hits in databases (for
     interpreting results).
     """
+    # Check that the AMOEBAE_Data directory does not already exist.
+    assert not os.path.isdir('results/AMOEBAE_Data'), """The directory
+    results/AMOEBAE_Data already exists. To prevent errors, please delete this
+    directory before proceeding."""
+
     input:
         expand('results/AMOEBAE_Data/Genomes/{data_file}', data_file=database_names_all),
         expand('results/AMOEBAE_Data/Queries/{query_file}', query_file = \
