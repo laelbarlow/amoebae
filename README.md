@@ -385,6 +385,9 @@ to prevent snakemake processes from being interrupted.
     ```
     snakemake get_ref_seqs -j 100 --use-conda
     ```
+    Note: If you decide to re-run the workflow from this point, perhaps after
+    adding additional genome or query files, then first delete or archive the
+    existing results subdirectory to prevent errors.
 
 
 5. Select relevant reference sequences for interpreting reverse search results.

@@ -408,16 +408,11 @@ rule get_ref_seqs:
     conda:
         'envs/amoebae_env.yaml'
 
-    #envmodules:
-    #    global_envmodules
+    envmodules:
+        global_envmodules
 
-    run:
-        # Check that the AMOEBAE_Data directory does not already exist.
-        assert not os.path.isdir('results/AMOEBAE_Data'), """The directory
-        results/AMOEBAE_Data already exists. To prevent errors, please delete this
-        directory before proceeding."""
-
-        shell('python3 {input.amoebae_script} ' + \
+    shell:
+        'python3 {input.amoebae_script} ' + \
             'get_redun_hits ' + \
                 'results/Ref_seqs_1 ' + \
                 'results/AMOEBAE_Data ' + \
@@ -427,7 +422,7 @@ rule get_ref_seqs:
                 'results/Ref_seqs_1/0_ref_seqs.csv ' + \
                 '--predict_redun_hit_selection ' + \
         ' && cp results/Ref_seqs_1/0_ref_seqs_auto_predictions.csv ' + \
-               'results/Ref_seqs_1_auto_predictions.csv')
+               'results/Ref_seqs_1_auto_predictions.csv'
 
 
 rule setup_and_run_fwd_srch:
