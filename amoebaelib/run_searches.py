@@ -343,7 +343,8 @@ def run_all_searches(query_file_list,
                     #    dfull = os.path.join(db_dir, d)
                     dfull = os.path.join(db_dir, d)
                     assert os.path.isfile(dfull), """Specified database file path
-                    is not a file: %s""" % dfull
+                    is not a file: %s\n Please ensure that a FASTA file with
+                    the filename %s exists in the input data.""" % (dfull, d)
 
                     # Search start time.
                     search_start_time = time.time()
