@@ -408,8 +408,8 @@ rule get_ref_seqs:
     conda:
         'envs/amoebae_env.yaml'
 
-    envmodules:
-        global_envmodules
+    #envmodules:
+    #    global_envmodules
 
     run:
         # Check that the AMOEBAE_Data directory does not already exist.
