@@ -265,6 +265,11 @@ def get_query_title_from_csv(query_filename, main_data_dir):
     df.set_index('Filename', inplace=True)
     query_title = df.loc[query_filename]['Query title']
 
+    # Check that query title is not a dataframe.
+    assert not isinstance(query_title, pd.DataFrame), """Could not properly
+    parse query info file (%s), there may be duplicate entries in this file.""" \
+        % query_info_csv_path 
+
     # Check that query title is a string.
     assert isinstance(query_title, str), """Could not properly identify query
     title for query file %s in CSV file %s. Please ensure that the query title
