@@ -140,9 +140,11 @@ def get_database_filenames_from_csv(input_csv_path, source_type):
                 # Check that the filename extension is acceptable.
                 assert len(filename.rsplit('.', 1)) == 2, """No filename
                 extension detected in filename %s.""" % filename
-                assert filename.rsplit('.', 1)[1] in ['faa', 'fna', 'gff3', 'hmmdb'],\
+                filename_extension = filename.rsplit('.', 1)[1]
+                assert filename_extension in ['faa', 'fna', 'gff3', 'hmmdb'],\
                 """Error: Input file %s line %s: Data filename must have extension
-                .faa, .fna, or .gff3, not %s: %s""" % (input_csv_path, str(lnum), filename)
+                .faa, .fna, or .gff3, not %s: %s""" % (input_csv_path,
+                        str(lnum), filename, filename_extension)
 
                 # Decide whether to include.
                 include = False
