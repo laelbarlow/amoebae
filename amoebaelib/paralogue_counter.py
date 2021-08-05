@@ -3159,17 +3159,24 @@ def add_alignment_column(incsv, outcsv):
     could be found to use for the following query titles:
         %s""" % (str(titles_without_alignments))
 
-    # Check that one and only one alignment file name has been assigned to each
-    # query title.
+    # Check that at least one alignment file name has been assigned to each
+    # query title. Also, print a warning if more than one has been assigned,
+    # and modify the dict to have only one (the first alignment).
     for query_title in query_title_alignment_dict.keys():
         assert len(query_title_alignment_dict[query_title]) > 0, """Could not
         identify an alignment file to use for query title: %s""" % query_title
 
-        assert len(query_title_alignment_dict[query_title]) < 2, """Identified
-        more than one potential alignment file to use for query title %s:
-            %s"""\
-        % (query_title, str(query_title_alignment_dict[query_title]))
-    
+        #assert len(query_title_alignment_dict[query_title]) < 2, """Identified
+        #more than one potential alignment file to use for query title %s:
+        #    %s"""\
+        #% (query_title, str(query_title_alignment_dict[query_title]))
+
+        if len(query_title_alignment_dict[query_title]) >= 2:
+            print("""\n\n\nWarning: More than one alignment file is present for queries with title %s. Using alignment \"%s\".\n\n\n""" % (query_title, str(query_title_alignment_dict[query_title][0])))
+
+            # Modify alignment dict to remove all but the first alignment for this query title.
+            query_title_alignment_dict[query_title] = [query_title_alignment_dict[query_title][0]]
+
 
     # Use the dict to add a column to the dataframe.
 
