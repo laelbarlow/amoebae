@@ -204,6 +204,8 @@ on an HPC cluster, it may be useful to use
 to prevent snakemake processes from being interrupted. 
 
 1. Collect genome/proteome/transcriptome files to be searched:
+    - Note: This includes reference genomes that will be used for reverse
+      searches.
     - Copy the [example genomes.csv
       file](https://github.com/laelbarlow/amoebae/blob/126fd9dfaff6b21165cda0631bd77d994b0a69aa/config/example_genomes.csv)
       in the config subdirectory.
@@ -379,28 +381,24 @@ to prevent snakemake processes from being interrupted.
           example `config/genomes.csv` file).
 
 
-4. Execute initial workflow steps to download (if necessary) and format
-   sequence data and generate lists of potential reference orthologues (for
-   interpreting reverse searches). 
-    ```
-    snakemake get_ref_seqs -j 100 --use-conda
-    ```
-    Note: If you decide to re-run the workflow from this point, perhaps after
-    adding additional genome or query files, then first delete or archive the
-    existing results subdirectory to prevent errors.
-
-
-5. Select relevant reference sequences for interpreting reverse search results.
+4. Select relevant reference sequences for interpreting reverse search results.
+    - Perform sequence similarity searches in your reference genomes using your
+      queries. Here, several initial workflow steps will be run to download (if
+      necessary) and format sequence data. 
+      ```
+      snakemake get_ref_seqs -j 100 --use-conda
+      ```
     - If you ran searches just with the example files, then you can use the
       example reference sequence selection file by copying it in the `config`
-      subdirectory.
+      subdirectory (this defines appropriate *Arabidopsis* sequences as
+      orthologs of the example queries).
         ```
         cp config/example_Ref_seqs_1_manual_selections.csv \
            config/Ref_seqs_1_manual_selections.csv
         ```
     - Otherwise, copy the relevant file from the results subdirectory.
         ```
-        cp results/Ref_seqs_1_auto_selections.csv \
+        cp results/Ref_seqs_1_auto_predictions.csv \
            config/Ref_seqs_1_manual_selections.csv
         ```
     - The purpose of this `config/Ref_seqs_1_manual_selections.csv` file is to
@@ -416,9 +414,12 @@ to prevent snakemake processes from being interrupted.
       indicates inclusion of a sequence as a representative of the query used,
       and '-' indicates that the sequence is too distantly related to the query
       to be relevant.
+    - Note: If you decide to re-run the workflow from this point, perhaps after
+      adding additional genome or query files, then first delete or archive the
+      existing results subdirectory to prevent errors.
 
 
-6. Configure the organization of output plots.
+5. Configure the organization of output plots.
     - First, copy the relavent example configuration files.
         ```
         cp config/example_coulson_plot_organization.csv \
@@ -436,28 +437,37 @@ to prevent snakemake processes from being interrupted.
       files searched (including any nucleotide FASTA files), in the order that
       you want them to appear in the plots.
 
-7. Execute remainder of the workflow.
-    ```
-    snakemake -j 100 --use-conda 
-    ```
 
-8. View results summary files and positive hit sequence alignments at these
-   paths. For convenience, you may wish to download these files using an SFTP
-   client such as [Cyberduck](https://cyberduck.io/download/) or
-   [FileZilla](https://filezilla-project.org/):
-    ```
-    results/plot_coulson_both.pdf
-    results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv
-    results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files
-    ```
-    Note that these results require careful interpretation, and in most cases
-    re-analysis with modified parameters will be necessary as well as follow up
-    with additional methods such as phylogenetic analysis.
-
-9. Generate a report of results in HTML format which can be opened in a web browser.
-    ```
-    snakemake --cores 1 --report results/amoebae_report.html
-    ```
+6. Execute remainder of the workflow to perform searches in your genomes of
+   interest.
+    - Note: This is where searches in all the FASTA files listed in your
+      `config/genomes.csv` file are performed.
+    - Run the following command:
+      ```
+      snakemake -j 100 --use-conda 
+      ```
+    - This will take minutes to hours to run, depending on the input data,
+      computing resources, etc.
+    - View results summary files and positive hit sequence alignments at these
+      paths. 
+      ```
+      results/plot_coulson_both.pdf
+      results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv
+      results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files
+      ```
+    - You may also wish to generate a report of results in HTML format which
+      can be opened in a web browser. This can be done with the following
+      command:
+      ```
+      snakemake --cores 1 --report results/amoebae_report.html
+      ```
+    - If you are running the workflow on an HPC cluster, for convenience you may
+      wish to download these files using an SFTP client such as
+      [Cyberduck](https://cyberduck.io/download/) or
+      [FileZilla](https://filezilla-project.org/).
+    - Note that these results require careful interpretation, and in most cases
+      re-analysis with modified parameters will be necessary as well as follow
+      up with additional methods such as phylogenetic analysis.
 
 
 ## Customizing parameters
