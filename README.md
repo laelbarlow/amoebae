@@ -297,6 +297,8 @@ to prevent snakemake processes from being interrupted.
       proceed to the next step.
     - Otherwise, define the queries you want to search with. 
         - This is similar to how genome files are specified (see above).
+        - For simplicity, it is best to select query sequences from the genomes that you plan
+          to use as reference genomes (see below).
         - Input query files must contain peptide (amino acid) sequences, and
           may be in either single-FASTA (for BLAST searches) or aligned
           multi-FASTA format (for profile searches with HMMer).
@@ -360,9 +362,10 @@ to prevent snakemake processes from being interrupted.
 
 
 
-3. Specify an appropriate reference protein FASTA file to query in
-   reverse searches (this is the second set of searches in reciprocal-best-hit
-   sequence similarity searching). 
+3. Specify appropriate reference genomes to query in
+   reverse searches.
+   	- Protein FASTA file(s) (with `.faa` extensions) selected here will be used in the second set of searches 
+   	  performed during reciprocal-best-hit sequence similarity searching. 
     - Copy the example file in the config subdirectory.
         ```
         cp config/example_reference_db_list.txt \
@@ -382,6 +385,11 @@ to prevent snakemake processes from being interrupted.
 
 
 4. Select relevant reference sequences for interpreting reverse search results.
+    - If you have already run amoebae from this directory, and
+      have some previous result files in the `amoebae/results` subdirectory,
+      then you will need to remove your `amoebae/results` directory (or move it
+      elsewhere) before running the workflow again with snakemake commands
+      described below in this step and subsequent steps. 
     - Perform sequence similarity searches in your reference genomes using your
       queries. Here, several initial workflow steps will be run to download (if
       necessary) and format sequence data. 
@@ -414,9 +422,12 @@ to prevent snakemake processes from being interrupted.
       indicates inclusion of a sequence as a representative of the query used,
       and '-' indicates that the sequence is too distantly related to the query
       to be relevant.
-    - Note: If you decide to re-run the workflow from this point, perhaps after
-      adding additional genome or query files, then first delete or archive the
-      existing results subdirectory to prevent errors.
+    - Note: If your `results/Ref_seqs_1_auto_predictions.csv` file is missing
+      search results that you expected it to contain, then you may be using the
+      wrong protein FASTA file for one or more reference genomes. Check that
+      you have specified the relevant URLs in the `config/genomes.csv` file
+      and/or correctly named the relevant FASTA files in your
+      `resources/local_db_files` directory.
 
 
 5. Configure the organization of output plots.
