@@ -390,7 +390,7 @@ to prevent snakemake processes from being interrupted.
       ```
     - If you ran searches just with the example files, then you can use the
       example reference sequence selection file by copying it in the `config`
-      subdirectory (this defines appropriate **Arabidopsis** sequences as
+      subdirectory (this defines appropriate *Arabidopsis* sequences as
       orthologs of the example queries).
         ```
         cp config/example_Ref_seqs_1_manual_selections.csv \
@@ -398,7 +398,7 @@ to prevent snakemake processes from being interrupted.
         ```
     - Otherwise, copy the relevant file from the results subdirectory.
         ```
-        cp results/Ref_seqs_1_auto_selections.csv \
+        cp results/Ref_seqs_1_auto_predictions.csv \
            config/Ref_seqs_1_manual_selections.csv
         ```
     - The purpose of this `config/Ref_seqs_1_manual_selections.csv` file is to
