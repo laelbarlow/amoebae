@@ -1052,14 +1052,10 @@ Miscellaneous commands:
         if os.path.isfile(args.databases):
             # Check that the input file path is not a fasta file.
             assert not open(args.databases, 'r').read().startswith('>'), """Don't input fasta file paths."""
-            # Get list from file.
+            # Get filename list from file.
             db_file_list = search.get_db_list_from_file(args.databases)
         else:
             # then argument is a filename (not a path).
-            expected_path_to_file_in_genomes_folder = os.path.join(db_dir, args.databases)
-            assert expected_path_to_file_in_genomes_folder,\
-            """File with the name %s does not exist in the directory %s""" % (args.databases, db_dir) 
-
             # Get list from file.
             db_file_list = [args.databases]
 
@@ -1067,6 +1063,12 @@ Miscellaneous commands:
         #Check that database was found.
         assert db_file_list is not None, """Could not find database(s) to use
         from argument: %""" % args.databases
+
+        # Check that the specified database FASTA files exist in the genomes directory.
+        for filename in db_file_list:
+            expected_path_to_file_in_genomes_folder = os.path.join(db_dir, filename)
+            assert os.path.isfile(expected_path_to_file_in_genomes_folder),\
+            """File with the name %s does not exist in the directory %s""" % (args.databases, db_dir) 
 
 
         # Define file paths for new query and db list files.
@@ -1076,7 +1078,7 @@ Miscellaneous commands:
         # Write query and db list files to output folder.
         with open(db_file_path, 'w') as o1, open(query_file_path, 'w') as o2:
             for x in db_file_list:
-                o1.write(x)
+                o1.write(x + '\n')
             for y in query_file_list:
                 o2.write(os.path.basename(y) + '\n')
 
