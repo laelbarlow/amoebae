@@ -1171,10 +1171,16 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             redun_hit_list = None
             if redun_hit_csv is not None:
                 if query_title in redun_hit_dict.keys():
-                    #redun_hit_list =\
-                    #redun_hit_dict[query_title][query_file][db_file]
-                    redun_hit_list =\
-                    list(set(redun_hit_dict[query_title][db_file]))
+                    if db_file in redun_hit_dict[query_title].keys():
+                        redun_hit_list =\
+                        list(set(redun_hit_dict[query_title][db_file]))
+                    else:
+                        # If there are no redundant hits for this query in this
+                        # genome, then just put an empty list in the dataframe.
+                        redun_hit_list =\
+                        []
+
+                    # Update redundant hit list in dataframe.
                     row['Redundant hit list applied'] = redun_hit_list
 
             # Get corresponding query file path.
