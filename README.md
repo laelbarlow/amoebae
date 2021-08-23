@@ -422,12 +422,16 @@ to prevent snakemake processes from being interrupted.
       indicates inclusion of a sequence as a representative of the query used,
       and '-' indicates that the sequence is too distantly related to the query
       to be relevant.
-    - Note: If your `results/Ref_seqs_1_auto_predictions.csv` file is missing
-      search results that you expected it to contain, then you may be using the
-      wrong protein FASTA file for one or more reference genomes. Check that
-      you have specified the relevant URLs in the `config/genomes.csv` file
-      and/or correctly named the relevant FASTA files in your
-      `resources/local_db_files` directory.
+    - Notes:
+        - Occasionally, temporary disruptions of NCBI servers will prevent
+          download of files. If the workflow fails to download FASTA files,
+          check the FTP download URL, and try again later. 
+        - If your `results/Ref_seqs_1_auto_predictions.csv` file is missing
+          search results that you expected it to contain, then you may be using
+          the wrong protein FASTA file for one or more reference genomes. Check
+          that you have specified the relevant URLs in the `config/genomes.csv`
+          file and/or correctly named the relevant FASTA files in your
+          `resources/local_db_files` directory.
 
 
 5. Configure the organization of output plots.
