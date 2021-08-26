@@ -236,7 +236,7 @@ def get_redun_hits_in_dbs(query_title,
                     hit_num += 1
 
                     # Stop when the maximum has been reached.
-                    if hit_num > max_number_of_hits_to_summarize - 1:
+                    if hit_num > int(max_number_of_hits_to_summarize) - 1:
                         break
 
                     # Get E-value difference between current hit and top hit
