@@ -148,6 +148,13 @@ class SrchResFile:
             self.hits = list(self.hits)
             self.hits.sort(key=lambda x: float(x[0].evalue))
 
+            # Check that hits were actually sorted by ascending E-value.
+            max_e = 0.0
+            for hit in self.hits:
+                cur_e = hit[0].evalue
+                assert cur_e >= max_e, """E-values are not ascending."""
+                max_e = cur_e 
+
 
     def hit_id(self, hit_rank):
         """Return id (accession) (if present) for sequence/profile with a given
