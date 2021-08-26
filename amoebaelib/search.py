@@ -232,7 +232,9 @@ def get_redun_hits_in_dbs(query_title,
                 hit_num = -1
                 top_hit_evalue = parsed_file_obj.hit_evalue(0)
                 top_hit_len = len(parsed_file_obj.hit_sequence(0))
-                for hit in SearchIO.read(search_result_path, srch_file_format): 
+                #for hit in SearchIO.read(search_result_path, srch_file_format): 
+                max_e = 0.0
+                for hit in parsed_file_obj.hits: 
                     hit_num += 1
 
                     # Stop when the maximum has been reached.
@@ -245,6 +247,10 @@ def get_redun_hits_in_dbs(query_title,
                     e_cur = parsed_file_obj.hit_evalue(hit_num)
                     evaldiff = get_evaldiff(get_corr_evalue(e_top),\
                             get_corr_evalue(e_cur))
+
+                    # Check that E-values are ascending.
+                    assert e_cur >= max_e, """E-values are not ascending."""
+                    max_e = e_cur
 
                     # Get hit length as a percentage of the top hit sequence
                     # length.
