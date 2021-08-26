@@ -145,15 +145,10 @@ class SrchResFile:
             # (otherwise sequences with multiple repetitive domains may be
             # retrieved with lower E-values despite low sequence similarity
             # of each of the constituent domains with the query HMM).
+            # For this it is necessary to choose the minimum of the per domain
+            # E-values for each hit as the one to use for sorting.
             self.hits = list(self.hits)
-            self.hits.sort(key=lambda x: float(x[0].evalue))
-
-            # Check that hits were actually sorted by ascending E-value.
-            max_e = 0.0
-            for hit in self.hits:
-                cur_e = hit[0].evalue
-                assert cur_e >= max_e, """E-values are not ascending."""
-                max_e = cur_e 
+            self.hits.sort(key=lambda x: min([y.evalue for y in list(x)]))
 
 
     def hit_id(self, hit_rank):
@@ -229,7 +224,9 @@ class SrchResFile:
                     break
 
         elif self.format == 'hmmer3-text':
-            hit_evalue = self.hits[hit_rank].evalue
+            # Select the minimum per-domain E-value for the hit, not the
+            # full-sequence hit.
+            hit_evalue = min([x.evalue for x in list(self.hits[hit_rank])])
 
         elif self.format == 'hhsearch':
             pass # ...
