@@ -55,6 +55,7 @@ def get_query_filenames_from_csv(input_csv_path, source_type):
 
     query_dict = {}
     with open(input_csv_path) as infh:
+
         # Iterate over lines in CSV file.
         lnum = 0
         for i in infh:
@@ -63,8 +64,12 @@ def get_query_filenames_from_csv(input_csv_path, source_type):
             if not i.startswith('Filename') \
                     and not i.startswith('\n') \
                     and not i.startswith(','):
+
                 # Parse info in line.
                 spliti = i.strip().split(',')
+                assert len(spliti) >= 2, """Input file %s 
+                is formatted incorrectly. Please ensure there are two columns
+                (one comma per line).""" % input_csv_path
                 filename = spliti[0]
                 seq_id = str(spliti[1].strip())
 
