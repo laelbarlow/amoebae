@@ -432,6 +432,12 @@ to prevent snakemake processes from being interrupted.
           that you have specified the relevant URLs in the `config/genomes.csv`
           file and/or correctly named the relevant FASTA files in your
           `resources/local_db_files` directory.
+        - AMOEBAE re-ranks all hmmsearch (HMMer) hits according to the best 1
+          domain E-value instead of the full sequence E-value, which can be
+          useful when searching among sequences with multiple homologous
+          domains. See the [HMMer user
+          guide](http://eddylab.org/software/hmmer/Userguide.pdf) for further
+          information.
 
 
 5. Configure the organization of output plots.
