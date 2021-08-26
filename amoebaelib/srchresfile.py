@@ -146,7 +146,7 @@ class SrchResFile:
             # retrieved with lower E-values despite low sequence similarity
             # of each of the constituent domains with the query HMM).
             self.hits = list(self.hits)
-            self.hits.sort(key=lambda x: x[0].evalue)
+            self.hits.sort(key=lambda x: float(x[0].evalue))
 
 
     def hit_id(self, hit_rank):
