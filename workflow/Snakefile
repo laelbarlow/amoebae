@@ -421,7 +421,7 @@ rule get_ref_seqs:
                 '--csv_file ' + \
                 'results/Ref_seqs_1/0_ref_seqs.csv ' + \
                 '--predict_redun_hit_selection ' + \
-                '--max_number_of_hits_to_summarize 100 ' + \
+                '--max_number_of_hits_to_summarize 200 ' + \
         ' && cp results/Ref_seqs_1/0_ref_seqs_auto_predictions.csv ' + \
                'results/Ref_seqs_1_auto_predictions.csv'
 
