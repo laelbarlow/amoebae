@@ -146,7 +146,7 @@ class SrchResFile:
             # retrieved with lower E-values despite low sequence similarity
             # of each of the constituent domains with the query HMM).
             self.hits = list(self.hits)
-            self.hits.sort(key=lambda x: x[0].evalue)
+            self.hits.sort(key=lambda x: min([y.evalue for y in list(x)]))
 
 
     def hit_id(self, hit_rank):
@@ -222,7 +222,7 @@ class SrchResFile:
                     break
 
         elif self.format == 'hmmer3-text':
-            hit_evalue = self.hits[hit_rank].evalue
+            hit_evalue = min([x.evalue for x in list(self.hits[hit_rank])])
 
         elif self.format == 'hhsearch':
             pass # ...
