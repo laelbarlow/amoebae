@@ -424,8 +424,9 @@ to prevent snakemake processes from being interrupted.
       to be relevant.
     - Notes:
         - Occasionally, temporary disruptions of NCBI servers will prevent
-          download of files. If the workflow fails to download FASTA files,
-          check the FTP download URL, and try again later. 
+          download of files (queries or genomes). If the workflow fails to
+          download FASTA files, check the FTP download URL or NCBI accession,
+          as applicable, and try running the workflow again. 
         - If your `results/Ref_seqs_1_auto_predictions.csv` file is missing
           search results that you expected it to contain, then you may be using
           the wrong protein FASTA file for one or more reference genomes. Check
