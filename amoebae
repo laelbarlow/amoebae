@@ -447,8 +447,9 @@ Miscellaneous commands:
             if filetype == 'afa':
                 assert\
                 add_to_queries.fasta_seqs_all_same_len(query_file),\
-                """Error: Sequences in input alignment are not all the same length:
-                    %s""" % query_file
+                """Sequences in input alignment are not all the same length:
+                   %s
+                   Please ensure that this file is in aligned FASTA format.""" % query_file
 
             # Detect datatype (prot or nucl).
             datatype = get_dbtype(query_file)
