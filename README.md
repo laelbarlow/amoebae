@@ -304,7 +304,9 @@ to prevent snakemake processes from being interrupted.
           to use as reference genomes (see below).
         - Input query files must contain peptide (amino acid) sequences, and
           may be in either single-FASTA (for BLAST searches) or aligned
-          multi-FASTA format (for profile searches with HMMer).
+          multi-FASTA format (for profile searches with HMMer). These must be
+          in valid FASTA format, which includes a sequence header prefixed by
+          `>`.
         - Sequences that are accessible online via the [NCBI Protein
           database](https://www.ncbi.nlm.nih.gov/protein/) can be listed in the
           `config/queries.csv` file with the relevant [NCBI protein
