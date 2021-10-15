@@ -280,7 +280,10 @@ to prevent snakemake processes from being interrupted.
               Also, enter the URL for the file in the "Location" column (see
               example URLs for files on NCBI).
             - If the file is a local file, then leave the cells in the
-              "Compression type" and "Location" columns empty for this row. 
+              "Compression type" and "Location" columns empty for this row. See
+              the `config/example_local_genomes.csv` file for an example (each
+              row must contain the same number of commas for this to be
+              interpreted properly as CSV format).
             - Note: If you use a spreadsheet editor such as Microsoft Excel, then
               make sure to save the modified file with UTF-8 encoding (plain
               text) and in CSV format with the filename extension `.csv`.
