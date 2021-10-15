@@ -367,7 +367,8 @@ rule list_dbs_and_queries:
 
     output:
         dbs = 'results/db_list.txt',
-        queries = 'results/query_list.txt'
+        queries = 'results/query_list.txt',
+        coulson_plot_org = 'results/coulson_plot_organization.csv',
 
     run:
         # Get list of .faa and .fna database files (excluding .gff3 files).
@@ -384,6 +385,18 @@ rule list_dbs_and_queries:
             dbsfh.write('\n'.join(fa_database_names_all))
             # Write query name list to file.
             queriesfh.write('\n'.join(single_fasta_query_names_all + alignment_fasta_query_names))
+
+        # Write basic pre-filled coulson plot organization CSV file.
+        with open(output.coulson_plot_org, 'w') as coulson_plot_org:
+            # Make a non-redundant list of query names.
+            nonredun_query_names = list(set(single_fasta_query_names_all + \
+                                   alignment_fasta_query_names))
+            # Sort alphabetically.
+            nonredun_query_names.sort()
+            # Write lines, just using the first character of the query name as the
+            # category name.
+            for i in nonredun_query_names:
+                coulson_plot_org.write(i[0] + ',' + i + '\n')
 
 
 rule get_ref_seqs:

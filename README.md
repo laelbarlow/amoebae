@@ -447,22 +447,24 @@ to prevent snakemake processes from being interrupted.
 
 
 5. Configure the organization of output plots.
-    - First, copy the relavent example configuration files.
+    - First, copy the relavent configuration files from the results directory.
         ```
-        cp config/example_coulson_plot_organization.csv \
+        cp results/coulson_plot_organization.csv \
            config/coulson_plot_organization.csv
 
-        cp config/example_output_plot_row_order.txt \
+        cp results/db_list.txt \
            config/output_plot_row_order.txt
         ```
-    - Then re-arrange or re-write as necessary. The
+    - Then re-arrange or re-write these configuration files as necessary. The
       `coulson_plot_organization.csv` file contains two columns: The first is
       the name assigned to a column in the output coulson plot, and the second
       lists query titles for queries assigned to each column (multiple query
       titles can be associated with the same column name). The
       `output_plot_row_order.txt` file simply lists the file names of the FASTA
       files searched (including any nucleotide FASTA files), in the order that
-      you want them to appear in the plots.
+      you want them to appear in the plots. For examples, see
+      `config/example_coulson_plot_organization.csv` and
+      `config/example_output_plot_row_order.txt`.
 
 
 6. Execute remainder of the workflow to perform searches in your genomes of
