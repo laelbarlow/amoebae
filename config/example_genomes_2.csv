@@ -1,0 +1,7 @@
+Filename,FASTA header delimiter,Sequence ID position,Compression type,Location,
+Saccharomyces_cerevisiae.faa, ,0,gzip,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/146/045/GCF_000146045.2_R64/GCF_000146045.2_R64_protein.faa.gz,
+Saccharomyces_cerevisiae.fna, ,0,gzip,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/146/045/GCF_000146045.2_R64/GCF_000146045.2_R64_genomic.fna.gz,
+Saccharomyces_cerevisiae.gff3, ,0,gzip,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/146/045/GCF_000146045.2_R64/GCF_000146045.2_R64_genomic.gff.gz,
+Allomyces_macrogynus.faa, ,0,gzip,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/151/295/GCA_000151295.1_A_macrogynus_V3/GCA_000151295.1_A_macrogynus_V3_protein.faa.gz,
+Allomyces_macrogynus.fna, ,0,gzip,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/151/295/GCA_000151295.1_A_macrogynus_V3/GCA_000151295.1_A_macrogynus_V3_genomic.fna.gz,
+Allomyces_macrogynus.gff3, ,0,gzip,ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/151/295/GCA_000151295.1_A_macrogynus_V3/GCA_000151295.1_A_macrogynus_V3_genomic.gff.gz,
