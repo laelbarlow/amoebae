@@ -447,7 +447,7 @@ to prevent snakemake processes from being interrupted.
 
 
 5. Configure the organization of output plots.
-    - First, copy the relavent configuration files from the results directory.
+    - First, copy the relevent configuration files from the results directory.
         ```
         cp results/coulson_plot_organization.csv \
            config/coulson_plot_organization.csv
