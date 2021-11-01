@@ -20,7 +20,7 @@ Yarrowia_lipolytica.fna, ,0,gzip,https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/00
 Yarrowia_lipolytica.gff3, ,0,gzip,https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/525/GCF_000002525.2_ASM252v1/GCF_000002525.2_ASM252v1_genomic.gff.gz,
 Neurospora_crassa.faa, ,0,gzip,https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/182/925/GCF_000182925.2_NC12/GCF_000182925.2_NC12_protein.faa.gz,
 Neurospora_crassa.fna, ,0,gzip,https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/182/925/GCF_000182925.2_NC12/GCF_000182925.2_NC12_genomic.fna.gz,
-Neurospora_crassa.gff3, ,0,gzip,https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&PROG_DEF=blastn&BLAST_PROG_DEF=megaBlast&BLAST_SPEC=OGP__5141__9522,
+Neurospora_crassa.gff3, ,0,gzip,,https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/182/925/GCF_000182925.2_NC12/GCF_000182925.2_NC12_genomic.gff.gz
 Cryptococcus_neoformans.faa, ,0,gzip,https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/091/045/GCF_000091045.1_ASM9104v1/GCF_000091045.1_ASM9104v1_protein.faa.gz,
 Cryptococcus_neoformans.fna, ,0,gzip,https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/091/045/GCF_000091045.1_ASM9104v1/GCF_000091045.1_ASM9104v1_genomic.fna.gz,
 Cryptococcus_neoformans.gff3, ,0,gzip,https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/091/045/GCF_000091045.1_ASM9104v1/GCF_000091045.1_ASM9104v1_genomic.gff.gz,
