@@ -1,1 +1,1 @@
-Arabidopsis_thaliana.faa
+Rhizophagus_irregularis.faa
