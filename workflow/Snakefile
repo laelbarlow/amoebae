@@ -93,6 +93,7 @@ rule final_results:
     input:
         'results/workflow_diagram.pdf',
         'config/Ref_seqs_1_manual_selections.csv',
+        'results/Ref_seqs_1',
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
         'results/plot.pdf',
         'results/plot_coulson_both.pdf',

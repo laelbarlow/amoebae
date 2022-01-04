@@ -105,10 +105,10 @@ def process_query_title_hit_id_list_dict(in_dict):
     # Get a list of lists of all unique combinations of keys in the input dict.
     two_key_combos = get_nonredun_dict_key_pairs(in_dict2)
 
-    # Check whether the number of combos is super big.
-    assert len(two_key_combos) <= 500, """Attempting to iterate over more than
-    500 combinations of hit ID lists for different query titles. This is
-    probably impractical."""
+    ## Check whether the number of combos is super big.
+    #assert len(two_key_combos) <= 500, """Attempting to iterate over more than
+    #500 combinations of hit ID lists for different query titles. This is
+    #probably impractical."""
 
     # Iterate over all pairs of keys and generate a new dict.
     for combo in two_key_combos:
