@@ -1,0 +1,17 @@
+name: amoebae_typesetting_env
+channels:
+    - anaconda
+    - conda-forge
+    - r
+    - bioconda
+dependencies:
+    - ncurses=6.3
+    - pandoc=2.2
+    - r-essentials
+    - r-base
+    - r-tinytex
+    - python=3.9.6
+    - pandas
+    - numpy
+    - biopython=1.77
+
