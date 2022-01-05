@@ -127,9 +127,11 @@ in a wide variety of systems.
    ```
    mamba create -c conda-forge -c bioconda \
        -n snakemake \
+           python=3.9.6 \
            snakemake \
            cookiecutter \
-           graphviz
+           graphviz \
+           git
     ```
 
    An alternative method, if you cannot use conda on your system, is to
