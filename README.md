@@ -111,8 +111,8 @@ Cette recherche a été financée par le Conseil de recherches en sciences natur
 <img src="images/NSERC_FIP_RGB.png">
 
 
-Also, help with testing AMOEBAE has been kindly provided by Raegan T. Larson,
-Shweta V. Pipalya, Kira More, Kristína Záhonová, and Emily K. Herman.
+Also, help with testing AMOEBAE has been kindly provided by numerous members of
+the Dacks laboratory.
 
 
 ## License

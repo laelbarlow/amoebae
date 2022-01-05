@@ -115,7 +115,7 @@ in a wide variety of systems.
 
 5. Finally, clone the AMOEBAE code repository into an appropriate directory.
     ```
-    git clone --branch dev2 https://github.com/laelbarlow/amoebae.git
+    git clone https://github.com/laelbarlow/amoebae.git
     ```
 
 ## Running the workflow
