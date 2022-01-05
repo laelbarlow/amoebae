@@ -91,9 +91,8 @@ rule final_results:
     results directory.
     """
     input:
-        'results/workflow_diagram.pdf',
+        #'results/workflow_diagram.pdf',
         'config/Ref_seqs_1_manual_selections.csv',
-        'results/Ref_seqs_1',
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
         'results/plot.pdf',
         'results/plot_coulson_both.pdf',
@@ -551,7 +550,8 @@ rule sum_rev_srch:
         main_data_dir = 'results/AMOEBAE_Data',
         rev_srch_dir = 'results/rev_srchs_1',
         fwd_srch_csv = 'results/fwd_srchs_1.csv',
-        ref_seq_csv = 'config/Ref_seqs_1_manual_selections.csv'
+        ref_seq_csv = 'config/Ref_seqs_1_manual_selections.csv',
+        token_input_dir = 'results/Ref_seqs_1',
 
     output:
         csv_out_path = 'results/fwd_srchs_1_rev_srch_1.csv'
@@ -782,8 +782,8 @@ rule plot_workflow:
     output:
         'results/workflow_diagram.pdf'
 
-    conda:
-        'envs/amoebae_env.yaml'
+    #conda:
+    #    'envs/amoebae_env.yaml'
 
     envmodules:
         global_envmodules
