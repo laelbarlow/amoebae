@@ -203,6 +203,10 @@ def update_query_csv(csv_file, mod_query_path, datatype, main_data_dir):
         #query_title = query_basename.rsplit('.')[0]
 
         query_title = query_basename.split('_')[0]
+        # Remove filename extension, if present.
+        if query_title.endswith('.faa') or query_title.endswith('.afaa'):
+            query_title = query_title.rsplit('.', 1)[0]
+
 
     # Initiate dataframe for line to append.
     new_row = pd.DataFrame(columns=headers)
