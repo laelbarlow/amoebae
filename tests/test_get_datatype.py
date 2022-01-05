@@ -43,19 +43,3 @@ def test_get_datatype_for_sequence_string():
     assert dbtype_6 == 'nucl'
 
 
-def test_get_dbtype():  # ***Incomplete test
-    """Test the get_dbtype function in the get_datatype.py file.
-    """
-    ##########################
-    # Arrange.
-    f = "f"
-
-    ##########################
-    # Act.
-    #x = get_dbtype(f)
-
-    ##########################
-    # Assert.
-    assert True == True # ***Temporary.
-
-
