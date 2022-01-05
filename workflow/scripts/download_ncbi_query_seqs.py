@@ -58,9 +58,16 @@ for filename in query_dict.keys():
                     o.write(r.text)
             except:
                 print("\nError: Could not access NCBI server.\n")
+
         # Check that the sequence was actually downloaded.
         assert os.path.isfile(filepath), """The sequence with the following accession could not be downloaded from NCBI: %s\n
         Try re-running this script.""" % accession
+        with open(filepath) as infh:
+            contents = infh.read()
+            assert contents.startswith('>'), """The output file does not
+            appear to contain a FASTA sequence:
+            %s
+            You may need to try re-running this script."""
     # Wait one second between requests so that the API does not throw an error
     # and just write an error message to the output FASTA file paths.
     time.sleep(1)

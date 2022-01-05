@@ -1,0 +1,11 @@
+Amanita_muscaria.faa
+Pleurotus_ostreatus.faa
+Postia_placenta.faa
+Botryobasidium_botryosum.faa
+Cryptococcus_neoformans.faa
+Cryptococcus_neoformans.fna
+Tremella_mesenterica.faa
+Wallemia_ichthyophaga.faa
+Rhodotorula_graminis.faa
+Saccharomyces_cerevisiae.faa
+Rhizophagus_irregularis.faa

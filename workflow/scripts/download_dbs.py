@@ -74,6 +74,12 @@ with open(input_csv_path) as infh:
                 else:
                     print("\nCould not decompress file.")
 
+                # Check that the file was actually downloaded.
+                assert os.path.isfile(destination), """Failed to download file:
+                %s.
+                This may be due to an incorrectly specified file URL, or a temporary NCBI server disruption.
+                """ % location
+
 
 
 

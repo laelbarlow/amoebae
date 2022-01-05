@@ -313,6 +313,12 @@ def run_all_searches(query_file_list,
         for q in query_file_list:
             # Loop over database files.
             for d in db_file_list:
+
+                # Check that database file is a single FASTA file.
+                assert '.faa' not in d.rsplit('.', 1)[0], """The database file
+                name %s does not appear to be formatted correctly. This may
+                have resulted from a file parsing error.""" % d
+
                 if q.rsplit('.', 1)[1] == 'afaa' and d.rsplit('.', 1)[1] == 'fna':
                     warning_text = """\nWARNING: Not searching with profile query %s
                     in nucleotide data %s\n\n""" % (q, d)
@@ -343,7 +349,8 @@ def run_all_searches(query_file_list,
                     #    dfull = os.path.join(db_dir, d)
                     dfull = os.path.join(db_dir, d)
                     assert os.path.isfile(dfull), """Specified database file path
-                    is not a file: %s""" % dfull
+                    is not a file: %s\n Please ensure that a FASTA file with
+                    the filename %s exists in the input data.""" % (dfull, d)
 
                     # Search start time.
                     search_start_time = time.time()

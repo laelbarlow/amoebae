@@ -24,3 +24,4 @@ dependencies:
     - graphviz=2.40.1
     - snakemake=5.26.1
     - git=2.23.0
+    - curl

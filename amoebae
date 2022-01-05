@@ -447,8 +447,9 @@ Miscellaneous commands:
             if filetype == 'afa':
                 assert\
                 add_to_queries.fasta_seqs_all_same_len(query_file),\
-                """Error: Sequences in input alignment are not all the same length:
-                    %s""" % query_file
+                """Sequences in input alignment are not all the same length:
+                   %s
+                   Please ensure that this file is in aligned FASTA format.""" % query_file
 
             # Detect datatype (prot or nucl).
             datatype = get_dbtype(query_file)
@@ -1052,14 +1053,10 @@ Miscellaneous commands:
         if os.path.isfile(args.databases):
             # Check that the input file path is not a fasta file.
             assert not open(args.databases, 'r').read().startswith('>'), """Don't input fasta file paths."""
-            # Get list from file.
+            # Get filename list from file.
             db_file_list = search.get_db_list_from_file(args.databases)
         else:
             # then argument is a filename (not a path).
-            expected_path_to_file_in_genomes_folder = os.path.join(db_dir, args.databases)
-            assert expected_path_to_file_in_genomes_folder,\
-            """File with the name %s does not exist in the directory %s""" % (args.databases, db_dir) 
-
             # Get list from file.
             db_file_list = [args.databases]
 
@@ -1067,6 +1064,12 @@ Miscellaneous commands:
         #Check that database was found.
         assert db_file_list is not None, """Could not find database(s) to use
         from argument: %""" % args.databases
+
+        # Check that the specified database FASTA files exist in the genomes directory.
+        for filename in db_file_list:
+            expected_path_to_file_in_genomes_folder = os.path.join(db_dir, filename)
+            assert os.path.isfile(expected_path_to_file_in_genomes_folder),\
+            """File with the name %s does not exist in the directory %s""" % (args.databases, db_dir) 
 
 
         # Define file paths for new query and db list files.
@@ -1076,7 +1079,7 @@ Miscellaneous commands:
         # Write query and db list files to output folder.
         with open(db_file_path, 'w') as o1, open(query_file_path, 'w') as o2:
             for x in db_file_list:
-                o1.write(x)
+                o1.write(x + '\n')
             for y in query_file_list:
                 o2.write(os.path.basename(y) + '\n')
 
@@ -1233,7 +1236,7 @@ Miscellaneous commands:
                 may already contain reverse search summaries.''')
         parser.add_argument('rev_srch_out', help='''Path to directory where
                 reverse search results were written.''')
-        parser.add_argument('csv_out_path', help='''Path output spreadsheet
+        parser.add_argument('csv_out_path', help='''Path to output spreadsheet
                 (CSV) file with reverse search results appended to previous
                 results.''')
         parser.add_argument('main_data_dir', help='''Path to main data
@@ -1315,6 +1318,7 @@ Miscellaneous commands:
         # columns for search results into each reverse search database). ***Is
         # query_file_list used?
         db_num = 0
+        current_fwd_srch_csv = args.fwd_srch_csv
         for db_file in db_file_list:
             db_num += 1
             
@@ -1331,13 +1335,16 @@ Miscellaneous commands:
                               args.csv_out_path,
                               query_file_list,
                               db_file,
-                              args.fwd_srch_csv,
+                              current_fwd_srch_csv,
                               args.redun_hit_csv,
                               args.min_evaldiff,
                               timestamp,
                               args.aasubseq,
                               args.max_rev_srchs,
                               args.main_data_dir)
+
+            # Update input CSV for next iteration.
+            current_fwd_srch_csv = args.csv_out_path
 
         # Prompt manual inspection of spreadsheet.
         print("""\n\nReverse search results written/appended to

@@ -2,7 +2,7 @@
 
 echo "\\subsection{amoebae}" > amoebae_help_output.tex
 echo "\\begin{lstlisting}" >> amoebae_help_output.tex
-amoebae -h >> amoebae_help_output.tex
+../amoebae -h >> amoebae_help_output.tex
 echo "\\end{lstlisting}" >> amoebae_help_output.tex
 
 CMDLIST="mkdatadir
@@ -32,6 +32,6 @@ do
     echo "" >> amoebae_help_output.tex
     echo "\\subsection{amoebae ${CMD//_/$'\_'}}" >> amoebae_help_output.tex
     echo "\\begin{lstlisting}" >> amoebae_help_output.tex
-    amoebae $CMD -h >> amoebae_help_output.tex
+    ../amoebae $CMD -h >> amoebae_help_output.tex
     echo "\\end{lstlisting}" >> amoebae_help_output.tex
 done

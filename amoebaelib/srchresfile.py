@@ -145,6 +145,8 @@ class SrchResFile:
             # (otherwise sequences with multiple repetitive domains may be
             # retrieved with lower E-values despite low sequence similarity
             # of each of the constituent domains with the query HMM).
+            # For this it is necessary to choose the minimum of the per domain
+            # E-values for each hit as the one to use for sorting.
             self.hits = list(self.hits)
             self.hits.sort(key=lambda x: min([y.evalue for y in list(x)]))
 
@@ -222,6 +224,8 @@ class SrchResFile:
                     break
 
         elif self.format == 'hmmer3-text':
+            # Select the minimum per-domain E-value for the hit, not the
+            # full-sequence hit.
             hit_evalue = min([x.evalue for x in list(self.hits[hit_rank])])
 
         elif self.format == 'hhsearch':

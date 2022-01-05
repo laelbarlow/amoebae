@@ -232,11 +232,13 @@ def get_redun_hits_in_dbs(query_title,
                 hit_num = -1
                 top_hit_evalue = parsed_file_obj.hit_evalue(0)
                 top_hit_len = len(parsed_file_obj.hit_sequence(0))
-                for hit in SearchIO.read(search_result_path, srch_file_format): 
+                #for hit in SearchIO.read(search_result_path, srch_file_format): 
+                max_e = 0.0
+                for hit in parsed_file_obj.hits: 
                     hit_num += 1
 
                     # Stop when the maximum has been reached.
-                    if hit_num > max_number_of_hits_to_summarize - 1:
+                    if hit_num > int(max_number_of_hits_to_summarize) - 1:
                         break
 
                     # Get E-value difference between current hit and top hit
@@ -246,6 +248,10 @@ def get_redun_hits_in_dbs(query_title,
                     evaldiff = get_evaldiff(get_corr_evalue(e_top),\
                             get_corr_evalue(e_cur))
 
+                    # Check that E-values are ascending.
+                    assert e_cur >= max_e, """E-values are not ascending."""
+                    max_e = e_cur
+
                     # Get hit length as a percentage of the top hit sequence
                     # length.
                     cur_hit_len = len(parsed_file_obj.hit_sequence(hit_num))
@@ -253,10 +259,13 @@ def get_redun_hits_in_dbs(query_title,
 
                     # Get description.
                     description = parsed_file_obj.hit_description(hit_num)
+                    # Add double quotation marks around description.
                     if not description.startswith('\"'):
                         description = '\"' + description
                     if not description.endswith('\"'):
                         description = description + '\"'
+                    # Remove commas from description.
+                    description = description.replace(',', ' ')
 
                     # Append line with relevant info to spreadsheet.
                     line_to_write = ','.join([query_title, 
@@ -1171,10 +1180,16 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             redun_hit_list = None
             if redun_hit_csv is not None:
                 if query_title in redun_hit_dict.keys():
-                    #redun_hit_list =\
-                    #redun_hit_dict[query_title][query_file][db_file]
-                    redun_hit_list =\
-                    list(set(redun_hit_dict[query_title][db_file]))
+                    if db_file in redun_hit_dict[query_title].keys():
+                        redun_hit_list =\
+                        list(set(redun_hit_dict[query_title][db_file]))
+                    else:
+                        # If there are no redundant hits for this query in this
+                        # genome, then just put an empty list in the dataframe.
+                        redun_hit_list =\
+                        []
+
+                    # Update redundant hit list in dataframe.
                     row['Redundant hit list applied'] = redun_hit_list
 
             # Get corresponding query file path.
@@ -1220,6 +1235,8 @@ def write_rev_srch_res_to_csv(rev_srch_id,
                     srch_file_format)
             if len(query_res_obj) >= 1:
                 top_hit_acc = parsed_file_obj.hit_id(0)
+                assert "BL_ORD_ID" not in top_hit_acc, \
+                       """Reverse search result file parsed incorrectly."""
                 first_neg_hit_rank = None
                 if redun_hit_list is not None: 
                     first_neg_hit_rank = parsed_file_obj.rank_of_first_nonredun_hit(redun_hit_list)
@@ -1278,6 +1295,7 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             if top_hit_acc is not None:
                 # Then there is at least one reverse search hit. 
                 # Fill in info for top hit.
+                row['Top reverse hit ID'] = top_hit_acc
                 row['Top reverse hit description'] = parsed_file_obj.hit_description(0)
                 row['Top reverse search hit E-value'] = parsed_file_obj.hit_evalue(0)
                 row['Top reverse search hit score'] = parsed_file_obj.hit_score(0)

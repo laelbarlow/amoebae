@@ -1,0 +1,126 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{amsmath}
+\usepackage[pdftex]{graphicx}
+% Load hyperref package without putting lines around hyperlinks.
+%\usepackage[hidelinks]{hyperref}
+\PassOptionsToPackage{hyphens}{url}\usepackage[hidelinks]{hyperref}
+\usepackage{color} 
+\usepackage{xcolor} 
+\usepackage{xspace}
+\usepackage{anysize}
+%\usepackage{setspace}
+\usepackage{multicol} % This allows multiple columns
+%\usepackage[nottoc,numbib]{tocbibind} % This makes refs a section
+%\usepackage[pagewise]{lineno}
+%\usepackage{tcolorbox} % For making boxes around text.
+%\usepackage[xindy,toc]{glossaries} % Must come after hyperref package.
+%\usepackage{url}
+\usepackage[T1]{fontenc} % Makes > not typeset as inverted question mark.
+
+% Remove the "References" header from the bibliography.
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
+
+
+% Run external commands to generate a tex file containing the output of the
+% 'amoebae -h' command.
+\immediate\write18{bash generate_amoebae_help_output_text.sh}
+
+
+% Import stuff for formatting citations.
+\usepackage{natbib}
+
+% Format paragraphs.
+%\setlength{\parskip}{\baselineskip}%
+%\setlength{\parindent}{0pt}%
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+%\renewcommand{\baselinestretch}{2.0}
+
+% Define command for wrapping large words.
+\newcommand*\wrapletters[1]{\wr@pletters#1\@nil}
+\def\wr@pletters#1#2\@nil{#1\allowbreak\if&#2&\else\wr@pletters#2\@nil\fi}
+
+% Use the listings package to automatically wrap text (unlike with just using
+% verbatim).
+\usepackage{listings}
+\lstset{
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true,
+keepspaces=true
+} 
+
+
+%% Format section headers (this is not ideal when there are many short
+%%subsections. 
+%\usepackage[tiny]{titlesec}
+%\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+%\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+%\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus
+%2pt}
+
+\marginsize{2.5 cm}{2.5 cm}{1 cm}{1 cm} % Works out to one inch margins.
+
+%\parindent 1cm
+\graphicspath{{figures/}}
+%\pagenumbering{arabic}
+
+\pagenumbering{roman}
+
+%\makeglossaries
+
+\begin{document}
+\begin{titlepage}
+	\centering
+    {\huge AMOEBAE command-line interface documentation\par}
+	\vspace{2cm}
+    {\Large Lael D. Barlow\par}
+	\vfill
+	{\large Version of \today\par}
+\end{titlepage}
+
+%Optional table of contents.
+\newpage
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+
+% Start line numbers on this page
+%\begin{linenumbers}
+
+\section{Command reference}
+
+This documentation refers to the command-line interface for the "amoebae"
+    python script (in the main repository directory), not the command-line
+    interface for the AMOEBAE Snakemake workflow. Rules in the Snakemake
+    workflow definition file (Snakefile) run the "amoebae" script with various
+    parameters appropriate for relevant steps in the workflow.  Documentation
+    for each amoebae command and the various options may be accessed from the
+    command line via the "-h" options. The following command reference
+    information is the output of running amoebae (and each command) with the
+    "-h" option.
+
+% Import tex file output from the generate_amoebae_help_output_text.sh.
+\input{amoebae_help_output.tex}
+
+
+%\printglossaries % https://en.wikibooks.org/wiki/LaTeX/Glossary
+
+\newpage
+% End line numbering.
+%\end{linenumbers}
+
+%% The unsrt style orders references by appearance, but puts given names first.
+%% The plain style orders references alphabetically, but puts surnames first.
+%\bibliographystyle{laelstyle5} 
+%\begin{multicols}{2}
+%{\footnotesize % The footnotesize command makes the text smaller.
+%\bibliography{references/AMOEBAE}}
+%\end{multicols}
+
+
+\end{document}
+
+

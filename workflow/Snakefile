@@ -13,7 +13,7 @@ from scripts.get_filenames_from_csv import get_query_filenames_from_csv,\
 from scripts.get_param_dict_for_add_to_dbs import get_param_dict_for_add_to_dbs
 
 # Define path to CSV file listing genomes/proteomes/transcriptomes to use.
-database_csv = 'resources/genomes.csv'
+database_csv = 'config/genomes.csv'
 # Get a complete list of filenames for genomes/proteomes/transcriptome files.
 database_names_all = get_database_filenames_from_csv(database_csv, 'all')
 # Get a list of filenames for genomes/proteomes/transcriptome files to be
@@ -24,7 +24,7 @@ database_names_ncbi = get_database_filenames_from_csv(database_csv, 'ncbi')
 database_names_local = get_database_filenames_from_csv(database_csv, 'local')
 
 # Define path to CSV file listing queries to use.
-query_csv = 'resources/queries.csv'
+query_csv = 'config/queries.csv'
 # Get inclusive lists of query filenames for queries to be downloaded from NCBI.
 single_fasta_query_names_all, multi_fasta_query_names_all =\
 get_query_filenames_from_csv(query_csv, 'all')
@@ -34,6 +34,9 @@ get_query_filenames_from_csv(query_csv, 'ncbi')
 # Get lists of query filenames that are already present in a local directory.
 single_fasta_query_names_local, multi_fasta_query_names_local =\
 get_query_filenames_from_csv(query_csv, 'local')
+
+# Define path to report file.
+report: "report/workflow.rst"
 
 # Compile a nonredundant list of query titles.
 query_titles = list(set([x.split('_', 1)[0] for x in \
@@ -88,10 +91,11 @@ rule final_results:
     results directory.
     """
     input:
-        'results/workflow_diagram.pdf',
-        'results/Ref_seqs_1_manual_selections.csv',
+        #'results/workflow_diagram.pdf',
+        'config/Ref_seqs_1_manual_selections.csv',
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
         'results/plot.pdf',
+        'results/plot_coulson_both.pdf',
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files'
 
 
@@ -114,6 +118,8 @@ rule download_dbs:
         csv_file = database_csv
     output:
         expand('results/temp_databases/{data_file}', data_file = database_names_ncbi)
+    conda:
+        'envs/amoebae_env.yaml'
     shell:
         """
     	python3 {input.script} {input.csv_file} results/temp_databases
@@ -356,12 +362,13 @@ rule list_dbs_and_queries:
     listing all filenames from each to the results directory. 
     """
     input:
-        'resources/genomes.csv',
-        'resources/queries.csv'
+        'config/genomes.csv',
+        'config/queries.csv'
 
     output:
         dbs = 'results/db_list.txt',
-        queries = 'results/query_list.txt'
+        queries = 'results/query_list.txt',
+        coulson_plot_org = 'results/coulson_plot_organization.csv',
 
     run:
         # Get list of .faa and .fna database files (excluding .gff3 files).
@@ -379,6 +386,18 @@ rule list_dbs_and_queries:
             # Write query name list to file.
             queriesfh.write('\n'.join(single_fasta_query_names_all + alignment_fasta_query_names))
 
+        # Write basic pre-filled coulson plot organization CSV file.
+        with open(output.coulson_plot_org, 'w') as coulson_plot_org:
+            # Make a non-redundant list of query names.
+            nonredun_query_names = list(set(single_fasta_query_names_all + \
+                                   alignment_fasta_query_names))
+            # Sort alphabetically.
+            nonredun_query_names.sort()
+            # Write lines, just using the first character of the query name as the
+            # category name.
+            for i in nonredun_query_names:
+                coulson_plot_org.write(i[0] + ',' + i + '\n')
+
 
 rule get_ref_seqs:
     """
@@ -391,13 +410,13 @@ rule get_ref_seqs:
             single_fasta_query_names_all + \
             [x.rsplit('.', 1)[0] + '.afaa' for x in multi_fasta_query_names_all]),
         amoebae_script = 'amoebae',
-        db_list_file = 'resources/reference_db_list.txt',
+        db_list_file = 'config/reference_db_list.txt',
         query_list_file = 'results/query_list.txt'
 
     output:
         ref_seq_dir = directory('results/Ref_seqs_1'),
         ref_seq_pred_csv_copy = 'results/Ref_seqs_1_auto_predictions.csv',
-        ref_seq_manual_copy_csv = 'results/Ref_seqs_1_manual_selections.csv'
+        #ref_seq_manual_copy_csv = 'results/Ref_seqs_1_manual_selections.csv'
 
     conda:
         'envs/amoebae_env.yaml'
@@ -406,7 +425,7 @@ rule get_ref_seqs:
         global_envmodules
 
     shell:
-        'python3 {input.amoebae_script} '
+        'python3 {input.amoebae_script} ' + \
             'get_redun_hits ' + \
                 'results/Ref_seqs_1 ' + \
                 'results/AMOEBAE_Data ' + \
@@ -415,10 +434,9 @@ rule get_ref_seqs:
                 '--csv_file ' + \
                 'results/Ref_seqs_1/0_ref_seqs.csv ' + \
                 '--predict_redun_hit_selection ' + \
+                '--max_number_of_hits_to_summarize 200 ' + \
         ' && cp results/Ref_seqs_1/0_ref_seqs_auto_predictions.csv ' + \
-               'results/Ref_seqs_1_auto_predictions.csv' + \
-        ' && cp results/Ref_seqs_1_auto_predictions.csv ' + \
-               'results/Ref_seqs_1_manual_selections.csv '
+               'results/Ref_seqs_1_auto_predictions.csv'
 
 
 rule setup_and_run_fwd_srch:
@@ -493,7 +511,7 @@ rule setup_and_run_rev_srch:
     with given forward search hits into given db.
     """
     input:
-        reverse_srch_db_file = 'resources/reference_db_list.txt',
+        reverse_srch_db_file = 'config/reference_db_list.txt',
         amoebae_script = 'amoebae',
         main_data_dir = 'results/AMOEBAE_Data',
         fwd_srch_csv = 'results/fwd_srchs_1.csv'
@@ -532,7 +550,8 @@ rule sum_rev_srch:
         main_data_dir = 'results/AMOEBAE_Data',
         rev_srch_dir = 'results/rev_srchs_1',
         fwd_srch_csv = 'results/fwd_srchs_1.csv',
-        ref_seq_csv = 'results/Ref_seqs_1_manual_selections.csv'
+        ref_seq_csv = 'config/Ref_seqs_1_manual_selections.csv',
+        token_input_dir = 'results/Ref_seqs_1',
 
     output:
         csv_out_path = 'results/fwd_srchs_1_rev_srch_1.csv'
@@ -592,7 +611,10 @@ rule find_redun_seqs:
 
     output:
         interp_csv_with_ali_col = 'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col.csv',
-        nonredun_seq_csv = 'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv'
+        nonredun_seq_csv = \
+        report('results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
+               caption='./report/find_redun_seqs.rst',
+               category="Tables")
 
     conda:
         'envs/amoebae_env.yaml'
@@ -621,13 +643,18 @@ rule plot_results:
     """
     input:
         amoebae_script = 'amoebae',
-        coulson_org_csv = 'resources/coulson_plot_organization.csv',
+        coulson_org_csv = 'config/coulson_plot_organization.csv',
         nonredun_seq_csv =\
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun.csv',
-        row_order = 'resources/output_plot_row_order.txt'
+        row_order = 'config/output_plot_row_order.txt'
 
     output:
-        main_plot_pdf = 'results/plot.pdf'
+        main_plot_pdf = report('results/plot.pdf',
+                          caption='./report/plot_results.rst',
+                          category="Plots"),
+        coulson_plot_pdf = report('results/plot_coulson_both.pdf',
+                          caption='./report/plot_results_coulson.rst',
+                          category="Plots")
 
     conda:
         'envs/amoebae_env.yaml'
@@ -755,8 +782,8 @@ rule plot_workflow:
     output:
         'results/workflow_diagram.pdf'
 
-    conda:
-        'envs/amoebae_env.yaml'
+    #conda:
+    #    'envs/amoebae_env.yaml'
 
     envmodules:
         global_envmodules
