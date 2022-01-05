@@ -378,8 +378,8 @@ to prevent snakemake processes from being interrupted.
         cp config/example_reference_db_list.txt \
            config/reference_db_list.txt
         ```
-    - Again, if you simply want to use the example file (*Arabidopsis thaliana*
-      amino acid sequences), then proceed to the next step.
+    - Again, if you simply want to use the example file (*Rhizophagus
+      irregularis* amino acid sequences), then proceed to the next step.
     - To use different files, modify the `config/reference_db_list.txt`
       file accordingly.
         - List filenames with `.faa` extensions, one filename per line.
@@ -405,7 +405,7 @@ to prevent snakemake processes from being interrupted.
       ```
     - If you ran searches just with the example files, then you can use the
       example reference sequence selection file by copying it in the `config`
-      subdirectory (this defines appropriate *Arabidopsis* sequences as
+      subdirectory (this defines appropriate *Rhizophagus* sequences as
       orthologs of the example queries).
         ```
         cp config/example_Ref_seqs_1_manual_selections.csv \
