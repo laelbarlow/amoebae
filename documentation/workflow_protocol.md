@@ -432,7 +432,7 @@ modify the Snakefile (snakemake workflow definition file):
     ```
 For customizing shell commands in workflow rules (steps) that run the `amoebae`
 script, refer to the [AMOEBAE command-line interface
-documentation](https://github.com/laelbarlow/amoebae/blob/master/documentation/AMOEBAE_documentation.pdf)
+documentation](amoebae_commands.pdf)
 for available options. 
 
 

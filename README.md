@@ -72,7 +72,8 @@ Here's a diagram of the steps in the overall workflow:
 <img src="images/example_workflow_diagram.png" width="500">
 </p>
 
-Here's an example coulson plot output by the workflow.
+
+Here's an example coulson plot output by the workflow:
 
 <p align="center">
 <img src="images/example_coulson_plot.png" width="500">
@@ -80,8 +81,8 @@ Here's an example coulson plot output by the workflow.
 
 ## Protocol
 
-See the [detailed workflow
-protocol](documentation/detailed_workflow_protocol.md) for instructions and
+See the [workflow
+protocol](documentation/workflow_protocol.md) for instructions and
 guidelines for running the AMOEBAE workflow.
 
 
@@ -95,8 +96,7 @@ the GitHub webpage to report any problems you encounter while using AMOEBAE.
 
 Please cite the [AMOEBAE GitHub
 repository](https://github.com/laelbarlow/amoebae) (or alternative permanent
-repositories if relevant). Also, please remember to cite the software packages which
-are dependencies of AMOEBAE.
+repositories if relevant). 
 
 
 ## Acknowledgments
