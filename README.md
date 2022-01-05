@@ -63,9 +63,6 @@ homologues (potential orthologues) of several genes across several genomes, as
 well as a spreadsheet in CSV format providing a detailed summary of search
 results. 
 
-Unique feature: Allows/requires manual selection of valid reverse search hits
-for interpretation of results.
-
 Here's a diagram of the steps in the overall workflow:
 
 <p align="center">

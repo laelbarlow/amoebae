@@ -1,5 +1,5 @@
 
-# Detailed AMOEBAE workflow protocol
+# AMOEBAE workflow protocol
 
 ## Requirements 
 
