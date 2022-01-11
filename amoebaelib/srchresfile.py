@@ -57,6 +57,10 @@ class SrchResFile:
         assert os.path.isfile(filepath), """Input filepath does not exist:
         %s""" % filepath
 
+        # Check that input file is not empty.
+        assert os.stat(filepath).st_size > 0, """Input file is empty:
+        %s""" % filepath
+
         self.filepath = filepath
 
         self.main_data_dir = main_data_dir
