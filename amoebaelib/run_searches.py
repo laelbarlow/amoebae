@@ -21,6 +21,7 @@ import os
 import subprocess
 import datetime 
 import time
+import genetic_code_config
 
 
 def get_query_subdir(outdir):
@@ -206,11 +207,7 @@ def run_any_search(queryfile,
                 blast_max_target_seqs]
     elif method == 'tblastn':
         # Set the genetic code.
-        tblastn_ncbi_gen_code = None
-        try:
-            tblastn_ncbi_gen_code = DataPaths(main_data_dir).tblastn_ncbi_gen_code
-        except:
-            tblastn_ncbi_gen_code = '1'
+        tblastn_ncbi_gen_code = genetic_code_config.ncbi_genetic_code_number
 
         run_command = [method, '-query', queryfile, '-db', dbfile, '-out',
                 outfile, '-num_threads', num_threads, '-outfmt', '5', '-evalue',

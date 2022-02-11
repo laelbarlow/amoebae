@@ -38,6 +38,7 @@ import itertools
 from datapaths import DataPaths
 from run_exonerate import ExonerateLocusResult, get_subseq_from_nucl,\
 run_exonerate_as_subprocess
+import genetic_code_config
 
 
 def check_if_two_hsp_ranges_overlap(lists):
@@ -1040,7 +1041,7 @@ def get_hit_seq_record_and_coord2(search_result_path,
     exonerate_output_filepath = subseq_fasta_path.rsplit('.', 1)[0] + '_exonerate_out.txt'
     
     # Run exonerate as a subprocess.
-    genetic_code_number = '1'
+    genetic_code_number = genetic_code_config.ncbi_genetic_code_number
     run_exonerate_as_subprocess(query_faa,
                                 subseq_fasta_path,
                                 exonerate_output_filepath,
