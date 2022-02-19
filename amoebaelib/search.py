@@ -224,7 +224,7 @@ def get_redun_hits_in_dbs(query_title,
                 if parsed_file_obj.num_hits == 0:
                     print('\n\nWarning: Search result file %s contains no results\n\n' \
                           % search_result_path)
-                    break
+                    continue
                 else:
                     pass
 
