@@ -391,11 +391,10 @@ rule list_dbs_and_queries:
             # Make a non-redundant list of query names.
             nonredun_query_names = list(set(single_fasta_query_names_all + \
                                    alignment_fasta_query_names))
-            # Sort alphabetically.
-            nonredun_query_names.sort()
 
             # Get a list of just the query titles from the query names.
             nonredun_query_titles = list(set([x.split('_', 1)[0] for x in nonredun_query_names]))
+            nonredun_query_titles.sort()
 
             # Write lines, just using the first character of the query name as the
             # category name.
