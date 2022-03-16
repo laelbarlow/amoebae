@@ -393,7 +393,7 @@ rule list_dbs_and_queries:
                                    alignment_fasta_query_names))
 
             # Get a list of just the query titles from the query names.
-            nonredun_query_titles = list(set([x.split('_', 1)[0] for x in nonredun_query_names]))
+            nonredun_query_titles = list(set([x.split('_', 1)[0].rsplit('.', 1)[0] for x in nonredun_query_names]))
             nonredun_query_titles.sort()
 
             # Write lines, just using the first character of the query name as the
