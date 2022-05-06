@@ -637,8 +637,9 @@ Miscellaneous commands:
             # Read list from input file.
             db_file_list =\
             search.get_db_list_from_file(args.db_list_file)
-        assert len(db_file_list) >= 1, """Error: No database files in database
-        file list."""
+        assert len(db_file_list) >= 1, """No database files in database
+        file list. Check that you specified at least one FASTA file to use as a
+        reference genome."""
 
         # Define output directory path.
         #outdir = None
