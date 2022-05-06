@@ -152,7 +152,19 @@ class SrchResFile:
             # For this it is necessary to choose the minimum of the per domain
             # E-values for each hit as the one to use for sorting.
             self.hits = list(self.hits)
-            self.hits.sort(key=lambda x: min([y.evalue for y in list(x)]))
+            #for x in self.hits:
+            #    print()
+            #    print('Hit:')
+            #    print(x.id)
+            #    print(x.evalue)
+            #    for y in list(x):
+            #        print('Domain')
+            #        print(y.evalue)
+            #    print('Minimum domain e-value for hit')
+            #    #print(min([domain.evalue for domain in list(x)]))
+            #    print(min([domain.evalue for domain in list(x)], default=x.evalue))
+            #print()
+            self.hits.sort(key=lambda x: min([y.evalue for y in list(x)], default=x.evalue))
 
 
     def hit_id(self, hit_rank):
@@ -230,7 +242,7 @@ class SrchResFile:
         elif self.format == 'hmmer3-text':
             # Select the minimum per-domain E-value for the hit, not the
             # full-sequence hit.
-            hit_evalue = min([x.evalue for x in list(self.hits[hit_rank])])
+            hit_evalue = min([x.evalue for x in list(self.hits[hit_rank])], default=self.hits[hit_rank].evalue)
 
         elif self.format == 'hhsearch':
             pass # ...
