@@ -29,6 +29,8 @@ import glob
 import pandas as pd
 import math
 #import copy
+import numpy as np
+import collections
 
 # Import modules from installed libraries/packages.
 from Bio import SeqIO
@@ -1289,6 +1291,10 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             #        if hit.id not in redun_hit_list:
             #            first_neg_hit_obj = hit
             #            break
+
+            
+            # Convert list to string.
+            row['Redundant hit list applied'] = '\"' + ','.join(redun_hit_list) + '\"'
 
             # Extract info from hits, if any, and interpret. 
 
