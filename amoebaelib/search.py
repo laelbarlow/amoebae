@@ -741,7 +741,41 @@ def write_fwd_srch_res_to_csv(outdir,
     """Input spreadsheet has different column header names than
     expected."""
 
-    num_searches = len(query_file_list) * len(db_file_list)
+    # Get list of search output file names in the search outdir.
+    search_out_file_list = os.listdir(outdir)
+
+    # Count amino acid and nucleotide database files.
+    num_aa_dbs = 0
+    num_nt_dbs = 0
+    for db in db_file_list:
+        filename_extension = db.rsplit('.', 1)[1]
+        assert filename_extension in ['faa', 'fna'], \
+               """Database file """ + db + """ is not a single-sequence FASTA file."""
+        if filename_extension == 'faa':
+            num_aa_dbs += 1
+        elif filename_extension == 'fna':
+            num_nt_dbs += 1
+
+    # Count single-FASTA and multi-FASTA query files.
+    num_single_fasta_queries = 0
+    num_multi_fasta_queries = 0
+    for q in query_file_list:
+        filename_extension = q.rsplit('.', 1)[1]
+        assert filename_extension in ['faa', 'afaa'], \
+               """Query file """ + q + """ is not a protein FASTA file."""
+        if filename_extension == 'faa':
+            num_single_fasta_queries += 1
+        elif filename_extension == 'afaa':
+            num_multi_fasta_queries += 1
+
+    # Calculate the expected number of searches.
+    #num_searches = len(query_file_list) * len(db_file_list)
+    num_searches = (num_single_fasta_queries * (num_aa_dbs + num_nt_dbs)) + \
+                   (num_multi_fasta_queries * num_aa_dbs)
+
+    # Check that the expected number of searches matches the number of search output files.
+    assert num_searches == len(search_out_file_list), \
+           """Found %s forward search output files, but expected %s""" % (str(len(search_out_file_list)), str(num_searches))
 
     # Parse search results and write summary to output.
     #row_num = -1
