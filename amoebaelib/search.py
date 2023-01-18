@@ -521,8 +521,7 @@ def get_rows_for_fwd_srch_df(df,
                                                   main_data_dir
                                                   )
                     if hit_seq_record_and_coord == None:
-                        # Do not include the cluster in the results, because
-                        # exonerate could not identify any sequence to
+                        # Exonerate could not identify any sequence to
                         # translate (given the specified parameters).
 
                         # Get a sequence record, without exonerate (just based on
