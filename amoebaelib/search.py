@@ -448,7 +448,6 @@ def get_rows_for_fwd_srch_df(df,
         subdf = subdf.append(new_row_df, ignore_index=True)
 
     elif num_hits > 0:
-        assert 2!=2
         # ***Note: TBLASTN results are parsed very differently from results of
         # searches into protein databases, because a single subject sequence
         # (chromosome, scaffold, etc) may contain HSPs that represent different
@@ -525,7 +524,12 @@ def get_rows_for_fwd_srch_df(df,
                         # Do not include the cluster in the results, because
                         # exonerate could not identify any sequence to
                         # translate (given the specified parameters).
-                        continue
+
+                        # Get a sequence record, without exonerate (just based on
+                        # TBLASTN HSPs).
+                        hit_seq_record_and_coord = get_hit_seq_record_and_coord(hit, cluster)
+
+                        #continue
                     else:
                         # Exonerate was used successfully.
                         new_row_df.loc[0]['Exon boundary prediction method'] =\
