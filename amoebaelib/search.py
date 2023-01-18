@@ -688,6 +688,11 @@ def get_rows_for_fwd_srch_df(df,
                 # Append row dataframe to dataframe for output.
                 subdf = subdf.append(new_row_df, ignore_index=True)
 
+    print()
+    print('num_hits: ')
+    print(num_hits)
+    print()
+
     # Check that the sub-dataframe is not empty.
     assert not subdf.empty, \
         """Sub-dataframe is empty for results of search with query file {} and database file {}.""".format(q, d)
