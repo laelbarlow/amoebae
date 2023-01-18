@@ -448,8 +448,7 @@ def get_rows_for_fwd_srch_df(df,
         subdf = subdf.append(new_row_df, ignore_index=True)
 
     elif num_hits > 0:
-        print()
-        print('XXX')
+        assert 2!=2
         # ***Note: TBLASTN results are parsed very differently from results of
         # searches into protein databases, because a single subject sequence
         # (chromosome, scaffold, etc) may contain HSPs that represent different
