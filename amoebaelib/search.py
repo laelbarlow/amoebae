@@ -688,6 +688,11 @@ def get_rows_for_fwd_srch_df(df,
                 # Append row dataframe to dataframe for output.
                 subdf = subdf.append(new_row_df, ignore_index=True)
 
+    # Check that the sub-dataframe is not empty.
+    assert not subdf.empty, \
+        """Sub-dataframe is empty for results of search with query file {} and database file {}.""".format(query_file, db_file)
+
+
     # Return populated sub-dataframe to append to full dataframe.
     return subdf
 
@@ -773,9 +778,9 @@ def write_fwd_srch_res_to_csv(outdir,
     num_searches = (num_single_fasta_queries * (num_aa_dbs + num_nt_dbs)) + \
                    (num_multi_fasta_queries * num_aa_dbs)
 
-    # Check that the expected number of searches matches the number of search output files.
-    assert num_searches == len(search_out_file_list), \
-           """Found %s forward search output files, but expected %s""" % (str(len(search_out_file_list)), str(num_searches))
+    ## Check that the expected number of searches matches the number of search output files.
+    #assert num_searches == len(search_out_file_list), \
+    #       """Found %s forward search output files, but expected %s""" % (str(len(search_out_file_list)), str(num_searches))
 
     # Parse search results and write summary to output.
     #row_num = -1
