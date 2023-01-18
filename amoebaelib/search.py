@@ -606,7 +606,7 @@ def get_rows_for_fwd_srch_df(df,
             #for hit in hit_list: 
             for hit in query_res_obj: 
                 print()
-                print(XXX)
+                print("XXX")
                 #row_num += 1
                 hit_num += 1
 
