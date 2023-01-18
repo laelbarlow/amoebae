@@ -690,7 +690,7 @@ def get_rows_for_fwd_srch_df(df,
 
     # Check that the sub-dataframe is not empty.
     assert not subdf.empty, \
-        """Sub-dataframe is empty for results of search with query file {} and database file {}.""".format(query_file, db_file)
+        """Sub-dataframe is empty for results of search with query file {} and database file {}.""".format(q, d)
 
 
     # Return populated sub-dataframe to append to full dataframe.
