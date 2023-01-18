@@ -392,6 +392,9 @@ def get_rows_for_fwd_srch_df(df,
     # Determine the number of hits in the search result file.
     num_hits = parsed_file_obj.num_hits
 
+    # Check that the number of hits is the same for both parsing methods.
+    assert num_hits == len(query_res_obj), """Unclear how many hits are in the search result file: %s""" % search_result_path
+
     ## Modify the Bio.SearchIO query result object if the search program was
     ## tblastn, such that HSPs are grouped as separate hits if they likely
     ## represent separate genes. ???
@@ -605,8 +608,6 @@ def get_rows_for_fwd_srch_df(df,
             top_hit_len = len(parsed_file_obj.hit_sequence(0))
             #for hit in hit_list: 
             for hit in query_res_obj: 
-                print()
-                print("XXX")
                 #row_num += 1
                 hit_num += 1
 
