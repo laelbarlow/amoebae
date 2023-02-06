@@ -528,7 +528,6 @@ def get_rows_for_fwd_srch_df(df,
                         # TBLASTN HSPs).
                         hit_seq_record_and_coord = get_hit_seq_record_and_coord(hit, cluster)
 
-                        #continue
                     else:
                         # Exonerate was used successfully.
                         new_row_df.loc[0]['Exon boundary prediction method'] =\
@@ -1343,6 +1342,9 @@ def write_rev_srch_res_to_csv(rev_srch_id,
             #            first_neg_hit_obj = hit
             #            break
 
+            # If the redun_hit_list is still None, then make it an empty list.
+            if redun_hit_list is None:
+                redun_hit_list = []
             
             # Convert list to string.
             row['Redundant hit list applied'] = '\"' + ','.join(redun_hit_list) + '\"'
