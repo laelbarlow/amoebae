@@ -368,6 +368,9 @@ to prevent snakemake processes from being interrupted.
           domains. See the [HMMer user
           guide](http://eddylab.org/software/hmmer/Userguide.pdf) for further
           information.
+        - If you do another analysis with the same reference genome and query set,
+          then you can re-use the same `config/Ref_seqs_1_manual_selections.csv`
+          file.
 
 
 5. Configure the organization of output plots.
