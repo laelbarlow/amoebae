@@ -637,7 +637,8 @@ rule find_redun_seqs:
             'find_redun_seqs ' + \
                 '{output.interp_csv_with_ali_col} ' + \
                 '{input.main_data_dir} ' + \
-                '--out_csv_path {output.nonredun_seq_csv} '
+                '--out_csv_path {output.nonredun_seq_csv} ' + \
+                '--min_length 55'
 
 
 rule plot_results:
