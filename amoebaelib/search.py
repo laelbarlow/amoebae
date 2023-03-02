@@ -968,8 +968,7 @@ def get_rev_queries(csv_file, query_subdir, aasubseq, nafullseq):
 
                 # Long sequence descriptions may be problematic, because used
                 # in output filenames...
-                assert len(description) <= 1000, """Sequence description is
-                really long."""
+                assert len(description) <= 1000, """Sequence description is very long:\n%s""" % description
                 
                 # Check whether sequence already added to reverse search
                 # queries.
