@@ -1629,6 +1629,10 @@ def eliminate_overlapping_positive_hits_from_df(df, query_title_pos_ids):
     the query title with the query that retrieved the sequence with the lowest
     E-value.
     """
+    # Check that there are at least two query titles with positive hits, and if not, return.
+    if len(query_title_pos_ids) <= 1:
+        return
+
     # Check that no query titles have overlapping sets of positive hits.
     query_title_combos_with_overlapping_pos_hits = []
     unique_key_combos = get_nonredun_dict_key_pairs(query_title_pos_ids)
