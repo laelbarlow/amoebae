@@ -21,7 +21,7 @@ Usage:
 import sys
 import os
 from Bio import AlignIO
-from Bio.Alphabet import IUPAC, Gapped
+#from Bio.Alphabet import IUPAC, Gapped
 from afa_to_nex import delete_extra_mesquite_lines
 
 ## Increase recursion limit for python. Potentially dangerous, but necessary for

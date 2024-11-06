@@ -42,7 +42,9 @@
 
     https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html
 
-    https://docs.conda.io/projects/conda/en/latest/user-guide/cheatsheet.html    
+    https://docs.conda.io/projects/conda/en/latest/user-guide/cheatsheet.html   
+
+    https://pixi.sh/latest/ 
 
 
 4. AMOEBAE is a Snakemake workflow. Snakemake is a highly popular workflow and

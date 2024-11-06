@@ -29,3 +29,7 @@ results
 documentation/code_documentation/rst/*
 documentation/code_documentation/html/*
 OBSOLETE/*
+
+# pixi environments
+.pixi
+*.egg-info

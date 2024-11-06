@@ -26,7 +26,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'amoebaelib'))
 from Bio import AlignIO
-from Bio.Alphabet import IUPAC, Gapped
+#from Bio.Alphabet import IUPAC, Gapped
 from afa_to_nex import delete_extra_mesquite_lines
 import numpy as np
 from Bio.Seq import Seq
@@ -92,7 +92,8 @@ def mask_alignment(alignment):
         mask_seq = mask_seq + mask_char
 
     # Generate a SeqRecord object with the mask_seq.
-    empty_mask_seq = Seq(mask_seq, IUPAC.protein)
+    #empty_mask_seq = Seq(mask_seq, IUPAC.protein)
+    empty_mask_seq = Seq(mask_seq)
     empty_mask_rec = SeqRecord(empty_mask_seq, id='MASK', name='MASK')
 
     # Add the mask_seq sequence to the alignment.

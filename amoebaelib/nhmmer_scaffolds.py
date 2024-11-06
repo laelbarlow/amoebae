@@ -27,7 +27,7 @@ import itertools
 from get_fas_from_db_dir import get_seq_obj_from_db_fasta
 from datapaths import DataPaths
 from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
+#from Bio.Alphabet import IUPAC
 
 # Maybe it would be better to get the whole gene region and align that to the
 # nucleotide HMM, and then make a translation based on that alignment...
@@ -63,7 +63,8 @@ class NhmmerHitAlig:
             #***********alifrom comes after alito if on neg strand!!!!!!!!!!!!
             #***********Have to reverse them to get the right subsequence.
             subseqstring = str(full_seq_obj.seq)[int(self.alito) -1: int(self.alifrom)]
-            x = Seq(subseqstring, IUPAC.ambiguous_dna)
+            #x = Seq(subseqstring, IUPAC.ambiguous_dna)
+            x = Seq(subseqstring)
             y = x.reverse_complement()
             alig_seq = str(y)
 
@@ -93,7 +94,8 @@ class NhmmerHitAlig:
         seq_in_frame = frameify_seq(self.sequ(), self.hmmfrom)
 
         # Make the in frame sequence a Seq object, and translate.
-        seq_in_frame_obj = Seq(seq_in_frame, IUPAC.ambiguous_dna)
+        #seq_in_frame_obj = Seq(seq_in_frame, IUPAC.ambiguous_dna)
+        seq_in_frame_obj = Seq(seq_in_frame)
         translation = str(seq_in_frame_obj.translate())
 
         # Return translation of sequence.
@@ -576,7 +578,8 @@ def get_three_frame_transl_string(inputs):
     position_in_original = re.compile(r'\[\d+\.\.\d+\]')
     start_end = position_in_original.findall(header)[0].strip('[]').split('..')
     start_end.sort(key=lambda x: int(x))
-    seq = Seq(str(inputs[1]), IUPAC.ambiguous_dna)
+    #seq = Seq(str(inputs[1]), IUPAC.ambiguous_dna)
+    seq = Seq(str(inputs[1]))
 
     frame1 = header + ' frame 1' + '\n' + str(seq.translate()) + '\n'
 

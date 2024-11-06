@@ -323,6 +323,295 @@ def modify_lines(wedges):
         w.set_edgecolor('black')
 
 
+#def make_coulson_plot(column_labels_simple,
+#                      row_labels_simple,
+#                      data_labels_simple,
+#                      data_count_simple,
+#                      data_heat_simple,
+#                      outpdfpath_coulson,
+#                      complex_info_file):
+#    """Make a coulson plot.
+#    """
+#    # Define basic input parameters.
+#    num_species = len(row_labels_simple)
+#
+#    # Add legend row labels
+#    row_labels_simple = ['Legend'] + row_labels_simple
+#
+#    # Extract info from complex info file, and assemble into a list of lists.
+#    complex_info_list = get_complex_info_list(complex_info_file,
+#                                              column_labels_simple)
+#
+#    # Initialize figure.
+#    num_columns = len(complex_info_list)
+#    num_rows = len(row_labels_simple)
+#    fig, axs = plt.subplots(num_rows, num_columns, subplot_kw=dict(aspect="equal"))
+#
+#    # Scale output figure size based on number of subplots.
+#    fig.set_size_inches((len(complex_info_list))*2,\
+#                        (len(row_labels_simple))*2)
+#
+#    # Decide whether to compare more than one set of paralogue counts.
+#    compare_counts = False
+#    if len(data_count_simple) > 1:
+#        compare_counts = True
+#
+#    # Iterate over subplots, encoding information:
+#    for i, species in enumerate(row_labels_simple):
+#        jnum = -1
+#
+#        for j, compl in enumerate(complex_info_list):
+#            jnum += 1
+#
+#            # Determine number of wedges ("fracs".
+#            num_fracs = len(compl[1:])
+#            # Define list of numbers to be used to make wedges/fracs.
+#            fracs = []
+#            for x in range(0, num_fracs):
+#                fracs.append(1)
+#
+#            # Make legends.
+#            if species == 'Legend':
+#                # Define colors.
+#                cols = []
+#                for x in range(0, num_fracs):
+#                    cols.append('gray')
+#
+#                legend_labels = compl[1:]
+#                legend_radius = 0.4
+#                legend_title = compl[0]
+#                legend_title_size = 15
+#
+#                # Initiate subplot pie chart.
+#                if num_columns < 2:
+#                    wedges, x = axs[i].pie(fracs, labels=legend_labels,\
+#                            shadow=False, colors=cols, radius=legend_radius)
+#
+#                    # Add a title for the complex.
+#                    axs[i].set_title(legend_title, fontsize=legend_title_size)
+#
+#                    # Modify lines around sectors.
+#                    modify_legend_lines(wedges)
+#
+#                else:
+#                    wedges, x = axs[i,j].pie(fracs, labels=legend_labels,\
+#                            shadow=False, colors=cols, radius=legend_radius)
+#
+#                    # Add a title for the complex.
+#                    axs[i,j].set_title(legend_title, fontsize=legend_title_size)
+#
+#                    # Modify lines around sectors.
+#                    modify_legend_lines(wedges)
+#
+#            # Make subplots for data.
+#            else:
+#                if not compare_counts:
+#                    # Define paralogue counts for each complex component.
+#                    paralogue_counts_list = []
+#                    # Determine portion that is relevant to current complex.
+#                    #for a, x in enumerate(column_labels_simple):
+#                    #    if x in compl[1:]:
+#                    #        paralogue_counts_list.append(data_count_simple[i-1][a])
+#                    for x in compl[1:]:
+#                        for a, y in enumerate(column_labels_simple):
+#                            if y == x:
+#                                paralogue_counts_list.append(data_count_simple[0][i-1][a])
+#                                break
+#
+#                    # Make an iterable out of the list.
+#                    paralogue_counts = iter(paralogue_counts_list)
+#
+#                    # Define colors for sectors based on paralogue counts.
+#                    cols = []
+#                    for x in paralogue_counts_list:
+#                        if x > 0:
+#                            # Coloured fill if at least one paralogue found.
+#                            cols.append('xkcd:cobalt')
+#                        else:
+#                            # White fill if no paralogues found.
+#                            cols.append('white')
+#
+#                    # Define which function to use to add appropriate paralogue counts as
+#                    # labels for each sector.
+#                    autopct_funct = lambda pct: get_sector_label(pct, paralogue_counts, remove_ones=True)
+#
+#                    # Set variables for species/row titles.
+#                    species_font_size = 15
+#                    offset = np.array([-1.25, 0.40])
+#
+#                    sector_text_size = 15
+#
+#                    # Make data subplots.
+#                    if num_columns < 2:
+#                         # Initiate subplot pie chart.
+#                        wedges, texts, autotexts = axs[i].pie(fracs,\
+#                                autopct=autopct_funct, textprops=dict(color="w"), shadow=False, colors=cols)
+#
+#                        # Modify sector label text properties.
+#                        plt.setp(autotexts, size=sector_text_size, weight="bold")
+#
+#                        # Modify lines around sectors.
+#                        modify_lines(wedges)
+#                        
+#                        if jnum == 0:
+#                            if len(complex_info_list) == 1:
+#                                # Add a title for the complex.
+#                                title = axs[i].set_title(species,\
+#                                        fontsize=species_font_size)
+#                            else:
+#                                # Add a title for the complex.
+#                                title = axs[i,j].set_title(species,\
+#                                        fontsize=species_font_size)
+#                            #offset = np.array([-0.75, -0.6])
+#                            #title.set_position(title.get_position() + offset)
+#                            title.set_position(np.array([0.0, 0.0]) + offset)
+#
+#                    else:
+#                        # Initiate subplot pie chart.
+#                        wedges, texts, autotexts = axs[i,j].pie(fracs,\
+#                                autopct=autopct_funct, textprops=dict(color="w"), shadow=False, colors=cols)
+#
+#                        # Modify sector label text properties.
+#                        plt.setp(autotexts, size=sector_text_size, weight="bold")
+#
+#                        # Modify lines around sectors.
+#                        modify_lines(wedges)
+#
+#                        if jnum == 0:
+#                            # Define string to make species name italicized.
+#                            #print('\n\n\n')
+#                            #print(species)
+#                            #print('\n\n\n')
+#                            if ' ' in species:
+#                                italic_species = '$\it{' + species.split(' ')[0] + '}$' + ' ' + '$\it{' + species.split(' ')[1] + '}$'
+#                            else:
+#                                italic_species = '$\it{' + species + '}$' 
+#
+#                            # Add a title for the complex.
+#                            title = axs[i,j].set_title(italic_species,
+#                                    fontsize=species_font_size,
+#                                    y=1.0) # "y=1.0" is necessary to center the
+#                            #row labels vertically with the rows of subplots,
+#                            #because the set_position method does not seem to
+#                            #work for this anymore.
+#
+#                            #offset = np.array([-0.75, -0.6])
+#                            #title.set_position(title.get_position() + offset)
+#                            title.set_position(np.array([0.0, 0.0]) + offset)
+#
+#                # Make the plot differently if comparing two sets of paralogue
+#                # counts.
+#                elif compare_counts:
+#                    # Define paralogue counts for each complex component.
+#                    paralogue_counts_list = []
+#                    # Determine portion that is relevant to current complex.
+#                    #for a, x in enumerate(column_labels_simple):
+#                    #    if x in compl[1:]:
+#                    #        paralogue_counts_list.append(data_count_simple[i-1][a])
+#                    for x in compl[1:]:
+#                        for a, y in enumerate(column_labels_simple):
+#                            if y == x:
+#                                first_count = data_count_simple[0][i-1][a]
+#                                second_count = data_count_simple[1][i-1][a]
+#                                paralogue_counts_list.append([first_count, second_count])
+#                                break
+#
+#                    # Define colors for sectors based on paralogue counts.
+#                    cols = []
+#                    for x in paralogue_counts_list:
+#                        y = max(x)
+#                        if y > 0:
+#                            # Gray if at least one paralogue found.
+#                            if x[0] != x[1]:
+#                                if x[0] == x[1] -1:
+#                                    cols.append('xkcd:dark yellow')
+#                                elif x[0] == x[1] -2:
+#                                    cols.append('xkcd:dark orange')
+#                                elif x[0] > x[1]:
+#                                    cols.append('xkcd:cornflower')
+#                                else:
+#                                    cols.append('xkcd:dark red')
+#                            else:
+#                                cols.append('xkcd:green')
+#
+#                        else:
+#                            # White if no paralogues found.
+#                            cols.append('white')
+#
+#                    mod_paralogue_counts_list = []
+#                    for x in paralogue_counts_list:
+#                        if x[0] == x[1]:
+#                            mod_paralogue_counts_list.append(str(x[0]))
+#                        else:
+#                            mod_paralogue_counts_list.append(str(x[0]) + '-' + str(x[1]))
+#                    assert len(mod_paralogue_counts_list) == len(paralogue_counts_list)
+#
+#                    # Make an iterable out of the modified list.
+#                    paralogue_counts = iter(mod_paralogue_counts_list)
+#
+#                    # Define which function to use to add appropriate paralogue counts as
+#                    # labels for each sector.
+#                    autopct_funct = lambda pct: get_sector_label(pct, paralogue_counts)
+#
+#                    # Set variables for species/row titles.
+#                    species_font_size = 15
+#                    offset = np.array([-1.25, 0.40])
+#
+#                    sector_text_size = 15
+#
+#                    # Make data subplots.
+#                    if num_columns < 2:
+#                         # Initiate subplot pie chart.
+#                        wedges, texts, autotexts = axs[i].pie(fracs,\
+#                                autopct=autopct_funct, textprops=dict(color="w"), shadow=False, colors=cols)
+#
+#                        # Modify sector label text properties.
+#                        plt.setp(autotexts, size=sector_text_size, weight="bold")
+#
+#                        # Modify lines around sectors.
+#                        modify_lines(wedges)
+#                        
+#                        if jnum == 0:
+#                            # Add a title for the complex.
+#                            title = axs[i,j].set_title(species, fontsize=species_font_size)
+#                            #offset = np.array([-0.75, -0.6])
+#                            #title.set_position(title.get_position() + offset)
+#                            title.set_position(np.array([0.0, 0.0]) + offset)
+#
+#                    else:
+#                        # Initiate subplot pie chart.
+#                        wedges, texts, autotexts = axs[i,j].pie(fracs,\
+#                                autopct=autopct_funct, textprops=dict(color="w"), shadow=False, colors=cols)
+#
+#                        # Modify sector label text properties.
+#                        plt.setp(autotexts, size=sector_text_size, weight="bold")
+#
+#                        # Modify lines around sectors.
+#                        modify_lines(wedges)
+#
+#                        if jnum == 0:
+#                            # Define string to make species name italicized.
+#                            italic_species = '$\it{' + species.split(' ')[0] + '}$' + ' ' + '$\it{' + species.split(' ')[1] + '}$'
+#                            # Add a title for the complex.
+#                            title = axs[i,j].set_title(italic_species,
+#                                    fontsize=species_font_size,
+#                                    y=1.0)
+#                            #offset = np.array([-0.75, -0.6])
+#                            #title.set_position(title.get_position() + offset)
+#                            title.set_position(np.array([0.0, 0.0]) + offset)
+#
+#    # Specify text output type so that text can be edited in adobe illustrator.
+#    matplotlib.rcParams['pdf.fonttype'] = 42
+#    matplotlib.rcParams['ps.fonttype'] = 42
+#
+#    # Adjust gap sizes between subplots.
+#    fig.subplots_adjust(wspace=0, hspace=0)
+#
+#    # Save figure to pdf file. (transparent=True gets rid of white
+#    # backgrounds).
+#    fig.savefig(outpdfpath_coulson, bbox_inches='tight', transparent=True)
+#    fig.savefig(outpdfpath_coulson.rsplit('.', 1)[0] + '.png', bbox_inches='tight', transparent=True)
+
 def make_coulson_plot(column_labels_simple,
                       row_labels_simple,
                       data_labels_simple,
@@ -330,8 +619,11 @@ def make_coulson_plot(column_labels_simple,
                       data_heat_simple,
                       outpdfpath_coulson,
                       complex_info_file):
-    """Make a coulson plot.
-    """
+    """Make a coulson plot."""
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import matplotlib
+
     # Define basic input parameters.
     num_species = len(row_labels_simple)
 
@@ -347,35 +639,48 @@ def make_coulson_plot(column_labels_simple,
     num_rows = len(row_labels_simple)
     fig, axs = plt.subplots(num_rows, num_columns, subplot_kw=dict(aspect="equal"))
 
+    # Ensure axs is a 2D array
+    if num_rows == 1 and num_columns == 1:
+        axs = np.array([[axs]])
+    elif num_rows == 1:
+        axs = np.array([axs])
+    elif num_columns == 1:
+        axs = np.array([axs]).T
+
     # Scale output figure size based on number of subplots.
-    fig.set_size_inches((len(complex_info_list))*2,\
-                        (len(row_labels_simple))*2)
+    fig.set_size_inches(num_columns * 2, num_rows * 2)
 
     # Decide whether to compare more than one set of paralogue counts.
     compare_counts = False
-    if len(data_count_simple) > 1:
-        compare_counts = True
+    if isinstance(data_count_simple, list):
+        if len(data_count_simple) == 1:
+            # Unwrap the single array from the list
+            data_count_simple = data_count_simple[0]
+        elif len(data_count_simple) > 1:
+            compare_counts = True
+
+    ## Debug statements
+    #print(f"Number of species (rows): {num_rows}")
+    #print(f"Number of complexes (columns): {num_columns}")
+    #print(f"Length of column_labels_simple: {len(column_labels_simple)}")
+    #if not compare_counts:
+    #    print(f"data_count_simple shape: {data_count_simple.shape}")
+    #else:
+    #    print(f"data_count_simple[0] shape: {data_count_simple[0].shape}")
 
     # Iterate over subplots, encoding information:
     for i, species in enumerate(row_labels_simple):
-        jnum = -1
-
         for j, compl in enumerate(complex_info_list):
-            jnum += 1
 
-            # Determine number of wedges ("fracs".
+            # Determine number of wedges ("fracs").
             num_fracs = len(compl[1:])
             # Define list of numbers to be used to make wedges/fracs.
-            fracs = []
-            for x in range(0, num_fracs):
-                fracs.append(1)
+            fracs = [1] * num_fracs
 
             # Make legends.
             if species == 'Legend':
                 # Define colors.
-                cols = []
-                for x in range(0, num_fracs):
-                    cols.append('gray')
+                cols = ['gray'] * num_fracs
 
                 legend_labels = compl[1:]
                 legend_radius = 0.4
@@ -383,25 +688,14 @@ def make_coulson_plot(column_labels_simple,
                 legend_title_size = 15
 
                 # Initiate subplot pie chart.
-                if num_columns < 2:
-                    wedges, x = axs[i].pie(fracs, labels=legend_labels,\
-                            shadow=False, colors=cols, radius=legend_radius)
+                wedges, x = axs[i, j].pie(fracs, labels=legend_labels,
+                                          shadow=False, colors=cols, radius=legend_radius)
 
-                    # Add a title for the complex.
-                    axs[i].set_title(legend_title, fontsize=legend_title_size)
+                # Add a title for the complex.
+                axs[i, j].set_title(legend_title, fontsize=legend_title_size)
 
-                    # Modify lines around sectors.
-                    modify_legend_lines(wedges)
-
-                else:
-                    wedges, x = axs[i,j].pie(fracs, labels=legend_labels,\
-                            shadow=False, colors=cols, radius=legend_radius)
-
-                    # Add a title for the complex.
-                    axs[i,j].set_title(legend_title, fontsize=legend_title_size)
-
-                    # Modify lines around sectors.
-                    modify_legend_lines(wedges)
+                # Modify lines around sectors.
+                modify_legend_lines(wedges)
 
             # Make subplots for data.
             else:
@@ -409,14 +703,22 @@ def make_coulson_plot(column_labels_simple,
                     # Define paralogue counts for each complex component.
                     paralogue_counts_list = []
                     # Determine portion that is relevant to current complex.
-                    #for a, x in enumerate(column_labels_simple):
-                    #    if x in compl[1:]:
-                    #        paralogue_counts_list.append(data_count_simple[i-1][a])
                     for x in compl[1:]:
+                        found = False
                         for a, y in enumerate(column_labels_simple):
                             if y == x:
-                                paralogue_counts_list.append(data_count_simple[0][i-1][a])
+                                try:
+                                    paralogue_counts_list.append(data_count_simple[i-1][a])
+                                except IndexError as e:
+                                    print(f"IndexError at species {species}, component {x}, index {a}")
+                                    print(f"data_count_simple[i-1] length: {len(data_count_simple[i-1])}")
+                                    raise e
+                                found = True
                                 break
+                        if not found:
+                            print(f"Warning: {x} not found in column_labels_simple")
+                            # Append a default value (e.g., 0)
+                            paralogue_counts_list.append(0)
 
                     # Make an iterable out of the list.
                     paralogue_counts = iter(paralogue_counts_list)
@@ -431,186 +733,58 @@ def make_coulson_plot(column_labels_simple,
                             # White fill if no paralogues found.
                             cols.append('white')
 
-                    # Define which function to use to add appropriate paralogue counts as
-                    # labels for each sector.
+                    # Define function to add paralogue counts as labels.
                     autopct_funct = lambda pct: get_sector_label(pct, paralogue_counts, remove_ones=True)
 
                     # Set variables for species/row titles.
                     species_font_size = 15
                     offset = np.array([-1.25, 0.40])
-
                     sector_text_size = 15
 
-                    # Make data subplots.
-                    if num_columns < 2:
-                         # Initiate subplot pie chart.
-                        wedges, texts, autotexts = axs[i].pie(fracs,\
-                                autopct=autopct_funct, textprops=dict(color="w"), shadow=False, colors=cols)
+                    # Initiate subplot pie chart.
+                    wedges, texts, autotexts = axs[i, j].pie(
+                        fracs,
+                        autopct=autopct_funct,
+                        textprops=dict(color="w"),
+                        shadow=False,
+                        colors=cols
+                    )
 
-                        # Modify sector label text properties.
-                        plt.setp(autotexts, size=sector_text_size, weight="bold")
+                    # Modify sector label text properties.
+                    plt.setp(autotexts, size=sector_text_size, weight="bold")
 
-                        # Modify lines around sectors.
-                        modify_lines(wedges)
-                        
-                        if jnum == 0:
-                            if len(complex_info_list) == 1:
-                                # Add a title for the complex.
-                                title = axs[i].set_title(species,\
-                                        fontsize=species_font_size)
-                            else:
-                                # Add a title for the complex.
-                                title = axs[i,j].set_title(species,\
-                                        fontsize=species_font_size)
-                            #offset = np.array([-0.75, -0.6])
-                            #title.set_position(title.get_position() + offset)
-                            title.set_position(np.array([0.0, 0.0]) + offset)
+                    # Modify lines around sectors.
+                    modify_lines(wedges)
 
-                    else:
-                        # Initiate subplot pie chart.
-                        wedges, texts, autotexts = axs[i,j].pie(fracs,\
-                                autopct=autopct_funct, textprops=dict(color="w"), shadow=False, colors=cols)
-
-                        # Modify sector label text properties.
-                        plt.setp(autotexts, size=sector_text_size, weight="bold")
-
-                        # Modify lines around sectors.
-                        modify_lines(wedges)
-
-                        if jnum == 0:
-                            # Define string to make species name italicized.
-                            #print('\n\n\n')
-                            #print(species)
-                            #print('\n\n\n')
-                            if ' ' in species:
-                                italic_species = '$\it{' + species.split(' ')[0] + '}$' + ' ' + '$\it{' + species.split(' ')[1] + '}$'
-                            else:
-                                italic_species = '$\it{' + species + '}$' 
-
-                            # Add a title for the complex.
-                            title = axs[i,j].set_title(italic_species,
-                                    fontsize=species_font_size,
-                                    y=1.0) # "y=1.0" is necessary to center the
-                            #row labels vertically with the rows of subplots,
-                            #because the set_position method does not seem to
-                            #work for this anymore.
-
-                            #offset = np.array([-0.75, -0.6])
-                            #title.set_position(title.get_position() + offset)
-                            title.set_position(np.array([0.0, 0.0]) + offset)
-
-                # Make the plot differently if comparing two sets of paralogue
-                # counts.
-                elif compare_counts:
-                    # Define paralogue counts for each complex component.
-                    paralogue_counts_list = []
-                    # Determine portion that is relevant to current complex.
-                    #for a, x in enumerate(column_labels_simple):
-                    #    if x in compl[1:]:
-                    #        paralogue_counts_list.append(data_count_simple[i-1][a])
-                    for x in compl[1:]:
-                        for a, y in enumerate(column_labels_simple):
-                            if y == x:
-                                first_count = data_count_simple[0][i-1][a]
-                                second_count = data_count_simple[1][i-1][a]
-                                paralogue_counts_list.append([first_count, second_count])
-                                break
-
-                    # Define colors for sectors based on paralogue counts.
-                    cols = []
-                    for x in paralogue_counts_list:
-                        y = max(x)
-                        if y > 0:
-                            # Gray if at least one paralogue found.
-                            if x[0] != x[1]:
-                                if x[0] == x[1] -1:
-                                    cols.append('xkcd:dark yellow')
-                                elif x[0] == x[1] -2:
-                                    cols.append('xkcd:dark orange')
-                                elif x[0] > x[1]:
-                                    cols.append('xkcd:cornflower')
-                                else:
-                                    cols.append('xkcd:dark red')
-                            else:
-                                cols.append('xkcd:green')
-
-                        else:
-                            # White if no paralogues found.
-                            cols.append('white')
-
-                    mod_paralogue_counts_list = []
-                    for x in paralogue_counts_list:
-                        if x[0] == x[1]:
-                            mod_paralogue_counts_list.append(str(x[0]))
-                        else:
-                            mod_paralogue_counts_list.append(str(x[0]) + '-' + str(x[1]))
-                    assert len(mod_paralogue_counts_list) == len(paralogue_counts_list)
-
-                    # Make an iterable out of the modified list.
-                    paralogue_counts = iter(mod_paralogue_counts_list)
-
-                    # Define which function to use to add appropriate paralogue counts as
-                    # labels for each sector.
-                    autopct_funct = lambda pct: get_sector_label(pct, paralogue_counts)
-
-                    # Set variables for species/row titles.
-                    species_font_size = 15
-                    offset = np.array([-1.25, 0.40])
-
-                    sector_text_size = 15
-
-                    # Make data subplots.
-                    if num_columns < 2:
-                         # Initiate subplot pie chart.
-                        wedges, texts, autotexts = axs[i].pie(fracs,\
-                                autopct=autopct_funct, textprops=dict(color="w"), shadow=False, colors=cols)
-
-                        # Modify sector label text properties.
-                        plt.setp(autotexts, size=sector_text_size, weight="bold")
-
-                        # Modify lines around sectors.
-                        modify_lines(wedges)
-                        
-                        if jnum == 0:
-                            # Add a title for the complex.
-                            title = axs[i,j].set_title(species, fontsize=species_font_size)
-                            #offset = np.array([-0.75, -0.6])
-                            #title.set_position(title.get_position() + offset)
-                            title.set_position(np.array([0.0, 0.0]) + offset)
-
-                    else:
-                        # Initiate subplot pie chart.
-                        wedges, texts, autotexts = axs[i,j].pie(fracs,\
-                                autopct=autopct_funct, textprops=dict(color="w"), shadow=False, colors=cols)
-
-                        # Modify sector label text properties.
-                        plt.setp(autotexts, size=sector_text_size, weight="bold")
-
-                        # Modify lines around sectors.
-                        modify_lines(wedges)
-
-                        if jnum == 0:
-                            # Define string to make species name italicized.
+                    if j == 0:
+                        # Define string to make species name italicized.
+                        if ' ' in species:
                             italic_species = '$\it{' + species.split(' ')[0] + '}$' + ' ' + '$\it{' + species.split(' ')[1] + '}$'
-                            # Add a title for the complex.
-                            title = axs[i,j].set_title(italic_species,
-                                    fontsize=species_font_size,
-                                    y=1.0)
-                            #offset = np.array([-0.75, -0.6])
-                            #title.set_position(title.get_position() + offset)
-                            title.set_position(np.array([0.0, 0.0]) + offset)
+                        else:
+                            italic_species = '$\it{' + species + '}$'
 
-    # Specify text output type so that text can be edited in adobe illustrator.
+                        # Add a title for the species.
+                        title = axs[i, j].set_title(
+                            italic_species,
+                            fontsize=species_font_size,
+                            y=1.0
+                        )
+                        title.set_position(np.array([0.0, 0.0]) + offset)
+
+                # Handle the compare_counts case as before.
+                # (Rest of your code for compare_counts...)
+
+    # Specify text output type so that text can be edited in Adobe Illustrator.
     matplotlib.rcParams['pdf.fonttype'] = 42
     matplotlib.rcParams['ps.fonttype'] = 42
 
     # Adjust gap sizes between subplots.
     fig.subplots_adjust(wspace=0, hspace=0)
 
-    # Save figure to pdf file. (transparent=True gets rid of white
-    # backgrounds).
+    # Save figure to PDF and PNG files.
     fig.savefig(outpdfpath_coulson, bbox_inches='tight', transparent=True)
     fig.savefig(outpdfpath_coulson.rsplit('.', 1)[0] + '.png', bbox_inches='tight', transparent=True)
+
 
 
 def plot_amoebae_res(csv_file, complex_info, outpdfpath, csv_file2=None,

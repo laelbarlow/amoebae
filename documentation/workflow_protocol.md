@@ -3,16 +3,18 @@
 
 ## Requirements 
 
-The following setup procedure should work on most Linux HPC clusters. This can
-also be run on Linux or MacOS personal computers, but this is generally not
-recommended due to requirements of storage (~30GB or more) and computation time. 
+The following setup procedure should work on most Linux or MacOS
+computers.  Please ensure that you have sufficient storage, as this protocol
+will generate files totalling ~30GB or more in size.
 
-This workflow has minimal essential dependencies for installation, which are
-all widely used in the life sciences (see below for installation instructions):
-- Python version 3.
-- [Conda](https://docs.conda.io/en/latest/miniconda.html) **or**
-  [Singularity](https://sylabs.io/docs/)
-  version 3.6+.
+Most users seem to run the AMOEBAE workflow either on their personal computers
+or on servers without job schedulers (PBS, SLURM, etc.), so the instructions
+below will not be directly applicable to running AMOEBAE on a high-performance
+computing (HPC) cluster. If that is something you need to do, please refer to
+the documentation on the [Snakemake
+website](https://snakemake.readthedocs.io/en/stable/) and consult with your
+system administrator(s) as necessary. Otherwise, just follow the installation
+instructions below.
 
 
 ## Installation
@@ -22,100 +24,58 @@ These instructions are for setting up and running AMOEBAE via the
 interface, which is well-documented and provides the flexibility to run AMOEBAE
 in a wide variety of systems. 
 
-1. If you do not already have the conda package and environment manager
-   installed, this may be installed using the latest version of Miniconda3 from
-   the [conda website](https://docs.conda.io/en/latest/miniconda.html). You may
-   need help from a system administrator to set this up properly on a HPC cluster.
-   Some HPC cluster administrators do not allow use of conda at all, but in
-   such cases conda can still be used to install software in
-   [Singularity](https://sylabs.io/docs/) containers (this process is automated
-   by snakemake). If singularity is not already installed on your system, you
-   will need to request that you system administrator install it for you. Also,
-   if you need to use singularity, then you will need to add
-   `--use-singularity` to most of the snakemake commands described below.
+1. Install Pixi according to the instructions on the [Pixi
+website](https://pixi.sh/latest/). Pixi will install Conda packages without the
+need for you to install Conda itself (or Mamba, etc.). This approach is new as
+of November 2024, and addresses the problems including those related to
+installing dependencies on Apple Silicon MacOS systems.
 
-2. Install snakemake and a few other packages. If you do not already have the
-   snakemake workflow manager installed then you will need to install it. If
-   you have conda installed, then you can follow the [snakemake installation
-   instructions](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
-   on the snakemake website. If conda cannot be installed, then snakemake can
-   be installed in a Python virtual environment. You will need a few additional
-   dependencies: [cookiecutter](https://github.com/cookiecutter/cookiecutter)
-   and [graphviz](https://graphviz.org/).
+2. Clone the AMOEBAE code repository into an appropriate directory.
+    ```
+    git clone https://github.com/laelbarlow/amoebae.git my_amoebae_directory
+    ```
+    - Note: Replace `my_amoebae_directory` with the name of the directory where
+      you want to clone AMOEBAE.
 
-   These can be installed at the same time as snakemake. For example, after
-   installing [mamba](https://github.com/mamba-org/mamba) using conda, you can
-   run the following command to create an environment for running snakemake: 
-   ```
-   mamba create -c conda-forge -c bioconda \
-       -n snakemake \
-           python=3.9.6 \
-           snakemake \
-           cookiecutter \
-           graphviz \
-           git
+3. Navigate into the new directory, and install dependencies listed in the new `pixi.toml` file:
+    ```
+    cd my_amoebae_directory
+    pixi install
     ```
 
-   An alternative method, if you cannot use conda on your system, is to
-   install snakemake in a [Python virtual
-   environment](https://docs.python.org/3/library/venv.html).
-   ```
-   python3 -m venv ~/amoebae_python_env
-   source ~/amoebae_python_env/bin/activate
-   pip install --upgrade pip
-   pip install \
-       snakemake \
-       cookiecutter \
-       graphviz
-   ```
+4. Install `blast`, `muscle`, and `exonerate` globally using Pixi, because
+    this is operating-system specific.
 
-
-3. If running AMOEBAE on an HPC cluster (recommended) then you will need to generate
-   cluster configuration files so that snakemake knows how to submit jobs
-   appropriately on your system. This is described in the [snakemake
-   documentation on
-   profiles](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles).
-   To set up a profile, select the appropriate template profile for your system
-   from the [snakemake profiles](https://github.com/snakemake-profiles/doc),
-   and follow the relevant setup instructions provided. This will write new
-   files to a new hidden directory in your filesystem. For example, if your HPC
-   cluster uses PBS-TORQUE, and you choose to name the new snakemake
-   profile "pbs-torque", then cluster configuration files will be written to a
-   directory with the path `~/.config/snakemake/pbs-torque`. For example:
-   ```
-   conda activate snakemake
-   mkdir -p ~/.config/snakemake
-   cd ~/.config/snakemake
-   cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git
-   chmod a+x pbs-torque/*.py
-   cd -
-   ```
-
-   To edit the cluster configuration in the snakemake profile (if necessary),
-   edit the `cluster_config.yaml` or `cluster.yaml` file (depends on what type
-   of profile, and what you chose to name the files) using your favourite text
-   editor. Details of the configuration will depend on the job scheduler and
-   resources available on your system, and can be modified at any time. Your
-   system administrator will have provided job submission guidelines and
-   example job submission commands/scripts, and these may help guide you in
-   adapting the cluster configuration files to your system. To use a snakemake
-   profile, you will need to append an option to all snakemake commands to
-   indicate the name of the profile (for example, `--profile pbs-torque`). 
-
-4. If you are **not** running AMOEBAE on an HPC cluster, for example if you are
-   running it on a personal computer, then snakemake profiles will not be
-   necessary. In this case, simply activate your previously defined conda
-   environment for snakemake, and you will ready to run amoebae or other
-   snakemake workflows:
-   ```
-   conda activate snakemake
-   ```
-   Note: It will be necessary to reactivate the appropriate conda environment,
-   using the same command, every time you want to run the workflow.
-
-5. Finally, clone the AMOEBAE code repository into an appropriate directory.
+    First, make sure you don't already have blast, muscle, or exonerate globally installed:
     ```
-    git clone https://github.com/laelbarlow/amoebae.git
+    which blastp
+    which muscle
+    which exonerate
+    ```
+    If you do, then you should may need to uninstall these before proceeding.
+    
+    Then, if you are not installing on an Apple Silicon MacOS system, then
+    simply do this:
+    ```
+    pixi global install -c conda-forge -c bioconda blast muscle=3.8 exonerate
+    ```
+
+    If you are using Apple Silicon MacOS, then install Rosetta 2 (if you haven't already):
+    ```
+    /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+    ```
+
+    Then use the `--platform` option to install the osx64 binaries like this:
+    ```
+    pixi global install --platform osx-64 -c conda-forge -c bioconda blast muscle=3.8 exonerate
+    ```
+
+5. **Note**: In contrast to previous versions of this protocol, now with Pixi we
+    prefix all snakemake commands with `pixi run` so that the workflow is run in
+    the Conda environment created using Pixi, and no longer use the
+    `--use-conda` option. For example:
+    ```
+    pixi run snakemake
     ```
 
 ## Running the workflow
@@ -323,7 +283,7 @@ to prevent snakemake processes from being interrupted.
       queries. Here, several initial workflow steps will be run to download (if
       necessary) and format sequence data. 
       ```
-      snakemake get_ref_seqs -j 100 --use-conda
+      pixi run snakemake get_ref_seqs 
       ```
     - If you ran searches just with the example files, then you can use the
       example reference sequence selection file by copying it in the `config`
@@ -400,7 +360,7 @@ to prevent snakemake processes from being interrupted.
       `config/genomes.csv` file are performed.
     - Run the following command:
       ```
-      snakemake -j 100 --use-conda 
+      pixi run snakemake 
       ```
     - This will take minutes to hours to run, depending on the input data,
       computing resources, etc.
@@ -415,7 +375,7 @@ to prevent snakemake processes from being interrupted.
       can be opened in a web browser. This can be done with the following
       command:
       ```
-      snakemake --cores 1 --report results/amoebae_report.html
+      pixi run snakemake --report results/amoebae_report.html
       ```
     - If you are running the workflow on an HPC cluster, for convenience you may
       wish to download these files using an SFTP client such as
@@ -435,7 +395,6 @@ modify the Snakefile (snakemake workflow definition file):
     ```
 For customizing shell commands in workflow rules (steps) that run the `amoebae`
 script, refer to the [AMOEBAE command-line interface
-documentation](amoebae_commands.pdf)
-for available options. 
+documentation](amoebae_commands.pdf) for available options. 
 
 

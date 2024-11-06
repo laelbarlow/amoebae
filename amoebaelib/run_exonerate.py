@@ -35,7 +35,7 @@ from datapaths import DataPaths
 #from get_fas_from_db_dir import get_seq_obj_from_db_fasta
 from amoebae_m import get_seqs_from_fasta_db
 from Bio import SeqIO
-from Bio.Alphabet import IUPAC
+#from Bio.Alphabet import IUPAC
 import warnings
 from Bio import BiopythonExperimentalWarning
 with warnings.catch_warnings():
@@ -219,7 +219,7 @@ class ExonerateLocusResult:
 
                 # Change alphabet type for the sequence to ambiguous DNA, so that it
                 # can be translated (if it is translatable).
-                exonerate_seq_obj.seq.alphabet = IUPAC.ambiguous_dna
+                #exonerate_seq_obj.seq.alphabet = IUPAC.ambiguous_dna
 
                 ## Code block for debugging issues with translating sequences using
                 ## Biopython.

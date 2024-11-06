@@ -20,7 +20,7 @@ import sys
 import os
 import shutil
 from Bio import AlignIO
-from Bio.Alphabet import IUPAC, Gapped
+#from Bio.Alphabet import IUPAC, Gapped
 from get_datatype import get_dbtype
 from Bio.Seq import Seq
 import glob
@@ -29,40 +29,76 @@ sys.path.append(os.path.dirname(sys.path[0]))
 from datapaths import DataPaths
 
 
-def determine_alphabet(filepath):
-    """Automatically determine what alphabet to use for a given file."""
-    dtype = get_dbtype(filepath)
-    if dtype == 'prot':
-        return Gapped(IUPAC.protein)
-    if dtype == 'nucl':
-        return Gapped(IUPAC.ambiguous_dna)
+#def determine_alphabet(filepath):
+#    """Automatically determine what alphabet to use for a given file."""
+#    dtype = get_dbtype(filepath)
+#    if dtype == 'prot':
+#        return Gapped(IUPAC.protein)
+#    if dtype == 'nucl':
+#        return Gapped(IUPAC.ambiguous_dna)
 
+
+#def afa_to_nex(infilepath, outfilepath=None):
+#    """Takes an aligned fasta file (protein) and writes a nexus format file.
+#    This function replaces the record.id with the record.description in the
+#    nexus files, otherwise only the accession (before the first space character) is
+#    written to the nexus file records.
+#    """
+#    # Delete extra mesquite lines if present (otherwise they cause errors).
+#    # These may have been added if the nex file was opened and saved in
+#    # mesquite. IS THIS NECESSARY???
+#    delete_extra_mesquite_lines(infilepath)
+#
+#    # Convert afa to nex.
+#    if outfilepath is None:
+#        outfilepath = os.path.dirname(infilepath)
+#    inhandle = open(infilepath)
+#    #alph = determine_alphabet(infilepath) # Get dbtype
+#    #alignment = AlignIO.read(inhandle, "fasta",
+#    #    alphabet=alph)
+#    alignment = AlignIO.read(inhandle, "fasta")
+#    for record in alignment:
+#        x = record.description
+#        record.id = x
+#    outhandle = open(outfilepath, "w")
+#    AlignIO.write(alignment, outhandle, "nexus")
+#    inhandle.close()
+#    outhandle.close()
 
 def afa_to_nex(infilepath, outfilepath=None):
-    """Takes an aligned fasta file (protein) and writes a nexus format file.
-    This function replaces the record.id with the record.description in the
-    nexus files, otherwise only the accession (before the first space character) is
-    written to the nexus file records.
+    """Takes an aligned fasta file (protein or DNA) and writes a nexus format file.
     """
-    # Delete extra mesquite lines if present (otherwise they cause errors).
-    # These may have been added if the nex file was opened and saved in
-    # mesquite. IS THIS NECESSARY???
     delete_extra_mesquite_lines(infilepath)
 
-    # Convert afa to nex.
+    # Define the output file path if none is provided.
     if outfilepath is None:
-        outfilepath = os.path.dirname(infilepath)
-    inhandle = open(infilepath)
-    alph = determine_alphabet(infilepath) # Get dbtype
-    alignment = AlignIO.read(inhandle, "fasta",
-        alphabet=alph)
-    for record in alignment:
-        x = record.description
-        record.id = x
-    outhandle = open(outfilepath, "w")
-    AlignIO.write(alignment, outhandle, "nexus")
-    inhandle.close()
-    outhandle.close()
+        outfilepath = os.path.splitext(infilepath)[0] + ".nex"
+
+    # Determine the type of the input file.
+    dtype = get_dbtype(infilepath)  # Ensure get_dbtype returns 'prot' or 'nucl'
+
+    # Read the alignment.
+    with open(infilepath) as inhandle:
+        alignment = AlignIO.read(inhandle, "fasta")
+
+        # Update the record IDs as needed.
+        for record in alignment:
+            record.id = record.description
+
+    # Define the molecule type of sequences based on dtype
+    for record in alignment._records:
+        if dtype == "prot":
+            record.annotations["molecule_type"] = "protein"
+        elif dtype == "nucl":
+            record.annotations["molecule_type"] = "DNA"
+        else:
+            raise ValueError("Unsupported molecule type determined: {}".format(dtype))
+
+    # Write to Nexus format.
+    with open(outfilepath, "w") as outhandle:
+        AlignIO.write(alignment, outhandle, "nexus")
+
+
 
 def nex_to_afa(infilepath, outfilepath):
     """Takes a nexus file (protein) and writes an aligned fasta file.
@@ -74,9 +110,10 @@ def nex_to_afa(infilepath, outfilepath):
 
     # Convert nex to afa.
     inhandle = open(infilepath)
-    alph = determine_alphabet(infilepath) # Get dbtype
-    alignment = AlignIO.read(inhandle, "nexus",
-        alphabet=alph)
+    #alph = determine_alphabet(infilepath) # Get dbtype
+    #alignment = AlignIO.read(inhandle, "nexus",
+    #    alphabet=alph)
+    alignment = AlignIO.read(inhandle, "nexus")
     outhandle = open(outfilepath, "w")
     AlignIO.write(alignment, outhandle, "fasta")
     inhandle.close()
@@ -121,9 +158,10 @@ def nex_to_phylip(infilepath, outfilepath):
 
     # Convert nex to phylip.
     inhandle = open(infilepath)
-    alph = determine_alphabet(infilepath) # Get dbtype
-    alignment = AlignIO.read(inhandle, "nexus",
-        alphabet=alph)
+    #alph = determine_alphabet(infilepath) # Get dbtype
+    #alignment = AlignIO.read(inhandle, "nexus",
+    #    alphabet=alph)
+    alignment = AlignIO.read(inhandle, "nexus")
     outhandle = open(outfilepath, "w")
     AlignIO.write(alignment, outhandle, "phylip-sequential")
     inhandle.close()

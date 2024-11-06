@@ -117,7 +117,7 @@ the Dacks laboratory.
 
 ## License
 
-Copyright 2018 Lael D. Barlow
+Copyright 2018-2024 Lael D. Barlow
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

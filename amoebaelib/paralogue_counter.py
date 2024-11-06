@@ -25,7 +25,7 @@ import os
 import subprocess
 from afa_to_nex import afa_to_nex, delete_extra_mesquite_lines
 from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC, Gapped
+#from Bio.Alphabet import IUPAC, Gapped
 from Bio.SeqRecord import SeqRecord
 import time
 import pandas as pd

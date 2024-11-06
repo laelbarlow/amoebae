@@ -35,7 +35,7 @@ import collections
 # Import modules from installed libraries/packages.
 from Bio import SeqIO
 from Bio import AlignIO
-from Bio.Alphabet import IUPAC, Gapped
+#from Bio.Alphabet import IUPAC, Gapped
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
@@ -679,7 +679,8 @@ def mask_alignment2(alignment):
         mask_seq = mask_seq + mask_char
 
     # Generate a SeqRecord object with the mask_seq.
-    empty_mask_seq = Seq(mask_seq, IUPAC.protein)
+    #empty_mask_seq = Seq(mask_seq, IUPAC.protein)
+    empty_mask_seq = Seq(mask_seq)
     empty_mask_rec = SeqRecord(empty_mask_seq, id='MASK', name='MASK')
 
     # Add the mask_seq sequence to the alignment.

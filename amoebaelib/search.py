@@ -414,9 +414,9 @@ def get_rows_for_fwd_srch_df(df,
     #new_row_df.loc[0] = ['not???'] * len(column_label_list) # Temp
 
     # Fill in info to row.
-    new_row_df.loc[0]['Query title'] = query_title
-    new_row_df.loc[0]['Query file'] = q
-    new_row_df.loc[0]['Query species (if applicable)'] = \
+    new_row_df.loc[0,'Query title'] = query_title
+    new_row_df.loc[0,'Query file'] = q
+    new_row_df.loc[0,'Query species (if applicable)'] = \
         amoebae_m.get_query_taxon_from_csv(q, main_data_dir)
 
     # Get "taxon" from query filename.
@@ -425,16 +425,16 @@ def get_rows_for_fwd_srch_df(df,
 
     # Use query "taxon" to look up the database, if any, that
     # the query came from (in the query info csv file).
-    new_row_df.loc[0]['Query database name'] = \
+    new_row_df.loc[0,'Query database name'] = \
         amoebae_m.get_db_filename_for_query_from_db_csv(taxon, main_data_dir)
 
-    new_row_df.loc[0]['Query accession (if applicable)'] = query_res_obj.id
-    new_row_df.loc[0]['Query description'] = query_res_obj.description
-    new_row_df.loc[0]['Query length'] = query_len
-    new_row_df.loc[0]['Subject database species (if applicable)'] =\
+    new_row_df.loc[0,'Query accession (if applicable)'] = query_res_obj.id
+    new_row_df.loc[0,'Query description'] = query_res_obj.description
+    new_row_df.loc[0,'Query length'] = query_len
+    new_row_df.loc[0,'Subject database species (if applicable)'] =\
         amoebae_m.get_species_for_db_filename(d, main_data_dir) ### PROBLEM?
-    new_row_df.loc[0]['Subject database file'] = d
-    new_row_df.loc[0]['Forward search method'] = srch_file_prog + ' ' + srch_file_prog_vers
+    new_row_df.loc[0,'Subject database file'] = d
+    new_row_df.loc[0,'Forward search method'] = srch_file_prog + ' ' + srch_file_prog_vers
 
     # Get version of exonerate that may be used.
     exonerate_version = subprocess.getoutput('exonerate -v').split('\n')[0].rsplit(' ', 1)[-1]
@@ -442,10 +442,12 @@ def get_rows_for_fwd_srch_df(df,
 
     if num_hits == 0:
         # No hits to record.
-        new_row_df.loc[0]['Forward hit rank'] = '0'
+        new_row_df.loc[0,'Forward hit rank'] = '0'
 
         # Append row dataframe to dataframe for output.
-        subdf = subdf.append(new_row_df, ignore_index=True)
+        #subdf = subdf.append(new_row_df, ignore_index=True)
+        subdf = pd.concat([subdf, new_row_df], ignore_index=True)
+
 
     elif num_hits > 0:
         # ***Note: TBLASTN results are parsed very differently from results of
@@ -457,7 +459,7 @@ def get_rows_for_fwd_srch_df(df,
             # Set value in column to indicate that TBLASTN was used to predict
             # exon boundaries (this may be update later if exonerate is used
             # instead.
-            new_row_df.loc[0]['Exon boundary prediction method'] = srch_file_prog + ' ' + srch_file_prog_vers
+            new_row_df.loc[0,'Exon boundary prediction method'] = srch_file_prog + ' ' + srch_file_prog_vers
 
             # Get list of lists of HSPs corresponding to each potential gene in
             # the subject sequences.
@@ -530,7 +532,7 @@ def get_rows_for_fwd_srch_df(df,
 
                     else:
                         # Exonerate was used successfully.
-                        new_row_df.loc[0]['Exon boundary prediction method'] =\
+                        new_row_df.loc[0,'Exon boundary prediction method'] =\
                         'exonerate ' + exonerate_version
 
                 # Define hit sequence object.
@@ -541,37 +543,37 @@ def get_rows_for_fwd_srch_df(df,
                 cur_hit_len = len(hit_seq)
                 percent_len = round((cur_hit_len / top_hit_len) * 100)
 
-                new_row_df.loc[0]['Forward hit rank'] = hit_num + 1
-                new_row_df.loc[0]['Forward hit score'] = score_cur
-                new_row_df.loc[0]['Forward hit score difference from top hit score'] = scorediff
-                new_row_df.loc[0]['Forward hit E-value (top HSP)'] = e_cur
-                new_row_df.loc[0]['Forward hit E-value (top HSP) order of magnitude difference compared to top hit'] = evaldiff
-                new_row_df.loc[0]['Forward hit length'] = cur_hit_len
-                new_row_df.loc[0]['Forward hit length as a percentage of query length'] =\
+                new_row_df.loc[0,'Forward hit rank'] = hit_num + 1
+                new_row_df.loc[0,'Forward hit score'] = score_cur
+                new_row_df.loc[0,'Forward hit score difference from top hit score'] = scorediff
+                new_row_df.loc[0,'Forward hit E-value (top HSP)'] = e_cur
+                new_row_df.loc[0,'Forward hit E-value (top HSP) order of magnitude difference compared to top hit'] = evaldiff
+                new_row_df.loc[0,'Forward hit length'] = cur_hit_len
+                new_row_df.loc[0,'Forward hit length as a percentage of query length'] =\
                         round((cur_hit_len/query_len) * 100)
-                new_row_df.loc[0]['Forward hit percent query cover'] =\
+                new_row_df.loc[0,'Forward hit percent query cover'] =\
                         round((cur_hit_len/query_len) * 100) # Same as percent length, because all residues identified align to query sequence.
-                #new_row_df.loc[0]['Forward hit accession'] = hit.id + '_(fwdhit' + str(hit_num + 1) + ')' 
-                new_row_df.loc[0]['Forward hit accession'] = hit.id
-                new_row_df.loc[0]['Forward hit description'] = hit.description
+                #new_row_df.loc[0,'Forward hit accession'] = hit.id + '_(fwdhit' + str(hit_num + 1) + ')' 
+                new_row_df.loc[0,'Forward hit accession'] = hit.id
+                new_row_df.loc[0,'Forward hit description'] = hit.description
 
 
                 # Need to handle nucleotide and protein sequences
                 # differently!
-                new_row_df.loc[0]['Forward hit sequence'] = '-'
+                new_row_df.loc[0,'Forward hit sequence'] = '-'
 
                 # Get subsequence(s) to use for reverse search.
                 #range_and_seq = get_subsequences_matching_query(hit)
-                #new_row_df.loc[0]['Forward hit coordinates of subsequence(s) that align(s) to query'] =\
+                #new_row_df.loc[0,'Forward hit coordinates of subsequence(s) that align(s) to query'] =\
                 #range_and_seq[0] 
-                #new_row_df.loc[0]['Forward hit subsequence(s) that align(s) to query'] = range_and_seq[1]
+                #new_row_df.loc[0,'Forward hit subsequence(s) that align(s) to query'] = range_and_seq[1]
 
                 subseq_and_coord = hit_seq_record_and_coord
-                new_row_df.loc[0]['Forward hit coordinates of subsequence(s) that align(s) to query'] =\
+                new_row_df.loc[0,'Forward hit coordinates of subsequence(s) that align(s) to query'] =\
                 str(subseq_and_coord[1]).replace(' ', '')
-                new_row_df.loc[0]['Forward hit description of subsequence(s) that align(s) to query']\
+                new_row_df.loc[0,'Forward hit description of subsequence(s) that align(s) to query']\
                     = subseq_and_coord[0].description
-                new_row_df.loc[0]['Forward hit subsequence(s) that align(s) to query']\
+                new_row_df.loc[0,'Forward hit subsequence(s) that align(s) to query']\
                 = str(subseq_and_coord[0].seq)
 
                 # Fill in info about how close the hit is to the ends of the
@@ -580,7 +582,7 @@ def get_rows_for_fwd_srch_df(df,
                 cluster_range = get_cluster_range(cluster)
                 subject_seq_len = hit.seq_len
                 proximity = min([cluster_range[0], subject_seq_len - cluster_range[1]])
-                new_row_df.loc[0]['Proximity (bp) to end of subject sequence (if searching in nucleotide sequences)']\
+                new_row_df.loc[0,'Proximity (bp) to end of subject sequence (if searching in nucleotide sequences)']\
                 = str(proximity)
 
                 # Calculate difference in length between query and hit
@@ -592,7 +594,7 @@ def get_rows_for_fwd_srch_df(df,
                 if e_cur <= float(max_evalue) and \
                         (length_diff <= int(max_length_diff) or max_length_diff == -1):
                     decis = '+'
-                new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
+                new_row_df.loc[0,'Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
                 # Make sure that all the info was identified and added to
                 # the row.
@@ -601,7 +603,9 @@ def get_rows_for_fwd_srch_df(df,
 
 
                 # Append row dataframe to dataframe for output.
-                subdf = subdf.append(new_row_df, ignore_index=True)
+                #subdf = subdf.append(new_row_df, ignore_index=True)
+                subdf = pd.concat([subdf, new_row_df], ignore_index=True)
+
 
         else:
             # Loop over hits in query_res_obj...
@@ -636,42 +640,47 @@ def get_rows_for_fwd_srch_df(df,
                 cur_hit_len = len(hit_seq)
                 percent_len = round((cur_hit_len / top_hit_len) * 100)
 
-                new_row_df.loc[0]['Forward hit rank'] = hit_num + 1
-                new_row_df.loc[0]['Forward hit score'] = score_cur
-                new_row_df.loc[0]['Forward hit score difference from top hit score'] = scorediff
-                new_row_df.loc[0]['Forward hit E-value (top HSP)'] = e_cur
-                new_row_df.loc[0]['Forward hit E-value (top HSP) order of magnitude difference compared to top hit'] = evaldiff
-                new_row_df.loc[0]['Forward hit length'] = cur_hit_len
-                new_row_df.loc[0]['Forward hit length as a percentage of query length'] =\
+                new_row_df.loc[0,'Forward hit rank'] = hit_num + 1
+                new_row_df.loc[0,'Forward hit score'] = score_cur
+                new_row_df.loc[0,'Forward hit score difference from top hit score'] = scorediff
+                new_row_df.loc[0,'Forward hit E-value (top HSP)'] = e_cur
+                new_row_df.loc[0,'Forward hit E-value (top HSP) order of magnitude difference compared to top hit'] = evaldiff
+                new_row_df.loc[0,'Forward hit length'] = cur_hit_len
+                new_row_df.loc[0,'Forward hit length as a percentage of query length'] =\
                         round((cur_hit_len/query_len) * 100)
 
                 # Get subsequence that aligns to query, and its coordinates
                 # within the target sequence.
                 subseq_and_coord = parsed_file_obj.hit_subsequence_and_coord(hit_num)
 
-                new_row_df.loc[0]['Forward hit percent query cover'] =\
+                new_row_df.loc[0,'Forward hit percent query cover'] =\
                         round((len(subseq_and_coord[0])*100)/query_len)
-                new_row_df.loc[0]['Forward hit accession'] = parsed_file_obj.hit_id(hit_num)
-                new_row_df.loc[0]['Forward hit description'] = parsed_file_obj.hit_description(hit_num)
+                new_row_df.loc[0,'Forward hit accession'] = parsed_file_obj.hit_id(hit_num)
+                new_row_df.loc[0,'Forward hit description'] = parsed_file_obj.hit_description(hit_num)
 
                 # Need to handle nucleotide and protein sequences
                 # differently!
                 if parsed_file_obj.program == 'tblastn':
-                    new_row_df.loc[0]['Forward hit sequence'] = '-'
+                    new_row_df.loc[0,'Forward hit sequence'] = '-'
                 else:
-                    new_row_df.loc[0]['Forward hit sequence'] = str(hit_seq.seq)
+                    #new_row_df.loc[0,'Forward hit sequence'] = str(hit_seq.seq)
+                    new_row_df.loc[0, 'Forward hit sequence'] = str(hit_seq.seq)
+
 
                 # Get subsequence(s) to use for reverse search.
                 #range_and_seq = get_subsequences_matching_query(hit)
-                #new_row_df.loc[0]['Forward hit coordinates of subsequence(s) that align(s) to query'] =\
+                #new_row_df.loc[0,'Forward hit coordinates of subsequence(s) that align(s) to query'] =\
                 #range_and_seq[0] 
-                #new_row_df.loc[0]['Forward hit subsequence(s) that align(s) to query'] = range_and_seq[1]
+                #new_row_df.loc[0,'Forward hit subsequence(s) that align(s) to query'] = range_and_seq[1]
 
-                new_row_df.loc[0]['Forward hit coordinates of subsequence(s) that align(s) to query'] =\
+                #new_row_df.loc[0,'Forward hit coordinates of subsequence(s) that align(s) to query'] =\
+                new_row_df.loc[0,'Forward hit coordinates of subsequence(s) that align(s) to query'] =\
                 str(subseq_and_coord[1]).replace(' ', '')
-                new_row_df.loc[0]['Forward hit description of subsequence(s) that align(s) to query']\
+                #new_row_df.loc[0,'Forward hit description of subsequence(s) that align(s) to query']\
+                new_row_df.loc[0,'Forward hit description of subsequence(s) that align(s) to query']\
                     = subseq_and_coord[0].description
-                new_row_df.loc[0]['Forward hit subsequence(s) that align(s) to query']\
+                #new_row_df.loc[0,'Forward hit subsequence(s) that align(s) to query']\
+                new_row_df.loc[0,'Forward hit subsequence(s) that align(s) to query']\
                 = str(subseq_and_coord[0].seq)
 
                 # Calculate difference in length between query and hit
@@ -683,7 +692,7 @@ def get_rows_for_fwd_srch_df(df,
                 if e_cur <= float(max_evalue) and \
                         (length_diff <= int(max_length_diff) or max_length_diff == -1):
                     decis = '+'
-                new_row_df.loc[0]['Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
+                new_row_df.loc[0,'Positive/redundant (+) or negative (-) hit based on E-value criterion'] = decis
 
                 # Make sure that all the info was identified and added to
                 # the row.
@@ -692,7 +701,9 @@ def get_rows_for_fwd_srch_df(df,
 
 
                 # Append row dataframe to dataframe for output.
-                subdf = subdf.append(new_row_df, ignore_index=True)
+                #subdf = subdf.append(new_row_df, ignore_index=True)
+                subdf = pd.concat([subdf, new_row_df], ignore_index=True)
+
 
     print()
     print('num_hits: ')
@@ -853,7 +864,9 @@ def write_fwd_srch_res_to_csv(outdir,
                                                      main_data_dir)
 
                     # Append sub-dataframe to full dataframe.
-                    df = df.append(subdf, ignore_index=True)
+                    #df = df.append(subdf, ignore_index=True)
+                    df = pd.concat([df, subdf], ignore_index=True)
+
 
         # Write updated dataframe to output spreadsheet.
         print('Writing dataframe to csv file')
