@@ -73,10 +73,7 @@ installing dependencies on Apple Silicon MacOS systems.
 5. **Note**: In contrast to previous versions of this protocol, now with Pixi we
     prefix all snakemake commands with `pixi run` so that the workflow is run in
     the Conda environment created using Pixi, and no longer use the
-    `--use-conda` option. For example:
-    ```
-    pixi run snakemake
-    ```
+    `--use-conda` option. For example, `pixi run snakemake`.
 
 ## Running the workflow
 
