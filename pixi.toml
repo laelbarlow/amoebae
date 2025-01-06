@@ -22,4 +22,5 @@ matplotlib = ">=3.7,<3.9"
 graphviz = ">=12.0.0,<13"
 snakemake = ">=8.25.1,<9"
 curl = ">=8.10.1,<9"
+certifi = ">=2024.12.14,<2025"
 # Note: blast, exonerate, and muscle=3.8 must also be installed (e.g., globally), but are not defined here because installation is system-specific.
