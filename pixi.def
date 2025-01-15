@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: ghcr.io/prefix-dev/pixi:latest
+
+%post
+    cd /root
+    cp pixi.toml pixi.lock /
+    cd /
+    pixi install --locked --environment default
+    pixi global install -c conda-forge -c bioconda blast muscle=3.8 exonerate
+
+%environment
+    export PIXI_HOME=/
+    export PIXI_CACHE_DIR=/.cache/rattler/cache
+    export RATTLER_AUTH_FILE=/.rattler/credentials.json
+    cd / && source <(pixi shell-hook --environment default)

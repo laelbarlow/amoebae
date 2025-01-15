@@ -4,20 +4,13 @@
 ## Requirements 
 
 The following setup procedure should work on most Linux or MacOS
-computers.  Please ensure that you have sufficient storage, as this protocol
+systems. Please ensure that you have sufficient storage, as this protocol
 will generate files totalling ~30GB or more in size.
-
-Most users seem to run the AMOEBAE workflow either on their personal computers
-or on servers without job schedulers (PBS, SLURM, etc.), so the instructions
-below will not be directly applicable to running AMOEBAE on a high-performance
-computing (HPC) cluster. If that is something you need to do, please refer to
-the documentation on the [Snakemake
-website](https://snakemake.readthedocs.io/en/stable/) and consult with your
-system administrator(s) as necessary. Otherwise, just follow the installation
-instructions below.
 
 
 ## Installation
+
+### Local servers and personal computers
 
 These instructions are for setting up and running AMOEBAE via the
 [SnakeMake](https://snakemake.readthedocs.io/en/stable/) command-line
@@ -74,6 +67,10 @@ installing dependencies on Apple Silicon MacOS systems.
     prefix all snakemake commands with `pixi run` so that the workflow is run in
     the Conda environment created using Pixi, and no longer use the
     `--use-conda` option. For example, `pixi run snakemake`.
+
+### High Performance Computing Clusters
+
+See the [instructions for using AMOEBAE on Digital Research Alliance of Canada clusters](./drac.md).
 
 ## Running the workflow
 
