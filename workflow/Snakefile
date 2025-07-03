@@ -71,16 +71,10 @@ if not os.path.isdir('results/AMOEBAE_Data'):
 # being submitted as jobs via the job scheduler.
 localrules: final_results, download_dbs, download_queries, \
 list_dbs_and_queries, help
-
-
 # Define global container image (for if the --use-singularity option is used).
 container: "docker://continuumio/miniconda3:4.8.2"
 
-# Define global environment modules (for if the --use-envmodules option is
-# used).
-global_envmodules = open('workflow/envs/amoebae_env_modules.txt', 'r').read().split('\n')
-
-
+# Environment modules are deprecated - using Pixi/Conda environment instead
 # Define rules for the workflow.
 
 rule final_results:
@@ -97,8 +91,6 @@ rule final_results:
         'results/plot.pdf',
         'results/plot_coulson_both.pdf',
         'results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files'
-
-
 rule help:
     """
     Print list of all targets with help.
@@ -107,8 +99,6 @@ rule help:
         for rule in workflow.rules:
             print(rule.name)
             print(rule.docstring)
-
-
 rule download_dbs:
     """
     Download FASTA files to use for analysis.
@@ -119,13 +109,11 @@ rule download_dbs:
     output:
         expand('results/temp_databases/{data_file}', data_file = database_names_ncbi)
     conda:
-        'envs/amoebae_env.yaml'
+        'envs/pixi_env.yaml'
     shell:
         """
     	python3 {input.script} {input.csv_file} results/temp_databases
         """
-
-
 rule download_queries:
     """
     Download (and construct) query sequences and multiple sequence alignments to use as search queries.
@@ -146,8 +134,6 @@ rule download_queries:
                 results/temp_single_seq_queries \
                 results/temp_multi_seq_queries
         """
-
-
 rule add_to_dbs:        
     """
     Format and add a file to a formatted directory.
@@ -168,11 +154,7 @@ rule add_to_dbs:
         input_file = "(.+faa|.+fna|.+gff3)"
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) && '
@@ -182,8 +164,6 @@ rule add_to_dbs:
              '{input.data_dir} '
              '--split_char $sc '
              '--split_pos $sp '
-
-
 rule add_to_dbs_local:        
     """
     Format and add a file to a formatted directory.
@@ -204,11 +184,7 @@ rule add_to_dbs_local:
         input_file = "(.+faa|.+fna|.+gff3)"
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) && '
@@ -218,8 +194,6 @@ rule add_to_dbs_local:
                 '{input.data_dir} '
                      '--split_char $sc '
                      '--split_pos $sp '
-
-
 rule add_to_query_seqs:
     """
     Add a query file to a formatted directory.
@@ -235,19 +209,13 @@ rule add_to_query_seqs:
         output_file = 'results/AMOEBAE_Data/Queries/{query_file}.faa'
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
         'add_to_queries '
             '{input.input_file} '
             '{input.data_dir} '
         
-
-
 rule add_to_query_seqs_local:
     """
     Add a query file to a formatted directory.
@@ -263,19 +231,13 @@ rule add_to_query_seqs_local:
         output_file = 'results/AMOEBAE_Data/Queries/{query_file}.faa'
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
         'add_to_queries '
             '{input.input_file} '
             '{input.data_dir} '
         
-
-
 rule align_fasta:
     """
     Align FASTA files used for HMM searching.
@@ -288,18 +250,12 @@ rule align_fasta:
         output_file = 'results/temp_multi_seq_queries/{file}.afaa'
         
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'align_fa '
                 '{input.input_file} '
                 '--output_format fasta '
-
-
 rule add_to_query_ali:
     """
     Add a query file to a formatted directory.
@@ -315,19 +271,13 @@ rule add_to_query_ali:
         output_file = 'results/AMOEBAE_Data/Queries/{query_file}.afaa'
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
            'add_to_queries '
                '{input.input_file} '
                '{input.data_dir} '
         
-
-
 rule add_to_query_ali_local:
     """
     Add a query file to a formatted directory.
@@ -343,11 +293,7 @@ rule add_to_query_ali_local:
         output_file = 'results/AMOEBAE_Data/Queries/{query_file}.afaa'
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
            'add_to_queries '
@@ -400,8 +346,6 @@ rule list_dbs_and_queries:
             # category name.
             for i in nonredun_query_titles:
                 coulson_plot_org.write(i[0] + ',' + i + '\n')
-
-
 rule get_ref_seqs:
     """
     Run searches with queries to find redundant hits in databases (for
@@ -422,11 +366,7 @@ rule get_ref_seqs:
         #ref_seq_manual_copy_csv = 'results/Ref_seqs_1_manual_selections.csv'
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} ' + \
             'get_redun_hits ' + \
@@ -440,8 +380,6 @@ rule get_ref_seqs:
                 '--max_number_of_hits_to_summarize 200 ' + \
         ' && cp results/Ref_seqs_1/0_ref_seqs_auto_predictions.csv ' + \
                'results/Ref_seqs_1_auto_predictions.csv'
-
-
 rule setup_and_run_fwd_srch:
     """
     Make directory in which to perform forward searches.
@@ -460,11 +398,7 @@ rule setup_and_run_fwd_srch:
         outdir = directory('results/fwd_srchs_1')
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} ' + \
             'setup_fwd_srch ' + \
@@ -477,8 +411,6 @@ rule setup_and_run_fwd_srch:
             'run_fwd_srch ' + \
                 '{output.outdir} ' + \
                 'results/AMOEBAE_Data '
-
-
 rule sum_fwd_srch:
     """
     Append information about forward searches to csv summary file (this is used
@@ -493,11 +425,7 @@ rule sum_fwd_srch:
         csv_out_path = 'results/fwd_srchs_1.csv'
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'sum_fwd_srch ' + \
@@ -506,8 +434,6 @@ rule sum_fwd_srch:
                 '{input.main_data_dir} ' + \
                 '--max_hits_to_sum 5 ' + \
                 '--max_gap_between_tblastn_hsps 1000 '
-
-
 rule setup_and_run_rev_srch:
     """
     Make a directory in which to perform reverse searches.  Perform searches
@@ -523,11 +449,7 @@ rule setup_and_run_rev_srch:
         out_dir = directory('results/rev_srchs_1')
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'setup_rev_srch ' + \
@@ -542,8 +464,6 @@ rule setup_and_run_rev_srch:
             'run_rev_srch ' + \
                 '{output.out_dir} ' + \
                 '{input.main_data_dir} '
-
-
 rule sum_rev_srch:
     """
     Append information about reverse searches to csv summary file.
@@ -560,11 +480,7 @@ rule sum_rev_srch:
         csv_out_path = 'results/fwd_srchs_1_rev_srch_1.csv'
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'sum_rev_srch ' + \
@@ -575,8 +491,6 @@ rule sum_rev_srch:
                 '--redun_hit_csv {input.ref_seq_csv} ' + \
                 '--aasubseq ' + \
                 '--min_evaldiff 2 '
-
-
 rule interp_srchs:
     """
     Interpret search results based on summary.
@@ -589,18 +503,12 @@ rule interp_srchs:
         interp_csv = 'results/fwd_srchs_1_rev_srch_1_interp.csv'
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'interp_srchs ' + \
                 '{input.rev_srch_csv} ' + \
                 '--out_csv_path {output.interp_csv} '
-
-
 rule find_redun_seqs:
     """
     First add a column to the CSV file listing relevant alignment files to use
@@ -620,11 +528,7 @@ rule find_redun_seqs:
                category="Tables")
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'find_redun_seqs ' + \
@@ -639,8 +543,6 @@ rule find_redun_seqs:
                 '{input.main_data_dir} ' + \
                 '--out_csv_path {output.nonredun_seq_csv} ' + \
                 '--min_length 55'
-
-
 rule plot_results:
     """
     Plot search results.
@@ -661,11 +563,7 @@ rule plot_results:
                           category="Plots")
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'plot ' + \
@@ -673,8 +571,6 @@ rule plot_results:
                 '--complex_info {input.coulson_org_csv} ' + \
                 '--row_order {input.row_order} ' + \
                 '--out_pdf {output.main_plot_pdf} '
-
-
 rule get_positive_hit_fastas:
     """
     Generate FASTA files of positive hits from summary CSV file.
@@ -688,19 +584,13 @@ rule get_positive_hit_fastas:
         fasta_dir = directory('results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_files')
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'csv_to_fasta ' + \
                 '{input.nonredun_seq_csv} ' + \
                 '--abbrev ' + \
                 '--split_by_query_title '
-
-
 rule get_fwd_hit_seqs:
     """
     Generate FASTA files of positive hits from summary CSV file.
@@ -714,11 +604,7 @@ rule get_fwd_hit_seqs:
         fasta_dir = directory('results/fwd_srchs_1_fasta_files')
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'csv_to_fasta ' + \
@@ -726,8 +612,6 @@ rule get_fwd_hit_seqs:
                 '--abbrev ' + \
                 '--split_by_query_title ' + \
                 '--all_hits '
-
-
 rule align_positive_hit_fastas:
     """
     Generate FASTA files of positive hits from summary CSV file, and align with MUSCLE.
@@ -742,11 +626,7 @@ rule align_positive_hit_fastas:
         directory('results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files')
 
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell:
         'mkdir -p {output.ali_dir} && '
         'for X in {input.fasta_dir}/*.fa; '
@@ -757,22 +637,14 @@ rule align_positive_hit_fastas:
                 '--output_dir_path {output.ali_dir} ' + \
                 '--output_format fasta '
         '; done '
-
-
 rule generate_doc_pdf:
     """
     Run script to generate documentation PDF file.
     """
     conda:
-        'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+        'envs/pixi_env.yaml'
     shell: 
         'bash documentation/build_pdf.sh'
-
-
 rule plot_workflow:
     """
     Plot the snakemake workflow defined in the Snakefile file.
@@ -780,18 +652,12 @@ rule plot_workflow:
     Use the Python PIL library to invert images:
     https://stackoverflow.com/questions/2498875/how-to-invert-colors-of-image-with-pil-python-imaging
     http://effbot.org/imagingbook/imageops.htm
-
-
     """
     output:
         'results/workflow_diagram.pdf'
 
     #conda:
-    #    'envs/amoebae_env.yaml'
-
-    envmodules:
-        global_envmodules
-
+    #    'envs/pixi_env.yaml'
     shell: 
         'snakemake --cores 1 -p --rulegraph | dot -Tpdf > {output} && '
         'snakemake --cores 1 -p --rulegraph | dot -Tpng > images/example_workflow_diagram.png '
