@@ -71,8 +71,6 @@ if not os.path.isdir('results/AMOEBAE_Data'):
 # being submitted as jobs via the job scheduler.
 localrules: final_results, download_dbs, download_queries, \
 list_dbs_and_queries, help
-# Define global container image (for if the --use-singularity option is used).
-container: "docker://continuumio/miniconda3:4.8.2"
 
 # Environment modules are deprecated - using Pixi/Conda environment instead
 # Define rules for the workflow.
@@ -108,8 +106,6 @@ rule download_dbs:
         csv_file = database_csv
     output:
         expand('results/temp_databases/{data_file}', data_file = database_names_ncbi)
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         """
     	python3 {input.script} {input.csv_file} results/temp_databases
@@ -153,8 +149,6 @@ rule add_to_dbs:
     wildcard_constraints:
         input_file = "(.+faa|.+fna|.+gff3)"
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) && '
@@ -183,8 +177,6 @@ rule add_to_dbs_local:
     wildcard_constraints:
         input_file = "(.+faa|.+fna|.+gff3)"
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'sc=$( python3 {input.split_char_script} ' + database_csv + ' {input.input_file} ) && '
         'sp=$( python3 {input.split_pos_script} ' + database_csv + ' {input.input_file} ) && '
@@ -208,8 +200,6 @@ rule add_to_query_seqs:
     output:
         output_file = 'results/AMOEBAE_Data/Queries/{query_file}.faa'
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
         'add_to_queries '
@@ -230,8 +220,6 @@ rule add_to_query_seqs_local:
     output:
         output_file = 'results/AMOEBAE_Data/Queries/{query_file}.faa'
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
         'add_to_queries '
@@ -249,8 +237,6 @@ rule align_fasta:
     output:
         output_file = 'results/temp_multi_seq_queries/{file}.afaa'
         
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'align_fa '
@@ -270,8 +256,6 @@ rule add_to_query_ali:
     output:
         output_file = 'results/AMOEBAE_Data/Queries/{query_file}.afaa'
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
            'add_to_queries '
@@ -292,8 +276,6 @@ rule add_to_query_ali_local:
     output:
         output_file = 'results/AMOEBAE_Data/Queries/{query_file}.afaa'
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
            'add_to_queries '
@@ -365,8 +347,6 @@ rule get_ref_seqs:
         ref_seq_pred_csv_copy = 'results/Ref_seqs_1_auto_predictions.csv',
         #ref_seq_manual_copy_csv = 'results/Ref_seqs_1_manual_selections.csv'
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} ' + \
             'get_redun_hits ' + \
@@ -397,8 +377,6 @@ rule setup_and_run_fwd_srch:
     output:
         outdir = directory('results/fwd_srchs_1')
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} ' + \
             'setup_fwd_srch ' + \
@@ -424,8 +402,6 @@ rule sum_fwd_srch:
     output:
         csv_out_path = 'results/fwd_srchs_1.csv'
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'sum_fwd_srch ' + \
@@ -448,8 +424,6 @@ rule setup_and_run_rev_srch:
     output:
         out_dir = directory('results/rev_srchs_1')
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'setup_rev_srch ' + \
@@ -479,8 +453,6 @@ rule sum_rev_srch:
     output:
         csv_out_path = 'results/fwd_srchs_1_rev_srch_1.csv'
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'sum_rev_srch ' + \
@@ -502,8 +474,6 @@ rule interp_srchs:
     output:
         interp_csv = 'results/fwd_srchs_1_rev_srch_1_interp.csv'
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'interp_srchs ' + \
@@ -527,8 +497,6 @@ rule find_redun_seqs:
                caption='./report/find_redun_seqs.rst',
                category="Tables")
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'find_redun_seqs ' + \
@@ -562,8 +530,6 @@ rule plot_results:
                           caption='./report/plot_results_coulson.rst',
                           category="Plots")
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'plot ' + \
@@ -583,8 +549,6 @@ rule get_positive_hit_fastas:
     output:
         fasta_dir = directory('results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_files')
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'csv_to_fasta ' + \
@@ -603,8 +567,6 @@ rule get_fwd_hit_seqs:
     output:
         fasta_dir = directory('results/fwd_srchs_1_fasta_files')
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'python3 {input.amoebae_script} '
             'csv_to_fasta ' + \
@@ -625,8 +587,6 @@ rule align_positive_hit_fastas:
         ali_dir =\
         directory('results/fwd_srchs_1_rev_srch_1_interp_with_ali_col_nonredun_fasta_ali_files')
 
-    conda:
-        'envs/pixi_env.yaml'
     shell:
         'mkdir -p {output.ali_dir} && '
         'for X in {input.fasta_dir}/*.fa; '
@@ -641,8 +601,6 @@ rule generate_doc_pdf:
     """
     Run script to generate documentation PDF file.
     """
-    conda:
-        'envs/pixi_env.yaml'
     shell: 
         'bash documentation/build_pdf.sh'
 rule plot_workflow:
@@ -655,9 +613,6 @@ rule plot_workflow:
     """
     output:
         'results/workflow_diagram.pdf'
-
-    #conda:
-    #    'envs/pixi_env.yaml'
     shell: 
         'snakemake --cores 1 -p --rulegraph | dot -Tpdf > {output} && '
         'snakemake --cores 1 -p --rulegraph | dot -Tpng > images/example_workflow_diagram.png '
