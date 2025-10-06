@@ -41,7 +41,21 @@ def make_easel_index(outfp):
     """Use the esl-sfetch miniapp from the Easel package associated with the
     HMMER3 software package to index a fasta file.
     """
-    subprocess.call(['esl-sfetch', '--index', outfp])
+    command = ['esl-sfetch', '--index', outfp]
+    returncode = subprocess.call(command)
+
+    # Check if the command failed.
+    if returncode != 0:
+        command_str = ' '.join(command)
+        raise RuntimeError(
+            f"\nError: esl-sfetch failed with exit code {returncode}.\n"
+            f"Command: {command_str}\n"
+            f"\nThis may indicate that:\n"
+            f"  1. esl-sfetch is not installed or not in your PATH\n"
+            f"  2. HMMER is not properly installed\n"
+            f"  3. The input file is corrupted or inaccessible\n"
+            f"\nNote: esl-sfetch is part of HMMER, which should be installed via pixi.toml"
+        )
 
 
 def convert_headers(infp, outfp, split_char=' ', split_pos='0',
@@ -159,8 +173,21 @@ def make_blast_db(infp):
     dbtype = get_dbtype_from_file_exten(infp)
 
     # Make the file blast-able with makeblastdb.
-    subprocess.call(["makeblastdb", "-in", infp, "-dbtype",
-        dbtype])
+    command = ["makeblastdb", "-in", infp, "-dbtype", dbtype]
+    returncode = subprocess.call(command)
+
+    # Check if the command failed.
+    if returncode != 0:
+        command_str = ' '.join(command)
+        raise RuntimeError(
+            f"\nError: makeblastdb failed with exit code {returncode}.\n"
+            f"Command: {command_str}\n"
+            f"\nThis may indicate that:\n"
+            f"  1. makeblastdb is not installed or not in your PATH\n"
+            f"  2. The BLAST installation has architecture compatibility issues\n"
+            f"  3. The input file is corrupted or inaccessible\n"
+            f"\nFor installation instructions, see documentation/workflow_protocol.md"
+        )
 
 
 def get_corr_fasta_exten(infp):
