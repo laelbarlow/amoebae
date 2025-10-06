@@ -252,12 +252,35 @@ def run_any_search(queryfile,
     #run_command[1:]
 
     # Run command.
-    subprocess.call(run_command)
+    returncode = subprocess.call(run_command)
 
-    # Check that the output file is not empty.
-    assert os.path.getsize(outfile) != 0, """Error: Search output file is
-    empty. This may be due to low memory available on this system.\nEmpty file:
-    %s""" % outfile
+    # Check if the command failed.
+    if returncode != 0:
+        command_str = ' '.join(run_command)
+        raise RuntimeError(
+            f"\nError: Search command failed with exit code {returncode}.\n"
+            f"Command: {command_str}\n"
+            f"\nThis may indicate that:\n"
+            f"  1. The tool '{run_command[0]}' is not installed or not in your PATH\n"
+            f"  2. The tool encountered an error during execution\n"
+            f"\nFor installation instructions, see documentation/workflow_protocol.md"
+        )
+
+    # Check that the output file exists and is not empty.
+    if not os.path.exists(outfile):
+        command_str = ' '.join(run_command)
+        raise FileNotFoundError(
+            f"\nError: Search output file was not created.\n"
+            f"Expected output file: {outfile}\n"
+            f"Command: {command_str}\n"
+        )
+
+    if os.path.getsize(outfile) == 0:
+        raise RuntimeError(
+            f"\nError: Search output file is empty.\n"
+            f"This may be due to low memory available on this system or no matches found.\n"
+            f"Empty file: {outfile}"
+        )
 
     # Return string with command used to run search.
     #search_descr =  method + ' (' + version + ')' + ' run with command:\n\t' +\

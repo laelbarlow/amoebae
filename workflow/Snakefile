@@ -38,6 +38,37 @@ get_query_filenames_from_csv(query_csv, 'local')
 # Define path to report file.
 report: "report/workflow.rst"
 
+# Check for required external dependencies before starting workflow
+onstart:
+    import shutil
+    import sys
+
+    required_tools = {
+        'blastp': 'BLAST+ (install with: pixi global install -c conda-forge -c bioconda blast)',
+        'tblastn': 'BLAST+ (install with: pixi global install -c conda-forge -c bioconda blast)',
+        'hmmsearch': 'HMMER (should be installed via pixi.toml)',
+        'muscle': 'MUSCLE v3.8 (install with: pixi global install -c conda-forge -c bioconda muscle=3.8)',
+        'exonerate': 'Exonerate (install with: pixi global install -c conda-forge -c bioconda exonerate)'
+    }
+
+    missing_tools = []
+    for tool, description in required_tools.items():
+        if shutil.which(tool) is None:
+            missing_tools.append(f"  - {tool}: {description}")
+
+    if missing_tools:
+        print("\n" + "="*80, file=sys.stderr)
+        print("ERROR: Required external dependencies are missing!", file=sys.stderr)
+        print("="*80, file=sys.stderr)
+        print("\nThe following required tools were not found in your PATH:\n", file=sys.stderr)
+        print("\n".join(missing_tools), file=sys.stderr)
+        print("\nPlease install the missing tools before running the workflow.", file=sys.stderr)
+        print("See documentation/workflow_protocol.md for installation instructions.", file=sys.stderr)
+        print("="*80 + "\n", file=sys.stderr)
+        sys.exit(1)
+
+    print("✓ All required external dependencies found")
+
 # Compile a nonredundant list of query titles.
 query_titles = list(set([x.split('_', 1)[0] for x in \
     single_fasta_query_names_all + multi_fasta_query_names_all]))
